@@ -99,9 +99,10 @@
 													<label class="text-label">Designation<span class="required">*</span></label>
 													<select class="me-sm-2 form-control default-select" id="designation" name="designation">
 														<option selected>Choose...</option>
-														<option value="1">One</option>
-														<option value="2">Two</option>
-														<option value="3">Three</option>
+                                                        @foreach($designations as $designation)
+														<option value="{{$designation->id}}">{{$designation->designation_name}}</option>
+
+                                                        @endforeach
 													</select>
 												</div>
 											</div>

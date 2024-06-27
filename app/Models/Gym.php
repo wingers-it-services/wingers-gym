@@ -15,21 +15,11 @@ class Gym extends Authenticatable
     use SessionTrait;
 
     protected $fillable = [
-        'username',
+
         'gym_name',
         'email',
         'password',
-        'address',
-        'country',
-        'image',
-        'state',
-        'city',
-        'web_link',
-        'gym_type',
-        'subscription_id',
-        'terms_and_conditions',
-        'facebook',
-        'instagram'
+
     ];
 
     protected static function boot()

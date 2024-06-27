@@ -21,6 +21,7 @@ class GymStaff extends Model
         'image',
         'gym_id',
         'employee_id',
+        'blood_group',
         'email',
         'number',
         'address',
