@@ -67,7 +67,7 @@ class GymStaffController extends Controller
                 "joining_date" => 'required',
                 "salary" => 'required',
                 "designation" => 'required',
-                "blood_group" => 'required'
+                "blood_group" => 'nullable'
             ]);
 
             $gym_uuid = $this->getGymSession()['uuid'];

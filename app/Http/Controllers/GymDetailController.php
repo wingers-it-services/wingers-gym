@@ -57,7 +57,7 @@ class GymDetailController extends Controller
             $this->storeGymSession($gymAccount);
             return redirect('/dashboard')->with('status', 'success')->with('message', 'login successfully');
         } catch (Exception $e) {
-            dd($e);
+            // dd($e);
             Log::error('[GymDetailController][gymLogin] Error Login Gym ' . 'Request=' . $request . ', Exception=' . $e->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'Invalid credentials or account is not active');
         }
@@ -84,7 +84,7 @@ class GymDetailController extends Controller
             }
             return redirect()->route('register')->with('status', 'error')->with('message', 'error in register gym.');
         } catch (Exception $e) {
-             dd($e);
+            //  dd($e);
             Log::error('[GymDetailController][registerGym] Error register gym: ' . $e->getMessage());
             return redirect()->route('register')->with('status', 'error')->with('message', 'error in register gym.');
         }

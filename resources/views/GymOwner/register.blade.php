@@ -17,7 +17,7 @@
     <meta property="og:description" content="Laravel | Page Register">
     <meta property="og:image" content="../social-image.png">
     <meta name="format-detection" content="telephone=no">
-    <title>Laravel | Page Register </title>
+    <title>Wingers Gym Register </title>
 
     <!-- Mobile Specific -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,6 +40,10 @@
                                     <h4 class="text-center mb-4">Sign up your account</h4>
                                     <form id="log_in" method="post" action="/register">
                                         @csrf
+                                        {{-- <div class="form-group">
+                                            <label class="mb-1" for="gym_name"><strong>User Name</strong></label>
+                                            <input type="text" class="form-control" name="username" placeholder="username" required>
+                                        </div> --}}
                                         <div class="form-group">
                                             <label class="mb-1" for="gym_name"><strong>GYM Name</strong></label>
                                             <input type="text" class="form-control" name="gym_name" placeholder="Gym Name" required>
