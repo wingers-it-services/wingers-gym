@@ -59,8 +59,14 @@ Route::get('/enquiry', function () {
 Route::get('/inbox', function () {
     return view('gymowner.inbox');
 });
+Route::get('/gym-profile', function () {
+    return view('gymowner.gym-profile');
+});
 Route::get('/enquiry-read', function () {
     return view('gymowner.enquiry-read');
+});
+Route::get('/faq', function () {
+    return view('gymowner.faq');
 });
 /* GymOwner register */
 Route::get('/register', function () {
