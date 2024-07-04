@@ -26,8 +26,42 @@ Route::get('/', function () {
     return view('GymOwner.login');
 })->name('login');
 
-
-
+Route::get('/add-product', function () {
+    return view('gymowner.add-product');
+});
+Route::get('/product-list', function () {
+    return view('gymowner.product-list');
+});
+Route::get('/order-list', function () {
+    return view('gymowner.order-list');
+});
+Route::get('/invoice', function () {
+    return view('gymowner.invoice');
+});
+Route::get('/gym-customers', function () {
+    return view('gymowner.gym-customers');
+});
+Route::get('/gym-gallery', function () {
+    return view('gymowner.gym-gallery');
+});
+Route::get('/customers-payment', function () {
+    return view('gymowner.customers-payment');
+});
+Route::get('/coupon', function () {
+    return view('gymowner.coupon');
+});
+Route::get('/vendor-list', function () {
+    return view('gymowner.vendor-list');
+});
+Route::get('/enquiry', function () {
+    return view('gymowner.enquiry');
+});
+Route::get('/inbox', function () {
+    return view('gymowner.inbox');
+});
+Route::get('/enquiry-read', function () {
+    return view('gymowner.enquiry-read');
+});
 /* GymOwner register */
 Route::get('/register', function () {
     return view('GymOwner.register');
@@ -57,6 +91,10 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     Route::get('/updateSubscriptionView', [GymSubscriptionController::class, 'viewGymSubscription'])->name('updateSubscriiptionView');
     Route::post('/updateSubscriiption', [GymSubscriptionController::class, 'updateGymSubscriptionPlan'])->name('updateSubscriiption');
+    Route::delete('/deleteGymSubscription/{uuid}', [GymSubscriptionController::class, 'deleteGymSubscription'])->name('deleteGymSubscription');
+
+
+
 
     Route::get('/add-staff-attendence', [GymStaffController::class, 'addStaffAttendence']);
 
@@ -82,7 +120,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::post('/add-user-by-gym', [GymUserController::class, 'addUserByGym'])->name('addUserByGym');
 
     /* listGymUser */
-    Route::get('/gym-user-list', [GymUserController::class, 'listGymUser'])->name('listGymUser');
+    // Route::get('/gym-user-list', [GymUserController::class, 'listGymUser'])->name('listGymUser');
     Route::post('/updateUser', [GymUserController::class, 'updateUser'])->name('updateUser');
     Route::post('/addUserWorkout', [GymUserController::class, 'addUserWorkout'])->name('addUserWorkout');
     Route::post('/updateUserWorkout', [GymUserController::class, 'updateUserWorkout'])->name('updateUserWorkout');

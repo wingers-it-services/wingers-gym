@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('validity');
             $table->string('description');
             $table->string('gym_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -900,9 +900,9 @@
 						</a>
 
 						<ul aria-expanded="false">
-							<li><a href="/gym-user-list">Members List</a></li>
+							<li><a href="/gym-customers">Members List</a></li>
 							<li><a href="/add-gym-user">Add New Member</a></li>
-							<li><a href="/gym-customers-subscription-payment">Payment</a></li>
+							<li><a href="/customers-payment">Payment</a></li>
 						</ul>
 					</li>
 					<li>
@@ -911,113 +911,45 @@
 							<span class="nav-text">GYM Schedule</span>
 						</a>
 					</li>
+                    <li>
+						<a href="/vendor-list">
+							<i class="fa-solid fa-scale-unbalanced-flip"></i>
+							<span class="nav-text">Vendor</span>
+						</a>
+					</li>
 					<li>
 						<a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
 							<i class="fa fa-cart-plus" aria-hidden="true"></i>
 							<span class="nav-text">Shop</span>
 						</a>
 						<ul aria-expanded="false">
-							<li><a href="ecom-product-grid.html">Product Grid</a></li>
-							<li><a href="ecom-product-list.html">Product List</a></li>
-							<li><a href="ecom-product-detail.html">Product Details</a></li>
-							<li><a href="ecom-product-order.html">Order</a></li>
-							<li><a href="ecom-checkout.html">Checkout</a></li>
-							<li><a href="ecom-invoice.html">Invoice</a></li>
-							<li><a href="ecom-customers.html">Customers</a></li>
+							<li><a href="/add-product">Add Product</a></li>
+							<li><a href="/product-list">Product List</a></li>
+							<li><a href="/order-list">Order</a></li>
+							<li><a href="/invoice">Invoice</a></li>
+
 						</ul>
 					</li>
 
 					<li>
-						<a href="chart-flot.html">
+						<a href="/coupon">
 							<i class="fa fa-ticket" aria-hidden="true"></i>
 							<span class="nav-text">Coupon</span>
 						</a>
 					</li>
 
 					<li>
-						<a href="/gallery">
+						<a href="/gym-gallery">
 							<i class="fa fa-picture-o" aria-hidden="true"></i>
 							<span class="nav-text">Gallery</span>
 						</a>
 					</li>
-					<!--
-
-					<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-							<i class="flaticon-381-controls-3"></i>
-							<span class="nav-text">Charts</span>
-						</a>
-						<ul aria-expanded="false">
-
-							<li><a href="chart-chartjs.html">Chartjs</a></li>
-							<li><a href="chart-chartist.html">Chartist</a></li>
-							<li><a href="chart-sparkline.html">Sparkline</a></li>
-							<li><a href="chart-peity.html">Peity</a></li>
-						</ul>
-					</li>
-					<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-							<i class="flaticon-381-internet"></i>
-							<span class="nav-text">Bootstrap</span>
-						</a>
-						<ul aria-expanded="false">
-							<li><a href="ui-accordion.html">Accordion</a></li>
-							<li><a href="ui-alert.html">Alert</a></li>
-							<li><a href="ui-badge.html">Badge</a></li>
-							<li><a href="ui-button.html">Button</a></li>
-							<li><a href="ui-modal.html">Modal</a></li>
-							<li><a href="ui-button-group.html">Button Group</a></li>
-							<li><a href="ui-list-group.html">List Group</a></li>
-							<li><a href="ui-media-object.html">Media Object</a></li>
-							<li><a href="ui-card.html">Cards</a></li>
-							<li><a href="ui-carousel.html">Carousel</a></li>
-							<li><a href="ui-dropdown.html">Dropdown</a></li>
-							<li><a href="ui-popover.html">Popover</a></li>
-							<li><a href="ui-progressbar.html">Progressbar</a></li>
-							<li><a href="ui-tab.html">Tab</a></li>
-							<li><a href="ui-typography.html">Typography</a></li>
-							<li><a href="ui-pagination.html">Pagination</a></li>
-							<li><a href="ui-grid.html">Grid</a></li>
-
-						</ul>
-					</li>
-
-					<li><a href="widget-basic.html" class="ai-icon" aria-expanded="false">
-							<i class="flaticon-381-settings-2"></i>
-							<span class="nav-text">Widget</span>
-						</a>
-					</li>
-					<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-							<i class="flaticon-381-notepad"></i>
-							<span class="nav-text">Forms</span>
-						</a>
-						<ul aria-expanded="false">
-							<li><a href="form-element.html">Form Elements</a></li>
-							<li><a href="form-wizard.html">Wizard</a></li>
-							<li><a href="form-ckeditor.html">Summernote</a></li>
-							<li><a href="form-pickers.html">Pickers</a></li>
-							<li><a href="form-validation-jquery.html">Jquery Validate</a></li>
-						</ul>
-					</li>
-					<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-							<i class="flaticon-381-network"></i>
-							<span class="nav-text">Table</span>
-						</a>
-						<ul aria-expanded="false">
-							<li><a href="table-bootstrap-basic.html">Bootstrap</a></li>
-							<li><a href="table-datatable-basic.html">Datatable</a></li>
-						</ul>
-					</li> -->
 
 					<li>
-						<a href="page-register.html">
+						<a href="/enquiry">
 							<i class="fa fa-phone" aria-hidden="true"></i>
 							<span class="nav-text">Enquiry</span>
 						</a>
-					</li>
-
-					<li>
-						<a href="#">
-							<i class="fa fa-bell" aria-hidden="true"></i>
-							<span class="nav-text">Designation</span></a>
 					</li>
 
 					<li>
