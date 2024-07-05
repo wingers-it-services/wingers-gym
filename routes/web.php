@@ -211,3 +211,41 @@ Route::get('/rooms', [AdminController::class, 'showRooms']);
 Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
+
+
+Route::get('/dashboard', function () {
+    return view('admin.dashboard');
+});
+
+Route::get('/admin-enquiry', function () {
+    return view('admin.admin-enquiry');
+});
+
+Route::get('/add-advertisment', function () {
+    return view('admin.add-advertisment');
+});
+
+Route::get('/admin-notification', function () {
+    return view('admin.admin-notification');
+});
+
+
+Route::get('/admin-login', function () {
+    return view('admin.admin-login');
+});
+
+Route::get('/add-user', function () {
+    return view('admin.add-user');
+});
+
+Route::get('/books-list', function () {
+    return view('admin.books-list');
+});
+Route::get('/add-book', function () {
+    return view('admin.add-book');
+});
+
+
+Route::get('/user-list', function () {
+    return view('admin.user-list');
+});
