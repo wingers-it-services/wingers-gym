@@ -27,46 +27,46 @@ Route::get('/', function () {
 })->name('login');
 
 Route::get('/add-product', function () {
-    return view('gymowner.add-product');
+    return view('GymOwner.add-product');
 });
 Route::get('/product-list', function () {
-    return view('gymowner.product-list');
+    return view('GymOwner.product-list');
 });
 Route::get('/order-list', function () {
-    return view('gymowner.order-list');
+    return view('GymOwner.order-list');
 });
 Route::get('/invoice', function () {
-    return view('gymowner.invoice');
+    return view('GymOwner.invoice');
 });
 Route::get('/gym-customers', function () {
-    return view('gymowner.gym-customers');
+    return view('GymOwner.gym-customers');
 });
 Route::get('/gym-gallery', function () {
-    return view('gymowner.gym-gallery');
+    return view('GymOwner.gym-gallery');
 });
 Route::get('/customers-payment', function () {
-    return view('gymowner.customers-payment');
+    return view('GymOwner.customers-payment');
 });
 Route::get('/coupon', function () {
-    return view('gymowner.coupon');
+    return view('GymOwner.coupon');
 });
 Route::get('/vendor-list', function () {
-    return view('gymowner.vendor-list');
+    return view('GymOwner.vendor-list');
 });
 Route::get('/enquiry', function () {
-    return view('gymowner.enquiry');
+    return view('GymOwner.enquiry');
 });
 Route::get('/inbox', function () {
-    return view('gymowner.inbox');
+    return view('GymOwner.inbox');
 });
 Route::get('/gym-profile', function () {
-    return view('gymowner.gym-profile');
+    return view('GymOwner.gym-profile');
 });
 Route::get('/enquiry-read', function () {
-    return view('gymowner.enquiry-read');
+    return view('GymOwner.enquiry-read');
 });
 Route::get('/faq', function () {
-    return view('gymowner.faq');
+    return view('GymOwner.faq');
 });
 /* GymOwner register */
 Route::get('/register', function () {
@@ -213,9 +213,7 @@ Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
 
 
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-});
+
 
 Route::get('/admin-enquiry', function () {
     return view('admin.admin-enquiry');

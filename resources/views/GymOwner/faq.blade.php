@@ -1,4 +1,4 @@
-@extends('Gymowner.master')
+@extends('GymOwner.master')
 @section('title','Dashboard')
 @section('content')
 

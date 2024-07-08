@@ -966,9 +966,9 @@
 
 					</li>
 
-					<li><a href="page-lock-screen.html">
+					<li><a href="/">
 							<i class="fa fa-lock" aria-hidden="true"></i>
-							<span class="nav-text">Lock Screen</span>
+							<span class="nav-text">Log Out</span>
 						</a>
 					</li>
 				</ul>
