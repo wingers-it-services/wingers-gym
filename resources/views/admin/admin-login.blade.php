@@ -38,8 +38,22 @@
                         <div class="row no-gutters">
                             <div class="col-xl-12">
                                 <div class="auth-form">
-                                    <h4 class="text-center mb-4">Sign in your account</h4>
-                                    <form class="form" id="log_in" method="POST" action="{{route('gymLogin')}}">
+                                    <div class="row emial-setup">
+                                        <div class="col-lg-12 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <div class="mailclinet" id="mailclinet">
+                                                    <img id="selected_image" src="{{asset('images/logo.png')}}" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info progress-bar-striped" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"  role="progressbar">
+                                        </div>
+                                    </div>
+
+                                    <h4 class="text-center mb-4" style=" margin: revert; -webkit-text-stroke-width: thin; ">Admin account</h4>
+                                    <form class="form" id="log_in" method="POST" action="/admin/login">
                                         @csrf
                                         <div class="form-group">
                                             <label class="mb-1"><strong>Email</strong></label>
@@ -67,14 +81,11 @@
                                             </div>
                                         </div>
                                         <div class="text-center">
-                                            <button type="submit" class="btn btn-primary btn-block">Sign Me In</button>
+                                          <a href="/dashboard"><button type="submit" class="btn btn-primary btn-block">Sign Me In</button></a>
                                         </div>
                                     </form>
                                     <div class="new-account mt-3">
                                         <p>Don't have an account? <a class="text-primary" href='/register'>Sign up</a></p>
-                                    </div>
-                                    <div class="new-account mt-3">
-                                        <p><a class="text-primary" href='/admin-login'>Admin LOgin</a></p>
                                     </div>
                                 </div>
                             </div>

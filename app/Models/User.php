@@ -14,16 +14,21 @@ class User extends Authenticatable
     use SoftDeletes;
 
     protected $fillable = [
+        'employee_id',
         'gym_id',
-        'trainer_id',
-        'first_name',
-        'last_name',
+        'firstname',
+        'lastname',
         'email',
         'gender',
-        'phone_no',
-        'username',
-        'password',
-        'image'
+        'member_number',
+        'subscription_id',
+        'blood_group',
+        'image',
+        'joining_date',
+        'address',
+        'country',
+        'state',
+        'zip_code'
     ];
 
     protected static function boot()
@@ -39,18 +44,25 @@ class User extends Authenticatable
         // $trainer = GymStaff::
     }
 
-    public function addUser(array $addUser, $imagePath, $gymId)
+    public function addUser(array $addUser, $imagePath, $gymId,$subscriptionId,$employeeId)
     {
         try {
             return $this->create([
                 'gym_id' => $gymId,
-                'first_name' => $addUser['first_name'],
-                'last_name' => $addUser['last_name'],
+                'employee_id'=>$employeeId,
+                'subscription_id'=>$subscriptionId,
+                'firstname' => $addUser['firstname'],
+                'lastname' => $addUser['lastname'],
                 'email' => $addUser['email'],
                 'gender' => $addUser['gender'],
-                'phone_no' => $addUser['phone_no'],
-                'username' => $addUser['username'],
-                'password' => $addUser['password'],
+                'address' => $addUser['address'],
+                'member_number' => $addUser['member_number'],
+                'blood_group' => $addUser['blood_group'],
+                'joining_date' => $addUser['joining_date'],
+                'address' => $addUser['address'],
+                'country' => $addUser['country'],
+                'state' => $addUser['state'],
+                'zip_code' => $addUser['zip_code'],
                 'image' => $imagePath,
             ]);
         } catch (Throwable $e) {

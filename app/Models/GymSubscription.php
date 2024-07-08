@@ -64,4 +64,5 @@ class GymSubscription extends Model
         });
     }
 
+
 }

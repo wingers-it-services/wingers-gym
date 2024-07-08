@@ -49,15 +49,15 @@ class GymUserController extends Controller
         $this->gymStaff = $gymStaff;
     }
 
-    public function listGymUser()
-    {
-        $gym_uuid = $this->getGymSession()['uuid'];
-        $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
-        $users = $this->user->where('gym_id', $gymId)->get();
+    // public function listGymUser()
+    // {
+    //     $gym_uuid = $this->getGymSession()['uuid'];
+    //     $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+    //     // $users = $this->user->where('gym_id', $gymId)->get();
 
 
-        return view('GymOwner.gym-customers', compact('users'));
-    }
+    //     return view('GymOwner.gym-customers', compact('users'));
+    // }
 
     public function addGymUser()
     {

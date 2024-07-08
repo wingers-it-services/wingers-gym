@@ -14,6 +14,24 @@ use App\Http\Controllers\GymNotificationController;
 use App\Http\Controllers\UserNotificationController;
 use Illuminate\Support\Facades\Route;
 
+
+
+Route::get('/admin-login', function () {
+    return view('admin.admin-login');
+});
+
+Route::get('/dashboard', function () {
+    return view('admin.dashboard');
+});
+Route::get('/add-advertisment', function () {
+    return view('admin.add-advertisment');
+});
+Route::get('/dashboard', function () {
+    return view('admin.dashboard');
+});
+Route::get('/dashboard', function () {
+    return view('admin.dashboard');
+});
 Route::get('/viewGymInfo', [AdminGymController::class, 'viewGymInfo']);
 
 Route::get('/adminDashboard', [AdminController::class, 'adminDashboard']);

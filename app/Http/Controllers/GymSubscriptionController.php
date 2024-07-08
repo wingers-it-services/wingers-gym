@@ -61,9 +61,9 @@ class GymSubscriptionController extends Controller
             }
             $updatedSubscription = $this->gymSubscription->updateSubscription($validatedData, $imagePath, $request->uuid);
             if ($updatedSubscription) {
-                return redirect()->route('listSubscriptionPlan')->with("status", "success")->with("message", "Subscription upated succesfully");
+                return redirect()->route('updateSubscriptionView')->with("status", "success")->with("message", "Subscription upated succesfully");
             } else {
-                return redirect()->back()->with('error', 'error while updating profi');
+                return redirect()->back()->with('error', 'error while updating profile');
             }
         } catch (Throwable $th) {
             Log::error("[GymSubscriptionController][updateGymSubscriptionPlan] error " . $th->getMessage());
@@ -89,8 +89,23 @@ class GymSubscriptionController extends Controller
 
             return redirect()->route('listSubscriptionPlan')->with('status', 'success')->with('message', 'Data saved successfully.');
         } catch (Throwable $th) {
-            dd($th);
+            // dd($th);
             Log::error("[GymSubscriptionController][createGymSubscriptionPlan] error " . $th->getMessage());
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+    }
+    public function deleteGymSubscription($uuid)
+    {
+        try {
+            $subscription = $this->gymSubscription->where('uuid', $uuid)->first();
+            if ($subscription) {
+                $subscription->delete();
+                return redirect()->route('listSubscriptionPlan')->with('status', 'success')->with('message', 'Subscription deleted successfully.');
+            } else {
+                return redirect()->back()->with('error', 'Subscription not found.');
+            }
+        } catch (Throwable $th) {
+            Log::error("[GymSubscriptionController][deleteGymSubscription] error " . $th->getMessage());
             return redirect()->back()->with('error', $th->getMessage());
         }
     }

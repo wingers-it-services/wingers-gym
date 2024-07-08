@@ -26,8 +26,48 @@ Route::get('/', function () {
     return view('GymOwner.login');
 })->name('login');
 
-
-
+Route::get('/add-product', function () {
+    return view('GymOwner.add-product');
+});
+Route::get('/product-list', function () {
+    return view('GymOwner.product-list');
+});
+Route::get('/order-list', function () {
+    return view('GymOwner.order-list');
+});
+Route::get('/invoice', function () {
+    return view('GymOwner.invoice');
+});
+Route::get('/gym-customers', function () {
+    return view('GymOwner.gym-customers');
+});
+Route::get('/gym-gallery', function () {
+    return view('GymOwner.gym-gallery');
+});
+Route::get('/customers-payment', function () {
+    return view('GymOwner.customers-payment');
+});
+Route::get('/coupon', function () {
+    return view('GymOwner.coupon');
+});
+Route::get('/vendor-list', function () {
+    return view('GymOwner.vendor-list');
+});
+Route::get('/enquiry', function () {
+    return view('GymOwner.enquiry');
+});
+Route::get('/inbox', function () {
+    return view('GymOwner.inbox');
+});
+Route::get('/gym-profile', function () {
+    return view('GymOwner.gym-profile');
+});
+Route::get('/enquiry-read', function () {
+    return view('GymOwner.enquiry-read');
+});
+Route::get('/faq', function () {
+    return view('GymOwner.faq');
+});
 /* GymOwner register */
 Route::get('/register', function () {
     return view('GymOwner.register');
@@ -57,6 +97,10 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     Route::get('/updateSubscriptionView', [GymSubscriptionController::class, 'viewGymSubscription'])->name('updateSubscriiptionView');
     Route::post('/updateSubscriiption', [GymSubscriptionController::class, 'updateGymSubscriptionPlan'])->name('updateSubscriiption');
+    Route::delete('/deleteGymSubscription/{uuid}', [GymSubscriptionController::class, 'deleteGymSubscription'])->name('deleteGymSubscription');
+
+
+
 
     Route::get('/add-staff-attendence', [GymStaffController::class, 'addStaffAttendence']);
 
@@ -82,7 +126,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::post('/add-user-by-gym', [GymUserController::class, 'addUserByGym'])->name('addUserByGym');
 
     /* listGymUser */
-    Route::get('/gym-user-list', [GymUserController::class, 'listGymUser'])->name('listGymUser');
+    // Route::get('/gym-user-list', [GymUserController::class, 'listGymUser'])->name('listGymUser');
     Route::post('/updateUser', [GymUserController::class, 'updateUser'])->name('updateUser');
     Route::post('/addUserWorkout', [GymUserController::class, 'addUserWorkout'])->name('addUserWorkout');
     Route::post('/updateUserWorkout', [GymUserController::class, 'updateUserWorkout'])->name('updateUserWorkout');
@@ -167,3 +211,39 @@ Route::get('/rooms', [AdminController::class, 'showRooms']);
 Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
+
+
+
+
+Route::get('/admin-enquiry', function () {
+    return view('admin.admin-enquiry');
+});
+
+Route::get('/add-advertisment', function () {
+    return view('admin.add-advertisment');
+});
+
+Route::get('/admin-notification', function () {
+    return view('admin.admin-notification');
+});
+
+
+Route::get('/admin-login', function () {
+    return view('admin.admin-login');
+});
+
+Route::get('/add-user', function () {
+    return view('admin.add-user');
+});
+
+Route::get('/books-list', function () {
+    return view('admin.books-list');
+});
+Route::get('/add-book', function () {
+    return view('admin.add-book');
+});
+
+
+Route::get('/user-list', function () {
+    return view('admin.user-list');
+});
