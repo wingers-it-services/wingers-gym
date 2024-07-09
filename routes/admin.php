@@ -61,8 +61,28 @@ Route::get('/admin-advertistement', function () {
     return view('admin.admin-advertistement');
 });
 
-Route::get('/admin-designation', function () {
-    return view('admin.admin-designation');
+Route::get('/admin-user-compose-notification', function () {
+    return view('admin.admin-user-compose-notification');
+});
+
+
+Route::get('/admin-gym-compose-notification', function () {
+    return view('admin.admin-gym-compose-notification');
+});
+Route::get('/admin-user-inbox', function () {
+    return view('admin.admin-user-inbox');
+});
+
+Route::get('/admin-gym-inbox', function () {
+    return view('admin.admin-gym-inbox');
+});
+
+Route::get('/admin-user-read', function () {
+    return view('admin.admin-user-read');
+});
+
+Route::get('/admin-gym-read', function () {
+    return view('admin.admin-gym-read');
 });
 
 Route::get('/admin-faq', function () {
@@ -75,6 +95,17 @@ Route::get('/admin-payment', function () {
 
 Route::get('/admin-enquiry', function () {
     return view('admin.admin-enquiry');
+});
+Route::get('/admin-read', function () {
+    return view('admin.admin-read');
+});
+
+Route::get('/add-vendor', function () {
+    return view('admin.add-vendor');
+});
+
+Route::get('/vendor-list', function () {
+    return view('admin.vendor-list');
 });
 
 Route::get('/viewGymInfo', [AdminGymController::class, 'viewGymInfo']);

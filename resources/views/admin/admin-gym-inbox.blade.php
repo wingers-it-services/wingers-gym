@@ -6,7 +6,7 @@
 <div class="page-titles">
 <ol class="breadcrumb">
     {{-- <li class="breadcrumb-item"><a href="javascript:void(0)">Email</a></li> --}}
-    <li class="breadcrumb-item active"><a href="javascript:void(0)">Enquiry</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Notification</a></li>
 </ol>
 </div>
 <!-- row -->
@@ -15,11 +15,11 @@
     <div class="card">
         <div class="card-body">
             <div class="email-left-box px-0 mb-3">
-                {{-- <div class="p-0">
-                    <a href="/admin/admin-enquiry" class="btn btn-primary btn-block">Compose</a>
-                </div> --}}
+               <div class="mail-list rounded mt-4">
+                                <a href="/admin/admin-gym-compose-notification" class="list-group-item active"><i class="fa fa-envelope" aria-hidden="true"></i> Compose </a>
+                            </div>
                 <div class="mail-list rounded mt-4">
-                    <a href="/admin/admin-read" class="list-group-item active"><i
+                    <a href="/admin/admin-user-inbox" class="list-group-item active"><i
                             class="fa fa-inbox font-18 align-middle me-2"></i> Inbox <span
                             class="badge badge-secondary badge-sm float-end">198</span> </a>
 
@@ -63,7 +63,7 @@
                                             class="fa fa-star" aria-hidden="true"></i></button>
                                 </div>
                             </div>
-                            <a href="/admin/admin-read" class="col-mail col-mail-2">
+                            <a href="/admin/admin-gym-read" class="col-mail col-mail-2">
                                 <div class="subject">Ingredia Nutrisha, A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture</div>
                                 <div class="date">11:49 am</div>
                             </a>

@@ -1001,7 +1001,7 @@
 
                     <li>
                         <a href="/admin/admin-subscription" class="ai-icon" aria-expanded="false">
-                            <i class="fa fa-folder" aria-hidden="true"></i>
+                            <i class="fa fa-user-plus" aria-hidden="true"></i>
                             <span class="nav-text">Subscripton</span>
                         </a>
                     </li>
@@ -1030,21 +1030,48 @@
                         </ul>
                     </li>
                     <li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-                        <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                        <i class="fa fa-bell" aria-hidden="true"></i>
                         <span class="nav-text">Notification</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="/add-book">User Notification</a></li>
-                        <li><a href="/books-list">GYM Notification</a></li>
+                        <li><a href="/admin/admin-user-inbox">User Notification</a></li>
+                        <li><a href="/admin/admin-gym-inbox">GYM Notification</a></li>
                         {{-- <li><a href="/admin/book-details">Books Details</a></li> --}}
                     </ul>
                 </li>
+                <li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
+                    <i class="fa-solid fa-scale-unbalanced-flip" aria-hidden="true"></i>
+                    <span class="nav-text">Vendor</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="/admin/add-vendor">Add New Vendor</a></li>
+                    <li><a href="/admin/vendor-list">Vendor List</a></li>
+                    {{-- <li><a href="/admin/book-details">Books Details</a></li> --}}
+                </ul>
+            </li>
+            <li>
+                <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                    <span class="nav-text">Shop</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="/add-product">Add Product</a></li>
+                    <li><a href="/product-list">Product List</a></li>
+                    <li><a href="/order-list">Order</a></li>
+                    <li><a href="/invoice">Invoice</a></li>
+
+                </ul>
+            </li>
+
                     <li>
                         <a href="/admin/admin-coupon">
-                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            <i class="fa fa-gift" aria-hidden="true"></i>
                             <span class="nav-text">Coupons</span>
                         </a>
                     </li>
+
+
+
                     <li>
                         <a href="/admin/admin-advertistement">
                             <i class="fa-solid fa-rectangle-ad"></i>
@@ -1053,15 +1080,11 @@
                     </li>
                     <li>
                         <a href="/admin/admin-payment">
-                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            <i class="fa fa-credit-card" aria-hidden="true"></i>
                             <span class="nav-text">Payment</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="/admin/admin-designation">
-                            <i class="fa fa-bell" aria-hidden="true"></i>
-                            <span class="nav-text">Designation</span></a>
-                    </li>
+
 
                     <li>
                         <a href="/admin/admin-enquiry">
