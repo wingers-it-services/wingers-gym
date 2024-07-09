@@ -20,18 +20,63 @@ Route::get('/admin-login', function () {
     return view('admin.admin-login');
 });
 
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
+Route::get('/admin-dashboard', function () {
+    return view('admin.admin-dashboard');
 });
+
+Route::get('/admin-enquiry', function () {
+    return view('admin.admin-enquiry');
+});
+
+Route::get('/admin-subscription', function () {
+    return view('admin.admin-subscription');
+});
+
 Route::get('/add-advertisment', function () {
     return view('admin.add-advertisment');
 });
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
+
+Route::get('/add-gym', function () {
+    return view('admin.add-gym');
 });
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
+
+Route::get('/admin-gym-list', function () {
+    return view('admin.admin-gym-list');
 });
+
+Route::get('/admin-user', function () {
+    return view('admin.admin-user');
+});
+
+Route::get('/admin-user-list', function () {
+    return view('admin.admin-user-list');
+});
+
+
+Route::get('/admin-coupon', function () {
+    return view('admin.admin-coupon');
+});
+
+Route::get('/admin-advertistement', function () {
+    return view('admin.admin-advertistement');
+});
+
+Route::get('/admin-designation', function () {
+    return view('admin.admin-designation');
+});
+
+Route::get('/admin-faq', function () {
+    return view('admin.admin-faq');
+});
+
+Route::get('/admin-payment', function () {
+    return view('admin.admin-payment');
+});
+
+Route::get('/admin-enquiry', function () {
+    return view('admin.admin-enquiry');
+});
+
 Route::get('/viewGymInfo', [AdminGymController::class, 'viewGymInfo']);
 
 Route::get('/adminDashboard', [AdminController::class, 'adminDashboard']);

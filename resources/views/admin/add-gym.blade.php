@@ -10,7 +10,7 @@
 		<div class="page-titles">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item active"><a href="javascript:void(0)">Add </a></li>
-				<li class="breadcrumb-item active"><a href="javascript:void(0)">New Member Details</a></li>
+				<li class="breadcrumb-item active"><a href="javascript:void(0)">New GYM</a></li>
 			</ol>
 		</div>
 		<div class="row">
@@ -79,7 +79,7 @@
 											<select class="me-sm-2 form-control default-select" id="designation" name="designation">
 												<option selected>Choose...</option>
 												{{-- @foreach ($gymStaff as $staff) --}}
-												<option>Muskan</option>
+												<option>Trainer</option>
 												{{-- @endforeach --}}
 											</select>
 											<div class="invalid-feedback">
@@ -91,9 +91,9 @@
 											<label for="lastName">Member Subscription </label>
 											<select class="me-sm-2 form-control default-select" id="designation" name="designation">
 												<option selected>Choose...</option>
-												@foreach ($gymSubscription as $subscription)
-												<option value="{{ $subscription->id }}">{{ $subscription->subscription_name}}</option>
-												@endforeach
+												{{-- @foreach ($gymSubscription as $subscription) --}}
+												<option>MUskan </option>
+												{{-- @endforeach --}}
 											</select>
 											<div class="invalid-feedback">
 												Valid last name is required.

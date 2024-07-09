@@ -994,25 +994,25 @@
                             <span class="nav-text">Dashboard</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="/admin/dashboard">AI Dashboard<span
+                            <li><a href="/admin/admin-dashboard">AI Dashboard<span
                                         class="badge badge-xs badge-danger ms-3">New</span></a></li>
                         </ul>
                     </li>
 
                     <li>
-                        <a href="/admin/industries-categories" class="ai-icon" aria-expanded="false">
+                        <a href="/admin/admin-subscription" class="ai-icon" aria-expanded="false">
                             <i class="fa fa-folder" aria-hidden="true"></i>
-                            <span class="nav-text">Industries Categories</span>
+                            <span class="nav-text">Subscripton</span>
                         </a>
                     </li>
 
                     <li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
                             <i class="fa fa-address-card-o" aria-hidden="true"></i>
-                            <span class="nav-text">Books</span>
+                            <span class="nav-text">GYM</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="/add-book">Add New Book</a></li>
-                            <li><a href="/books-list">Books List</a></li>
+                            <li><a href="/admin/add-gym">Add New GYM</a></li>
+                            <li><a href="/admin/admin-gym-list">GYM List</a></li>
                             {{-- <li><a href="/admin/book-details">Books Details</a></li> --}}
                         </ul>
                     </li>
@@ -1024,34 +1024,49 @@
                         </a>
 
                         <ul aria-expanded="false">
-                            <li><a href="/add-user">Add New User</a></li>
-                            <li><a href="/user-list">Users List</a></li>
-                            <li><a href="/admin/user-payment">Payment Details</a></li>
+                            <li><a href="/admin/admin-user">Add New User</a></li>
+                            <li><a href="/admin/admin-user-list">Users List</a></li>
+                            <li><a href="/admin/admin-paymenti">Payment Details</a></li>
                         </ul>
                     </li>
-
+                    <li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
+                        <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                        <span class="nav-text">Notification</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a href="/add-book">User Notification</a></li>
+                        <li><a href="/books-list">GYM Notification</a></li>
+                        {{-- <li><a href="/admin/book-details">Books Details</a></li> --}}
+                    </ul>
+                </li>
                     <li>
-                        <a href="/admin-enquiry">
+                        <a href="/admin/admin-coupon">
                             <i class="fa fa-phone" aria-hidden="true"></i>
-                            <span class="nav-text">Enquiry</span>
+                            <span class="nav-text">Coupons</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/add-advertisment">
+                        <a href="/admin/admin-advertistement">
                             <i class="fa-solid fa-rectangle-ad"></i>
                             <span class="nav-text">Advertisement</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/admin-notification">
+                        <a href="/admin/admin-payment">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            <span class="nav-text">Payment</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/admin-designation">
                             <i class="fa fa-bell" aria-hidden="true"></i>
-                            <span class="nav-text">Notification</span></a>
+                            <span class="nav-text">Designation</span></a>
                     </li>
 
                     <li>
-                        <a href="/admin/user-login-history">
-                            <i class="fa fa-bell" aria-hidden="true"></i>
-                            <span class="nav-text">User Login History</span></a>
+                        <a href="/admin/admin-enquiry">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            <span class="nav-text">Enquiry</span></a>
                     </li>
 
                     {{-- <li>
