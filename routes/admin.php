@@ -103,11 +103,44 @@ Route::get('/admin-read', function () {
 Route::get('/add-vendor', function () {
     return view('admin.add-vendor');
 });
+Route::get('/add-doctor', function () {
+    return view('admin.add-doctor');
+});
 
 Route::get('/vendor-list', function () {
     return view('admin.vendor-list');
 });
 
+Route::get('/doctor-list', function () {
+    return view('admin.doctor-list');
+});
+
+Route::get('/admin-add-product', function () {
+    return view('admin.admin-add-product');
+});
+
+Route::get('/admin-product-list', function () {
+    return view('admin.admin-product-list');
+});
+
+Route::get('/admin-order-list', function () {
+    return view('admin.admin-order-list');
+});
+
+Route::get('/admin-invoice', function () {
+    return view('admin.admin-invoice');
+});
+
+Route::get('/system-inbox', function () {
+    return view('admin.system-inbox');
+});
+
+Route::get('/system-read', function () {
+    return view('admin.system-read');
+});
+Route::get('/admin-profile', function () {
+    return view('admin.admin-profile');
+});
 Route::get('/viewGymInfo', [AdminGymController::class, 'viewGymInfo']);
 
 Route::get('/adminDashboard', [AdminController::class, 'adminDashboard']);
