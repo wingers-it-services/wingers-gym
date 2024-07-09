@@ -120,7 +120,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::delete('/deleteGymStaff/{uuid}', [GymStaffController::class, 'deleteGymStaff'])->name('deleteGymStaff');
 
     /* addUserByGym */
-    Route::get('/add-gym-user', [GymUserController::class, 'addGymUser'])->name('addGymUser');
+    Route::get('/add-gym-user', [GymUserController::class, 'addGadd-gym-customerymUser'])->name('addGymUser');
 
     /* addUserByGym */
     Route::post('/add-user-by-gym', [GymUserController::class, 'addUserByGym'])->name('addUserByGym');
@@ -215,9 +215,7 @@ Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
 
 
 
-Route::get('/admin-enquiry', function () {
-    return view('admin.admin-enquiry');
-});
+
 
 Route::get('/add-advertisment', function () {
     return view('admin.add-advertisment');
@@ -236,13 +234,14 @@ Route::get('/add-user', function () {
     return view('admin.add-user');
 });
 
-Route::get('/books-list', function () {
-    return view('admin.books-list');
-});
+
 Route::get('/add-book', function () {
     return view('admin.add-book');
 });
 
+Route::get('/admin-dashboard', function () {
+    return view('admin.admin-dashboard');
+});
 
 Route::get('/user-list', function () {
     return view('admin.user-list');

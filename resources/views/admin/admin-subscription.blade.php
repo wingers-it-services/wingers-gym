@@ -1,4 +1,4 @@
-@extends('GymOwner.master')
+@extends('admin.master')
 @section('title', 'Subscription Plans')
 @section('content')
 
@@ -83,11 +83,11 @@
 											</tr>
 										</thead>
 										<tbody>
-											@foreach ($subscriptions as $subscription)
+											{{-- @foreach ($subscriptions as $subscription) --}}
 											<tr>
-												<td>{{$subscription->subscription_name }}</td>
-												<td>{{$subscription->amount }}</td>
-												<td>{{$subscription->validity }} Months</td>
+												<td>Muskan</td>
+												<td>2500</td>
+												<td>1 Months</td>
 												<td>
 													<div class="progress" style="background: rgba(255, 193, 7, .1)">
 														<div class="progress-bar bg-warning" style="width: 70%;" role="progressbar"><span class="sr-only">70% Complete</span>
@@ -97,10 +97,10 @@
 												<td>Jun 28,2018</td>
 												<td><span class="badge badge-warning">70%</span>
 												</td>
-												<td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i> </a><a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
+												<td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i> </a><a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
 												</td>
 											</tr>
-											@endforeach
+											{{-- @endforeach --}}
 										</tbody>
 									</table>
 								</div>
@@ -123,8 +123,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ url('/gym-subscription') }}" enctype="multipart/form-data">
-                    @csrf
+                {{-- <form method="POST" action="{{ url('/gym-subscription') }}" enctype="multipart/form-data"> --}}
+                    {{-- @csrf --}}
                     <div class="form-group">
                         <label>Subscription Name</label>
                         <input type="text" name="subscription_name" class="form-control" required>
@@ -153,7 +153,7 @@
 </div>
 
 <!-- Modal for Editing Plan -->
-<div class="modal fade" id="editPlan" tabindex="-1" aria-labelledby="editPlanLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="editPlan" tabindex="-1" aria-labelledby="editPlanLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -189,7 +189,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

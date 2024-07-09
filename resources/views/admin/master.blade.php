@@ -96,7 +96,7 @@
         <!--**********************************
             Chat box start
         ***********************************-->
-        <div class="chatbox">
+        {{-- <div class="chatbox">
             <div class="chatbox-close"></div>
             <div class="custom-tab-1">
                 <ul class="nav nav-tabs">
@@ -717,7 +717,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!--**********************************
     Chat box End
 ***********************************-->
@@ -758,8 +758,8 @@
                                 </a>
                             </li>
                             <li class="nav-item dropdown notification_dropdown">
-                                <a class="nav-link  ai-icon" href="#" role="button"
-                                    data-bs-toggle="dropdown">
+                                <a class="nav-link  ai-icon" href="/admin/system-inbox" role=""
+                                    data-bs-toggle="">
                                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -768,85 +768,10 @@
                                     </svg>
                                     <span class="badge light text-white bg-primary">12</span>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <div id="DZ_W_Notification1" class="widget-media dz-scroll p-3 height380">
-                                        <ul class="timeline">
-                                            <li>
-                                                <div class="timeline-panel">
-                                                    <div class="media me-2">
-                                                        <img alt="image" width="50"
-                                                            src="{{ asset('images/avatar/1.jpg') }}">
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h6 class="mb-1">Dr sultads Send you Photo</h6>
-                                                        <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="timeline-panel">
-                                                    <div class="media me-2 media-info">
-                                                        KG
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h6 class="mb-1">Resport created successfully</h6>
-                                                        <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="timeline-panel">
-                                                    <div class="media me-2 media-success">
-                                                        <i class="fa fa-home"></i>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h6 class="mb-1">Reminder : Treatment Time!</h6>
-                                                        <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="timeline-panel">
-                                                    <div class="media me-2">
 
-                                                        <img alt="image" width="50"
-                                                            src="images/avatar/1.jpg___/div__div%20class%3d.html"
-                                                            media-body">
-                                                        <h6 class="mb-1">Dr sultads Send you Photo</h6>
-                                                        <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="timeline-panel">
-                                                    <div class="media me-2 media-danger">
-                                                        KG
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h6 class="mb-1">Resport created successfully</h6>
-                                                        <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="timeline-panel">
-                                                    <div class="media me-2 media-primary">
-                                                        <i class="fa fa-home"></i>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h6 class="mb-1">Reminder : Treatment Time!</h6>
-                                                        <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <a class="all-notification" href="#">See all notifications <i
-                                            class="ti-arrow-right"></i></a>
-                                </div>
                             </li>
                             <li class="nav-item dropdown notification_dropdown">
-                                <a class="nav-link bell bell-link" href="#">
+                                <a class="nav-link bell bell-link" href="/admin/admin-enquiry">
                                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -863,7 +788,7 @@
                                 </a>
                             </li>
                             <li class="nav-item dropdown notification_dropdown">
-                                <a class="nav-link" href="#" data-bs-toggle="dropdown">
+                                <a class="nav-link" href="/admin/admin-coupon" data-bs-toggle="">
                                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -872,74 +797,14 @@
                                     </svg>
                                     <span class="badge light text-white bg-primary">2</span>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <div id="DZ_W_TimeLine02" class="widget-timeline dz-scroll style-1 p-3 height370">
-                                        <ul class="timeline">
-                                            <li>
-                                                <div class="timeline-badge primary"></div>
-                                                <a class="timeline-panel text-muted" href="#">
-                                                    <span>10 minutes ago</span>
-                                                    <h6 class="mb-0">Youtube, a video-sharing website, goes live
-                                                        <strong class="text-primary">$500</strong>.
-                                                    </h6>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <div class="timeline-badge info">
-                                                </div>
-                                                <a class="timeline-panel text-muted" href="#">
-                                                    <span>20 minutes ago</span>
-                                                    <h6 class="mb-0">New order placed <strong
-                                                            class="text-info">#XF-2356.</strong></h6>
-                                                    <p class="mb-0">Quisque a consequat ante Sit amet magna at
-                                                        volutapt...</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <div class="timeline-badge danger">
-                                                </div>
-                                                <a class="timeline-panel text-muted" href="#">
-                                                    <span>30 minutes ago</span>
-                                                    <h6 class="mb-0">john just buy your product <strong
-                                                            class="text-warning">Sell $250</strong></h6>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <div class="timeline-badge success">
-                                                </div>
-                                                <a class="timeline-panel text-muted" href="#">
-                                                    <span>15 minutes ago</span>
-                                                    <h6 class="mb-0">StumbleUpon is acquired by eBay. </h6>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <div class="timeline-badge warning">
-                                                </div>
-                                                <a class="timeline-panel text-muted" href="#">
-                                                    <span>20 minutes ago</span>
-                                                    <h6 class="mb-0">Mashable, a news website and blog, goes live.
-                                                    </h6>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <div class="timeline-badge dark">
-                                                </div>
-                                                <a class="timeline-panel text-muted" href="#">
-                                                    <span>20 minutes ago</span>
-                                                    <h6 class="mb-0">Mashable, a news website and blog, goes live.
-                                                    </h6>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+
                             </li>
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
                                     <img src="{{ asset('images/profile/17.jpg') }}" width="20" alt="">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="app-profile.html" class="dropdown-item ai-icon">
+                                    <a href="admin-profile" class="dropdown-item ai-icon">
                                         <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary"
                                             width="18" height="18" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -994,25 +859,25 @@
                             <span class="nav-text">Dashboard</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="/admin/dashboard">AI Dashboard<span
+                            <li><a href="/admin/admin-dashboard">AI Dashboard<span
                                         class="badge badge-xs badge-danger ms-3">New</span></a></li>
                         </ul>
                     </li>
 
                     <li>
-                        <a href="/admin/industries-categories" class="ai-icon" aria-expanded="false">
-                            <i class="fa fa-folder" aria-hidden="true"></i>
-                            <span class="nav-text">Industries Categories</span>
+                        <a href="/admin/admin-subscription" class="ai-icon" aria-expanded="false">
+                            <i class="fa fa-user-plus" aria-hidden="true"></i>
+                            <span class="nav-text">Subscripton</span>
                         </a>
                     </li>
 
                     <li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
                             <i class="fa fa-address-card-o" aria-hidden="true"></i>
-                            <span class="nav-text">Books</span>
+                            <span class="nav-text">GYM</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="/add-book">Add New Book</a></li>
-                            <li><a href="/books-list">Books List</a></li>
+                            <li><a href="/admin/add-gym">Add New GYM</a></li>
+                            <li><a href="/admin/admin-gym-list">GYM List</a></li>
                             {{-- <li><a href="/admin/book-details">Books Details</a></li> --}}
                         </ul>
                     </li>
@@ -1024,34 +889,82 @@
                         </a>
 
                         <ul aria-expanded="false">
-                            <li><a href="/add-user">Add New User</a></li>
-                            <li><a href="/user-list">Users List</a></li>
-                            <li><a href="/admin/user-payment">Payment Details</a></li>
+                            <li><a href="/admin/admin-user">Add New User</a></li>
+                            <li><a href="/admin/admin-user-list">Users List</a></li>
+                            {{-- <li><a href="/admin/admin-paymenti">Payment Details</a></li> --}}
                         </ul>
                     </li>
+                    <li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
+                        <i class="fa fa-bell" aria-hidden="true"></i>
+                        <span class="nav-text">Notification</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a href="/admin/admin-user-inbox">User Notification</a></li>
+                        <li><a href="/admin/admin-gym-inbox">GYM Notification</a></li>
+                        <li><a href="/admin/system-inbox">System Notification</a></li>
+                    </ul>
+                </li>
+                <li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
+                    <i class="fa-solid fa-scale-unbalanced-flip" aria-hidden="true"></i>
+                    <span class="nav-text">Vendor</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="/admin/add-vendor">Add New Vendor</a></li>
+                    <li><a href="/admin/vendor-list">Vendor List</a></li>
+
+                </ul>
+            </li>
+            <li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
+                <i class="fas fa-user-md" aria-hidden="true"></i>
+                <span class="nav-text">Doctor</span>
+            </a>
+            <ul aria-expanded="false">
+                <li><a href="/admin/add-doctor">Add New Doctor</a></li>
+                <li><a href="/admin/doctor-list">Doctor List</a></li>
+
+            </ul>
+        </li>
+            <li>
+                <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                    <span class="nav-text">Shop</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="/admin/admin-add-product">Add Product</a></li>
+                    <li><a href="/admin/admin-product-list">Product List</a></li>
+                    <li><a href="/admin/admin-order-list">Order</a></li>
+                    <li><a href="/admin/admin-invoice">Invoice</a></li>
+
+                </ul>
+            </li>
 
                     <li>
-                        <a href="/admin-enquiry">
-                            <i class="fa fa-phone" aria-hidden="true"></i>
-                            <span class="nav-text">Enquiry</span>
+                        <a href="/admin/admin-coupon">
+                            <i class="fa fa-gift" aria-hidden="true"></i>
+                            <span class="nav-text">Coupons</span>
                         </a>
                     </li>
+
+
+
                     <li>
-                        <a href="/add-advertisment">
+                        <a href="/admin/admin-advertistement">
                             <i class="fa-solid fa-rectangle-ad"></i>
                             <span class="nav-text">Advertisement</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/admin-notification">
-                            <i class="fa fa-bell" aria-hidden="true"></i>
-                            <span class="nav-text">Notification</span></a>
+                        <a href="/admin/admin-payment">
+                            <i class="fa fa-credit-card" aria-hidden="true"></i>
+                            <span class="nav-text">Payment</span>
+                        </a>
                     </li>
 
+
                     <li>
-                        <a href="/admin/user-login-history">
-                            <i class="fa fa-bell" aria-hidden="true"></i>
-                            <span class="nav-text">User Login History</span></a>
+                        <a href="/admin/admin-enquiry">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            <span class="nav-text">Enquiry</span></a>
                     </li>
 
                     {{-- <li>

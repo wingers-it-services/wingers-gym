@@ -21,8 +21,8 @@
 							</small>
 							<span class="circle bg-primary"></span>
 						</div>
-						<h2 class="fs-24 text-black font-w600 mb-0">42</h2>
-						<span class="fs-14">No. Of Books</span>
+						<h2 class="fs-24 text-black font-w600 mb-0">42%</h2>
+						<span class="fs-14">Weekly Progress</span>
 					</div>
 				</div>
 			</div>
@@ -45,8 +45,8 @@
 							</small>
 							<span class="circle bg-danger"></span>
 						</div>
-						<h2 class="fs-24 text-black font-w600 mb-0">67</h2>
-						<span class="fs-14">No. of Persons</span>
+						<h2 class="fs-24 text-black font-w600 mb-0">67cal</h2>
+						<span class="fs-14">Calories Burn</span>
 					</div>
 				</div>
 			</div>

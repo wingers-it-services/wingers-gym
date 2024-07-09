@@ -1,4 +1,4 @@
-@extends('GymOwner.master')
+@extends('admin.master')
 @section('title','Designation')
 
 @section('content')
@@ -52,7 +52,7 @@
                                 </div>
 
                                 <div class="dropdown mt-sm-0 mt-3">
-                                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addNewDesignation" class="btn btn-outline-primary rounded">Add New Designation</a>
+                                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addNewDesignation" class="btn btn-outline-primary rounded">Add New Coupon</a>
                                 </div>
                             </div>
                             <div class="card-body">

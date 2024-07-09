@@ -6,7 +6,7 @@
 <div class="page-titles">
 <ol class="breadcrumb">
     {{-- <li class="breadcrumb-item"><a href="javascript:void(0)">Email</a></li> --}}
-    <li class="breadcrumb-item active"><a href="javascript:void(0)">Enquiry</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Notification</a></li>
 </ol>
 </div>
 <!-- row -->
@@ -14,20 +14,20 @@
 <div class="col-lg-12">
     <div class="card">
         <div class="card-body">
-            <div class="email-left-box px-0 mb-3">
-                {{-- <div class="p-0">
-                    <a href="/admin/admin-enquiry" class="btn btn-primary btn-block">Compose</a>
-                </div> --}}
-                <div class="mail-list rounded mt-4">
-                    <a href="/admin/admin-read" class="list-group-item active"><i
+            {{-- <div class="email-left-box px-0 mb-3"> --}}
+               {{-- <div class="mail-list rounded mt-4">
+                                <a href="/admin/admin-user-compose-notification" class="list-group-item active"><i class="fa fa-envelope" aria-hidden="true"></i> Compose </a>
+                            </div> --}}
+                {{-- <div class="mail-list rounded mt-4">
+                    <a href="/admin/system-inbox" class="list-group-item active"><i
                             class="fa fa-inbox font-18 align-middle me-2"></i> Inbox <span
                             class="badge badge-secondary badge-sm float-end">198</span> </a>
 
 
-                </div>
+                </div> --}}
 
-            </div>
-            <div class="email-right-box ms-0 ms-sm-4 ms-sm-0">
+            {{-- </div> --}}
+            <div class="col-12">
                 <div role="toolbar" class="toolbar ms-1 ms-sm-0">
                     <div class="btn-group mb-1">
                         <div class="form-check custom-checkbox ps-4">
@@ -63,7 +63,7 @@
                                             class="fa fa-star" aria-hidden="true"></i></button>
                                 </div>
                             </div>
-                            <a href="/admin/admin-read" class="col-mail col-mail-2">
+                            <a href="/admin/system-read" class="col-mail col-mail-2">
                                 <div class="subject">Ingredia Nutrisha, A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture</div>
                                 <div class="date">11:49 am</div>
                             </a>
