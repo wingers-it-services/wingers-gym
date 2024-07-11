@@ -74,7 +74,7 @@
                                         <p>Don't have an account? <a class="text-primary" href='/register'>Sign up</a></p>
                                     </div>
                                     <div class="new-account mt-3">
-                                        <p><a class="text-primary" href='/admin-login'>Admin LOgin</a></p>
+                                        <p><a class="text-primary" href='/admin/admin-login'>Admin LOgin</a></p>
                                     </div>
                                 </div>
                             </div>

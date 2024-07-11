@@ -213,36 +213,6 @@ Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
 
 
-
-
-
-
-Route::get('/add-advertisment', function () {
-    return view('admin.add-advertisment');
-});
-
-Route::get('/admin-notification', function () {
-    return view('admin.admin-notification');
-});
-
-
-Route::get('/admin-login', function () {
-    return view('admin.admin-login');
-});
-
-Route::get('/add-user', function () {
-    return view('admin.add-user');
-});
-
-
-Route::get('/add-book', function () {
-    return view('admin.add-book');
-});
-
-Route::get('/admin-dashboard', function () {
-    return view('admin.admin-dashboard');
-});
-
-Route::get('/user-list', function () {
-    return view('admin.user-list');
+Route::get('/view-gym-details', function () {
+    return view('GymOwner.view-gym-details');
 });
