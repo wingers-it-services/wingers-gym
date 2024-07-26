@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Designation;
 use App\Models\GymStaff;
 use App\Models\userBmi;
 use App\Models\Gym;
@@ -28,6 +29,8 @@ class GymUserController extends Controller
     protected $userBodyMeasurement;
     protected $bmi;
     protected $gymStaff;
+    protected $designation;
+    protected $gymSubscription;
 
     public function __construct(
         User $user,
@@ -37,7 +40,9 @@ class GymUserController extends Controller
         UserService $userService,
         UserBodyMeasurement $userBodyMeasurement,
         userBmi $bmi,
-        GymStaff $gymStaff
+        GymStaff $gymStaff,
+        Designation $designation,
+        GymSubscription $gymSubscription
     ) {
         $this->user = $user;
         $this->gym = $gym;
@@ -47,17 +52,17 @@ class GymUserController extends Controller
         $this->userBodyMeasurement = $userBodyMeasurement;
         $this->bmi = $bmi;
         $this->gymStaff = $gymStaff;
+        $this->designation = $designation;
+        $this->gymSubscription = $gymSubscription;
     }
 
-    // public function listGymUser()
-    // {
-    //     $gym_uuid = $this->getGymSession()['uuid'];
-    //     $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
-    //     // $users = $this->user->where('gym_id', $gymId)->get();
-
-
-    //     return view('GymOwner.gym-customers', compact('users'));
-    // }
+    public function listGymUser()
+    {
+        $gym_uuid = $this->getGymSession()['uuid'];
+        $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+        $users = $this->user->where('gym_id', $gymId)->get();
+        return view('GymOwner.gym-customers', compact('users'));
+    }
 
     public function addGymUser()
     {
@@ -66,56 +71,58 @@ class GymUserController extends Controller
 
         $gymStaff = GymStaff::join('designations', 'designations.id', 'gym_staffs.designation_id')
             ->where('gym_staffs.gym_id', $gymId)->get();
+        $gymSubscription = $this->gymSubscription->where('gym_id', $gymId)->get();
 
-        $gymSubscription = GymSubscription::where('gym_id', $gymId)->get();
-
-
-        return view('GymOwner.add-gym-customer', compact('gymStaff','gymSubscription'));
+        return view('GymOwner.add-gym-customer', compact('gymStaff', 'gymSubscription'));
     }
 
     public function addUserByGym(Request $request)
     {
         try {
             $request->validate([
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'email' => 'required',
-                'gender' => 'required',
-                'phone_no' => 'required',
-                'username' => 'required|unique:users',
-                'password' => 'required'
-
+                'firstname'         => 'required',
+                'lastname'          => 'required',
+                'email'             => 'required|email',
+                'gender'            => 'required',
+                'member_number'     => 'required',
+                'employee_id'       => 'required',
+                'subscription_id'   => 'required',
+                'blood_group'       => 'nullable',
+                'joining_date'      => 'required',
+                'address'           => 'required',
+                'country'           => 'required',
+                'state'             => 'required',
+                'zip_code'          => 'required',
+                'image'             => 'nullable'
             ]);
 
             $gym_uuid = $this->getGymSession()['uuid'];
             $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
 
             $this->userService->createUserAccount($request->all(), $gymId);
-
-
-
-            return back()->with('status', 'success')->with('message', 'User Added Succesfully');
+            return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Succesfully');
         } catch (\Exception $e) {
-            Log::error('[GymUserController][addUserByGym]Error adding : ' . 'Request=' . $e->getMessage());
+            Log::error('[GymUserController][addUserByGym]Error adding : ' . $e->getMessage());
             return back()->with('status', 'error')->with('message', 'User Not Added ');
         }
     }
 
 
-    public function showUserProfile(Request $request)
+    public function showUserProfile($uuid)
     {
-        $uuid = $request->input('uuid');
         $userDetail = $this->user->where('uuid', $uuid)->first();
-        $workouts = $this->workout->all();
-        $diets = $this->diet->all();
+        // $workouts = $this->workout->all();
+        // $diets = $this->diet->all();
 
         $gymId = $this->gym->where('uuid', $this->getGymSession()['uuid'])->first()->id;
         $userId = $userDetail->id;
-        $bmis = $this->bmi->where('user_id', $userId)->get();
-        $trainers = $this->gymStaff->where('designation_id', "1")->get();
-        $trainers = $this->gymStaff->where('gym_id', $gymId)->where('designation_id', "1")->get();
-        // dd($gymId);
-        return view('GymOwner.User.userProfile', compact('userDetail', 'workouts', 'diets', 'bmis', 'trainers'));
+        $designations = $this->designation->get();
+        $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
+        // $bmis = $this->bmi->where('user_id', $userId)->get();
+        // $trainers = $this->gymStaff->where('designation_id', "1")->get();
+        // $trainers = $this->gymStaff->where('gym_id', $gymId)->where('designation_id', "1")->get();
+        // return view('GymOwner.view-gym-details', compact('userDetail', 'workouts', 'diets', 'bmis', 'trainers'));
+        return view('GymOwner.view-gym-details', compact('userDetail',  'designations', 'gymSubscriptions'));
     }
 
     public function updateUser(Request $request)

@@ -38,9 +38,11 @@ Route::get('/order-list', function () {
 Route::get('/invoice', function () {
     return view('GymOwner.invoice');
 });
-Route::get('/gym-customers', function () {
-    return view('GymOwner.gym-customers');
-});
+// Route::get('/gym-customers', function () {
+//     return view('GymOwner.gym-customers');
+// });
+
+Route::get('/gym-customers', [GymUserController::class, 'listGymUser'])->name('gymCustomerList');
 Route::get('/gym-gallery', function () {
     return view('GymOwner.gym-gallery');
 });
@@ -87,7 +89,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
 
     Route::get('/gymProfile', [GymDetailController::class, 'showGymProfile'])->name('showGymProfile');
-    Route::get('/userProfile', [GymUserController::class, 'showUserProfile'])->name('showUserProfile');
+    Route::get('/userProfile/{uuid}', [GymUserController::class, 'showUserProfile'])->name('showUserProfile');
 
     /* listSubscriptionPlan */
     Route::get('/subscription-list', [GymSubscriptionController::class, 'listSubscriptionPlan'])->name('listSubscriptionPlan');
@@ -120,7 +122,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::delete('/deleteGymStaff/{uuid}', [GymStaffController::class, 'deleteGymStaff'])->name('deleteGymStaff');
 
     /* addUserByGym */
-    Route::get('/add-gym-user', [GymUserController::class, 'addGadd-gym-customerymUser'])->name('addGymUser');
+    Route::get('/add-gym-user', [GymUserController::class, 'addGymUser'])->name('addGymUser');
 
     /* addUserByGym */
     Route::post('/add-user-by-gym', [GymUserController::class, 'addUserByGym'])->name('addUserByGym');
@@ -211,8 +213,3 @@ Route::get('/rooms', [AdminController::class, 'showRooms']);
 Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
-
-
-Route::get('/view-gym-details', function () {
-    return view('GymOwner.view-gym-details');
-});

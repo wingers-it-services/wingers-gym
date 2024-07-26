@@ -33,24 +33,25 @@
 
 								<form>
 									<div class="input-group">
-										<input class="form-control form-control-sm" id="member_photo" name="mtaff_photo" onchange="loadFile(event)" accept="image/*" type="file">
+										<input class="form-control form-control-sm" id="image" name="image" onchange="loadFile(event)" accept="image/*" type="file">
 									</div>
 								</form>
 							</div>
 							<div class="col-lg-8 order-lg-1">
 								<form class="needs-validation" novalidate="" action="/add-user-by-gym" method="post">
+                                    @csrf
 									<div class="row">
 										<div class="col-md-6 mb-3">
 											<label for="firstName">First Name</label>
-											<input type="text" class="form-control" id="firstName" name="firstName" placeholder="" required="">
+											<input type="text" class="form-control" id="firstName" name="firstname" placeholder="" required="">
 											<div class="invalid-feedback">
 												Valid first name is required.
 											</div>
 										</div>
 
 										<div class="col-md-6 mb-3">
-											<label for="firstName">Last Name</label>
-											<input type="text" class="form-control" id="lastName" name="lastName" placeholder="" required="">
+											<label for="lastname">Last Name</label>
+											<input type="text" class="form-control" id="lastname" name="lastname" placeholder="" required="">
 											<div class="invalid-feedback">
 												Valid first name is required.
 											</div>
@@ -60,23 +61,23 @@
 									<div class="row">
 										<div class="col-md-6 mb-3">
 											<label for="email">Email <span class="text-muted">(Optional)</span></label>
-											<input type="email" class="form-control" id="email">
+											<input type="email" name="email" class="form-control" id="email">
 											<div class="invalid-feedback">
 												Please enter a valid email address for shipping updates.
 											</div>
 										</div>
 
 										<div class="col-md-6 mb-3">
-											<label for="firstName">Member Number</label>
-											<input type="text" class="form-control" id="firstName" placeholder="" required>
+											<label for="member_number">Member Number</label>
+											<input type="text" class="form-control" name="member_number" id="member_number" placeholder="" required>
 										</div>
 
 
 									</div>
 									<div class="row">
 										<div class="col-md-6 mb-3">
-											<label for="lastName">Staff Assigned</label>
-											<select class="me-sm-2 form-control default-select" id="designation" name="designation">
+											<label for="employee_id">Staff Assigned</label>
+											<select class="me-sm-2 form-control default-select" id="employee_id" name="employee_id">
 												<option selected>Choose...</option>
 												@foreach ($gymStaff as $staff)
 												<option value="{{ $staff->id }}">{{ $staff->designation_name}}</option>
@@ -88,8 +89,8 @@
 										</div>
 
 										<div class="col-md-6 mb-3">
-											<label for="lastName">Member Subscription </label>
-											<select class="me-sm-2 form-control default-select" id="designation" name="designation">
+											<label for="subscription_id">Member Subscription </label>
+											<select class="me-sm-2 form-control default-select" id="subscription_id" name="subscription_id">
 												<option selected>Choose...</option>
 												@foreach ($gymSubscription as $subscription)
 												<option value="{{ $subscription->id }}">{{ $subscription->subscription_name}}</option>
@@ -103,8 +104,8 @@
 
 									<div class="row">
 										<div class="col-md-6 mb-3">
-											<label for="lastName">Gender</label>
-											<select class="me-sm-2 form-control default-select" id="blood_group" name="blood_group">
+											<label for="gender">Gender</label>
+											<select class="me-sm-2 form-control default-select" id="gender" name="gender">
 												<option selected>Choose...</option>
 												<option value="male">Male</option>
 												<option value="female">Female</option>
@@ -113,7 +114,7 @@
 										</div>
 
 										<div class="col-md-6 mb-3">
-											<label for="lastName">Member Blood Group</label>
+											<label for="blood_group">Member Blood Group</label>
 											<select class="me-sm-2 form-control default-select" id="blood_group" name="blood_group">
 												<option selected>Choose...</option>
 												<option value="A+">A+</option>
@@ -129,18 +130,14 @@
 									</div>
 									<div class="row">
 										<div class="col-md-6 mb-3">
-											<label for="firstName">Member Joining Date</label>
-											<input type="date" class="form-control" id="firstName" placeholder="" required="">
-										</div>
-										<div class="col-md-6 mb-3">
-											<label for="firstName">Member Joining Date</label>
-											<input type="date" class="form-control" id="firstName" placeholder="" required="">
+											<label for="joining_date">Member Joining Date</label>
+											<input type="date" class="form-control" id="joining_date" name="joining_date" placeholder="" required="">
 										</div>
 									</div>
 
 									<div class="mb-3">
 										<label for="address">Address</label>
-										<input type="text" class="form-control" id="address" required="">
+										<input type="text" class="form-control" id="address" name="address" required="">
 										<div class="invalid-feedback">
 											Please enter your shipping address.
 										</div>
@@ -149,20 +146,19 @@
 									<div class="row">
 										<div class="col-md-5 mb-3">
 											<label for="country">Country</label>
-											<input type="text" class="form-control" id="address" required="">
+											<input type="text" class="form-control" id="country" name="country" required="">
 										</div>
 										<div class="col-md-4 mb-3">
 											<label for="state">State</label>
-											<input type="text" class="form-control" id="address" required="">
+											<input type="text" class="form-control" id="state" name="state" required="">
 										</div>
 										<div class="col-md-3 mb-3">
-											<label for="zip">Zip</label>
-											<input type="text" class="form-control" id="zip" placeholder="" required="">
-
+											<label for="zip_code">Zip</label>
+											<input type="text" class="form-control" id="zip_code" name="zip_code" placeholder="" required="">
 										</div>
 									</div>
 									<hr class="mb-4">
-									<input type="submit" class="btn btn-primary btn-lg btn-block" value="Continue to checkout">
+									<input type="submit" class="btn btn-primary btn-lg btn-block" value="Add Member">
 								</form>
 							</div>
 						</div>
