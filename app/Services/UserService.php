@@ -18,15 +18,19 @@ class UserService
     public function createUserAccount(array $enteredUserData, $gymId)
     {
         $fieldsToUpdate = [
+            'employee_id',
             'gym_id',
-            'first_name',
-            'last_name',
-            'email',
+            'firstname',
+            'lastname',
             'gender',
-            'phone_no',
-            'username',
-            'password',
-            'image',
+            'member_number',
+            'subscription_id',
+            'blood_group',
+            'joining_date',
+            'address',
+            'country',
+            'state',
+            'zip_code'
         ];
 
         $userData = [];
@@ -39,11 +43,11 @@ class UserService
         }
 
         $user = $this->user->updateOrCreate(
-            ['username' => $enteredUserData['username']],
+            ['email' => $enteredUserData['email']],
             $userData
         );
 
-        if ($userData["image"]) {
+        if (isset($userData["image"])) {
             $this->uploadAdminProfilePicture($user, $enteredUserData["image"]);
         }
 

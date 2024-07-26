@@ -12,7 +12,7 @@ use Throwable;
 class User extends Authenticatable
 {
     use SoftDeletes;
-
+    protected $table = 'gym_users';
     protected $fillable = [
         'employee_id',
         'gym_id',
