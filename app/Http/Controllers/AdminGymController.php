@@ -25,7 +25,7 @@ class AdminGymController extends Controller
 
     public function viewGymInfo()
     {
-        return view('admin.gym.addGymInfo');
+        return view('admin.add-gym');
     }
 
     public function viewGymList()
