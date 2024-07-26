@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AdminSubscription;
+use App\Models\AdminSubscriptionPlan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +13,7 @@ class AdminSubscriptionController extends Controller
 
     private $adminSubscription;
     public function __construct(
-        AdminSubscription $adminSubscription
+        AdminSubscriptionPlan $adminSubscription
     ) {
         $this->adminSubscription = $adminSubscription;
     }
@@ -21,67 +21,65 @@ class AdminSubscriptionController extends Controller
     public function viewAddAdminSubscription()
     {
         $adminSubscriptions = $this->adminSubscription->all();
-        return view('admin.subscription.addSubscription', compact('adminSubscriptions'));
+        return view('admin.admin-subscription', compact('adminSubscriptions'));
     }
 
     public function addAdminSubscription(Request $request)
     {
         try {
-            Validator::make($request->all(), []);
-            $data = $request->all();
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $subscriptionImage = $request->file('image');
-                $filename = time() . '_' . $subscriptionImage->getClientOriginalName();
-                $imagePath = 'adminSubscription_images/' . $filename;
-                $subscriptionImage->move(public_path('adminSubscription_images/'), $filename);
-            }
-            $this->adminSubscription->addAdminSubscription($data, $imagePath);
-            return back()->with('status', 'success')->with('message', 'Subscription Added Succesfully');
-        } catch (\Exception $e) {
-            Log::error('[AdminSubscriptionController][addAdminSubscription]Error adding : ' . 'Request=' . $e->getMessage());
-            return back()->with('status', 'error')->with('message', 'Subscription Not Added ');
+
+            $validatedData = $request->validate([
+                'name' => 'required',
+                'price' => 'required',
+                'validity' => 'required',
+                'description' => 'required',
+                'start_date' => 'required'
+            ]);
+
+            $this->adminSubscription->createSubscription($validatedData);
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Data saved successfully.');
+        } catch (Throwable $th) {
+            // dd($th);
+            Log::error("[AdminSubscriptionController][addAdminSubscription] error " . $th->getMessage());
+            return redirect()->back()->with('error', $th->getMessage());
         }
-    }
-
-    public function viewEditAdminSubscription(Request $request, $uuid)
-    {
-        $adminSubscription = $this->adminSubscription->where('uuid', $uuid)->first();
-
-        return view('admin.subscription.editSubcription', compact('adminSubscription'));
     }
 
     public function updateAdminSubscription(Request $request)
     {
         try {
             $validatedData = $request->validate([
-                "uuid" => 'required',
-                "subscription_name" => 'required',
-                "validity" => 'required',
-                "start_date" => 'required',
-                "amount" => 'required',
-                "plan_id" => 'required',
-                "description" => 'required'
+                "uuid"  => 'required',
+                'name' => 'required',
+                'price' => 'required',
+                'validity' => 'required',
+                'description' => 'required',
+                'start_date' => 'required'
             ]);
 
-            $uuid=$request->uuid;
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $subscriptionImage = $request->file('image');
-                $filename = time() . '_' . $subscriptionImage->getClientOriginalName();
-                $imagePath = 'adminSubscription_images/' . $filename;
-                $subscriptionImage->move(public_path('adminSubscription_images/'), $filename);
-            } 
-            $updatedSubscription = $this->adminSubscription->updateAdminSubscription($validatedData, $imagePath, $uuid);
-            if ($updatedSubscription) {
-                return redirect()->route('viewAddAdminSubscription')->with("status", "success")->with("message", "Subscription Upated Succesfully");
+            $uuid = $request->uuid;
+            $updateSub = $this->adminSubscription->updateAdminSubscription($validatedData, $uuid);
+
+            if ($updateSub) {
+                return redirect()->back()->with("status", "success")->with("message", "User UpDated Succesfully");
             } else {
+
                 return redirect()->back()->with('error', 'error while updating profile');
             }
-        } catch (Throwable $th) {
-
-            Log::error("[AdminSubscriptionController][updateAdminSubscription] error " . $th->getMessage());
-            return redirect()->back()->with('error', $th->getMessage());
+        } catch (\Exception $th) {
+            Log::error("[AdminUserController][updateUser] error " . $th->getMessage());
+            // return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->with('error', 'error while updating profile');
         }
     }
+
+    public function deleteSubscription($uuid)
+    {
+        $plan = $this->adminSubscription->where('uuid', $uuid)->firstOrFail();
+        $plan->delete();
+        // return redirect()->back()->with('success', 'User deleted successfully!');
+        return redirect()->back()->with("status", "success")->with("message", "Subscription deleted successfully!");
+    }
+
 }
