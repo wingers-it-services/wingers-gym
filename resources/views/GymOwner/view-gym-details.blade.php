@@ -60,7 +60,7 @@
                                                                 <div>
                                                                     @if (isset($userDetail->image))
                                                                         <img id="selected_image"
-                                                                            src="{{ asset($userDetail->image) }}"
+                                                                           src="{{ '../' . $userDetail->image ?? 'https://www.w3schools.com/howto/img_avatar.png' }} "
                                                                             style="border-radius: 50%;width: 200px;height:200px">
                                                                     @else
                                                                         <img id="selected_image"
@@ -190,28 +190,28 @@
                                                                     <select class="me-sm-2 form-control default-select"
                                                                         id="blood_group" name="blood_group">
                                                                         <option
-                                                                            {{ $userDetail->gender == 'A+' ? 'selected' : '' }}
+                                                                            {{ $userDetail->blood_group == 'A+' ? 'selected' : '' }}
                                                                             value="A+">A+</option>
                                                                         <option
-                                                                            {{ $userDetail->gender == 'A-' ? 'selected' : '' }}
+                                                                            {{ $userDetail->blood_group == 'A-' ? 'selected' : '' }}
                                                                             value="A-">A-</option>
                                                                         <option
-                                                                            {{ $userDetail->gender == 'B+' ? 'selected' : '' }}
+                                                                            {{ $userDetail->blood_group == 'B+' ? 'selected' : '' }}
                                                                             value="B+">B+</option>
                                                                         <option
-                                                                            {{ $userDetail->gender == 'B-' ? 'selected' : '' }}
+                                                                            {{ $userDetail->blood_group == 'B-' ? 'selected' : '' }}
                                                                             value="B-">B-</option>
                                                                         <option
-                                                                            {{ $userDetail->gender == 'AB+' ? 'selected' : '' }}
+                                                                            {{ $userDetail->blood_group == 'AB+' ? 'selected' : '' }}
                                                                             value="AB+">AB+</option>
                                                                         <option
-                                                                            {{ $userDetail->gender == 'AB-' ? 'selected' : '' }}
+                                                                            {{ $userDetail->blood_group == 'AB-' ? 'selected' : '' }}
                                                                             value="AB-">AB-</option>
                                                                         <option
-                                                                            {{ $userDetail->gender == 'O+' ? 'selected' : '' }}
+                                                                            {{ $userDetail->blood_group == 'O+' ? 'selected' : '' }}
                                                                             value="O+">O+</option>
                                                                         <option
-                                                                            {{ $userDetail->gender == 'O-' ? 'selected' : '' }}
+                                                                            {{ $userDetail->blood_group == 'O-' ? 'selected' : '' }}
                                                                             value="O-">O-</option>
                                                                     </select>
                                                                 </div>
