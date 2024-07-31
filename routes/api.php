@@ -17,3 +17,5 @@ Route::get('/fetch-country-list', [LocationControllerApi::class, 'fetchCountryLi
 Route::post('/fetch-state-list', [LocationControllerApi::class, 'fetchStateList']);
 
 Route::post('/fetch-city-list', [LocationControllerApi::class, 'fetchCityList']);
+
+Route::post('/gyms-by-city', [LocationControllerApi::class, 'fetchGymsByCity']);

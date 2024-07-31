@@ -13,7 +13,7 @@ class UserLebel extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'goal'
+        'level'
     ];
 
     protected static function boot()

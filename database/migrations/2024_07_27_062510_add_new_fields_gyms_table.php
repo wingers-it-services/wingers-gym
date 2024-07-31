@@ -15,9 +15,9 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('username')->nullable();
             $table->string('address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('country')->nullable();
+            $table->string('city_id')->nullable();
+            $table->string('state_id')->nullable();
+            $table->string('country_id')->nullable();
             $table->string('web_link')->nullable();
             $table->string('gym_type')->nullable();
             $table->string('face_link')->nullable();
