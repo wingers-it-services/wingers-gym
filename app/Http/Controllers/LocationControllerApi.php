@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
+use App\Models\Gym;
 use App\Traits\errorResponseTrait;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -17,15 +18,18 @@ class LocationControllerApi extends Controller
     protected $country;
     protected $state;
     protected $city;
+    protected $gym;
 
     public function __construct(
         Country $country,
         State $state,
-        City $city
+        City $city,
+        Gym $gym
     ) {
         $this->country = $country;
         $this->state = $state;
         $this->city = $city;
+        $this->gym = $gym;
     }
 
     public function fetchCountryList()
@@ -63,6 +67,23 @@ class LocationControllerApi extends Controller
               Log::error("[LocationControllerApi][fetchCityList] Error fetching city: " . $e->getMessage());
             return $this->errorResponse('Error while fetching city', $e->getMessage(), 500);
        
+        }
+    }
+
+
+    public function fetchGymsByCity(Request $request)
+    {
+        try {
+            $request->validate([
+                'cityId' => 'required|exists:cities,id', // Ensure cityId exists in the cities table
+            ]);
+
+            $cityId = $request->input('cityId');
+            $gyms = $this->gym->where('id', $cityId)->get();
+            return response()->json($gyms);
+        } catch (Throwable $e) {
+            Log::error("[LocationControllerApi][fetchGymsByCity] Error fetching gyms: " . $e->getMessage());
+            return $this->errorResponse('Error while fetching gyms', $e->getMessage(), 500);
         }
     }
 }
