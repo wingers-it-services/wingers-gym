@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Gym;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
 
 class GymService
 {
@@ -25,17 +26,16 @@ class GymService
             'gym_name',
             'email',
             'password',
-            'address',
-            'country',
             'image',
-            'state',
+            'username',
+            'address',
             'city',
+            'state',
+            'country',
             'web_link',
             'gym_type',
-            'subscription_id',
-            'terms_and_conditions',
-            'facebook',
-            'instagram'
+            'face_link',
+            'insta_link'
         ];
 
         $gymData = [];
@@ -62,14 +62,28 @@ class GymService
      */
     public function uploadAdminProfilePicture(Gym $gym, UploadedFile $image): Gym
     {
-        if ($image) {
-            $filename = time() . '_' . $image->getClientOriginalName();
-            $imagePath = 'gymProfile_images/' . $filename;
-            $image->move(public_path('gymProfile_images/'), $filename);
-
-            $gym->image = $$imagePath;
-            $gym->save();
+        if ($gym->image) {
+            $oldImagePath = public_path($gym->image);
+            if (File::exists($oldImagePath)) {
+                // Delete the old image
+                if (!File::delete($oldImagePath)) {
+                    // Log an error message if the deletion fails
+                    \Log::error("Failed to delete old image: $oldImagePath");
+                }
+            } else {
+                // Log an error message if the file does not exist
+                \Log::error("Old image does not exist: $oldImagePath");
+            }
         }
+
+        // Save the new image
+        $filename = time() . '_' . $image->getClientOriginalName();
+        $imagePath = 'gymProfile_images/' . $filename;
+        $image->move(public_path('gymProfile_images/'), $filename);
+
+        $gym->image = $imagePath;
+        $gym->save();
+
         return $gym;
     }
 }

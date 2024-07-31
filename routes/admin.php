@@ -33,14 +33,6 @@ Route::get('/add-advertisment', function () {
     return view('admin.add-advertisment');
 });
 
-// Route::get('/add-gym', function () {
-//     return view('admin.add-gym');
-// });
-
-Route::get('/admin-gym-list', function () {
-    return view('admin.admin-gym-list');
-});
-
 Route::get('/admin-user', function () {
     return view('admin.admin-user');
 });
@@ -135,17 +127,17 @@ Route::get('/admin-add-product', [AdminProductController::class, 'viewAddProduct
 Route::post('/add-product', [AdminProductController::class, 'addProductByAdmin'])->name('add-product');
 Route::get('/admin-product-list', [AdminProductController::class, 'listProduct']);
 
-Route::get('/add-gym', [AdminGymController::class, 'viewGymInfo']);
+
 
 Route::get('/adminDashboard', [AdminController::class, 'adminDashboard']);
 
-Route::get('/viewGymList', [AdminGymController::class, 'viewGymList'])->name('viewGymList');
+Route::get('/admin-gym-list', [AdminGymController::class, 'viewGymList'])->name('admin-gym-list');
 
-
+Route::get('/add-gym', [AdminGymController::class, 'viewGymInfo']);
 Route::post('/addGymByAdmin', [AdminGymController::class, 'addGymDetailsByAdmin'])->name('addGymByAdmin');
-Route::get('/viewEditGym/{uuid}', [AdminGymController::class, 'viewEditGym'])->name('viewEditGym');
+Route::get('/update-gym/{uuid}', [AdminGymController::class, 'viewEditGym'])->name('update-gym');
 Route::post('/updateAdminGym', [AdminGymController::class,'updateAdminGym'])->name('updateAdminGym');
-Route::delete('/deleteGym/{uuid}', [AdminGymController::class, 'deleteGym'])->name('deleteGym');
+Route::get('/deleteGym/{uuid}', [AdminGymController::class, 'deleteGym'])->name('deleteGym');
 // Route::post('/addTermsAndConditions', [AdminGymController::class, 'addTermsAndConditions'])->name('addTAndC');
 // Route::post('/addGymSocialLink', [AdminGymController::class, 'addGymSocialLink'])->name('addGymSocialLink');
 

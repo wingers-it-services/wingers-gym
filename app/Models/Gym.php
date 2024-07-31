@@ -19,6 +19,16 @@ class Gym extends Authenticatable
         'gym_name',
         'email',
         'password',
+        'image',
+        'username',
+        'address',
+        'city',
+        'state',
+        'country',
+        'web_link',
+        'gym_type',
+        'face_link',
+        'insta_link'
 
     ];
 
@@ -68,29 +78,6 @@ class Gym extends Authenticatable
         }
 
     }
-    // public function addTandC(array $tAndC)
-    // {
-    //     try {
-    //         return $this->create([
-    //             'terms_and_conditions'   => $tAndC['terms_and_conditions'],
-    //         ]);
-    //     } catch (\Throwable $e) {
-    //         Log::error('[Gym][addTandC] Error adding gym terms and conditions: ' . $e->getMessage());
-    //     }
-    // }
-
-    // public function addSocialLink(array $social)
-    // {
-    //     try {
-    //         return $this->create([
-    //             'facebook'   => $social['facebook'],
-    //             'instagram'  => $social['instagram'],
-    //         ]);
-    //     } catch (\Throwable $e) {
-    //         Log::error('[Gym][addSocialLink] Error adding social links: ' . $e->getMessage());
-    //     }
-    // }
-
 
 
 

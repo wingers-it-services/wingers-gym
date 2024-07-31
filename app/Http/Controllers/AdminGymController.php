@@ -31,18 +31,32 @@ class AdminGymController extends Controller
     public function viewGymList()
     {
         $gymLists = $this->gym->all();
-        return view('admin.gym.listGym', compact('gymLists'));
+        return view('admin.admin-gym-list', compact('gymLists'));
     }
 
     public function addGymDetailsByAdmin(Request $request)
     {
         try {
-            Validator::make($request->all(), []);
+            $request->validate([
+                'gym_name' => 'required',
+                'email' => 'required',
+                'password' => 'required',
+                'image' => 'nullable',
+                'username' => 'required',
+                'address' => 'required',
+                'city' => 'required',
+                'state' => 'required',
+                'country' => 'required',
+                'web_link' => 'nullable',
+                'gym_type' => 'required',
+                'face_link' => 'nullable',
+                'insta_link' => 'nullable',
+            ]);
             $this->gymService->createGymAccount($request->all());
 
             return back()->with('status', 'success')->with('message', 'Gym Added Succesfully');
         } catch (Exception $e) {
-            Log::error('[GymController][addGym]Error adding : ' . 'Request=' . $e->getMessage());
+            Log::error('[GymController][addGymDetailsByAdmin]Error adding : ' . 'Request=' . $e->getMessage());
             return back()->with('status', 'error')->with('message', $e->getMessage());
         }
     }
@@ -51,37 +65,37 @@ class AdminGymController extends Controller
     {
         $gymLists = $this->gym->where('uuid', $uuid)->first();
 
-        return view('admin.gym.editGymInfo', compact('gymLists'));
+        return view('admin.update-gym', compact('gymLists'));
     }
 
     public function updateAdminGym(Request $request)
     {
         try {
             $request->validate([
-                "username" => 'required',
-                "email" => 'required',
-                "password" => 'required',
-                "gym_name" => 'required',
-                "address" => 'required',
-                "city" => 'required',
-                "state" => 'required',
-                "country" => 'required',
-                "web_link" => 'required',
-                "gym_type" => 'required',
-                "terms_and_conditions" => 'nullable',
-                "facebook" => 'nullable',
-                "instagram" => 'nullable'
+                'gym_name' => 'required',
+                'email' => 'required',
+                'password' => 'required',
+                'image' => 'nullable',
+                'username' => 'required',
+                'address' => 'required',
+                'city' => 'required',
+                'state' => 'required',
+                'country' => 'required',
+                'web_link' => 'nullable',
+                'gym_type' => 'required',
+                'face_link' => 'nullable',
+                'insta_link' => 'nullable',
             ]);
 
 
             $isProfileUpdated = $this->gymService->createGymAccount($request->all());
             if ($isProfileUpdated) {
-                return redirect()->route('viewGymList')->with('status', 'success')->with('message', 'Gym profile updated succesfully.');
+                return redirect()->route('admin-gym-list')->with('status', 'success')->with('message', 'Gym profile updated succesfully.');
             }
-            return redirect()->route('viewGymList')->with('status', 'error')->with('message', 'error while updating gym.');
+            return redirect()->route('admin-gym-list')->with('status', 'error')->with('message', 'error while updating gym.');
         } catch (Exception $e) {
             Log::error('[AdminGymController][updateAdminGym] Error updating gym :' . $e->getMessage());
-            return redirect()->route('viewGymList')->with('status', 'error')->with('message', 'error while updating gym.');
+            return redirect()->route('admin-gym-list')->with('status', 'error')->with('message', 'error while updating gym.');
         }
     }
 
@@ -89,33 +103,6 @@ class AdminGymController extends Controller
     {
         $gyms = $this->gym->where('uuid', $uuid)->firstOrFail();
         $gyms->delete();
-        return redirect()->route('viewGymList')->with('success', 'Gym deleted successfully!');
+        return redirect()->back()->with('success', 'Gym deleted successfully!');
     }
-
-
-    // public function addTermsAndConditions(Request $request)
-    // {
-    //     try {
-    //         Validator::make($request->all(), []);
-    //         $data = $request->all();
-    //         $this->gym->addTandC($data);
-    //         return back()->with('status', 'success')->with('message', 'Gym terms and conditions added Succesfully');
-    //     } catch (\Exception $e) {
-    //         Log::error('[GymController][addTermsAndConditions]Error adding : ' . 'Request=' . $e->getMessage());
-    //         return back()->with('status', 'error')->with('message', 'T&C Not Added ');
-    //     }
-    // }
-
-    // public function addGymSocialLink(Request $request)
-    // {
-    //     try {
-    //         Validator::make($request->all(), []);
-    //         $data = $request->all();
-    //         $this->gym->addSocialLink($data);
-    //         return back()->with('status', 'success')->with('message', 'Gym terms and conditions added Succesfully');
-    //     } catch (\Exception $e) {
-    //         Log::error('[GymController][addGymSocialLink]Error adding : ' . 'Request=' . $e->getMessage());
-    //         return back()->with('status', 'error')->with('message', 'T&C Not Added ');
-    //     }
-    // }
 }
