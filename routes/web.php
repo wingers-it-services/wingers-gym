@@ -96,10 +96,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     /* createGymSubscriptionPlan */
     Route::post('/gym-subscription', [GymSubscriptionController::class, 'createGymSubscriptionPlan']);
-
-    Route::get('/updateSubscriptionView', [GymSubscriptionController::class, 'viewGymSubscription'])->name('updateSubscriiptionView');
-    Route::post('/updateSubscriiption', [GymSubscriptionController::class, 'updateGymSubscriptionPlan'])->name('updateSubscriiption');
-    Route::delete('/deleteGymSubscription/{uuid}', [GymSubscriptionController::class, 'deleteGymSubscription'])->name('deleteGymSubscription');
+    Route::post('/update-gym-subscription', [GymSubscriptionController::class, 'updateGymSubscription'])->name('update-gym-subscription');
+    Route::get('/delete-subscription/{uuid}', [GymSubscriptionController::class, 'deleteSubscription'])->name('deleteSubscription');
 
 
 
@@ -119,13 +117,13 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     Route::get('/editStaff/{uuid}', [GymStaffController::class, 'showUpdateStaff'])->name('showUpdateStaff');
     Route::post('/updateStaff', [GymStaffController::class, 'updateStaff'])->name('updateStaff');
-    Route::delete('/deleteGymStaff/{uuid}', [GymStaffController::class, 'deleteGymStaff'])->name('deleteGymStaff');
+    Route::get('/deleteGymStaff/{uuid}', [GymStaffController::class, 'deleteGymStaff'])->name('deleteGymStaff');
 
     /* addUserByGym */
     Route::get('/add-gym-user', [GymUserController::class, 'addGymUser'])->name('addGymUser');
 
     /* addUserByGym */
-    Route::post('/add-user-by-gym', [GymUserController::class, 'addUserByGym'])->name('addUserByGym');
+    Route::post('/add-user-by-gym', [GymUserController::class, 'addUserByGym'])->name('add-user-by-gym');
 
     /* listGymUser */
     // Route::get('/gym-user-list', [GymUserController::class, 'listGymUser'])->name('listGymUser');

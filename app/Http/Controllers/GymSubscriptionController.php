@@ -37,40 +37,6 @@ class GymSubscriptionController extends Controller
         return view('GymOwner.GymSubscription.editSubscription', compact('subscription'));
     }
 
-
-    public function updateGymSubscriptionPlan(Request $request)
-    {
-        try {
-            $validatedData = $request->validate([
-                "uuid" => 'required',
-                "subscription_name" => 'required',
-                "validity" => 'required',
-                "start_date" => 'required',
-                "amount" => 'required',
-                "description" => 'required'
-            ]);
-
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $subscriptionImage = $request->file('image');
-                $filename = time() . '_' . $subscriptionImage->getClientOriginalName();
-                $imagePath = 'gymSubscription_images/' . $filename;
-                $subscriptionImage->move(public_path('gymSubscription_images/'), $filename);
-            } else {
-                Log::error("[GymSubscriptionController][updateGymSubscriptionPlan] error imagefile is null");
-            }
-            $updatedSubscription = $this->gymSubscription->updateSubscription($validatedData, $imagePath, $request->uuid);
-            if ($updatedSubscription) {
-                return redirect()->route('updateSubscriptionView')->with("status", "success")->with("message", "Subscription upated succesfully");
-            } else {
-                return redirect()->back()->with('error', 'error while updating profile');
-            }
-        } catch (Throwable $th) {
-            Log::error("[GymSubscriptionController][updateGymSubscriptionPlan] error " . $th->getMessage());
-            return redirect()->back()->with('error', $th->getMessage());
-        }
-    }
-
     public function createGymSubscriptionPlan(Request $request)
     {
         try {
@@ -87,26 +53,46 @@ class GymSubscriptionController extends Controller
 
             $this->gymSubscription->createSubscription($validatedData, $gymId);
 
-            return redirect()->route('listSubscriptionPlan')->with('status', 'success')->with('message', 'Data saved successfully.');
+            return redirect()->route('listSubscriptionPlan')->with('status', 'success')->with('message', 'Subscription added Successfully');
         } catch (Throwable $th) {
-            // dd($th);
             Log::error("[GymSubscriptionController][createGymSubscriptionPlan] error " . $th->getMessage());
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
-    public function deleteGymSubscription($uuid)
+
+    public function updateGymSubscription(Request $request)
     {
         try {
-            $subscription = $this->gymSubscription->where('uuid', $uuid)->first();
-            if ($subscription) {
-                $subscription->delete();
-                return redirect()->route('listSubscriptionPlan')->with('status', 'success')->with('message', 'Subscription deleted successfully.');
+            $validatedData = $request->validate([
+                "uuid"  => 'required',
+                'subscription_name' => 'required',
+                'amount' => 'required',
+                'validity' => 'required',
+                'description' => 'required',
+                'start_date' => 'required'
+            ]);
+
+            $uuid = $request->uuid;
+            $updateSub = $this->gymSubscription->updateGymSubscription($validatedData, $uuid);
+
+            if ($updateSub) {
+                return redirect()->back()->with("status", "success")->with("message", "User Updated Succesfully");
             } else {
-                return redirect()->back()->with('error', 'Subscription not found.');
+
+                return redirect()->back()->with('error', 'error while updating profile');
             }
-        } catch (Throwable $th) {
-            Log::error("[GymSubscriptionController][deleteGymSubscription] error " . $th->getMessage());
-            return redirect()->back()->with('error', $th->getMessage());
+        } catch (\Exception $th) {
+            Log::error("[AdminUserController][updateUser] error " . $th->getMessage());
+            // return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->with('error', 'error while updating profile');
         }
+    }
+
+    public function deleteSubscription($uuid)
+    {
+        $plan = $this->gymSubscription->where('uuid', $uuid)->firstOrFail();
+
+        $plan->delete();
+        return redirect()->back()->with('status', 'success')->with('message', 'Suscription deleted successfully!');
     }
 }

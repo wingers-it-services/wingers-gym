@@ -30,7 +30,8 @@ class UserService
             'address',
             'country',
             'state',
-            'zip_code'
+            'zip_code',
+            'image'
         ];
 
         $userData = [];

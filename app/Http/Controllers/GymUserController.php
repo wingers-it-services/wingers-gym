@@ -93,7 +93,7 @@ class GymUserController extends Controller
                 'country'           => 'required',
                 'state'             => 'required',
                 'zip_code'          => 'required',
-                'image'             => 'nullable'
+                'image'             => 'required'
             ]);
 
             $gym_uuid = $this->getGymSession()['uuid'];
@@ -102,6 +102,7 @@ class GymUserController extends Controller
             $this->userService->createUserAccount($request->all(), $gymId);
             return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Succesfully');
         } catch (\Exception $e) {
+            dd($e);
             Log::error('[GymUserController][addUserByGym]Error adding : ' . $e->getMessage());
             return back()->with('status', 'error')->with('message', 'User Not Added ');
         }

@@ -83,7 +83,7 @@ class GymStaffController extends Controller
 
             $this->gymStaff->addGymStaff($request->all(), $gymId, $imagePath);
 
-            return redirect()->route('listGymStaff')->with('success', 'Data saved successfully.');
+            return redirect()->route('listGymStaff')->with('status', 'success')->with('message', 'Gym Staff saved successfully.');
         } catch (\Throwable $th) {
             Log::error("[GymStaffController][addGymStaff] error " . $th->getMessage());
             return redirect()->back()->with('error', $th->getMessage());
@@ -200,29 +200,40 @@ class GymStaffController extends Controller
         $designations = $this->designation->where('gym_id', $gymId)->get();
         return view('GymOwner.edit-gym-staff', compact('staffDetail', 'designations'));
     }
-
     public function updateStaff(Request $request)
     {
         try {
-
             $validatedData = $request->validate([
                 'uuid' => 'required',
-                'member_name' => 'required',
-                'member_designation' => 'required',
-                'salary' => 'required',
-                'image' => 'nullable'
+                "full_name" => 'required',
+                "email" => 'required',
+                "phone_number" => 'required',
+                "joining_date" => 'required',
+                "salary" => 'required',
+                "designation" => 'required',
+                "blood_group" => 'nullable',
+                "image" => 'nullable'
             ]);
-
-            $imagePath = null;
+    
+            $staff = $this->gymStaff->where('uuid', $request->uuid)->first();
+    
+            $imagePath = $staff->image; // Default to existing image path
+    
             if ($request->hasFile('image')) {
-                $gymImage = $request->file('image');
-                $filename = time() . '_' . $gymImage->getClientOriginalName();
+                if ($staff->image) {
+                    $existingImagePath = public_path($staff->image);
+                    if (file_exists($existingImagePath)) {
+                        unlink($existingImagePath);
+                    }
+                }
+                $imagefile = $request->file('image');
+                $filename = time() . '_' . $imagefile->getClientOriginalName();
                 $imagePath = 'gymStaff_images/' . $filename;
-                $gymImage->move(public_path('gymStaff_images/'), $filename);
+                $imagefile->move(public_path('gymStaff_images/'), $filename);
             }
-
+    
             $isStaffUpdated = $this->gymStaff->updateStaff($validatedData, $imagePath);
-
+    
             if (!$isStaffUpdated) {
                 return redirect()->back()->with('status', 'error')->with('message', 'error while updating user.');
             }
@@ -232,11 +243,12 @@ class GymStaffController extends Controller
             return redirect()->back()->with('status', 'error')->with('message', 'error while updating user.');
         }
     }
+    
     public function deleteGymStaff($uuid)
     {
         $gymStaff = $this->gymStaff->where('uuid', $uuid)->firstOrFail();
         $gymStaff->delete();
-        return redirect()->back()->with('success', 'Staff deleted successfully!');
+        return redirect()->back()->with('status', 'success')->with('message', 'Staff deleted successfully!');
     }
 
     public function staffDetails()
