@@ -52,7 +52,6 @@ class GymStaff extends Model
 
     public function updateStaff(array $updateStaff, $imagePath)
     {
-
         $uuid = $updateStaff['uuid'];
         $staffDetail = GymStaff::where('uuid', $uuid)->first();
 
@@ -62,8 +61,14 @@ class GymStaff extends Model
         }
         try {
             $staffDetail->update([
-                'name' => $updateStaff['member_name'],
-                'designation_id' => $updateStaff['member_designation'],
+                'name' => $updateStaff['full_name'],
+                'blood_group' => $updateStaff['blood_group'],
+                'employee_id' => $updateStaff['staff_id'],
+                'email' => $updateStaff['email'],
+                'number' => $updateStaff['phone_number'],
+                'designation_id' => $updateStaff['designation'],
+                'joining_date' => $updateStaff['joining_date'],
+                'address' => $updateStaff['address'],
                 'salary' => $updateStaff['salary'],
             ]);
 

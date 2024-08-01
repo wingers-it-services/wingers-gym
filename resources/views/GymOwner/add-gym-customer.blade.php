@@ -17,29 +17,27 @@
 			<div class="col-xl-12">
 				<div class="card">
 					<div class="card-body">
-						<div class="row">
-							<div class="col-lg-4 order-lg-2 mb-4">
-								<h4 class="d-flex justify-content-between align-items-center mb-3">
-									<span class="text-black">Member Image</span>
-								</h4>
-								<ul class="list-group mb-3">
-									<li class="list-group-item d-flex justify-content-between lh-condensed">
-										<div>
-											<img id="selected_image" src="https://www.w3schools.com/howto/img_avatar.png" style="border-radius: 50%;width: 200px;height:200px">
-										</div>
-									</li>
+						<form class="needs-validation" novalidate="" action="/add-user-by-gym" method="POST" enctype="multipart/form-data">
+							@csrf
+							<div class="row">
+								<div class="col-lg-4 order-lg-2 mb-4">
+									<h4 class="d-flex justify-content-between align-items-center mb-3">
+										<span class="text-black">Member Image</span>
+									</h4>
+									<ul class="list-group mb-3">
+										<li class="list-group-item d-flex justify-content-between lh-condensed">
+											<div>
+												<img id="selected_image" src="https://www.w3schools.com/howto/img_avatar.png" style="border-radius: 50%;width: 200px;height:200px">
+											</div>
+										</li>
 
-								</ul>
+									</ul>
 
-								<form>
 									<div class="input-group">
 										<input class="form-control form-control-sm" id="image" name="image" onchange="loadFile(event)" accept="image/*" type="file">
 									</div>
-								</form>
-							</div>
-							<div class="col-lg-8 order-lg-1">
-								<form class="needs-validation" novalidate="" action="/add-user-by-gym" method="post">
-                                    @csrf
+								</div>
+								<div class="col-lg-8 order-lg-1">
 									<div class="row">
 										<div class="col-md-6 mb-3">
 											<label for="firstName">First Name</label>
@@ -159,19 +157,41 @@
 									</div>
 									<hr class="mb-4">
 									<input type="submit" class="btn btn-primary btn-lg btn-block" value="Add Member">
-								</form>
-							</div>
-						</div>
+						</form>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+</div>
+</div>
 <!--**********************************
             Content body end
         ***********************************-->
 <script>
+	var loadFile = function(event) {
+		// var selected_image = document.getElementById('selected_image');
+
+		var input = event.target;
+		var image = document.getElementById('selected_image');
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				image.src = e.target.result;
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+
+		function validateForm() {
+			let x = document.forms["myForm"]["staff_id"].value;
+			if (x == "") {
+				alert("Name must be filled out");
+				return false;
+			}
+		}
+
+	};
 	(function() {
 		'use strict'
 

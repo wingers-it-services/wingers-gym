@@ -25,7 +25,7 @@ class GymSubscription extends Model
     ];
 
 
-    public function createSubscription(array $subscriptionArray,int $gymId)
+    public function createSubscription(array $subscriptionArray, int $gymId)
     {
         $this->create([
             'subscription_name' => $subscriptionArray['subscription_name'],
@@ -38,22 +38,28 @@ class GymSubscription extends Model
         ]);
     }
 
-    public function updateSubscription(array $updateSubscriptionArray, $imagePath, $uuid)
+    public function updateGymSubscription(array $validatedData, $uuid)
     {
-        try {
-            $subscription = $this->where('uuid', $uuid)->first();
-            $subscription->update($updateSubscriptionArray);
-            if (isset($imagePath)) {
-                $subscription->update([
-                    'image' => $imagePath
-                ]);
-            }
-            return true;
-        } catch (Throwable $th) {
-            Log::error('[GymSubscription] [updateSubscription] Error updating Subscription: ' . $th->getMessage());
-           return false;
+        $subcriptionDetail = GymSubscription::where('uuid', $uuid)->first();
+        if (!$subcriptionDetail) {
+            return redirect()->back()->with('error', 'suscription not found');
         }
+        try {
+            $updateData = [
+                "subscription_name"           => $validatedData['subscription_name'],
+                "amount"          => $validatedData['amount'],
+                "validity"          => $validatedData['validity'],
+                "description"         => $validatedData['description'],
+                "start_date"        => $validatedData['start_date']
+            ];
 
+
+            $subcriptionDetail->update($updateData);
+
+            return $subcriptionDetail->save();
+        } catch (Throwable $e) {
+            Log::error('[GymSubscription][updateGymSubscription] Error while updating user detail: ' . $e->getMessage());
+        }
     }
 
     protected static function boot()
@@ -63,6 +69,4 @@ class GymSubscription extends Model
             $model->uuid = Uuid::uuid4()->toString();
         });
     }
-
-
 }

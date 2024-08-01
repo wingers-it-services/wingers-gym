@@ -257,15 +257,6 @@
 												</div>
 											</div>
 										</div>
-
-										<div class="row">
-											<div class="col-12">
-												<div class="skip-email text-center">
-													<p>Or if want skip this step entirely and setup it later</p>
-													<input type="submit" class="btn btn-primary mt-3" value="Submit" />
-												</div>
-											</div>
-										</div>
 									</div>
 								</div>
 							</form>
@@ -312,5 +303,5 @@
 
 	};
 </script>
-
+@include('CustomSweetAlert');
 @endsection

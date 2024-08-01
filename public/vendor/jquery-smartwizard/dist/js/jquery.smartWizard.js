@@ -267,21 +267,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         this.main.find('.sw-btn-next').on("click", function (e) {
           e.preventDefault();
-
           _this._showNext();
-        }); // Previous button event
+          _this._setButtons(_this._getStepIndex(_this.currentStepIdx + 1));
+      });
 
-        this.main.find('.sw-btn-prev').on("click", function (e) {
+      this.main.find('.sw-btn-prev').on("click", function (e) {
           e.preventDefault();
-
           _this._showPrevious();
-        }); // Keyboard navigation event
+          _this._setButtons(_this._getStepIndex(_this.currentStepIdx - 1));
+      });
 
         if (this.options.keyboardSettings.keyNavigation) {
           $(document).keyup(function (e) {
             _this._keyNav(e);
           });
-        } // Back/forward browser button event
+        }
 
 
         if (this.options.backButtonSupport) {
@@ -327,26 +327,30 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "_createToolbar",
       value: function _createToolbar(position) {
-        // Skip if the toolbar is already created
-        if (this.main.find('.toolbar-' + position).length > 0) {
-          return null;
-        }
+          // Skip if the toolbar is already created
+          if (this.main.find('.toolbar-' + position).length > 0) {
+              return null;
+          }
 
-        var toolbar = $('<div></div>').addClass('toolbar toolbar-' + position).attr('role', 'toolbar'); // Create the toolbar buttons
+          var toolbar = $('<div></div>').addClass('toolbar toolbar-' + position).attr('role', 'toolbar');
 
-        var btnNext = this.options.toolbarSettings.showNextButton !== false ? $('<button></button>').text(this.options.lang.next).addClass('btn btn-primary   sw-btn-next').attr('type', 'button') : null;
-        var btnPrevious = this.options.toolbarSettings.showPreviousButton !== false ? $('<button></button>').text(this.options.lang.previous).addClass('btn btn-primary sw-btn-prev').attr('type', 'button') : null;
-        toolbar.append(btnPrevious, btnNext); // Add extra toolbar buttons
+          // Create the toolbar buttons
+          var btnNext = this.options.toolbarSettings.showNextButton !== false ? $('<button></button>').text(this.options.lang.next).addClass('btn btn-primary sw-btn-next').attr('type', 'button') : null;
+          var btnPrevious = this.options.toolbarSettings.showPreviousButton !== false ? $('<button></button>').text(this.options.lang.previous).addClass('btn btn-primary sw-btn-prev').attr('type', 'button') : null;
+          var btnSubmit = $('<button></button>').text(this.options.lang.submit || 'Submit').addClass('btn btn-primary sw-btn-sub').attr('type', 'submit').hide();
 
-        if (this.options.toolbarSettings.toolbarExtraButtons && this.options.toolbarSettings.toolbarExtraButtons.length > 0) {
-          $.each(this.options.toolbarSettings.toolbarExtraButtons, function (_i, n) {
-            toolbar.append(n.clone(true));
-          });
-        }
+          toolbar.append(btnPrevious, btnNext, btnSubmit);
 
-        toolbar.css('text-align', this.options.toolbarSettings.toolbarButtonPosition);
-        return toolbar;
-      }
+          // Add extra toolbar buttons if any
+          if (this.options.toolbarSettings.toolbarExtraButtons && this.options.toolbarSettings.toolbarExtraButtons.length > 0) {
+              $.each(this.options.toolbarSettings.toolbarExtraButtons, function (_i, n) {
+                  toolbar.append(n.clone(true));
+              });
+          }
+
+          toolbar.css('text-align', this.options.toolbarSettings.toolbarButtonPosition);
+          return toolbar;
+      },
     }, {
       key: "_showNext",
       value: function _showNext() {
@@ -787,33 +791,36 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "_setButtons",
       value: function _setButtons(idx) {
-        // Previous/Next Button enable/disable based on step
-        if (!this.options.cycleSteps) {
-          this.main.find('.sw-btn-prev').removeClass("disabled");
-          this.main.find('.sw-btn-next').removeClass("disabled");
+          if (!this.options.cycleSteps) {
+              this.main.find('.sw-btn-prev').removeClass("disabled");
+              this.main.find('.sw-btn-next').removeClass("disabled");
+              this.main.find('.sw-btn-sub').hide();
 
-          switch (this._getStepPosition(idx)) {
-            case 'first':
-              this.main.find('.sw-btn-prev').addClass("disabled");
-              break;
+              switch (this._getStepPosition(idx)) {
+                  case 'first':
+                      this.main.find('.sw-btn-prev').addClass("disabled");
+                      break;
 
-            case 'last':
-              this.main.find('.sw-btn-next').addClass("disabled");
-              break;
+                  case 'last':
+                      this.main.find('.sw-btn-next').hide();
+                      this.main.find('.sw-btn-sub').show();
+                      break;
 
-            default:
-              if (this._getNextShowable(idx) === false) {
-                this.main.find('.sw-btn-next').addClass("disabled");
+                  default:
+                      if (this._getNextShowable(idx) === false) {
+                          this.main.find('.sw-btn-next').addClass("disabled");
+                      }
+
+                      if (this._getPreviousShowable(idx) === false) {
+                          this.main.find('.sw-btn-prev').addClass("disabled");
+                      }
+
+                      this.main.find('.sw-btn-sub').hide();
+                      this.main.find('.sw-btn-next').show();
+                      break;
               }
-
-              if (this._getPreviousShowable(idx) === false) {
-                this.main.find('.sw-btn-prev').addClass("disabled");
-              }
-
-              break;
           }
-        }
-      }
+      },
     }, {
       key: "_getStepIndex",
       value: function _getStepIndex() {
