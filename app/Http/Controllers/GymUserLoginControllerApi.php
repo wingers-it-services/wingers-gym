@@ -29,11 +29,11 @@ class GymUserLoginControllerApi extends Controller
             // Determine if the input is an email or a phone number
             if (filter_var($credentials['email_or_phone'], FILTER_VALIDATE_EMAIL)) {
                 // Input is an email
-                $user = User::where('email', $credentials['email_or_phone'])->first();
+                $user = $this->user->where('email', $credentials['email_or_phone'])->first();
                 $inputType = 'email';
             } else {
                 // Input is a phone number
-                $user = User::where('phone_no', $credentials['email_or_phone'])->first();
+                $user = $this->user->where('phone_no', $credentials['email_or_phone'])->first();
                 $inputType = 'phone number';
             }
     

@@ -22,16 +22,16 @@ class UserInjuryControllerApi extends Controller
 
             if ($injuries->isEmpty()) {
                 return response()->json([
-                    'status'      => 200,
-                    'injuries'        => $injuries,
-                    'message'     => 'There is no injury type'
+                    'status'    => 200,
+                    'injuries'  => $injuries,
+                    'message'   => 'There is no injury type'
                 ], 200);
             }
 
             return response()->json([
-                'status'      => 200,
-                'injuries'    => $injuries,
-                'message'     => 'User injury type Fetch Successfully'
+                'status'   => 200,
+                'injuries' => $injuries,
+                'message'  => 'User injury type Fetch Successfully'
             ], 200);
         } catch (\Exception $e) {
             Log::error('[UserInjuryControllerApi][fetchUserInjury]Error fetching injury type details: ' . $e->getMessage());

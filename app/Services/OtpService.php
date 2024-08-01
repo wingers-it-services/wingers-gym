@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\OtpMail;
 use App\Models\MobileAndEmailOtp;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -71,7 +72,7 @@ class OtpService
             $this->mobileAndEmailOtp->updateOrCreate([
                 'email' => $email
             ], [
-                'otp' => $otp
+                'otp'   => $otp
             ]);
 
             return [
@@ -82,10 +83,10 @@ class OtpService
             ];
         } catch (\Throwable $e) {
             Log::error("[OtpControllerApi][sendOtptoEmail]Error sending email verification otp:" . $e->getMessage());
-            return[
-                'status'     => 500,
-                'message'    => 'Error sending OTP',
-                'errorMessage'      => $e->getMessage()
+            return [
+                'status'       => 500,
+                'message'      => 'Error sending OTP',
+                'errorMessage' => $e->getMessage()
             ];
         }
     }
@@ -103,9 +104,16 @@ class OtpService
             }
 
             if ($otpDetail->otp == $otp) {
+                // OTP is correct, update the user's is_mobile_verify field
+                $user = User::where('phone_no', $phone_no)->first();
+                if ($user) {
+                    $user->is_phone_no_verified = true;
+                    $user->save();
+                }
+
                 return [
                     'status'       => 200,
-                    'message'      => 'OTP verified succesfully',
+                    'message'      => 'OTP verified successfully',
                     'phone_no'     => $phone_no
                 ];
             } else {
@@ -115,16 +123,16 @@ class OtpService
                     'errorMessage' => "Provided OTP {$otp} is incorrect."
                 ];
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Log::error("[OtpService][verifyMobileOtp] Error verifying otp: " . $e->getMessage());
             return [
-                'status'       =>500,
+                'status'       => 500,
                 'message'      => 'Error while verifying otp',
                 'errorMessage' => $e->getMessage(),
             ];
         }
     }
-    
+
     public function verifyEmailOtp($email, $otp)
     {
         try {
@@ -138,10 +146,15 @@ class OtpService
             }
 
             if ($otpDetail->otp == $otp) {
+                $user = User::where('email', $email)->first();
+                if ($user) {
+                    $user->is_email_verified = true;
+                    $user->save();
+                }
                 return [
-                    'status'       => 200,
-                    'message'      => 'OTP verified succesfully',
-                    'email'     => $email
+                    'status'  => 200,
+                    'message' => 'OTP verified succesfully',
+                    'email'   => $email
                 ];
             } else {
                 return [
@@ -153,7 +166,7 @@ class OtpService
         } catch (Exception $e) {
             Log::error("[OtpService][verifyEmailOtp] Error verifying otp: " . $e->getMessage());
             return [
-                'status'       =>500,
+                'status'       => 500,
                 'message'      => 'Error while verifying otp',
                 'errorMessage' => $e->getMessage(),
             ];

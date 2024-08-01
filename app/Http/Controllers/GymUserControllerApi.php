@@ -19,7 +19,6 @@ class GymUserControllerApi extends Controller
         $this->otpService = $otpService;
     }
 
-
     public function sendMobileOtp(Request $request)
     {
         try {
@@ -38,7 +37,7 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
-                'email' => 'required|email|unique:users,email',
+                'email' => 'required|email|unique:gym_users,email',
             ]);
             $result = $this->otpService->sendOtptoEmail($request->email);
             return response()->json($result, $result['status']);
