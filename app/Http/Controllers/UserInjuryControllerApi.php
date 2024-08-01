@@ -18,19 +18,19 @@ class UserInjuryControllerApi extends Controller
     public function fetchUserInjury(Request $request)
     {
         try {
-            $injury = $this->injury->get();
+            $injuries = $this->injury->get();
 
-            if ($injury->isEmpty()) {
+            if ($injuries->isEmpty()) {
                 return response()->json([
                     'status'      => 200,
-                    'injury'        => $injury,
+                    'injuries'        => $injuries,
                     'message'     => 'There is no injury type'
                 ], 200);
             }
 
             return response()->json([
                 'status'      => 200,
-                'injury'        => $injury,
+                'injuries'    => $injuries,
                 'message'     => 'User injury type Fetch Successfully'
             ], 200);
         } catch (\Exception $e) {

@@ -5,13 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
+use Laravel\Passport\HasApiTokens;
 use Ramsey\Uuid\Uuid;
 use Throwable;
 
 class User extends Authenticatable
 {
     use SoftDeletes;
+    use Notifiable, HasApiTokens;
     protected $table = 'gym_users';
     protected $fillable = [
         'employee_id',
@@ -28,7 +31,9 @@ class User extends Authenticatable
         'address',
         'country',
         'state',
-        'zip_code'
+        'zip_code',
+        'phone_no',
+        'password'
     ];
 
     protected static function boot()

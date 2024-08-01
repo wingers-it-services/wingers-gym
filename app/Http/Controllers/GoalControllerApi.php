@@ -18,19 +18,19 @@ class GoalControllerApi extends Controller
     public function fetchGoal(Request $request)
     {
         try {
-            $goal = $this->goal->get();
+            $goals = $this->goal->get();
 
-            if ($goal->isEmpty()) {
+            if ($goals->isEmpty()) {
                 return response()->json([
                     'status'      => 200,
-                    'goal'        => $goal,
+                    'goals'        => $goals,
                     'message'     => 'There is no goal'
                 ], 200);
             }
 
             return response()->json([
                 'status'      => 200,
-                'goal'        => $goal,
+                'goals'        => $goals,
                 'message'     => 'Goal Fetch Successfully'
             ], 200);
         } catch (\Exception $e) {

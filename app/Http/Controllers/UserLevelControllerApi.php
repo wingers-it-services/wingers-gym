@@ -18,19 +18,19 @@ class UserLevelControllerApi extends Controller
     public function fetchLevel(Request $request)
     {
         try {
-            $level = $this->level->get();
+            $levels = $this->level->get();
 
-            if ($level->isEmpty()) {
+            if ($levels->isEmpty()) {
                 return response()->json([
                     'status'      => 200,
-                    'level'        => $level,
+                    'levels'        => $levels,
                     'message'     => 'There is no level'
                 ], 200);
             }
 
             return response()->json([
                 'status'      => 200,
-                'level'        => $level,
+                'levels'      => $levels,
                 'message'     => 'User level Fetch Successfully'
             ], 200);
         } catch (\Exception $e) {
