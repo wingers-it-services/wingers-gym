@@ -79,7 +79,7 @@ class LocationControllerApi extends Controller
             ]);
 
             $cityId = $request->input('cityId');
-            $gyms = $this->gym->where('id', $cityId)->get();
+            $gyms = $this->gym->where('city_id', $cityId)->get();
             return response()->json($gyms);
         } catch (Throwable $e) {
             Log::error("[LocationControllerApi][fetchGymsByCity] Error fetching gyms: " . $e->getMessage());
