@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GoalControllerApi;
+use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\LocationControllerApi;
 use App\Http\Controllers\UserInjuryControllerApi;
 use App\Http\Controllers\UserLevelControllerApi;
@@ -19,3 +20,11 @@ Route::post('/fetch-state-list', [LocationControllerApi::class, 'fetchStateList'
 Route::post('/fetch-city-list', [LocationControllerApi::class, 'fetchCityList']);
 
 Route::post('/gyms-by-city', [LocationControllerApi::class, 'fetchGymsByCity']);
+
+Route::post('/send-mobile-otp', [GymUserControllerApi::class, 'sendMobileOtp']);
+
+Route::post('/send-email-otp', [GymUserControllerApi::class, 'sendEmailOtp']);
+
+Route::post('/verify-mobile-otp', [GymUserControllerApi::class, 'verifyMobileOtp']);
+
+Route::post('/verify-email-otp', [GymUserControllerApi::class, 'verifyEmailOtp']);
