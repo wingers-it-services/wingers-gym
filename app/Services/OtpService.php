@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Mail\OtpMail;
 use App\Models\MobileAndEmailOtp;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
