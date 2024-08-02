@@ -82,7 +82,7 @@ class GymUserController extends Controller
             $request->validate([
                 'firstname'         => 'required',
                 'lastname'          => 'required',
-                'email'             => 'required|email',
+                'email'             => 'required|unique:users,email',
                 'gender'            => 'required',
                 'member_number'     => 'required',
                 'employee_id'       => 'required',
@@ -102,7 +102,6 @@ class GymUserController extends Controller
             $this->userService->createUserAccount($request->all(), $gymId);
             return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Succesfully');
         } catch (\Exception $e) {
-            dd($e);
             Log::error('[GymUserController][addUserByGym]Error adding : ' . $e->getMessage());
             return back()->with('status', 'error')->with('message', 'User Not Added ');
         }
@@ -112,44 +111,45 @@ class GymUserController extends Controller
     public function showUserProfile($uuid)
     {
         $userDetail = $this->user->where('uuid', $uuid)->first();
-        // $workouts = $this->workout->all();
         // $diets = $this->diet->all();
 
         $gymId = $this->gym->where('uuid', $this->getGymSession()['uuid'])->first()->id;
         $userId = $userDetail->id;
         $designations = $this->designation->get();
+        $workouts = $this->workout->where('user_id',$userId)->get();
+        $diets = $this->diet->where('user_id',$userId)->get();
         $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
+
+        $subscriptionId = $userDetail->subscription_id;
+        $userSubscriptions = $this->gymSubscription->where('id', $subscriptionId)->get();
         // $bmis = $this->bmi->where('user_id', $userId)->get();
         // $trainers = $this->gymStaff->where('designation_id', "1")->get();
         // $trainers = $this->gymStaff->where('gym_id', $gymId)->where('designation_id', "1")->get();
         // return view('GymOwner.view-gym-details', compact('userDetail', 'workouts', 'diets', 'bmis', 'trainers'));
-        return view('GymOwner.view-gym-details', compact('userDetail',  'designations', 'gymSubscriptions'));
+        return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets'));
     }
 
     public function updateUser(Request $request)
     {
         try {
-            $validatedData = $request->validate([
-                'uuid' => 'required',
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'email' => 'required',
-                'gender' => 'required',
-                'phone_no' => 'required',
-                'username' => 'required',
-                'password' => 'required',
-                'image' => 'nullable'
+            $request->validate([
+                'email' => 'nullable',
+                'member_number'     => 'required',
+                'employee_id'       => 'required',
+                'subscription_id'   => 'required',
+                'blood_group'       => 'nullable',
+                'joining_date'      => 'required',
+                'address'           => 'required',
+                'country'           => 'required',
+                'state'             => 'required',
+                'zip_code'          => 'required',
+                'image'             => 'nullable'
             ]);
 
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $gymImage = $request->file('image');
-                $filename = time() . '_' . $gymImage->getClientOriginalName();
-                $imagePath = 'gymProfile_images/' . $filename;
-                $gymImage->move(public_path('gymProfile_images/'), $filename);
-            }
+            $gym_uuid = $this->getGymSession()['uuid'];
+            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
 
-            $isProfileUpdated = $this->user->updateUser($validatedData, $imagePath);
+            $isProfileUpdated = $this->userService->createUserAccount($request->all(), $gymId);
 
             if ($isProfileUpdated) {
                 return redirect()->route('listGymUser')->with('status', 'success')->with('message', 'User profile and workout data updated successfully.');
@@ -210,27 +210,17 @@ class GymUserController extends Controller
         try {
             // Validate the incoming request data
             $validatedData = $request->validate([
-                'workout_id' => 'required|exists:user_workouts,id',
-                'user_id' => 'required|exists:users,id',
-                'exercise_name' => 'required|string',
+                'user_id' => 'required',
+                'workout_id' => 'required',
+                'exercise_name' => 'required',
                 'sets' => 'required|integer|min:1',
                 'reps' => 'required|integer|min:1',
                 'weight' => 'required|numeric|min:0',
-                'notes' => 'nullable|string',
+                'notes' => 'required',
             ]);
-
-            // Find the workout by ID
-            $workout = $this->workout->findOrFail($validatedData['workout_id']);
-
-            // Update the workout attributes
-            $workout->exercise_name = $validatedData['exercise_name'];
-            $workout->sets = $validatedData['sets'];
-            $workout->reps = $validatedData['reps'];
-            $workout->weight = $validatedData['weight'];
-            $workout->notes = $validatedData['notes'];
-
-            // Save the changes
-            $workout->save();
+        
+            $workout = $this->workout->findOrFail($request->workout_id);
+            $workout->update($validatedData);
 
             // Redirect back with a success message
             return redirect()->back()->with('success', 'Workout updated successfully.');
@@ -244,9 +234,9 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'diet_id' => 'required|exists:user_diets,id',
-                'user_id' => 'required|exists:users,id',
-                'meal_name' => 'required|string',
+                'diet_id' => 'required',
+                'user_id' => 'required',
+                'meal_name' => 'required',
                 "calories" => 'required|integer|min:0',
                 "protein" => 'required|integer|min:0',
                 "carbs" => 'required|numeric|min:0',
@@ -255,16 +245,8 @@ class GymUserController extends Controller
             ]);
 
             // Find the workout by ID
-            $diet = $this->diet->findOrFail($validatedData['diet_id']);
-
-            $diet->meal_name = $validatedData['meal_name'];
-            $diet->calories = $validatedData['calories'];
-            $diet->protein = $validatedData['protein'];
-            $diet->carbs = $validatedData['carbs'];
-            $diet->fats = $validatedData['fats'];
-            $diet->notes = $validatedData['notes'];
-            // Save the changes
-            $diet->save();
+            $diet = $this->diet->findOrFail($request->diet_id);
+            $diet->update($validatedData);
 
             // Redirect back with a success message
             return redirect()->back()->with('success', 'Diet updated successfully.');
@@ -272,6 +254,22 @@ class GymUserController extends Controller
             Log::error("[GymUserController][updateUserDiet] error " . $th->getMessage());
             return redirect()->back()->with('error', 'Failed to update workout data. Please try again.');
         }
+    }
+
+    public function deleteWorkout($uuid)
+    {
+        $workout = $this->workout->where('uuid', $uuid)->firstOrFail();
+
+        $workout->delete();
+        return redirect()->back()->with('status', 'success')->with('message', 'Workout deleted successfully!');
+    }
+    
+    public function deleteDiet($uuid)
+    {
+        $diet = $this->diet->where('uuid', $uuid)->firstOrFail();
+
+        $diet->delete();
+        return redirect()->back()->with('status', 'success')->with('message', 'Diet deleted successfully!');
     }
 
     public function allocateTrainerToUser(Request $request)
