@@ -126,13 +126,13 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::post('/add-user-by-gym', [GymUserController::class, 'addUserByGym'])->name('add-user-by-gym');
 
     /* listGymUser */
-    // Route::get('/gym-user-list', [GymUserController::class, 'listGymUser'])->name('listGymUser');
     Route::post('/updateUser', [GymUserController::class, 'updateUser'])->name('updateUser');
-    Route::post('/addUserWorkout', [GymUserController::class, 'addUserWorkout'])->name('addUserWorkout');
-    Route::post('/updateUserWorkout', [GymUserController::class, 'updateUserWorkout'])->name('updateUserWorkout');
-    Route::post('/addUserDiet', [GymUserController::class, 'addUserDiet'])->name('addUserDiet');
-    Route::post('/updateUserDiet', [GymUserController::class, 'updateUserDiet'])->name('updateUserDiet');
-
+    Route::post('/add-user-workout', [GymUserController::class, 'addUserWorkout'])->name('add-user-workout');
+    Route::post('/update-user-workout', [GymUserController::class, 'updateUserWorkout'])->name('update-user-workout');
+    Route::post('/add-user-diet', [GymUserController::class, 'addUserDiet'])->name('add-user-diet');
+    Route::post('/update-user-diet', [GymUserController::class, 'updateUserDiet'])->name('update-user-diet');
+    Route::get('/delete-workout/{uuid}', [GymUserController::class, 'deleteWorkout'])->name('delete-workout');
+    Route::get('/delete-diet/{uuid}', [GymUserController::class, 'deleteDiet'])->name('delete-diet');
 
     Route::get('/gym-coupon', [GymCouponController::class, 'listGymCoupons'])->name('listGymCoupons');
     Route::post('/gym-coupon', [GymCouponController::class, 'addGymCoupon']);
