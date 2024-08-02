@@ -56,9 +56,11 @@ class OtpService
     {
         try {
 
-            $otp = strval(random_int(1000, 9999));
+            // $otp = strval(random_int(1000, 9999));
+            
+            $otp = 1234;
 
-            Mail::to($email)->send(new OtpMail($otp));
+            // Mail::to($email)->send(new OtpMail($otp));
 
 
             // $data = ['otp' => $otp];

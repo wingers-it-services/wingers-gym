@@ -52,6 +52,7 @@ class GymUserControllerApi extends Controller
         try {
             $request->validate([
                 'phone_no' => 'required',
+                'otp' => 'required|digits:4',
             ]);
             $result = $this->otpService->verifyMobileOtp($request->phone_no, $request->otp);
             return response()->json($result, $result['status']);
@@ -66,6 +67,7 @@ class GymUserControllerApi extends Controller
         try {
             $request->validate([
                 'email' => 'required',
+                'otp' => 'required|digits:4',
             ]);
             $result = $this->otpService->verifyEmailOtp($request->email, $request->otp);
             return response()->json($result, $result['status']);
