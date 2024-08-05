@@ -2,21 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Services\OtpService;
+use App\Services\UserService;
 use App\Traits\errorResponseTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class GymUserControllerApi extends Controller
 {
     use errorResponseTrait;
     protected $otpService;
+    protected $user;
+    protected $userService;
 
     public function __construct(
-        OtpService $otpService
+        OtpService $otpService,
+        User $user,
+        UserService $userService
     ) {
         $this->otpService = $otpService;
+        $this->user = $user;
+        $this->userService=$userService;
     }
 
     public function sendMobileOtp(Request $request)
@@ -74,6 +83,36 @@ class GymUserControllerApi extends Controller
         } catch (Exception $e) {
             Log::error("[GymUserControllerApi][verifyEmailOtp] Error verifying otp: " . $e->getMessage());
             return $this->errorResponse('Error while verifying otp', $e->getMessage(), 500);
+        }
+    }
+
+    public function registerGymUser(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'firstname' => 'required',
+                'lastname'  => 'required',
+                'gender'    => 'required',
+                'password'  => 'required',
+                'image'     => 'nullable'
+            ]);
+
+            $userDetail = $request->all();
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $this->userService->uploadUserProfileImage($request->file('image'));
+            }
+
+            $response = $this->user->completeUserProfile($userDetail, $imagePath);
+
+            return response()->json([
+                'status'  => $response['status'],
+                'message' => $response['message'],
+                'user'    => $response['user'] ?? null
+            ], $response['status']);
+        } catch (Throwable $e) {
+            Log::error("[GymUserControllerApi][registerGymUser] Error in registration otp: " . $e->getMessage());
+            return $this->errorResponse('Error while registering', $e->getMessage(), 500);
         }
     }
 }

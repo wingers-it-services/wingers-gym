@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\GymUserAccountStatusEnum;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -34,7 +35,8 @@ class User extends Authenticatable
         'phone_no',
         'password',
         'is_email_verified',
-        'is_phone_no_verified'
+        'is_phone_no_verified',
+        'profile_status'
     ];
 
     protected static function boot()
@@ -43,6 +45,11 @@ class User extends Authenticatable
         static::creating(function ($model) {
             $model->uuid = Uuid::uuid4()->toString();
         });
+    }
+
+    public function injuries()
+    {
+        return $this->belongsToMany(UserInjury::class, 'injury_user');
     }
 
     public function trainerDetails()
@@ -131,4 +138,61 @@ class User extends Authenticatable
             Log::error('[Gym][addTrainer] Error while alloting Trainer detail: ' . $e->getMessage());
         }
     }
+
+    public function completeUserProfile(array $userDetail, $imagePath)
+    {
+        // Check if the email or phone number is provided
+        if ((!isset($userDetail['email']) && !isset($userDetail['phone_no'])) || 
+        (isset($userDetail['email']) && isset($userDetail['phone_no']))) {
+       return [
+                'status'  => 422,
+                'message' => 'Email or phone number is required'
+            ];
+        }
+    
+        // Find the user by email or phone number
+        $userProfile = isset($userDetail['email']) 
+        ? User::where('email', $userDetail['email'])->first()
+        : User::where('phone_no', $userDetail['phone_no'])->first();
+
+    
+        // Check if the user exists
+        if (!$userProfile) {
+            return [
+                'status'  => 422,
+                'message' => 'User not found'
+            ];
+        }
+    
+        try {
+            $userProfile->update([
+                'firstname'      => $userDetail['firstname'],
+                'lastname'       => $userDetail['lastname'],
+                'email'          => $userDetail['email']?? null,
+                'gender'         => $userDetail['gender'],
+                'phone_no'       => $userDetail['phone_no']?? null,
+                'password'       => $userDetail['password'],
+                'profile_status' => GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED,
+            ]);
+    
+            if ($imagePath) {
+                $userProfile->update([
+                    'image' => $imagePath
+                ]);
+            }
+    
+            return [
+                'status'  => 200,
+                'message' => 'Profile updated successfully',
+                'user'    => $userProfile
+            ];
+        } catch (Throwable $e) {
+            Log::error('[User][completeUserProfile] Error while completing user detail: ' . $e->getMessage());
+            return [
+                'status'  => 500,
+                'message' => 'An error occurred while updating the profile'
+            ];
+        }
+    }
+    
 }

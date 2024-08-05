@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('zip_code');
             $table->boolean('is_email_verified')->default(0);
             $table->boolean('is_phone_no_verified')->default(0);
+            $table->integer('profile_status')->default(0);
 
             $table->softDeletes();
             $table->timestamps();

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\GymUserAccountStatusEnum;
 use App\Mail\OtpMail;
 use App\Models\MobileAndEmailOtp;
 use App\Models\User;
@@ -106,11 +107,17 @@ class OtpService
             }
 
             if ($otpDetail->otp == $otp) {
-                // OTP is correct, update the user's is_mobile_verify field
+                // OTP is correct, check if user exists
                 $user = User::where('phone_no', $phone_no)->first();
                 if ($user) {
                     $user->is_phone_no_verified = true;
                     $user->save();
+                } else {
+                    $user = User::create([
+                        'phone_no'             => $phone_no,
+                        'is_phone_no_verified' => true,
+                        'profile_status'       => GymUserAccountStatusEnum::MOBILE_NUMBER_VERIFIED
+                    ]);
                 }
 
                 return [

@@ -22,7 +22,7 @@ class UserLevelControllerApi extends Controller
 
             if ($levels->isEmpty()) {
                 return response()->json([
-                    'status'   => 200,
+                    'status'   => 422,
                     'levels'   => $levels,
                     'message'  => 'There is no level'
                 ], 200);
