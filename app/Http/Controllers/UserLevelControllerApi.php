@@ -22,16 +22,16 @@ class UserLevelControllerApi extends Controller
 
             if ($levels->isEmpty()) {
                 return response()->json([
-                    'status'      => 200,
-                    'levels'        => $levels,
-                    'message'     => 'There is no level'
+                    'status'   => 422,
+                    'levels'   => $levels,
+                    'message'  => 'There is no level'
                 ], 200);
             }
 
             return response()->json([
-                'status'      => 200,
-                'levels'      => $levels,
-                'message'     => 'User level Fetch Successfully'
+                'status'  => 200,
+                'levels'  => $levels,
+                'message' => 'User level Fetch Successfully'
             ], 200);
         } catch (\Exception $e) {
             Log::error('[UserLevelControllerApi][fetchLevel]Error fetching level details: ' . $e->getMessage());

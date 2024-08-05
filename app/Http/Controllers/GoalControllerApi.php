@@ -22,16 +22,16 @@ class GoalControllerApi extends Controller
 
             if ($goals->isEmpty()) {
                 return response()->json([
-                    'status'      => 200,
-                    'goals'        => $goals,
-                    'message'     => 'There is no goal'
+                    'status'   => 200,
+                    'goals'    => $goals,
+                    'message'  => 'There is no goal'
                 ], 200);
             }
 
             return response()->json([
-                'status'      => 200,
-                'goals'        => $goals,
-                'message'     => 'Goal Fetch Successfully'
+                'status'   => 200,
+                'goals'    => $goals,
+                'message'  => 'Goal Fetch Successfully'
             ], 200);
         } catch (\Exception $e) {
             Log::error('[GoalControllerApi][fetchGoal]Error fetching goals details: ' . $e->getMessage());

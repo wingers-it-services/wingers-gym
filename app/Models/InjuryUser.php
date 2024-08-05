@@ -4,18 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Ramsey\Uuid\Uuid;
 
-class UserInjury extends Model
+class InjuryUser extends Model
 {
     use HasFactory;
-    use HasFactory;
-    use SoftDeletes;
 
     protected $fillable = [
-        'injury_type',
-        'image'
+        'user_id',
+        'injury_id'
     ];
 
     protected static function boot()
@@ -24,10 +21,5 @@ class UserInjury extends Model
         static::creating(function ($model) {
             $model->uuid = Uuid::uuid4()->toString();
         });
-    }
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'injury_user');
     }
 }
