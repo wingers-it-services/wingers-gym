@@ -18,12 +18,10 @@ class UserService
     public function createUserAccount(array $enteredUserData, $gymId)
     {
         $fieldsToUpdate = [
-            'employee_id',
-            'gym_id',
             'firstname',
             'lastname',
+            'email',
             'gender',
-            'member_number',
             'subscription_id',
             'blood_group',
             'joining_date',
@@ -31,7 +29,13 @@ class UserService
             'country',
             'state',
             'zip_code',
-            'image'
+            'image',
+            'end_date',
+            'coupon_id',
+            'subscription_status',
+            'profile_status',
+            'staff_assign_id',
+            'gym_id'
         ];
 
         $userData = [];

@@ -38,7 +38,7 @@ class AdminSubscriptionController extends Controller
 
             $this->adminSubscription->createSubscription($validatedData);
 
-            return redirect()->back()->with('status', 'success')->with('message', 'Data saved successfully.');
+            return redirect()->back()->with('status', 'success')->with('message', 'Subscription Added successfully.');
         } catch (Throwable $th) {
             // dd($th);
             Log::error("[AdminSubscriptionController][addAdminSubscription] error " . $th->getMessage());
@@ -62,15 +62,14 @@ class AdminSubscriptionController extends Controller
             $updateSub = $this->adminSubscription->updateAdminSubscription($validatedData, $uuid);
 
             if ($updateSub) {
-                return redirect()->back()->with("status", "success")->with("message", "User UpDated Succesfully");
+                return redirect()->back()->with("status", "success")->with("message", "User Updated Succesfully");
             } else {
 
                 return redirect()->back()->with('error', 'error while updating profile');
             }
         } catch (\Exception $th) {
             Log::error("[AdminUserController][updateUser] error " . $th->getMessage());
-            // return redirect()->back()->with('error', $th->getMessage());
-            return redirect()->back()->with('error', 'error while updating profile');
+            return redirect()->back()->with("status", "error")->with('message', 'error while updating profile');
         }
     }
 

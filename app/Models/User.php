@@ -17,13 +17,16 @@ class User extends Authenticatable
     use Notifiable, HasApiTokens;
     protected $table = 'gym_users';
     protected $fillable = [
-        'employee_id',
+        'staff_assign_id',
+        'profile_status',
+        'subscription_status',
+        'end_date',
+        'coupon_id',
         'gym_id',
         'firstname',
         'lastname',
         'email',
         'gender',
-        'member_number',
         'subscription_id',
         'blood_group',
         'image',
