@@ -7,6 +7,7 @@ use App\Mail\OtpMail;
 use App\Models\MobileAndEmailOtp;
 use App\Models\User;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -58,7 +59,7 @@ class OtpService
         try {
 
             // $otp = strval(random_int(1000, 9999));
-            
+
             $otp = 1234;
 
             // Mail::to($email)->send(new OtpMail($otp));
@@ -174,6 +175,76 @@ class OtpService
             }
         } catch (Exception $e) {
             Log::error("[OtpService][verifyEmailOtp] Error verifying otp: " . $e->getMessage());
+            return [
+                'status'       => 500,
+                'message'      => 'Error while verifying otp',
+                'errorMessage' => $e->getMessage(),
+            ];
+        }
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        try {
+            // Fetch the user using uuid
+            $user = User::where('uuid', $request->uuid)->first();
+
+            if (!$user) {
+                return [
+                    'status'       => 404,
+                    'message'      => 'User not found',
+                    'errorMessage' => 'No user associated with the provided UUID.'
+                ];
+            }
+
+            // Determine if the request contains an email or phone number
+            if ($request->has('email')) {
+                $isEmail = true;
+                $otpDetail = $this->mobileAndEmailOtp->where('email', $request->email)->first();
+            } elseif ($request->has('phone_no')) {
+                $isEmail = false;
+                $otpDetail = $this->mobileAndEmailOtp->where('phone_no', $request->phone_no)->first();
+            } else {
+                return [
+                    'status'       => 400,
+                    'message'      => 'Invalid request',
+                    'errorMessage' => 'Please provide either an email or phone number.'
+                ];
+            }
+
+            if (!$otpDetail) {
+                return [
+                    'status'       => 404,
+                    'message'      => 'Error while verifying OTP',
+                    'errorMessage' => 'Please provide correct identifier (phone number or email).'
+                ];
+            }
+
+            // Check if the provided OTP matches
+            if ($otpDetail->otp == $request->otp) {
+                // OTP is correct, update the user's verification status
+                if ($isEmail) {
+                    $user->is_email_verified = true;
+                } else {
+                    $user->is_phone_no_verified = true;
+                }
+                $user->profile_status = GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED;
+                $user->save();
+
+                return [
+                    'status'       => 200,
+                    'message'      => 'OTP verified successfully',
+                    'uuid'         => $request->uuid
+                ];
+            } else {
+                return [
+                    'status'       => 422,
+                    'message'      => 'Please enter correct OTP',
+                    'errorMessage' => "Provided OTP {$request->otp} is incorrect."
+                ];
+            }
+        } catch (\Exception $e) {
+            Log::error("[OtpService][verifyOtp] Error verifying otp: " . $e->getMessage());
             return [
                 'status'       => 500,
                 'message'      => 'Error while verifying otp',

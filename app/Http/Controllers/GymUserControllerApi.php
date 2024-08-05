@@ -94,7 +94,8 @@ class GymUserControllerApi extends Controller
                 'lastname'  => 'required',
                 'gender'    => 'required',
                 'password'  => 'required',
-                'image'     => 'nullable'
+                'image'     => 'nullable',
+                'dob'       => 'required'
             ]);
 
             $userDetail = $request->all();
@@ -113,6 +114,20 @@ class GymUserControllerApi extends Controller
         } catch (Throwable $e) {
             Log::error("[GymUserControllerApi][registerGymUser] Error in registration otp: " . $e->getMessage());
             return $this->errorResponse('Error while registering', $e->getMessage(), 500);
+        }
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        try {
+            $request->validate([
+                'otp' => 'required|digits:4',
+            ]);
+            $result = $this->otpService->verifyOtp($request);
+            return response()->json($result, $result['status']);
+        } catch (Exception $e) {
+            Log::error("[GymUserControllerApi][verifyOtp] Error verifying otp: " . $e->getMessage());
+            return $this->errorResponse('Error while verifying otp', $e->getMessage(), 500);
         }
     }
 }

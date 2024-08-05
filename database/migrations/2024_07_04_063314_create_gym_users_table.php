@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('gym_users', function (Blueprint $table) {
             $table->id();
             $table->uuid();
-            $table->string('employee_id');
-            $table->string('gym_id');
+            $table->integer('employee_id');
+            $table->integer('gym_id');
             $table->string('firstname');
             $table->string('lastname');
             $table->string('email');
             $table->string('phone_no');
             $table->string('member_number');
-            $table->string('subscription_id');
+            $table->integer('subscription_id');
             $table->string('gender');
             $table->string('blood_group');
             $table->string('image');
@@ -33,6 +33,7 @@ return new class extends Migration
             $table->boolean('is_email_verified')->default(0);
             $table->boolean('is_phone_no_verified')->default(0);
             $table->integer('profile_status')->default(0);
+            $table->date('dob')->nullable();
 
             $table->softDeletes();
             $table->timestamps();
