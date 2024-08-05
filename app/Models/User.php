@@ -39,7 +39,8 @@ class User extends Authenticatable
         'password',
         'is_email_verified',
         'is_phone_no_verified',
-        'profile_status'
+        'profile_status',
+        'dob'
     ];
 
     protected static function boot()
@@ -118,6 +119,7 @@ class User extends Authenticatable
             Log::error('[Gym][updateUser] Error while updating user detail: ' . $e->getMessage());
         }
     }
+
     public function addTrainer(array $gymTrainer)
     {
         $userId = $gymTrainer['user_id'];
@@ -175,6 +177,7 @@ class User extends Authenticatable
                 'gender'         => $userDetail['gender'],
                 'phone_no'       => $userDetail['phone_no']?? null,
                 'password'       => $userDetail['password'],
+                'dob'            => $userDetail['dob'],
                 'profile_status' => GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED,
             ]);
     
