@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\UserBodyMeasurement;
 use App\Models\UserWorkout;
 use App\Models\UserDiet;
+use App\Models\UserSubscriptionHistory;
 use App\Services\UserService;
 use App\Traits\SessionTrait;
 use Dotenv\Validator;
@@ -71,39 +72,56 @@ class GymUserController extends Controller
 
         $gymStaff = GymStaff::join('designations', 'designations.id', 'gym_staffs.designation_id')
             ->where('gym_staffs.gym_id', $gymId)->get();
-        $gymSubscription = $this->gymSubscription->where('gym_id', $gymId)->get();
+        $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
 
-        return view('GymOwner.add-gym-customer', compact('gymStaff', 'gymSubscription'));
+        return view('GymOwner.add-gym-customer', compact('gymStaff', 'gymSubscriptions'));
     }
 
     public function addUserByGym(Request $request)
     {
         try {
-            $request->validate([
+            $validateData = $request->validate([
                 'firstname'         => 'required',
                 'lastname'          => 'required',
                 'email'             => 'required|unique:users,email',
                 'gender'            => 'required',
-                'member_number'     => 'required',
-                'employee_id'       => 'required',
                 'subscription_id'   => 'required',
                 'blood_group'       => 'nullable',
-                'joining_date'      => 'required',
+                'joining_date'      => 'required|date',
                 'address'           => 'required',
                 'country'           => 'required',
                 'state'             => 'required',
                 'zip_code'          => 'required',
-                'image'             => 'required'
+                'image'             => 'required',
+                'end_date'          => 'required',
+                'coupon_id'         => 'nullable',
+                'subscription_status'  => 'nullable',
+                'profile_status'       => 'nullable',
+                'staff_assign_id'      => 'required',
             ]);
 
             $gym_uuid = $this->getGymSession()['uuid'];
             $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+    
+            // Create the user account
+            $user = $this->userService->createUserAccount($validateData, $gymId);
+            // Save to user_subscription_histories
+            
+            UserSubscriptionHistory::create([
+                'user_id' => $user->id,
+                'subscription_id' => $request->subscription_id,
+                'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
+                'joining_date' => $request->joining_date,
+                'end_date' => $request->end_date,
+                'status' => $request->subscription_status,
+                'amount' => $request->amount, // Ensure this is part of the request or calculate it
+                'coupon_id' => $request->coupon_id,
+            ]);
 
-            $this->userService->createUserAccount($request->all(), $gymId);
-            return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Succesfully');
+            return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Successfully');
         } catch (\Exception $e) {
-            Log::error('[GymUserController][addUserByGym]Error adding : ' . $e->getMessage());
-            return back()->with('status', 'error')->with('message', 'User Not Added ');
+            Log::error('[GymUserController][addUserByGym] Error adding user: ' . $e->getMessage());
+            return back()->with('status', 'error')->with('message', 'User Not Added');
         }
     }
 
@@ -116,8 +134,8 @@ class GymUserController extends Controller
         $gymId = $this->gym->where('uuid', $this->getGymSession()['uuid'])->first()->id;
         $userId = $userDetail->id;
         $designations = $this->designation->get();
-        $workouts = $this->workout->where('user_id',$userId)->get();
-        $diets = $this->diet->where('user_id',$userId)->get();
+        $workouts = $this->workout->where('user_id', $userId)->get();
+        $diets = $this->diet->where('user_id', $userId)->get();
         $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
 
         $subscriptionId = $userDetail->subscription_id;
@@ -175,10 +193,10 @@ class GymUserController extends Controller
 
             $this->workout->addWorkout($validatedData);
 
-            return redirect()->back()->with('success', 'Workout data saved successfully.');
+            return redirect()->back()->with('status', 'success')->with('message', 'Workout data saved successfully.');
         } catch (Throwable $th) {
             Log::error("[GymUserController][addUserWorkout] error " . $th->getMessage());
-            return redirect()->back()->with('error', 'Failed to save workout data. Please try again.');
+            return redirect()->back()->with('status', 'error')->with('message', 'Failed to save workout data. Please try again.');
         }
     }
 
@@ -198,10 +216,10 @@ class GymUserController extends Controller
 
             $this->diet->addUserDiet($validatedData);
 
-            return redirect()->back()->with('success', 'Diet data saved successfully.');
+            return redirect()->back()->with('status', 'success')->with('message', 'Diet data saved successfully.');
         } catch (Throwable $th) {
             Log::error("[GymUserController][addUserDiet] error " . $th->getMessage());
-            return redirect()->back()->with('error', 'Failed to save workout data. Please try again.');
+            return redirect()->back()->with('status', 'error')->with('message', 'Failed to save workout data. Please try again.');
         }
     }
 
@@ -218,15 +236,15 @@ class GymUserController extends Controller
                 'weight' => 'required|numeric|min:0',
                 'notes' => 'required',
             ]);
-        
+
             $workout = $this->workout->findOrFail($request->workout_id);
             $workout->update($validatedData);
 
             // Redirect back with a success message
-            return redirect()->back()->with('success', 'Workout updated successfully.');
+            return redirect()->back()->with('status', 'success')->with('message', 'Workout updated successfully.');
         } catch (Throwable $th) {
             Log::error("[GymUserController][updateUserWorkout] error " . $th->getMessage());
-            return redirect()->back()->with('error', 'Failed to update workout data. Please try again.');
+            return redirect()->back()->with('status', 'error')->with('message', 'Failed to update workout data. Please try again.');
         }
     }
 
@@ -249,10 +267,10 @@ class GymUserController extends Controller
             $diet->update($validatedData);
 
             // Redirect back with a success message
-            return redirect()->back()->with('success', 'Diet updated successfully.');
+            return redirect()->back()->with('status', 'success')->with('message', 'Diet updated successfully.');
         } catch (Throwable $th) {
             Log::error("[GymUserController][updateUserDiet] error " . $th->getMessage());
-            return redirect()->back()->with('error', 'Failed to update workout data. Please try again.');
+            return redirect()->back()->with('status', 'error')->with('message', 'Failed to update workout data. Please try again.');
         }
     }
 
@@ -263,7 +281,7 @@ class GymUserController extends Controller
         $workout->delete();
         return redirect()->back()->with('status', 'success')->with('message', 'Workout deleted successfully!');
     }
-    
+
     public function deleteDiet($uuid)
     {
         $diet = $this->diet->where('uuid', $uuid)->firstOrFail();
@@ -285,7 +303,7 @@ class GymUserController extends Controller
             return redirect()->back()->with('success', 'Trainer Alloted succesfully.');
         } catch (Throwable $th) {
             Log::error("[GymUserController][allocateTrainerToUser] error " . $th->getMessage());
-            return redirect()->back()->with('error', 'Failed to allocate trainer. Please try again.');
+            return redirect()->back()->with('status', 'error')->with('message', 'Failed to allocate trainer. Please try again.');
         }
     }
 }

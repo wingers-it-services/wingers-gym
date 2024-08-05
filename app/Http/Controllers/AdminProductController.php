@@ -52,7 +52,7 @@ class AdminProductController extends Controller
             // Assuming you have a method addCoupon in your GymCoupon model
             $this->product->addAdminProduct($validatedData, $imagePath);
 
-            return redirect()->route('listProduct')->with('success', 'Product added successfully.');
+            return redirect()->route('listProduct')->with('status', 'success')->with('message', 'Product added successfully.');
         } catch (\Throwable $th) {
             Log::error("[AdminProductController][addProductByAdmin] error " . $th->getMessage());
             return redirect()->back()->with('error', $th->getMessage());

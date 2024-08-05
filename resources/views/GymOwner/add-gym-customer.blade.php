@@ -13,12 +13,12 @@
 				<li class="breadcrumb-item active"><a href="javascript:void(0)">New Member Details</a></li>
 			</ol>
 		</div>
-		<div class="row">
-			<div class="col-xl-12">
-				<div class="card">
-					<div class="card-body">
-						<form class="needs-validation" novalidate="" action="/add-user-by-gym" method="POST" enctype="multipart/form-data">
-							@csrf
+		<form class="needs-validation" novalidate="" action="/add-user-by-gym" method="POST" enctype="multipart/form-data">
+			@csrf
+			<div class="row">
+				<div class="col-xl-12">
+					<div class="card">
+						<div class="card-body">
 							<div class="row">
 								<div class="col-lg-4 order-lg-2 mb-4">
 									<h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -37,11 +37,12 @@
 										<input class="form-control form-control-sm" id="image" name="image" onchange="loadFile(event)" accept="image/*" type="file">
 									</div>
 								</div>
+
 								<div class="col-lg-8 order-lg-1">
 									<div class="row">
 										<div class="col-md-6 mb-3">
 											<label for="firstName">First Name</label>
-											<input type="text" class="form-control" id="firstName" name="firstname" placeholder="" required="">
+											<input type="text" class="form-control" id="firstname" name="firstname" placeholder="" required="">
 											<div class="invalid-feedback">
 												Valid first name is required.
 											</div>
@@ -58,7 +59,7 @@
 									</div>
 									<div class="row">
 										<div class="col-md-6 mb-3">
-											<label for="email">Email <span class="text-muted">(Optional)</span></label>
+											<label for="email">Email </label>
 											<input type="email" name="email" class="form-control" id="email">
 											<div class="invalid-feedback">
 												Please enter a valid email address for shipping updates.
@@ -66,8 +67,8 @@
 										</div>
 
 										<div class="col-md-6 mb-3">
-											<label for="member_number">Member Number</label>
-											<input type="text" class="form-control" name="member_number" id="member_number" placeholder="" required>
+											<label for="member_number">Phone Number</label>
+											<input type="text" class="form-control" name="phone_no" id="phone_no" placeholder="" required>
 										</div>
 
 
@@ -75,7 +76,7 @@
 									<div class="row">
 										<div class="col-md-6 mb-3">
 											<label for="employee_id">Staff Assigned</label>
-											<select class="me-sm-2 form-control default-select" id="employee_id" name="employee_id">
+											<select class="me-sm-2 form-control default-select" id="staff_assign_id" name="staff_assign_id">
 												<option selected>Choose...</option>
 												@foreach ($gymStaff as $staff)
 												<option value="{{ $staff->id }}">{{ $staff->designation_name}}</option>
@@ -87,21 +88,6 @@
 										</div>
 
 										<div class="col-md-6 mb-3">
-											<label for="subscription_id">Member Subscription </label>
-											<select class="me-sm-2 form-control default-select" id="subscription_id" name="subscription_id">
-												<option selected>Choose...</option>
-												@foreach ($gymSubscription as $subscription)
-												<option value="{{ $subscription->id }}">{{ $subscription->subscription_name}}</option>
-												@endforeach
-											</select>
-											<div class="invalid-feedback">
-												Valid last name is required.
-											</div>
-										</div>
-									</div>
-
-									<div class="row">
-										<div class="col-md-6 mb-3">
 											<label for="gender">Gender</label>
 											<select class="me-sm-2 form-control default-select" id="gender" name="gender">
 												<option selected>Choose...</option>
@@ -110,8 +96,11 @@
 												<option value="Other">Other</option>
 											</select>
 										</div>
+									</div>
 
-										<div class="col-md-6 mb-3">
+									<div class="row">
+
+										<div class="col-md-4 mb-3">
 											<label for="blood_group">Member Blood Group</label>
 											<select class="me-sm-2 form-control default-select" id="blood_group" name="blood_group">
 												<option selected>Choose...</option>
@@ -125,22 +114,15 @@
 												<option value="O-">O-</option>
 											</select>
 										</div>
-									</div>
-									<div class="row">
-										<div class="col-md-6 mb-3">
-											<label for="joining_date">Member Joining Date</label>
-											<input type="date" class="form-control" id="joining_date" name="joining_date" placeholder="" required="">
+
+										<div class="col-md-8 mb-3">
+											<label for="address">Address</label>
+											<input type="text" class="form-control" id="address" name="address" required="">
+											<div class="invalid-feedback">
+												Please enter your shipping address.
+											</div>
 										</div>
 									</div>
-
-									<div class="mb-3">
-										<label for="address">Address</label>
-										<input type="text" class="form-control" id="address" name="address" required="">
-										<div class="invalid-feedback">
-											Please enter your shipping address.
-										</div>
-									</div>
-
 									<div class="row">
 										<div class="col-md-5 mb-3">
 											<label for="country">Country</label>
@@ -155,13 +137,84 @@
 											<input type="text" class="form-control" id="zip_code" name="zip_code" placeholder="" required="">
 										</div>
 									</div>
-									<hr class="mb-4">
-									<input type="submit" class="btn btn-primary btn-lg btn-block" value="Add Member">
-						</form>
+								</div>
+							</div>
+
+
+						</div>
 					</div>
 				</div>
+
+				<div class="col-xl-12">
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-lg-6 order-lg-1">
+									<div class="col-xl-12 col-lg-12">
+										<h4 class="d-flex justify-content-between align-items-center mb-3">
+											<span class="text-black">Select Subscription</span>
+										</h4>
+										<ul class="list-group mb-3">
+											<div class="col-md-12 mb-3">
+												<select class="me-sm-2 form-control default-select" id="subscription_id" name="subscription_id">
+													<option value="" data-description="" data-amount="" data-validity="">-- Select Subscription --</option>
+													@foreach ($gymSubscriptions as $subscription)
+													<option value="{{ $subscription->id }}" data-description="{{ $subscription->description }}" data-amount="{{ $subscription->amount }}" data-validity="{{ $subscription->validity }}">
+														{{ $subscription->subscription_name }}
+													</option>
+													@endforeach
+												</select>
+											</div>
+
+											<div class="col-md-12 mb-3">
+												<label for="joining_date">Member Joining Date</label>
+												<input type="date" class="form-control" id="joining_date" name="joining_date" required>
+											</div>
+
+											<li class="list-group-item d-flex justify-content-between lh-condensed">
+												<div>
+													<small class="text-muted">Subscription Amount</small>
+												</div>
+												<span class="text-muted" id="subscription_amount">₹0</span>
+												<input type="hidden" id="amount" name="amount">
+											</li>
+											<li class="list-group-item d-flex justify-content-between lh-condensed">
+												<div>
+													<small class="text-muted">Subscription End Date</small>
+													<input type="hidden" id="end_date" name="end_date">
+												</div>
+												<span class="text-muted" id="subscription_end_date"></span>
+											</li>
+
+											<li class="list-group-item d-flex justify-content-between">
+												<span>Total (USD)</span>
+												<strong id="total_amount">₹0</strong>
+											</li>
+										</ul>
+
+									</div>
+								</div>
+
+								<div class="col-lg-6 order-lg-1">
+									<div class="col-xl-12 col-lg-12">
+										<h4 class="d-flex justify-content-between align-items-center mb-3">
+											<span class="text-black">Subscription Description</span>
+										</h4>
+										<div class="col-md-12 mb-3">
+											<textarea type="text" class="form-control" id="description" name="description" required="" readonly></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<input type="submit" class="btn btn-primary btn-lg btn-block" value="Add Member">
+
 			</div>
-		</div>
+		</form>
 	</div>
 </div>
 </div>
@@ -211,5 +264,47 @@
 				}, false)
 			})
 	})()
+
+	document.getElementById('subscription_id').addEventListener('change', function() {
+    var selectedOption = this.options[this.selectedIndex];
+    var description = selectedOption.getAttribute('data-description');
+    var amount = selectedOption.getAttribute('data-amount');
+    var validity = selectedOption.getAttribute('data-validity');
+
+    document.getElementById('description').value = description;
+    document.getElementById('subscription_amount').innerText = '₹' + amount;
+    document.getElementById('total_amount').innerText = '₹' + amount;
+    document.getElementById('amount').value = amount;
+
+    var joiningDate = document.getElementById('joining_date').value;
+    if (joiningDate) {
+        updateEndDate(joiningDate, validity);
+    }
+});
+
+document.getElementById('joining_date').addEventListener('change', function() {
+    var selectedOption = document.getElementById('subscription_id').options[document.getElementById('subscription_id').selectedIndex];
+    var validity = selectedOption.getAttribute('data-validity');
+
+    updateEndDate(this.value, validity);
+});
+
+function updateEndDate(joiningDate, validity) {
+    if (joiningDate && validity) {
+        var date = new Date(joiningDate);
+        date.setMonth(date.getMonth() + parseInt(validity));
+        var day = ("0" + date.getDate()).slice(-2);
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var year = date.getFullYear();
+        var formattedDate = year + '-' + month + '-' + day;  // Correct MySQL format
+
+        document.getElementById('subscription_end_date').innerText = day + '/' + month + '/' + year;  // Display in dd/mm/yyyy
+        document.getElementById('end_date').value = formattedDate;  // Save in yyyy-mm-dd
+    } else {
+        document.getElementById('subscription_end_date').innerText = '';
+        document.getElementById('end_date').value = '';
+    }
+}
+
 </script>
 @endsection
