@@ -225,8 +225,10 @@ class OtpService
                 // OTP is correct, update the user's verification status
                 if ($isEmail) {
                     $user->is_email_verified = true;
+                    $user->email = $request->email;
                 } else {
                     $user->is_phone_no_verified = true;
+                    $user->phone_no = $request->phone_no;
                 }
                 $user->profile_status = GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED;
                 $user->save();
