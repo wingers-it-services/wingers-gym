@@ -21,4 +21,14 @@ class LevelUser extends Model
             $model->uuid = Uuid::uuid4()->toString();
         });
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function level()
+    {
+        return $this->belongsTo(UserLebel::class,'level_id');
+    }
 }
