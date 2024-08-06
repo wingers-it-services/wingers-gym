@@ -54,7 +54,7 @@
                                                 </div>
                                             </div> -->
                                         <td>
-                                            <a class="dropdown-item" href={{ route('showUserProfile', ['uuid' => $user->uuid]) }}>
+                                            <a class="dropdown-item" href="{{ route('showUserProfile', ['uuid' => $user->uuid]) }}">
                                                 <i class="fa fa-eye color-muted"></i>
                                             </a>
                                         </td>
@@ -64,7 +64,7 @@
                                             </a>
                                         <!-- </td>
                                         <td class="text-end"> -->
-                                            <a onclick="" data-bs-toggle="tooltip" data-placement="top" title="Close">
+                                            <a onclick="confirmDelete('{{ $user->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close">
                                                 <i class="fas fa-trash"> </i>
                                             </a>
                                         </td>
@@ -82,6 +82,22 @@
 </div>
 
 
-
-
+<script>
+    function confirmDelete(uuid) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to delete this user?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-user/' + uuid;
+            }
+        });
+    }
+</script>
+@include('CustomSweetAlert');
 @endsection

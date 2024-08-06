@@ -58,6 +58,17 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(UserInjury::class, 'injury_user');
     }
+    
+    public function staff()
+    {
+        return $this->belongsTo(GymStaff::class, 'staff_assign_id');
+    }
+
+    public function subscription()
+    {
+        return $this->belongsTo(GymSubscription::class, 'subscription_id');
+    }
+
 
     public function trainerDetails()
     {

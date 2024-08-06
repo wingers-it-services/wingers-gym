@@ -1,11 +1,13 @@
 @extends('GymOwner.master')
 @section('title', 'Dashboard')
 @section('content')
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <style>
     .nav-link i {
-        font-size: 14px; /* Adjust the size as needed */
-        margin-right: 8px; /* Add space between icon and text */
+        font-size: 14px;
+        /* Adjust the size as needed */
+        margin-right: 8px;
+        /* Add space between icon and text */
     }
 </style>
 <div class="content-body ">
@@ -33,39 +35,39 @@
                                                     <img src="https://fito.dexignzone.com/laravel/demo/images/profile/profile.png" width="100" class="img-fluid rounded-circle" alt="">
                                                 </div>
                                                 <h3 class="mt-3 mb-1 text-white">{{ $userDetail->firstname }} {{ $userDetail->lastname }} </h3>
-                                                <p class="text-white mb-0">Email: {{ $userDetail->email }}    Phone: 9978116971</p>
+                                                <p class="text-white mb-0">Email: {{ $userDetail->email }} Phone: {{ $userDetail->phone_no }}</p>
                                                 <!-- <p class="text-white mb-0">Phone: 9978116971</p> -->
-                                                <p class="text-white mb-0">Gender: {{ $userDetail->gender }}</p>
+                                                <p class="text-white mb-0">Gender: {{ $userDetail->gender }} Password: {{ $userDetail->password  }}</p>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <div class="col-xl-6 col-lg-12 col-sm-12">
-                                        <div class="card overflow-hidden">
-                                            <ul class="list-group list-group-flush">
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">First Name</span> <strong class="text-muted">{{ $userDetail->firstname }} </strong></li>
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Email</span> <strong class="text-muted">{{ $userDetail->email }}</strong></li>
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Phone Number</span> <strong class="text-muted">{{ $userDetail->member_number }}</strong></li>
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Gender</span> <strong class="text-muted">{{ $userDetail->gender}}</strong></li>
-                                            </ul>
-                                        </div>
-                                    </div> -->
                                     <div class="col-xl-6 col-lg-12 col-sm-12">
                                         <div class="card overflow-hidden">
                                             <ul class="list-group list-group-flush">
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Member Subscription</span> <strong class="text-muted">{{ $userDetail->firstname }} </strong></li>
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Staff Assigned</span> <strong class="text-muted">Divyesh</strong></li>
+                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Member Subscription</span> <strong class="text-muted">{{ $userDetail->subscription->subscription_name }} </strong></li>
+                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Staff Assigned</span> <strong class="text-muted">{{ $userDetail->staff->name }}</strong></li>
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Member Blood Group</span> <strong class="text-muted">{{ $userDetail->blood_group}} </strong></li>
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Member Joining Date</span> <strong class="text-muted">{{ $userDetail->joining_date }}</strong></li>
+                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Joining Date</span> <strong class="text-muted">{{ $userDetail->joining_date }}</strong></li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-sm-12">
+                                    <div class="col-xl-6 col-lg-12 col-sm-12">
                                         <div class="card overflow-hidden">
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Address</span> <strong class="text-muted">{{ $userDetail->address }} </strong></li>
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Country</span> <strong class="text-muted">{{ $userDetail->country }}</strong></li>
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">State</span> <strong class="text-muted">{{ $userDetail->state }}</strong></li>
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Zip</span> <strong class="text-muted">{{ $userDetail->zip_code }}</strong></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12 col-sm-12">
+                                        <div class="card overflow-hidden">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">End Date</span> <strong class="text-muted">{{ $userDetail->end_date }} </strong></li>
+                                                <!-- <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Email</span> <strong class="text-muted">{{ $userDetail->email }}</strong></li>
+                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Phone Number</span> <strong class="text-muted">{{ $userDetail->member_number }}</strong></li>
+                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Gender</span> <strong class="text-muted">{{ $userDetail->gender}}</strong></li> -->
                                             </ul>
                                         </div>
                                     </div>
@@ -105,6 +107,72 @@
 
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="subscription">
+                                    <div class="modal fade" id="addNewSubscription">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Add Subcription</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <!-- Subscription Selection -->
+                                                            <h4 class="mb-3 text-black">Select Subscription</h4>
+                                                            <div class="mb-3">
+                                                                <select class="form-control default-select" id="subscription_id" name="subscription_id">
+                                                                    <option value="" data-description="" data-amount="" data-validity="">-- Select Subscription --</option>
+                                                                    @foreach ($gymSubscriptions as $subscription)
+                                                                    <option value="{{ $subscription->id }}" data-description="{{ $subscription->description }}" data-amount="{{ $subscription->amount }}" data-validity="{{ $subscription->validity }}">
+                                                                        {{ $subscription->subscription_name }}
+                                                                    </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <!-- Subscription Description -->
+                                                                <h4 class="mb-3 text-black">Subscription Description</h4>
+                                                                <div class="mb-3">
+                                                                    <textarea class="form-control" id="description" name="description" required readonly></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="joining_date" class="form-label">Member Joining Date</label>
+                                                                <input type="date" class="form-control" id="joining_date" name="joining_date" required>
+                                                            </div>
+                                                            <ul class="list-group mb-3">
+                                                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                                                    <div>
+                                                                        <small class="text-muted">Subscription Amount</small>
+                                                                    </div>
+                                                                    <span class="text-muted" id="subscription_amount">₹0</span>
+                                                                    <input type="hidden" id="amount" name="amount">
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                                                    <div>
+                                                                        <small class="text-muted">Subscription End Date</small>
+                                                                        <input type="hidden" id="end_date" name="end_date">
+                                                                    </div>
+                                                                    <span class="text-muted" id="subscription_end_date"></span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Total (USD)</span>
+                                                                    <strong id="total_amount">₹0</strong>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="dropdown mt-sm-0 mt-3">
+                                                        <button id="addSubscriptionButton" class="btn btn-outline-primary rounded">Add Subscription</button>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
                                     <div class="col-xl-12 col-xxl-12">
                                         <div class="row">
                                             <div class="col-12">
@@ -112,6 +180,10 @@
                                                     <div class="card-header d-sm-flex d-block pb-0 border-0">
                                                         <div class="me-auto pe-3">
                                                             <h4 class="text-black fs-20">Subscriptions Plan List</h4>
+                                                        </div>
+
+                                                        <div class="dropdown mt-sm-0 mt-3">
+                                                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addNewSubscription" class="btn btn-outline-primary rounded">Add Subscription</a>
                                                         </div>
                                                     </div>
 
@@ -124,32 +196,30 @@
                                                                         <th scope="col">Amount</th>
                                                                         <th scope="col">Validity</th>
                                                                         <th scope="col">Start Date</th>
-                                                                        <th scope="col">Label</th>
+                                                                        <th scope="col">End Date</th>
                                                                         <th scope="col" class="text-end">Action
                                                                         </th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    @foreach ($userSubscriptions as $subscription)
+
                                                                     <tr>
-                                                                        <td>{{$subscription->subscription_name}}</td>
-                                                                        <td>{{$subscription->amount}}</td>
-                                                                        <td>{{$subscription->validity}} Months</td>
-                                                                        <td>{{ \Carbon\Carbon::parse($subscription->start_date)->format('M d, Y') }}</td>
-                                                                        <td><span class="badge badge-warning">70%</span>
-                                                                        </td>
+                                                                        <td>{{$userDetail->subscription->subscription_name}}</td>
+                                                                        <td>{{$userDetail->subscription->amount}}</td>
+                                                                        <td>{{$userDetail->subscription->validity}} Months</td>
+                                                                        <td>{{ \Carbon\Carbon::parse($userDetail->start_date)->format('M d, Y') }}</td>
+                                                                        <td>{{ \Carbon\Carbon::parse($userDetail->end_date)->format('M d, Y') }}</td>
                                                                         <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
                                                                                 </a><a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
                                                                         </td>
                                                                     </tr>
-                                                                    @endforeach
+
                                                                 </tbody>
                                                             </table>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -193,9 +263,7 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
-
                                     <div class="col-xl-12 col-xxl-12">
                                         <div class="row">
                                             <div class="col-12">
@@ -755,6 +823,126 @@
             }
         });
     }
+
+    document.getElementById('subscription_id').addEventListener('change', function() {
+        var selectedOption = this.options[this.selectedIndex];
+        var description = selectedOption.getAttribute('data-description');
+        var amount = selectedOption.getAttribute('data-amount');
+        var validity = selectedOption.getAttribute('data-validity');
+
+        document.getElementById('description').value = description;
+        document.getElementById('subscription_amount').innerText = '₹' + amount;
+        document.getElementById('total_amount').innerText = '₹' + amount;
+        document.getElementById('amount').value = amount;
+
+        var joiningDate = document.getElementById('joining_date').value;
+        if (joiningDate) {
+            updateEndDate(joiningDate, validity);
+        }
+    });
+
+    document.getElementById('joining_date').addEventListener('change', function() {
+        var selectedOption = document.getElementById('subscription_id').options[document.getElementById('subscription_id').selectedIndex];
+        var validity = selectedOption.getAttribute('data-validity');
+
+        updateEndDate(this.value, validity);
+    });
+
+    function updateEndDate(joiningDate, validity) {
+        if (joiningDate && validity) {
+            var date = new Date(joiningDate);
+            date.setMonth(date.getMonth() + parseInt(validity));
+            var day = ("0" + date.getDate()).slice(-2);
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            var year = date.getFullYear();
+            var formattedDate = year + '-' + month + '-' + day; // Correct MySQL format
+
+            document.getElementById('subscription_end_date').innerText = day + '/' + month + '/' + year; // Display in dd/mm/yyyy
+            document.getElementById('end_date').value = formattedDate; // Save in yyyy-mm-dd
+        } else {
+            document.getElementById('subscription_end_date').innerText = '';
+            document.getElementById('end_date').value = '';
+        }
+    }
+
+    document.querySelector('#addSubscriptionButton').addEventListener('click', function() {
+        const userId = @json($userDetail -> id); // Get the user ID
+        const subscriptionId = document.querySelector('#subscription_id').value;
+        const joiningDate = document.querySelector('#joining_date').value;
+        const amount = document.querySelector('#amount').value;
+        const endDate = document.querySelector('#end_date').value;
+
+        fetch(`/check-subscription/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    subscription_id: subscriptionId,
+                    joining_date: joiningDate,
+                    amount: amount,
+                    end_date: endDate
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'exists') {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Subscription Exists',
+                        text: `${data.message} The existing subscription ends on ${data.end_date}. Do you want to change the subscription?`,
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, change it!',
+                        cancelButtonText: 'No, keep it'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Call the update subscription route
+                            fetch(`/update-subscription/${userId}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify({
+                                        subscription_id: subscriptionId,
+                                        joining_date: joiningDate,
+                                        amount: amount,
+                                        end_date: endDate
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Subscription Updated',
+                                        text: data.message,
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // Optionally reload the page or update the UI
+                                            location.reload();
+                                        }
+                                    });
+                                });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Subscription Created',
+                        text: data.message,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Optionally reload the page or update the UI
+                            location.reload();
+                        }
+                    });
+                }
+            });
+    });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @include('CustomSweetAlert');
 @endsection

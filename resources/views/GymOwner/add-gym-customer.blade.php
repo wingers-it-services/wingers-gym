@@ -34,7 +34,7 @@
 									</ul>
 
 									<div class="input-group">
-										<input class="form-control form-control-sm" id="image" name="image" onchange="loadFile(event)" accept="image/*" type="file">
+										<input class="form-control form-control-sm" id="image" name="image" onchange="loadFile(event)" accept="image/*" type="file" required>
 									</div>
 								</div>
 
@@ -67,11 +67,21 @@
 										</div>
 
 										<div class="col-md-6 mb-3">
+											<div class="form-group position-relative">
+												<label for="password">Set Password</label>
+												<input type="password" class="form-control" name="password" id="password" placeholder="" required>
+												<span class="show-pass eye" onclick="togglePasswordVisibility()">
+													<i class="fa fa-eye-slash"></i>
+													<i class="fa fa-eye"></i>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6 mb-3">
 											<label for="member_number">Phone Number</label>
 											<input type="text" class="form-control" name="phone_no" id="phone_no" placeholder="" required>
 										</div>
-
-
 									</div>
 									<div class="row">
 										<div class="col-md-6 mb-3">
@@ -139,8 +149,6 @@
 									</div>
 								</div>
 							</div>
-
-
 						</div>
 					</div>
 				</div>
@@ -223,6 +231,20 @@
             Content body end
         ***********************************-->
 <script>
+	function togglePasswordVisibility() {
+		var passwordField = document.getElementById("password");
+		var toggleIcon = document.getElementById("togglePassword");
+
+		if (passwordField.type === "password") {
+			passwordField.type = "text";
+			toggleIcon.classList.remove('fa-eye-slash');
+			toggleIcon.classList.add('fa-eye');
+		} else {
+			passwordField.type = "password";
+			toggleIcon.classList.remove('fa-eye');
+			toggleIcon.classList.add('fa-eye-slash');
+		}
+	}
 	var loadFile = function(event) {
 		// var selected_image = document.getElementById('selected_image');
 
@@ -266,45 +288,45 @@
 	})()
 
 	document.getElementById('subscription_id').addEventListener('change', function() {
-    var selectedOption = this.options[this.selectedIndex];
-    var description = selectedOption.getAttribute('data-description');
-    var amount = selectedOption.getAttribute('data-amount');
-    var validity = selectedOption.getAttribute('data-validity');
+		var selectedOption = this.options[this.selectedIndex];
+		var description = selectedOption.getAttribute('data-description');
+		var amount = selectedOption.getAttribute('data-amount');
+		var validity = selectedOption.getAttribute('data-validity');
 
-    document.getElementById('description').value = description;
-    document.getElementById('subscription_amount').innerText = '₹' + amount;
-    document.getElementById('total_amount').innerText = '₹' + amount;
-    document.getElementById('amount').value = amount;
+		document.getElementById('description').value = description;
+		document.getElementById('subscription_amount').innerText = '₹' + amount;
+		document.getElementById('total_amount').innerText = '₹' + amount;
+		document.getElementById('amount').value = amount;
 
-    var joiningDate = document.getElementById('joining_date').value;
-    if (joiningDate) {
-        updateEndDate(joiningDate, validity);
-    }
-});
+		var joiningDate = document.getElementById('joining_date').value;
+		if (joiningDate) {
+			updateEndDate(joiningDate, validity);
+		}
+	});
 
-document.getElementById('joining_date').addEventListener('change', function() {
-    var selectedOption = document.getElementById('subscription_id').options[document.getElementById('subscription_id').selectedIndex];
-    var validity = selectedOption.getAttribute('data-validity');
+	document.getElementById('joining_date').addEventListener('change', function() {
+		var selectedOption = document.getElementById('subscription_id').options[document.getElementById('subscription_id').selectedIndex];
+		var validity = selectedOption.getAttribute('data-validity');
 
-    updateEndDate(this.value, validity);
-});
+		updateEndDate(this.value, validity);
+	});
 
-function updateEndDate(joiningDate, validity) {
-    if (joiningDate && validity) {
-        var date = new Date(joiningDate);
-        date.setMonth(date.getMonth() + parseInt(validity));
-        var day = ("0" + date.getDate()).slice(-2);
-        var month = ("0" + (date.getMonth() + 1)).slice(-2);
-        var year = date.getFullYear();
-        var formattedDate = year + '-' + month + '-' + day;  // Correct MySQL format
+	function updateEndDate(joiningDate, validity) {
+		if (joiningDate && validity) {
+			var date = new Date(joiningDate);
+			date.setMonth(date.getMonth() + parseInt(validity));
+			var day = ("0" + date.getDate()).slice(-2);
+			var month = ("0" + (date.getMonth() + 1)).slice(-2);
+			var year = date.getFullYear();
+			var formattedDate = year + '-' + month + '-' + day; // Correct MySQL format
 
-        document.getElementById('subscription_end_date').innerText = day + '/' + month + '/' + year;  // Display in dd/mm/yyyy
-        document.getElementById('end_date').value = formattedDate;  // Save in yyyy-mm-dd
-    } else {
-        document.getElementById('subscription_end_date').innerText = '';
-        document.getElementById('end_date').value = '';
-    }
-}
-
+			document.getElementById('subscription_end_date').innerText = day + '/' + month + '/' + year; // Display in dd/mm/yyyy
+			document.getElementById('end_date').value = formattedDate; // Save in yyyy-mm-dd
+		} else {
+			document.getElementById('subscription_end_date').innerText = '';
+			document.getElementById('end_date').value = '';
+		}
+	}
 </script>
+@include('CustomSweetAlert');
 @endsection
