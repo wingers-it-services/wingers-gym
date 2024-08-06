@@ -217,9 +217,8 @@ class User extends Authenticatable
 
     public function profilePartFour(array $userDetail)
     {
-        
         $userProfile = User::where('uuid', $userDetail['uuid'])->first();
-
+    
         // Check if the user exists
         if (!$userProfile) {
             return [
@@ -229,36 +228,54 @@ class User extends Authenticatable
         }
     
         try {
+            // Update user profile details
             $userProfile->update([
-                'height'   => $userDetail['height'],
-                'weight'   => $userDetail['weight'],
-                'days'     => $userDetail['days']
+                'height' => $userDetail['height'],
+                'weight' => $userDetail['weight'],
+                'days'   => $userDetail['days']
             ]);
-
+    
+            // Save goals to goal_users table
             if (!empty($userDetail['goals'])) {
                 foreach ($userDetail['goals'] as $goalId) {
-                    GoalUser::create([
-                        'user_id' => $userProfile->id,
-                        'goal_id' => $goalId
-                    ]);
+                    // Check if the goal already exists for the user
+                    $existingGoal = GoalUser::where('user_id', $userProfile->id)
+                                            ->where('goal_id', $goalId)
+                                            ->first();
+                    if (!$existingGoal) {
+                        GoalUser::create([
+                            'user_id' => $userProfile->id,
+                            'goal_id' => $goalId
+                        ]);
+                    }
                 }
             }
     
             // Save levels to level_users table
             if (!empty($userDetail['levels'])) {
                 foreach ($userDetail['levels'] as $levelId) {
-                    LevelUser::create([
-                        'user_id' => $userProfile->id,
-                        'level_id' => $levelId
-                    ]);
+                    // Check if the level already exists for the user
+                    $existingLevel = LevelUser::where('user_id', $userProfile->id)
+                                              ->where('level_id', $levelId)
+                                              ->first();
+                    if (!$existingLevel) {
+                        LevelUser::create([
+                            'user_id' => $userProfile->id,
+                            'level_id' => $levelId
+                        ]);
+                    }
                 }
             }
     
-    
+            // Retrieve goals and levels for the user
+        $goals = $userProfile->goals()->get();
+        $levels = $userProfile->levels()->get();
             return [
                 'status'  => 200,
                 'message' => 'Profile updated successfully',
-                'user'    => $userProfile
+                'user'    => $userProfile,
+                'goals'   => $goals,
+                'levels'  => $levels
             ];
         } catch (Throwable $e) {
             Log::error('[User][profilePartFour] Error while completing user detail: ' . $e->getMessage());
@@ -267,6 +284,26 @@ class User extends Authenticatable
                 'message' => 'An error occurred while updating the profile'
             ];
         }
+    }
+
+    public function goalUsers()
+    {
+        return $this->hasMany(GoalUser::class);
+    }
+
+    public function levelUsers()
+    {
+        return $this->hasMany(LevelUser::class);
+    }
+
+    public function goals()
+    {
+        return $this->belongsToMany(Goal::class, 'goal_users');
+    }
+
+    public function levels()
+    {
+        return $this->belongsToMany(UserLebel::class, 'level_users','user_id', 'level_id');
     }
     
 }

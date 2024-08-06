@@ -138,14 +138,14 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
-                'uuid'    =>'required',
-                'height'  =>'required',
-                'weight'  =>'required',
-                'days'    =>'required',
-                'goals'   => 'array',
-                'goals.*' => 'exists:goals,id', // Ensure each goal ID exists in the goals table
-               'levels'   => 'array',
-               'levels.*' => 'exists:user_levels,id'
+                'uuid'     =>'required',
+                'height'   =>'required',
+                'weight'   =>'required',
+                'days'     =>'required',
+                'goals'    => 'array',
+                'goals.*'  => 'exists:goals,id', 
+                'levels'   => 'array',
+                'levels.*' => 'exists:user_lebels,id'
             ]);
 
             $request=$request->all();
