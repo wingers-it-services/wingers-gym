@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\GymSubscriptionStatusEnum;
+use App\Enums\GymUserAccountStatusEnum;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 
@@ -35,7 +37,8 @@ class UserService
             'subscription_status',
             'profile_status',
             'staff_assign_id',
-            'gym_id'
+            'gym_id',
+            'password'
         ];
 
         $userData = [];
@@ -46,6 +49,9 @@ class UserService
                 $userData[$field] = $enteredUserData[$field];
             }
         }
+
+        $userData['subscription_status'] = GymSubscriptionStatusEnum::INACTIVE;
+        $userData['profile_status'] = GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED;
 
         $user = $this->user->updateOrCreate(
             ['email' => $enteredUserData['email']],

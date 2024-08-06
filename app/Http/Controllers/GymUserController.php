@@ -14,7 +14,6 @@ use App\Models\UserDiet;
 use App\Models\UserSubscriptionHistory;
 use App\Services\UserService;
 use App\Traits\SessionTrait;
-use Dotenv\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -98,24 +97,29 @@ class GymUserController extends Controller
                 'subscription_status'  => 'nullable',
                 'profile_status'       => 'nullable',
                 'staff_assign_id'      => 'required',
+                'password'             => 'required'
             ]);
 
             $gym_uuid = $this->getGymSession()['uuid'];
             $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
-    
-            // Create the user account
+
             $user = $this->userService->createUserAccount($validateData, $gymId);
+
+            // Create the user account
+            if ($user) {
+                $user = User::where('email', $validateData['email'])->first(); // Adjust the query as needed  
+            }
+
             // Save to user_subscription_histories
-            
             UserSubscriptionHistory::create([
                 'user_id' => $user->id,
                 'subscription_id' => $request->subscription_id,
                 'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
                 'joining_date' => $request->joining_date,
                 'end_date' => $request->end_date,
-                'status' => $request->subscription_status,
+                'status' => $user->subscription_status,
                 'amount' => $request->amount, // Ensure this is part of the request or calculate it
-                'coupon_id' => $request->coupon_id,
+                'coupon_id' => 2,
             ]);
 
             return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Successfully');
@@ -290,6 +294,14 @@ class GymUserController extends Controller
         return redirect()->back()->with('status', 'success')->with('message', 'Diet deleted successfully!');
     }
 
+    public function deleteGymUser($uuid)
+    {
+        $user = $this->user->where('uuid', $uuid)->firstOrFail();
+
+        $user->delete();
+        return redirect()->back()->with('status', 'success')->with('message', 'User deleted successfully!');
+    }
+
     public function allocateTrainerToUser(Request $request)
     {
         try {
@@ -305,5 +317,70 @@ class GymUserController extends Controller
             Log::error("[GymUserController][allocateTrainerToUser] error " . $th->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'Failed to allocate trainer. Please try again.');
         }
+    }
+
+    public function checkSubscription(Request $request, $userId)
+    {
+        // Check if the user has an existing subscription
+        $existingSubscription = UserSubscriptionHistory::where('user_id', $userId)->latest()->first();
+
+        if ($existingSubscription) {
+            return response()->json([
+                'status' => 'exists',
+                'message' => 'The user already has an existing subscription.',
+                'end_date' => $existingSubscription->end_date
+            ]);
+        } else {
+            // Create a new subscription
+            $subscription = UserSubscriptionHistory::create([
+                'user_id' => $userId,
+                'subscription_id' => $request->subscription_id,
+                'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
+                'joining_date' => $request->joining_date,
+                'end_date' => $request->end_date,
+                'status' => 2,
+                'amount' => $request->amount, // Ensure this is part of the request or calculate it
+                'coupon_id' => 2,
+            ]);
+
+            return response()->json([
+                'status' => 'created',
+                'message' => 'Subscription added successfully!',
+                'subscription' => $subscription
+            ]);
+        }
+    }
+
+    public function updateSubscription(Request $request, $userId)
+    {
+        // Inactivate the existing subscription in UserSubscriptionHistory table
+        UserSubscriptionHistory::where('user_id', $userId)->latest()->update(['status' => 0]);
+
+        // Update the subscription details in gym_users table
+        User::where('user_id', $userId)->update([
+            'subscription_id' => $request->subscription_id,
+            'joining_date' => $request->joining_date,
+            'end_date' => $request->end_date,
+            'amount' => $request->amount,
+            'status' => 2 // Assuming this status column exists in the gym_users table as well
+        ]);
+
+        // Create a new entry in the UserSubscriptionHistory table
+        $subscription = UserSubscriptionHistory::create([
+            'user_id' => $userId,
+            'subscription_id' => $request->subscription_id,
+            'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
+            'joining_date' => $request->joining_date,
+            'end_date' => $request->end_date,
+            'status' => 2,
+            'amount' => $request->amount, // Ensure this is part of the request or calculate it
+            'coupon_id' => 2,
+        ]);
+
+        return response()->json([
+            'status' => 'updated',
+            'message' => 'Subscription updated successfully!',
+            'subscription' => $subscription
+        ]);
     }
 }
