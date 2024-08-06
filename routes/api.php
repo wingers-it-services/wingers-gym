@@ -38,3 +38,5 @@ Route::get('/fetch-measurement',[SiteSettingControllerApi::class,'fetchMeasureme
 Route::post('/register-gym-user',[GymUserControllerApi::class,'registerGymUser']);
 
 Route::post('/verify-otp',[GymUserControllerApi::class,'verifyOtp']);
+
+Route::post('/profile',[GymUserControllerApi::class,'profilePartFour']);

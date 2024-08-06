@@ -40,7 +40,10 @@ class User extends Authenticatable
         'is_email_verified',
         'is_phone_no_verified',
         'profile_status',
-        'dob'
+        'dob',
+        'height',
+        'weight',
+        'days'
     ];
 
     protected static function boot()
@@ -194,6 +197,60 @@ class User extends Authenticatable
             ];
         } catch (Throwable $e) {
             Log::error('[User][completeUserProfile] Error while completing user detail: ' . $e->getMessage());
+            return [
+                'status'  => 500,
+                'message' => 'An error occurred while updating the profile'
+            ];
+        }
+    }
+
+    public function profilePartFour(array $userDetail)
+    {
+        
+        $userProfile = User::where('uuid', $userDetail['uuid'])->first();
+
+        // Check if the user exists
+        if (!$userProfile) {
+            return [
+                'status'  => 404,
+                'message' => 'User not found'
+            ];
+        }
+    
+        try {
+            $userProfile->update([
+                'height'   => $userDetail['height'],
+                'weight'   => $userDetail['weight'],
+                'days'     => $userDetail['days']
+            ]);
+
+            if (!empty($userDetail['goals'])) {
+                foreach ($userDetail['goals'] as $goalId) {
+                    GoalUser::create([
+                        'user_id' => $userProfile->id,
+                        'goal_id' => $goalId
+                    ]);
+                }
+            }
+    
+            // Save levels to level_users table
+            if (!empty($userDetail['levels'])) {
+                foreach ($userDetail['levels'] as $levelId) {
+                    LevelUser::create([
+                        'user_id' => $userProfile->id,
+                        'level_id' => $levelId
+                    ]);
+                }
+            }
+    
+    
+            return [
+                'status'  => 200,
+                'message' => 'Profile updated successfully',
+                'user'    => $userProfile
+            ];
+        } catch (Throwable $e) {
+            Log::error('[User][profilePartFour] Error while completing user detail: ' . $e->getMessage());
             return [
                 'status'  => 500,
                 'message' => 'An error occurred while updating the profile'
