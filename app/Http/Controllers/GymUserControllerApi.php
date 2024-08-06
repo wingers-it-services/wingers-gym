@@ -121,9 +121,10 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
+                'uuid'     => 'required',
                 'otp'      => 'required|digits:4',
-                'email'    => 'required_without:phone_no|email|unique:users,email',
-                'phone_no' => 'required_without:email|digits:10|unique:users,phone_no',
+                'email'    => 'required_without:phone_no|email|unique:gym_users,email',
+                'phone_no' => 'required_without:email|digits:10|unique:gym_users,phone_no',
             ]);
             
             $result = $this->otpService->verifyOtp($request);
@@ -155,6 +156,34 @@ class GymUserControllerApi extends Controller
         } catch (Exception $e) {
             Log::error("[GymUserControllerApi][profilePartFour] Error updating profile: " . $e->getMessage());
             return $this->errorResponse('Error while updating profile', $e->getMessage(), 500);
+        }
+    }
+
+     public function fetchUserWorkout()
+    {
+        try {
+            $user = auth()->user();
+            $workouts = $this->userWorkout->where('user_id',$user->id)->get();
+
+            if ($workouts->isEmpty()) {
+                return response()->json([
+                    'status'   => 422,
+                    'workouts' => $workouts,
+                    'message'  => 'There is no workouts'
+                ], 200);
+            }
+
+            return response()->json([
+                'status'    => 200,
+                'workouts'  => $workouts,
+                'message'   => 'User workouts Fetch Successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('[UserWorkoutControllerApi][fetchUserWorkout]Error fetching workouts details: ' . $e->getMessage());
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Error fetching workouts details: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

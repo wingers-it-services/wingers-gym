@@ -5,8 +5,11 @@ use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\GymUserLoginControllerApi;
 use App\Http\Controllers\LocationControllerApi;
 use App\Http\Controllers\SiteSettingControllerApi;
+use App\Http\Controllers\UserDietControllerApi;
 use App\Http\Controllers\UserInjuryControllerApi;
 use App\Http\Controllers\UserLevelControllerApi;
+use App\Http\Controllers\UserSubscriptionControllerApi;
+use App\Http\Controllers\UserWorkoutControllerApi;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/fetch-goal', [GoalControllerApi::class, 'fetchGoal'])->name('fetchGoal');
@@ -33,10 +36,21 @@ Route::post('/verify-email-otp', [GymUserControllerApi::class, 'verifyEmailOtp']
 
 Route::post('/gym-user-login', [GymUserLoginControllerApi::class, 'userLogin']);
 
-Route::get('/fetch-measurement',[SiteSettingControllerApi::class,'fetchMeasurement']);
+Route::get('/fetch-measurement', [SiteSettingControllerApi::class, 'fetchMeasurement']);
 
-Route::post('/register-gym-user',[GymUserControllerApi::class,'registerGymUser']);
+Route::post('/register-gym-user', [GymUserControllerApi::class, 'registerGymUser']);
 
-Route::post('/verify-otp',[GymUserControllerApi::class,'verifyOtp']);
+Route::post('/verify-otp', [GymUserControllerApi::class, 'verifyOtp']);
 
-Route::post('/profile-part-four-updated',[GymUserControllerApi::class,'profilePartFour']);
+Route::post('/profile-part-four-updated', [GymUserControllerApi::class, 'profilePartFour']);
+
+
+Route::middleware('auth:api')->group(function () {
+
+    Route::post('/fetch-subscription', [UserSubscriptionControllerApi::class, 'fetchSubscription']);
+
+    Route::post('/fetch-user-diets', [UserDietControllerApi::class, 'fetchUserDiet']);
+
+    Route::post('/fetch-user-workout', [UserWorkoutControllerApi::class, 'fetchUserWorkout']);
+
+});
