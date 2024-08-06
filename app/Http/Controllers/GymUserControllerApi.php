@@ -121,13 +121,40 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
-                'otp' => 'required|digits:4',
+                'otp'      => 'required|digits:4',
+                'email'    => 'required_without:phone_no|email|unique:users,email',
+                'phone_no' => 'required_without:email|digits:10|unique:users,phone_no',
             ]);
+            
             $result = $this->otpService->verifyOtp($request);
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
             Log::error("[GymUserControllerApi][verifyOtp] Error verifying otp: " . $e->getMessage());
             return $this->errorResponse('Error while verifying otp', $e->getMessage(), 500);
+        }
+    }
+
+    public function profilePartFour(Request $request)
+    {
+        try {
+            $request->validate([
+                'uuid'    =>'required',
+                'height'  =>'required',
+                'weight'  =>'required',
+                'days'    =>'required',
+                'goals'   => 'array',
+                'goals.*' => 'exists:goals,id', // Ensure each goal ID exists in the goals table
+               'levels'   => 'array',
+               'levels.*' => 'exists:user_levels,id'
+            ]);
+
+            $request=$request->all();
+            
+            $result = $this->user->profilePartFour($request);
+            return response()->json($result, $result['status']);
+        } catch (Exception $e) {
+            Log::error("[GymUserControllerApi][profilePartFour] Error updating profile: " . $e->getMessage());
+            return $this->errorResponse('Error while updating profile', $e->getMessage(), 500);
         }
     }
 }

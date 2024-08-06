@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->integer('coupon_id')->nullable();
             $table->integer('subscription_status')->nullable();
-            $table->integer('profile_status')->nullable();
+            $table->integer('profile_status')->default(0);
             $table->integer('staff_assign_id')->nullable();
         });
 
