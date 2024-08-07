@@ -26,7 +26,7 @@ class GymUserControllerApi extends Controller
     ) {
         $this->otpService = $otpService;
         $this->user = $user;
-        $this->userService=$userService;
+        $this->userService = $userService;
     }
 
     public function sendMobileOtp(Request $request)
@@ -90,8 +90,10 @@ class GymUserControllerApi extends Controller
     public function registerGymUser(Request $request)
     {
         try {
-            $validatedData = $request->validate([
+            $request->validate([
                 'firstname' => 'required',
+                'email'     => 'required|email|unique:gym_users,email',
+                'phone_no'  => 'required|digits:10|unique:gym_users,phone_no',
                 'lastname'  => 'required',
                 'gender'    => 'required',
                 'password'  => 'required',
@@ -105,7 +107,7 @@ class GymUserControllerApi extends Controller
                 $imagePath = $this->userService->uploadUserProfileImage($request->file('image'));
             }
 
-            $response = $this->user->completeUserProfile($userDetail, $imagePath);
+            $response = $this->user->createUserProfile($userDetail, $imagePath);
 
             return response()->json([
                 'status'  => $response['status'],
@@ -113,7 +115,7 @@ class GymUserControllerApi extends Controller
                 'user'    => $response['user'] ?? null
             ], $response['status']);
         } catch (Throwable $e) {
-            Log::error("[GymUserControllerApi][registerGymUser] Error in registration otp: " . $e->getMessage());
+            Log::error("[GymUserControllerApi][registerGymUser] Error in registration: " . $e->getMessage());
             return $this->errorResponse('Error while registering', $e->getMessage(), 500);
         }
     }
@@ -127,7 +129,7 @@ class GymUserControllerApi extends Controller
                 'email'    => 'required_without:phone_no|email|unique:gym_users,email',
                 'phone_no' => 'required_without:email|digits:10|unique:gym_users,phone_no',
             ]);
-            
+
             $result = $this->otpService->verifyOtp($request);
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
@@ -140,18 +142,18 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
-                'uuid'     =>'required',
-                'height'   =>'required',
-                'weight'   =>'required',
-                'days'     =>'required',
+                'uuid'     => 'required',
+                'height'   => 'required',
+                'weight'   => 'required',
+                'days'     => 'required',
                 'goals'    => 'array',
-                'goals.*'  => 'exists:goals,id', 
+                'goals.*'  => 'exists:goals,id',
                 'levels'   => 'array',
                 'levels.*' => 'exists:user_lebels,id'
             ]);
 
-            $request=$request->all();
-            
+            $request = $request->all();
+
             $result = $this->user->profilePartFour($request);
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
@@ -160,7 +162,7 @@ class GymUserControllerApi extends Controller
         }
     }
 
-     public function fetchUserGym()
+    public function fetchUserGym()
     {
         try {
             $user = auth()->user();
@@ -202,17 +204,17 @@ class GymUserControllerApi extends Controller
                 'injury_ids' => 'array|required',
                 'injury_ids.*' => 'exists:user_injuries,id'
             ]);
-    
+
             // Fetch the user using UUID
             $user = User::where('uuid', $request->uuid)->first();
-    
+
             if (!$user) {
                 return response()->json([
                     'status' => 404,
                     'message' => 'User not found',
                 ], 404);
             }
-    
+
             // Associate each injury with the user
             $injuryUsers = [];
             foreach ($request->injury_ids as $injuryId) {
@@ -222,7 +224,7 @@ class GymUserControllerApi extends Controller
                 ]);
                 $injuryUsers[] = $injuryUser;
             }
-    
+
             return response()->json([
                 'status' => 200,
                 'message' => 'Injuries added successfully',
@@ -237,5 +239,4 @@ class GymUserControllerApi extends Controller
             ], 500);
         }
     }
-    
 }
