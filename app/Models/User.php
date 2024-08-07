@@ -58,7 +58,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(UserInjury::class, 'injury_user');
     }
-    
+
     public function staff()
     {
         return $this->belongsTo(GymStaff::class, 'staff_assign_id');
@@ -158,59 +158,36 @@ class User extends Authenticatable
         }
     }
 
-    public function completeUserProfile(array $userDetail, $imagePath)
+    public function createUserProfile(array $userDetail, $imagePath)
     {
-        // Check if the email or phone number is provided
-        if ((!isset($userDetail['email']) && !isset($userDetail['phone_no'])) || 
-        (isset($userDetail['email']) && isset($userDetail['phone_no']))) {
-       return [
-                'status'  => 422,
-                'message' => 'Email or phone number is required'
-            ];
-        }
-    
-        // Find the user by email or phone number
-        $userProfile = isset($userDetail['email']) 
-        ? User::where('email', $userDetail['email'])->first()
-        : User::where('phone_no', $userDetail['phone_no'])->first();
-
-    
-        // Check if the user exists
-        if (!$userProfile) {
-            return [
-                'status'  => 422,
-                'message' => 'User not found'
-            ];
-        }
-    
         try {
-            $userProfile->update([
-                'firstname'      => $userDetail['firstname'],
-                'lastname'       => $userDetail['lastname'],
-                'email'          => $userDetail['email']?? null,
-                'gender'         => $userDetail['gender'],
-                'phone_no'       => $userDetail['phone_no']?? null,
-                'password'       => $userDetail['password'],
-                'dob'            => $userDetail['dob'],
-                'profile_status' => GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED,
+            $userProfile = $this->create([
+                'firstname'            => $userDetail['firstname'],
+                'lastname'             => $userDetail['lastname'],
+                'email'                => $userDetail['email'],
+                'gender'               => $userDetail['gender'],
+                'phone_no'             => $userDetail['phone_no'],
+                'password'             => $userDetail['password'],
+                'dob'                  => $userDetail['dob'],
+                'profile_status'       => GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED,
+                'is_email_verified'    => true,
+                'is_phone_no_verified' => true,
             ]);
-    
+
             if ($imagePath) {
-                $userProfile->update([
-                    'image' => $imagePath
-                ]);
+                $userProfileData['image'] = $imagePath;
             }
-    
+
             return [
                 'status'  => 200,
-                'message' => 'Profile updated successfully',
+                'message' => 'Profile created successfully',
                 'user'    => $userProfile
             ];
         } catch (Throwable $e) {
-            Log::error('[User][completeUserProfile] Error while completing user detail: ' . $e->getMessage());
+            Log::error('[User][createUserProfile] Error while creating user detail: ' . $e->getMessage());
             return [
                 'status'  => 500,
-                'message' => 'An error occurred while updating the profile'
+                'message' => 'An error occurred while creating the profile'
             ];
         }
     }
@@ -218,7 +195,7 @@ class User extends Authenticatable
     public function profilePartFour(array $userDetail)
     {
         $userProfile = User::where('uuid', $userDetail['uuid'])->first();
-    
+
         // Check if the user exists
         if (!$userProfile) {
             return [
@@ -226,7 +203,7 @@ class User extends Authenticatable
                 'message' => 'User not found'
             ];
         }
-    
+
         try {
             // Update user profile details
             $userProfile->update([
@@ -234,14 +211,14 @@ class User extends Authenticatable
                 'weight' => $userDetail['weight'],
                 'days'   => $userDetail['days']
             ]);
-    
+
             // Save goals to goal_users table
             if (!empty($userDetail['goals'])) {
                 foreach ($userDetail['goals'] as $goalId) {
                     // Check if the goal already exists for the user
                     $existingGoal = GoalUser::where('user_id', $userProfile->id)
-                                            ->where('goal_id', $goalId)
-                                            ->first();
+                        ->where('goal_id', $goalId)
+                        ->first();
                     if (!$existingGoal) {
                         GoalUser::create([
                             'user_id' => $userProfile->id,
@@ -250,14 +227,14 @@ class User extends Authenticatable
                     }
                 }
             }
-    
+
             // Save levels to level_users table
             if (!empty($userDetail['levels'])) {
                 foreach ($userDetail['levels'] as $levelId) {
                     // Check if the level already exists for the user
                     $existingLevel = LevelUser::where('user_id', $userProfile->id)
-                                              ->where('level_id', $levelId)
-                                              ->first();
+                        ->where('level_id', $levelId)
+                        ->first();
                     if (!$existingLevel) {
                         LevelUser::create([
                             'user_id' => $userProfile->id,
@@ -266,10 +243,10 @@ class User extends Authenticatable
                     }
                 }
             }
-    
+
             // Retrieve goals and levels for the user
-        $goals = $userProfile->goals()->get();
-        $levels = $userProfile->levels()->get();
+            $goals = $userProfile->goals()->get();
+            $levels = $userProfile->levels()->get();
             return [
                 'status'  => 200,
                 'message' => 'Profile updated successfully',
@@ -303,13 +280,11 @@ class User extends Authenticatable
 
     public function levels()
     {
-        return $this->belongsToMany(UserLebel::class, 'level_users','user_id', 'level_id');
+        return $this->belongsToMany(UserLebel::class, 'level_users', 'user_id', 'level_id');
     }
 
     public function gyms()
     {
         return $this->belongsToMany(Gym::class, 'gym_user_gyms', 'user_id', 'gym_id');
     }
-    
 }
- 
