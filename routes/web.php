@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DietController;
 use App\Http\Controllers\GymCouponController;
 use App\Http\Controllers\GymCustomerPaymentController;
 use App\Http\Controllers\GymStaffController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\GymUserController;
 use App\Http\Controllers\UserBmiController;
 use App\Traits\SessionTrait;
 use App\Http\Controllers\GymDesignationController;
+use App\Http\Controllers\WorkoutController;
 use App\Http\Middleware\EnsureGymTokenIsValid;
 use Illuminate\Support\Facades\Route;
 
@@ -173,20 +175,24 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
         return view('GymOwner.courses');
     });
 
-    Route::get('/add-workout', function () {
-        return view('GymOwner.add-workout');
-    });
+    // Route::get('/add-workout', function () {
+    //     return view('GymOwner.add-workout');
+    // });
 
     Route::get('/add-reels', function () {
         return view('GymOwner.add-reels');
     });
 
-    Route::get('/add-diet', function () {
-        return view('GymOwner.add-diet');
-    });
+    // Route::get('/add-diet', function () {
+    //     return view('GymOwner.add-diet');
+    // });
 
+    Route::get('/add-diet', [DietController::class, 'viewDiet'])->name('add-diet');
+    Route::post('/add-gym-diet', [DietController::class, 'addDiet'])->name('add-gym-diet');
 
-    
+    Route::get('/add-workout', [WorkoutController::class, 'viewWorkout'])->name('add-workout');
+    Route::post('/add-gym-workout', [WorkoutController::class, 'addWorkout'])->name('add-gym-workout');
+
 
     Route::get('/viewAddEnquiry', [GymEnquiryController::class, 'viewAddEnquiry'])->name('viewAddEnquiry');
     Route::post('/addGymEnquiry', [GymEnquiryController::class, 'addGymEnquiry'])->name('addGymEnquiry');
