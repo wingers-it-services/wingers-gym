@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InjuryUser;
 use App\Models\User;
 use App\Services\OtpService;
 use App\Services\UserService;
@@ -32,7 +33,7 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
-                'phone_no' => ['required', 'digits:10']
+                'phone_no' => 'required|unique:gym_users,phone_no'
             ]);
             $result = $this->otpService->generateMobileOtp($request->phone_no);
             return response()->json($result, $result['status']);
@@ -159,31 +160,82 @@ class GymUserControllerApi extends Controller
         }
     }
 
-     public function fetchUserWorkout()
+     public function fetchUserGym()
     {
         try {
             $user = auth()->user();
-            $workouts = $this->userWorkout->where('user_id',$user->id)->get();
+            if (!$user) {
+                return response()->json([
+                    'status'  => 401,
+                    'message' => 'User not authenticated',
+                ], 401);
+            }
+            $gyms = $user->gyms;
 
-            if ($workouts->isEmpty()) {
+            if ($gyms->isEmpty()) {
                 return response()->json([
                     'status'   => 422,
-                    'workouts' => $workouts,
-                    'message'  => 'There is no workouts'
+                    'gyms' => $gyms,
+                    'message'  => 'There is no gyms'
                 ], 200);
             }
 
             return response()->json([
-                'status'    => 200,
-                'workouts'  => $workouts,
-                'message'   => 'User workouts Fetch Successfully'
+                'status'  => 200,
+                'gyms'    => $gyms,
+                'message' => 'User gyms Fetch Successfully'
             ], 200);
         } catch (\Exception $e) {
-            Log::error('[UserWorkoutControllerApi][fetchUserWorkout]Error fetching workouts details: ' . $e->getMessage());
+            Log::error('[GymUserControllerApi][fetchUserGym]Error fetching gyms details: ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
-                'message' => 'Error fetching workouts details: ' . $e->getMessage()
+                'message' => 'Error fetching gyms details: ' . $e->getMessage()
             ], 500);
         }
     }
+
+    public function addUserInjuries(Request $request)
+    {
+        try {
+            $request->validate([
+                'uuid' => 'required',
+                'injury_ids' => 'array|required',
+                'injury_ids.*' => 'exists:user_injuries,id'
+            ]);
+    
+            // Fetch the user using UUID
+            $user = User::where('uuid', $request->uuid)->first();
+    
+            if (!$user) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'User not found',
+                ], 404);
+            }
+    
+            // Associate each injury with the user
+            $injuryUsers = [];
+            foreach ($request->injury_ids as $injuryId) {
+                $injuryUser = InjuryUser::create([
+                    'user_id' => $user->id,
+                    'injury_id' => $injuryId,
+                ]);
+                $injuryUsers[] = $injuryUser;
+            }
+    
+            return response()->json([
+                'status' => 200,
+                'message' => 'Injuries added successfully',
+                'injuryUsers' => $injuryUsers,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error("[GymUserControllerApi][addUserInjuries] Error adding injuries: " . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'An error occurred while adding injuries',
+                'errorMessage' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    
 }

@@ -79,6 +79,9 @@ class Gym extends Authenticatable
 
     }
 
-
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'gym_user_gyms', 'gym_id', 'user_id');
+    }
 
 }

@@ -109,17 +109,17 @@ class OtpService
 
             if ($otpDetail->otp == $otp) {
                 // OTP is correct, check if user exists
-                $user = User::where('phone_no', $phone_no)->first();
-                if ($user) {
-                    $user->is_phone_no_verified = true;
-                    $user->save();
-                } else {
-                    $user = User::create([
-                        'phone_no'             => $phone_no,
-                        'is_phone_no_verified' => true,
-                        'profile_status'       => GymUserAccountStatusEnum::MOBILE_NUMBER_VERIFIED
-                    ]);
-                }
+                // $user = User::where('phone_no', $phone_no)->first();
+                // if ($user) {
+                //     $user->is_phone_no_verified = true;
+                //     $user->save();
+                // } else {
+                //     $user = User::create([
+                //         'phone_no'             => $phone_no,
+                //         'is_phone_no_verified' => true,
+                //         'profile_status'       => GymUserAccountStatusEnum::MOBILE_NUMBER_VERIFIED
+                //     ]);
+                // }
 
                 return [
                     'status'       => 200,
@@ -164,7 +164,8 @@ class OtpService
                 return [
                     'status'  => 200,
                     'message' => 'OTP verified succesfully',
-                    'email'   => $email
+                    'email'   => $email,
+                    'user'    => $user
                 ];
             } else {
                 return [
