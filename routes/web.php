@@ -135,7 +135,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/delete-workout/{uuid}', [GymUserController::class, 'deleteWorkout'])->name('delete-workout');
     Route::get('/delete-diet/{uuid}', [GymUserController::class, 'deleteDiet'])->name('delete-diet');
     Route::post('/check-subscription/{userId}', [GymUserController::class, 'checkSubscription'])->name('check-subscription');
-    Route::post('/update-subscription/{userId}', [GymUserController::class, 'updateSubscription'])->name('update.subscription');
+    Route::post('/update-user-subscription/{userId}', [GymUserController::class, 'updateSubscription'])->name('update-user-subscription');
 
 
 
@@ -172,6 +172,21 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/courses', function () {
         return view('GymOwner.courses');
     });
+
+    Route::get('/add-workout', function () {
+        return view('GymOwner.add-workout');
+    });
+
+    Route::get('/add-reels', function () {
+        return view('GymOwner.add-reels');
+    });
+
+    Route::get('/add-diet', function () {
+        return view('GymOwner.add-diet');
+    });
+
+
+    
 
     Route::get('/viewAddEnquiry', [GymEnquiryController::class, 'viewAddEnquiry'])->name('viewAddEnquiry');
     Route::post('/addGymEnquiry', [GymEnquiryController::class, 'addGymEnquiry'])->name('addGymEnquiry');

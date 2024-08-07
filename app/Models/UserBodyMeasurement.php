@@ -13,6 +13,7 @@ class UserBodyMeasurement extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'gym_id',
         'user_id',
         'chest',
         'triceps',
@@ -28,24 +29,25 @@ class UserBodyMeasurement extends Model
         'calves'
     ];
 
-    public function createBodyMeasurement(array $bodyodyMeasurement, $userId)
+    public function createBodyMeasurement(array $bodyMeasurement, $userId, $gymId)
     {
        try {
         // dd($bodyodyMeasurement  );
         $this->create([
+            'gym_id' => $gymId,
             'user_id' => $userId,
-            'chest' => $bodyodyMeasurement['chest'],
-            'triceps' => $bodyodyMeasurement['triceps'],
-            'biceps' => $bodyodyMeasurement['biceps'],
-            'lats' => $bodyodyMeasurement['lats'],
-            'shoulder' => $bodyodyMeasurement['shoulder'],
-            'abs' => $bodyodyMeasurement['abs'],
-            'forearms' => $bodyodyMeasurement['forearms'],
-            'traps' => $bodyodyMeasurement['traps'],
-            'glutes' => $bodyodyMeasurement['glutes'],
-            'quads' => $bodyodyMeasurement['quads'],
-            'hamstring' => $bodyodyMeasurement['hamstring'],
-            'calves' => $bodyodyMeasurement['calves']
+            'chest' => $bodyMeasurement['chest'],
+            'triceps' => $bodyMeasurement['triceps'],
+            'biceps' => $bodyMeasurement['biceps'],
+            'lats' => $bodyMeasurement['lats'],
+            'shoulder' => $bodyMeasurement['shoulder'],
+            'abs' => $bodyMeasurement['abs'],
+            'forearms' => $bodyMeasurement['forearms'],
+            'traps' => $bodyMeasurement['traps'],
+            'glutes' => $bodyMeasurement['glutes'],
+            'quads' => $bodyMeasurement['quads'],
+            'hamstring' => $bodyMeasurement['hamstring'],
+            'calves' => $bodyMeasurement['calves']
         ]);
        } catch (Throwable $th) {
         Log::error("[UserBodyMeasurement][createBodyMeasurement] error " . $th->getMessage());

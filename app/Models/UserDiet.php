@@ -11,12 +11,13 @@ class UserDiet extends Model
 {
     
 
-    protected $fillable = ['user_id', 'meal_name', 'calories', 'protein', 'carbs','fats', 'notes'];
+    protected $fillable = ['user_id', 'meal_name', 'calories', 'protein', 'carbs','fats', 'notes', 'gym_id'];
 
-    public function addUserDiet(array $addDiet)
+    public function addUserDiet(array $addDiet, $gym_id)
     {
         try {
             return $this->create([
+                'gym_id' => $gym_id,
                 'user_id' => $addDiet['user_id'],
                 'meal_name' => $addDiet['meal_name'],
                 'calories' => $addDiet['calories'],

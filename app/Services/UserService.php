@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\GymSubscriptionStatusEnum;
 use App\Enums\GymUserAccountStatusEnum;
+use App\Models\GymUserGym;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 
@@ -62,8 +63,15 @@ class UserService
             $this->uploadAdminProfilePicture($user, $enteredUserData["image"]);
         }
 
+        // Insert into the pivot table
+        GymUserGym::create(
+            ['user_id' => $user->id, 
+            'gym_id'  => $gymId],
+        );
+
         return true;
     }
+
 
     public function uploadAdminProfilePicture(User $user, UploadedFile $image): User
     {
