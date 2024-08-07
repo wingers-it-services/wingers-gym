@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\GymUserAccountStatusEnum;
 use App\Models\InjuryUser;
 use App\Models\User;
 use App\Services\OtpService;
@@ -200,8 +201,8 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
-                'uuid' => 'required',
-                'injury_ids' => 'array|required',
+                'uuid'         => 'required',
+                'injury_ids'   => 'array|required',
                 'injury_ids.*' => 'exists:user_injuries,id'
             ]);
 
@@ -225,16 +226,20 @@ class GymUserControllerApi extends Controller
                 $injuryUsers[] = $injuryUser;
             }
 
+
+        $user->profile_status = GymUserAccountStatusEnum::INJURY_DETAIL_COMPLETED;
+        $user->save();
+
             return response()->json([
-                'status' => 200,
-                'message' => 'Injuries added successfully',
+                'status'      => 200,
+                'message'     => 'Injuries added successfully',
                 'injuryUsers' => $injuryUsers,
             ], 200);
         } catch (\Exception $e) {
             Log::error("[GymUserControllerApi][addUserInjuries] Error adding injuries: " . $e->getMessage());
             return response()->json([
-                'status' => 500,
-                'message' => 'An error occurred while adding injuries',
+                'status'       => 500,
+                'message'      => 'An error occurred while adding injuries',
                 'errorMessage' => $e->getMessage(),
             ], 500);
         }

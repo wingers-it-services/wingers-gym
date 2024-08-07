@@ -207,9 +207,10 @@ class User extends Authenticatable
         try {
             // Update user profile details
             $userProfile->update([
-                'height' => $userDetail['height'],
-                'weight' => $userDetail['weight'],
-                'days'   => $userDetail['days']
+                'height'          => $userDetail['height'],
+                'weight'          => $userDetail['weight'],
+                'days'            => $userDetail['days'],
+                'profile_status'  => GymUserAccountStatusEnum::BODY_MESUREMENT_DETAIL_COMPLETED,
             ]);
 
             // Save goals to goal_users table

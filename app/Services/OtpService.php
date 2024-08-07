@@ -43,6 +43,7 @@ class OtpService
                 'status'   => 200,
                 'message'  => 'OTP sent successfully',
                 'phone_no' => $phone_no,
+                'otp'      => $otp,
             ];
         } catch (Exception $e) {
             Log::error("[OtpService][generateOtp] Error sending otp: " . $e->getMessage());

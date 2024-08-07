@@ -4,7 +4,7 @@ namespace App\Enums;
 
 enum GymUserAccountStatusEnum
 {
-    public const BODY_MESUREMENT_DETAIL = 1;
+    public const BODY_MESUREMENT_DETAIL_COMPLETED = 1;
     public const PROFILE_DETAIL_COMPLETED = 0;
-    public const EMAIL_VERIFIED = 3;
+    public const INJURY_DETAIL_COMPLETED = 3;
 }
