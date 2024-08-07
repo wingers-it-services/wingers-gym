@@ -9,6 +9,7 @@ use Ramsey\Uuid\Uuid;
 class UserSubscriptionHistory extends Model
 {
     protected $fillable = [
+        'gym_id',
         'user_id',
         'subscription_id',
         'original_transaction_id',
@@ -18,6 +19,11 @@ class UserSubscriptionHistory extends Model
         'amount',
         'coupon_id',
     ];
+    
+    public function subscription()
+    {
+        return $this->belongsTo(GymSubscription::class, 'subscription_id');
+    }
     
     protected static function boot()
     {

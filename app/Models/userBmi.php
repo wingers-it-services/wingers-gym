@@ -13,6 +13,7 @@ class userBmi extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'gym_id',
         'user_id',
         'age',
         'height',
@@ -20,18 +21,19 @@ class userBmi extends Model
         'bmi'
     ];
 
-    public function createBmi(array $createBmiArray, $userId)
+    public function createBmi(array $createBmiArray, $userId, $gymId)
     {
         try {
             // dd($createBmiArray);
             $this->create([
+                'gym_id' => $gymId,
                 'user_id' => $userId,
-                'age' => $createBmiArray['age'],
                 'height' => $createBmiArray['height'],
                 'weight' => $createBmiArray['weight'],
                 'bmi'=> $createBmiArray['bmi']
             ]);
         } catch (Throwable $th) {
+            dd($th);
             Log::error("[Bmi][createBmi] error " . $th->getMessage());
         }
     }

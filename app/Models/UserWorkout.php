@@ -13,12 +13,13 @@ class UserWorkout extends Model
     use SoftDeletes;
     use SessionTrait;
 
-    protected $fillable = ['user_id', 'exercise_name', 'sets', 'reps', 'weight', 'notes'];
+    protected $fillable = ['user_id', 'exercise_name', 'sets', 'reps', 'weight', 'notes', 'gym_id'];
 
-    public function addWorkout(array $addWorkout)
+    public function addWorkout(array $addWorkout, $gym_id)
     {
         try {
             return $this->create([
+                'gym_id' => $gym_id,
                 'user_id' => $addWorkout['user_id'],
                 'exercise_name' => $addWorkout['exercise_name'],
                 'sets' => $addWorkout['sets'],

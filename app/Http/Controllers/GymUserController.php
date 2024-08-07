@@ -7,6 +7,7 @@ use App\Models\GymStaff;
 use App\Models\userBmi;
 use App\Models\Gym;
 use App\Models\GymSubscription;
+use App\Models\GymUserSubscriptionsHistory;
 use App\Models\User;
 use App\Models\UserBodyMeasurement;
 use App\Models\UserWorkout;
@@ -31,6 +32,7 @@ class GymUserController extends Controller
     protected $gymStaff;
     protected $designation;
     protected $gymSubscription;
+    protected $userHistory;
 
     public function __construct(
         User $user,
@@ -42,7 +44,8 @@ class GymUserController extends Controller
         userBmi $bmi,
         GymStaff $gymStaff,
         Designation $designation,
-        GymSubscription $gymSubscription
+        GymSubscription $gymSubscription,
+        UserSubscriptionHistory $userHistory
     ) {
         $this->user = $user;
         $this->gym = $gym;
@@ -54,6 +57,7 @@ class GymUserController extends Controller
         $this->gymStaff = $gymStaff;
         $this->designation = $designation;
         $this->gymSubscription = $gymSubscription;
+        $this->userHistory = $userHistory;
     }
 
     public function listGymUser()
@@ -96,7 +100,7 @@ class GymUserController extends Controller
                 'coupon_id'         => 'nullable',
                 'subscription_status'  => 'nullable',
                 'profile_status'       => 'nullable',
-                'staff_assign_id'      => 'required',
+                'staff_assign_id'      => 'nullable',
                 'password'             => 'required'
             ]);
 
@@ -120,6 +124,7 @@ class GymUserController extends Controller
                 'status' => $user->subscription_status,
                 'amount' => $request->amount, // Ensure this is part of the request or calculate it
                 'coupon_id' => 2,
+                'gym_id' => $gymId
             ]);
 
             return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Successfully');
@@ -138,12 +143,12 @@ class GymUserController extends Controller
         $gymId = $this->gym->where('uuid', $this->getGymSession()['uuid'])->first()->id;
         $userId = $userDetail->id;
         $designations = $this->designation->get();
-        $workouts = $this->workout->where('user_id', $userId)->get();
-        $diets = $this->diet->where('user_id', $userId)->get();
+        $workouts = $this->workout->where('gym_id', $gymId)->where('user_id', $userId)->get();
+        $diets = $this->diet->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
 
         $subscriptionId = $userDetail->subscription_id;
-        $userSubscriptions = $this->gymSubscription->where('id', $subscriptionId)->get();
+        $userSubscriptions = $this->userHistory->where('gym_id', $gymId)->where('user_id', $userId)->where('subscription_id', $subscriptionId)->get();
         // $bmis = $this->bmi->where('user_id', $userId)->get();
         // $trainers = $this->gymStaff->where('designation_id', "1")->get();
         // $trainers = $this->gymStaff->where('gym_id', $gymId)->where('designation_id', "1")->get();
@@ -195,7 +200,10 @@ class GymUserController extends Controller
                 "notes" => 'required',
             ]);
 
-            $this->workout->addWorkout($validatedData);
+            $gym_uuid = $this->getGymSession()['uuid'];
+            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+
+            $this->workout->addWorkout($validatedData, $gymId);
 
             return redirect()->back()->with('status', 'success')->with('message', 'Workout data saved successfully.');
         } catch (Throwable $th) {
@@ -218,7 +226,10 @@ class GymUserController extends Controller
                 "notes" => 'required',
             ]);
 
-            $this->diet->addUserDiet($validatedData);
+            $gym_uuid = $this->getGymSession()['uuid'];
+            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+
+            $this->diet->addUserDiet($validatedData, $gymId);
 
             return redirect()->back()->with('status', 'success')->with('message', 'Diet data saved successfully.');
         } catch (Throwable $th) {
@@ -354,7 +365,7 @@ class GymUserController extends Controller
     public function updateSubscription(Request $request, $userId)
     {
         // Inactivate the existing subscription in UserSubscriptionHistory table
-        UserSubscriptionHistory::where('user_id', $userId)->latest()->update(['status' => 0]);
+        $subscriptionHistory = $this->userHistory->where('user_id', $userId)->latest()->update(['status' => 0]);
 
         // Update the subscription details in gym_users table
         User::where('user_id', $userId)->update([
