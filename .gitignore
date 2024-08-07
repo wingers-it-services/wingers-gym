@@ -22,3 +22,5 @@ composer.lock
 public/admin_product_images/
 public/gymProfile_images/
 public/user_images/
+public/diet_images/
+public/workout_images/

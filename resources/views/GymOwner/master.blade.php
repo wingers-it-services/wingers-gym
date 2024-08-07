@@ -881,6 +881,18 @@
 						</a>
 					</li>
 
+					<li><a href="/add-workout" class="ai-icon" aria-expanded="false">
+							<i class="fa fa-money" aria-hidden="true"></i>
+							<span class="nav-text">Add Gym Workout</span>
+						</a>
+					</li>
+
+					<li><a href="/add-diet" class="ai-icon" aria-expanded="false">
+							<i class="fa fa-money" aria-hidden="true"></i>
+							<span class="nav-text">Add Gym Diet</span>
+						</a>
+					</li>
+
 					<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
 							<i class="fa fa-address-card-o" aria-hidden="true"></i>
 							<span class="nav-text">GYM Staff</span>
@@ -911,7 +923,7 @@
 							<span class="nav-text">GYM Schedule</span>
 						</a>
 					</li>
-                    <li>
+					<li>
 						<a href="/vendor-list">
 							<i class="fa-solid fa-scale-unbalanced-flip"></i>
 							<span class="nav-text">Vendor</span>
@@ -1039,7 +1051,7 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKadNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<!-- Required vendors -->
 
 	<script src="https://fito.dexignzone.com/laravel/demo/vendor/datatables/js/jquery.dataTables.min.js" type="text/javascript"></script>

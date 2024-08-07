@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('workouts', function (Blueprint $table) {
             $table->id();
             $table->uuid()->index();
+            $table->integer('gym_id');
             $table->string('image');
             $table->string('vedio_link');
             $table->string('name');
             $table->string('gender');
+            $table->string('category');
+            $table->longText('description');
             $table->timestamps();
         });
     }

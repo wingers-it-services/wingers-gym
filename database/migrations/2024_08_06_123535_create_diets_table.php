@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('diets', function (Blueprint $table) {
             $table->id();
             $table->uuid()->index();
+            $table->integer('gym_id');
             $table->string('image');
             $table->string('name');
             $table->string('diet');
             $table->string('gender');
-            $table->string('alternative_diet');
-            $table->interger('min_age');
-            $table->interger('max_age');
+            $table->string('alternative_diet')->nullable();
+            $table->integer('min_age');
+            $table->integer('max_age');
             $table->string('goal');
             $table->timestamps();
         });
