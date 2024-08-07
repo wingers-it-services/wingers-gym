@@ -22,6 +22,14 @@ class UserDietControllerApi extends Controller
     {
         try {
             $user = auth()->user();
+
+            if (!$user) {
+                return response()->json([
+                    'status'  => 401,
+                    'message' => 'User not authenticated',
+                ], 401);
+            }
+            
             $diets = $this->userDiet->where('user_id',$user->id)->get();
 
             if ($diets->isEmpty()) {

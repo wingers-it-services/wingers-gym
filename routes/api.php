@@ -44,13 +44,17 @@ Route::post('/verify-otp', [GymUserControllerApi::class, 'verifyOtp']);
 
 Route::post('/profile-part-four-updated', [GymUserControllerApi::class, 'profilePartFour']);
 
+Route::post('/add-user-injuries', [GymUserControllerApi::class, 'addUserInjuries']);
 
 Route::middleware('auth:api')->group(function () {
 
     Route::post('/fetch-subscription', [UserSubscriptionControllerApi::class, 'fetchSubscription']);
 
     Route::post('/fetch-user-diets', [UserDietControllerApi::class, 'fetchUserDiet']);
-
+    
     Route::post('/fetch-user-workout', [UserWorkoutControllerApi::class, 'fetchUserWorkout']);
+
+    Route::get('/fetch-user-gym', [GymUserControllerApi::class, 'fetchUserGym']);
+
 
 });

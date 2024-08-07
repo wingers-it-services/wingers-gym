@@ -305,6 +305,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(UserLebel::class, 'level_users','user_id', 'level_id');
     }
+
+    public function gyms()
+    {
+        return $this->belongsToMany(Gym::class, 'gym_user_gyms', 'user_id', 'gym_id');
+    }
     
 }
  
