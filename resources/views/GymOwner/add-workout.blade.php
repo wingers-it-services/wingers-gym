@@ -108,9 +108,9 @@
                                 <td>{{$subscription->name }}</td>
                                 <td>{{$subscription->gender }}</td>
                                 <td>
-                                    <a class="dropdown-item view-workout" href="javascript:void(0);" data-bs-toggle="tooltip" data-placement="top" title="View" data-workout="{{ json_encode($subscription) }}">
-                                        <i class="fa fa-eye color-muted"></i>
-                                    </a>
+                                <a class="dropdown-item view-workout" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#viewModal" data-workout="{{ json_encode($subscription) }}">
+                                    <i class="fa fa-eye color-muted"></i>
+                                </a>
                                 </td>
 
                                 <td class="text-end">
@@ -185,33 +185,44 @@
     </div>
 </div>
 
-<div class="modal fade" id="viewWorkoutModal" tabindex="-1" role="dialog" aria-labelledby="viewWorkoutModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+
+<!-- Modal Structure -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewWorkoutModalLabel">Workout Details</h5>
+                <h5 class="modal-title" id="viewModalLabel">Workout Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <img id="view_workout_image" src="" class="img-fluid" alt="Workout Image">
-                    </div>
-                    <div class="col-md-6">
-                        <div class="video-wrapper mb-3">
-                            <iframe id="view_vedio_frame" width="100%" height="315" src="" frameborder="0" allowfullscreen></iframe>
-                        </div>
-                        <h5 id="view_workout_name"></h5>
-                        <p><strong>Category:</strong> <span id="view_category"></span></p>
-                        <p><strong>Gender:</strong> <span id="view_gender"></span></p>
-                        <p><strong>Description:</strong></p>
-                        <p id="view_description"></p>
+            <div class="modal-body d-flex">
+                <div class="w-50 pe-2">
+                    <!-- Image -->
+                    <img id="modalImage" src="" alt="Workout Image" class="img-fluid">
+                </div>
+                <div class="w-50 ps-2">
+                    <!-- Video or Iframe -->
+                    <div id="videoContainer">
+                        <!-- Video -->
+                        <video id="modalVideo" controls class="w-100" style="display: none;">
+                            <source id="modalVideoSource" src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <!-- Iframe -->
+                        <iframe id="modalIframe" class="w-100" height="315" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <p id="modalDetails" class="w-100 mt-3"></p>
             </div>
         </div>
     </div>
 </div>
+
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -258,25 +269,51 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const viewButtons = document.querySelectorAll('.view-workout');
-
-        viewButtons.forEach(button => {
-            button.addEventListener('click', function() {
+    document.addEventListener('DOMContentLoaded', function () {
+        // Handling view workout modal
+        document.querySelectorAll('.view-workout').forEach(button => {
+            button.addEventListener('click', function () {
                 const workout = JSON.parse(this.getAttribute('data-workout'));
 
-                document.getElementById('view_workout_image').src = workout.image ? workout.image : 'path/to/default/image.jpg';
-                document.getElementById('view_workout_name').textContent = workout.name;
-                document.getElementById('view_vedio_frame').src = workout.vedio_link.replace('watch?v=', 'embed/');
-                document.getElementById('view_category').textContent = workout.category;
-                document.getElementById('view_gender').textContent = workout.gender;
-                document.getElementById('view_description').textContent = workout.description;
+                // Set the image src
+                document.getElementById('modalImage').src = workout.image ? workout.image : 'images/profile/17.jpg';
 
-                new bootstrap.Modal(document.getElementById('viewWorkoutModal')).show();
+                // Handle video or iframe
+                const videoContainer = document.getElementById('videoContainer');
+                const modalVideo = document.getElementById('modalVideo');
+                const modalIframe = document.getElementById('modalIframe');
+                const videoSource = document.getElementById('modalVideoSource');
+
+                // Clear previous video sources
+                modalVideo.style.display = 'none';
+                modalIframe.style.display = 'none';
+
+                // Check if it's an embedded video or a direct video file
+                if (workout.vedio_link.includes('youtube.com') || workout.vedio_link.includes('vimeo.com')) {
+                    // Embed video (e.g., YouTube or Vimeo)
+                    modalIframe.src = workout.vedio_link;
+                    modalIframe.style.display = 'block';
+                } else {
+                    // Direct video file
+                    videoSource.src = workout.vedio_link;
+                    modalVideo.style.display = 'block';
+                    modalVideo.load();
+                }
+
+                // Set workout details
+                const details = `
+                    <strong>Category:</strong> ${workout.category}<br>
+                    <strong>Workout Name:</strong> ${workout.name}<br>
+                    <strong>Gender:</strong> ${workout.gender}<br>
+                    <strong>Description:</strong> ${workout.description}
+                `;
+                document.getElementById('modalDetails').innerHTML = details;
+
+                // Show modal
+                new bootstrap.Modal(document.getElementById('viewModal')).show();
             });
         });
     });
-
 
 
     function confirmDelete(uuid) {
