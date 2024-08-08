@@ -120,4 +120,111 @@
     </div>
 </div>
 
+<div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editDietModalLabel">Edit Diet</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editDietForm" method="POST" enctype="multipart/form-data" action="/update-gym-diet">
+                    @csrf
+                    <input type="hidden" id="edit_diet_id" name="diet_id">
+
+                    <div class="form-group text-center" e>
+                        <label for="current_image">Current Diet Image</label>
+                        <img id="current_image" src="" alt="Diet Image" class="img-fluid mb-3" style="width: 70%;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_image">Upload New Diet Image</label>
+                        <input type="file" class="form-control" id="edit_image" name="image" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_name">Diet Name</label>
+                        <input type="text" class="form-control" id="edit_name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_gender">Gender</label>
+                        <select class="form-control" id="edit_gender" name="gender" required>
+                            <option value="">Choose...</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_diet">Diet</label>
+                        <input type="text" class="form-control" id="edit_diet" name="diet" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_alternative_diet">Alternative Diet</label>
+                        <input type="text" class="form-control" id="edit_alternative_diet" name="alternative_diet">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_min_age">Min Age</label>
+                        <input type="number" class="form-control" id="edit_min_age" name="min_age" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_max_age">Max Age</label>
+                        <input type="number" class="form-control" id="edit_max_age" name="max_age" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_goal">Goal</label>
+                        <input type="text" class="form-control" id="edit_goal" name="goal" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Update Diet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editButtons = document.querySelectorAll('.edit-book-button');
+        const editImageInput = document.getElementById('edit_image');
+        const currentImage = document.getElementById('current_image');
+        const editGenderSelect = document.getElementById('edit_gender');
+
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const diet = JSON.parse(this.getAttribute('data-book'));
+
+                document.getElementById('edit_diet_id').value = diet.id;
+                document.getElementById('edit_name').value = diet.name;
+                currentImage.src = diet.image; // Set the src of the image element
+                editGenderSelect.value = diet.gender;
+                document.getElementById('edit_diet').value = diet.diet;
+                document.getElementById('edit_alternative_diet').value = diet.alternative_diet;
+                document.getElementById('edit_min_age').value = diet.min_age;
+                document.getElementById('edit_max_age').value = diet.max_age;
+                document.getElementById('edit_goal').value = diet.goal;
+
+                new bootstrap.Modal(document.getElementById('editDietModal')).show();
+            });
+        });
+
+        // Show a preview of the new image when selected
+        editImageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentImage.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+
 @endsection

@@ -26,7 +26,6 @@ class UserBmiController extends Controller
 
     public function createUserBodyMeasurement(Request $request)
     {
-        // dd($request->all());
         try {
             $validatedData = $request->validate([
                 "user_id" => 'required',
