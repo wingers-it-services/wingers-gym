@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('gender');
             $table->string('category');
             $table->longText('description');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

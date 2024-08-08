@@ -48,16 +48,6 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="diet">Diet </label>
-                                            <input type="text" class="form-control" id="diet" name="diet" placeholder="">
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="alternative_diet">Alternative Diet </label>
-                                            <input type="text" class="form-control" id="alternative_diet" name="alternative_diet" placeholder="">
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
                                             <label for="min_age">Min Age </label>
                                             <input type="number" class="form-control" id="min_age" name="min_age" placeholder="">
                                         </div>
@@ -71,6 +61,16 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="goal">Goal </label>
                                             <input type="text" class="form-control" id="goal" name="goal" placeholder="">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="diet">Diet Description</label>
+                                            <textarea type="text" class="form-control" id="diet" name="diet" rows="5" placeholder=""></textarea>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="alternative_diet">Alternative Diet </label>
+                                            <textarea type="text" class="form-control" id="alternative_diet" name="alternative_diet" rows="5" placeholder=""></textarea>
                                         </div>
                                         <hr class="mb-4">
                                         <button class="btn btn-primary btn-lg btn-block" type="submit">Add Diet</button>
@@ -93,6 +93,7 @@
                                 <th scope="col">Image</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Gender</th>
+                                <th scope="col">Goal</th>
                                 <th scope="col">Max-Min Age</th>
                                 <th scope="col" class="text-end">Action</th>
                             </tr>
@@ -105,6 +106,7 @@
                                 </td>
                                 <td>{{$subscription->name }}</td>
                                 <td>{{$subscription->gender }}</td>
+                                <td>{{$subscription->goal }}</td>
                                 <td>{{$subscription->min_age }} - {{ $subscription->max_age }}</td>
                                 <td class="text-end">
                                     <span><a href="javascript:void(0);" class="me-4 edit-book-button" data-bs-toggle="modal" data-bs-target="#editSuscription" data-book='@json($subscription)'><i class="fa fa-pencil color-muted"></i> </a>
@@ -132,7 +134,7 @@
                     @csrf
                     <input type="hidden" id="edit_diet_id" name="diet_id">
 
-                    <div class="form-group text-center" e>
+                    <div class="form-group text-center">
                         <label for="current_image">Current Diet Image</label>
                         <img id="current_image" src="" alt="Diet Image" class="img-fluid mb-3" style="width: 70%;">
                     </div>
@@ -157,13 +159,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="edit_diet">Diet</label>
-                        <input type="text" class="form-control" id="edit_diet" name="diet" required>
+                        <label for="edit_diet">Diet Description</label>
+                        <textarea type="text" class="form-control" id="edit_diet" rows="4" name="diet" required>
                     </div>
 
                     <div class="form-group">
                         <label for="edit_alternative_diet">Alternative Diet</label>
-                        <input type="text" class="form-control" id="edit_alternative_diet" name="alternative_diet">
+                        <textarea type="text" class="form-control" rows="4" id="edit_alternative_diet" name="alternative_diet">
                     </div>
 
                     <div class="form-group">
@@ -225,6 +227,23 @@
             }
         });
     });
+
+    function confirmDelete(uuid) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to delete this workout?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-diet/' + uuid;
+            }
+        });
+    }
 </script>
 
+@include('CustomSweetAlert');
 @endsection

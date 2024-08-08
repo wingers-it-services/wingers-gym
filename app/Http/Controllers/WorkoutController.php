@@ -25,7 +25,8 @@ class WorkoutController extends Controller
     }
     public function viewWorkout()
     {
-        $workouts = $this->workout->all();
+        $gymId = $this->gym->where('uuid', $this->getGymSession()['uuid'])->first()->id;
+        $workouts = $this->workout->where('gym_id', $gymId)->get();
 
         return view('GymOwner.add-workout', compact('workouts'));
     }
@@ -56,9 +57,9 @@ class WorkoutController extends Controller
             // Assuming you have a method addCoupon in your GymCoupon model
             $this->workout->addWorkout($validatedData, $imagePath, $gymId);
 
-            return redirect()->back()->with('status', 'success')->with('message', 'Coupon added successfully.');
+            return redirect()->back()->with('status', 'success')->with('message', 'Workout added successfully.');
         } catch (\Throwable $th) {
-            Log::error("[AdminCouponController][addAdminCoupon] error " . $th->getMessage());
+            Log::error("[WorkoutController][addWorkout] error " . $th->getMessage());
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
@@ -108,5 +109,13 @@ class WorkoutController extends Controller
             return redirect()->back()->with('status', 'error')->with('message', 'Error while updating workout.');
         }
     }
+
+    public function deleteWorkout($uuid)
+    {
+        $workout = $this->workout->where('uuid', $uuid)->firstOrFail();
+
+        $workout->delete();
+        return redirect()->back()->with('status', 'success')->with('message', 'Workout deleted successfully!');
+    } 
     
 }
