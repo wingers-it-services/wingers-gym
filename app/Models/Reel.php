@@ -9,7 +9,6 @@ use Ramsey\Uuid\Uuid;
 class Reel extends Model
 {
     protected $fillable = [
-        'gym_id',
         'url',
         'type',
         'age',
