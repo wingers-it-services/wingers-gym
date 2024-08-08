@@ -17,12 +17,13 @@ return new class extends Migration
             $table->integer('gym_id');
             $table->string('image');
             $table->string('name');
-            $table->string('diet');
+            $table->longText('diet');
             $table->string('gender');
-            $table->string('alternative_diet')->nullable();
+            $table->longText('alternative_diet')->nullable();
             $table->integer('min_age');
             $table->integer('max_age');
             $table->string('goal');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

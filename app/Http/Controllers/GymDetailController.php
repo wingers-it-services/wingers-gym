@@ -86,7 +86,7 @@ class GymDetailController extends Controller
         } catch (Exception $e) {
             //  dd($e);
             Log::error('[GymDetailController][registerGym] Error register gym: ' . $e->getMessage());
-            return redirect()->route('register')->with('status', 'error')->with('message', 'error in register gym.');
+            return redirect()->route('register')->with('status', 'error')->with('message', 'error in register gym : ' . $e->getMessage());
         }
     }
 

@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('reels', function (Blueprint $table) {
             $table->id();
             $table->uuid()->index();
-            $table->integer('gym_id');
             $table->string('url');
-            $table->string('type');
+            $table->string('reel_type');
             $table->string('age');
             $table->string('gender');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

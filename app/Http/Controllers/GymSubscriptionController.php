@@ -94,5 +94,5 @@ class GymSubscriptionController extends Controller
 
         $plan->delete();
         return redirect()->back()->with('status', 'success')->with('message', 'Suscription deleted successfully!');
-    }
+    } 
 }

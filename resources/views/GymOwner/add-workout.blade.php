@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="page-titles">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Product</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Workout</a></li>
             </ol>
         </div>
         <div class="row">
@@ -62,7 +62,7 @@
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="description">Description</label>
-                                            <textarea type="text" class="form-control" id="description" name="description" required=""></textarea>
+                                            <textarea type="text" rows="5" class="form-control" id="description" name="description" required=""></textarea>
                                             <div class="invalid-feedback">
                                                 Product name is required.
                                             </div>
@@ -93,6 +93,7 @@
                                 <th scope="col">Category</th>
                                 <th scope="col">Workout Name</th>
                                 <th scope="col">Gender</th>
+                                <th scope="col" class="text-end">View</th>
                                 <th scope="col" class="text-end">Action</th>
                             </tr>
                         </thead>
@@ -106,6 +107,12 @@
                                 <td>{{$subscription->category }}</td>
                                 <td>{{$subscription->name }}</td>
                                 <td>{{$subscription->gender }}</td>
+                                <td>
+                                    <a class="dropdown-item view-workout" href="javascript:void(0);" data-bs-toggle="tooltip" data-placement="top" title="View" data-workout="{{ json_encode($subscription) }}">
+                                        <i class="fa fa-eye color-muted"></i>
+                                    </a>
+                                </td>
+
                                 <td class="text-end">
                                     <span> <a href="javascript:void(0);" class="me-4 edit-workout" data-bs-toggle="tooltip" data-placement="top" title="Edit" data-workout="{{ json_encode($subscription) }}">
                                             <i class="fa fa-pencil color-muted"></i></a>
@@ -130,32 +137,32 @@
             <div class="modal-body">
                 <form id="editDietForm" method="POST" action="update-workout" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" id="edit_workout_id" name="workout_id">                    
+                    <input type="hidden" id="edit_workout_id" name="workout_id">
                     <div class="form-group text-center">
                         <label for="current_image">Current Workout Image</label>
                         <img id="current_image" src="" alt="Workout Image" class="img-fluid mb-3" style="width: 70%;">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="edit_image">Upload New Workout Image</label>
                         <input type="file" class="form-control" id="edit_image" name="image" accept="image/*">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="vedio_link">Video Link</label>
                         <input type="text" class="form-control" id="edit_vedio_link" name="vedio_link" placeholder="">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="category">Category</label>
                         <input type="text" class="form-control" name="category" id="edit_category" required="">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="name">Workout Name</label>
                         <input type="text" class="form-control" id="edit_name" name="name" required="">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="gender">Gender</label>
                         <div class="input-group">
@@ -165,12 +172,12 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <textarea type="text" class="form-control" id="edit_description" name="description" required=""></textarea>
+                        <textarea type="text" class="form-control" rows="4" id="edit_description" name="description" required=""></textarea>
                     </div>
-                    
+
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
@@ -178,54 +185,115 @@
     </div>
 </div>
 
-
+<div class="modal fade" id="viewWorkoutModal" tabindex="-1" role="dialog" aria-labelledby="viewWorkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewWorkoutModalLabel">Workout Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img id="view_workout_image" src="" class="img-fluid" alt="Workout Image">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="video-wrapper mb-3">
+                            <iframe id="view_vedio_frame" width="100%" height="315" src="" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <h5 id="view_workout_name"></h5>
+                        <p><strong>Category:</strong> <span id="view_category"></span></p>
+                        <p><strong>Gender:</strong> <span id="view_gender"></span></p>
+                        <p><strong>Description:</strong></p>
+                        <p id="view_description"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const editButtons = document.querySelectorAll('.edit-workout');
-    const editImageInput = document.getElementById('edit_image');
-    const currentImage = document.getElementById('current_image');
-    const editGenderSelect = document.getElementById('edit_gender');
+    document.addEventListener('DOMContentLoaded', function() {
+        const editButtons = document.querySelectorAll('.edit-workout');
+        const editImageInput = document.getElementById('edit_image');
+        const currentImage = document.getElementById('current_image');
+        const editGenderSelect = document.getElementById('edit_gender');
 
-    editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const workout = JSON.parse(this.getAttribute('data-workout'));
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const workout = JSON.parse(this.getAttribute('data-workout'));
 
-            document.getElementById('edit_workout_id').value = workout.id;
-            document.getElementById('edit_vedio_link').value = workout.vedio_link;
-            currentImage.src = workout.image; // Set the src of the image element
-            document.getElementById('edit_name').value = workout.name;
-            document.getElementById('edit_category').value = workout.category;
-            document.getElementById('edit_description').value = workout.description;
-            
-            // Set the selected option for the gender dropdown
-            editGenderSelect.value = workout.gender;
-            console.log(`Gender set to: ${workout.gender}`); // Debugging line to check the gender value
-            
-            // Force re-render of the select element
-            const parent = editGenderSelect.parentElement;
-            const placeholder = document.createElement('div');
-            parent.replaceChild(placeholder, editGenderSelect);
-            parent.replaceChild(editGenderSelect, placeholder);
+                document.getElementById('edit_workout_id').value = workout.id;
+                document.getElementById('edit_vedio_link').value = workout.vedio_link;
+                currentImage.src = workout.image; // Set the src of the image element
+                document.getElementById('edit_name').value = workout.name;
+                document.getElementById('edit_category').value = workout.category;
+                document.getElementById('edit_description').value = workout.description;
 
-            new bootstrap.Modal(document.getElementById('editDietModal')).show();
+                // Set the selected option for the gender dropdown
+                editGenderSelect.value = workout.gender;
+                console.log(`Gender set to: ${workout.gender}`); // Debugging line to check the gender value
+
+                // Force re-render of the select element
+                const parent = editGenderSelect.parentElement;
+                const placeholder = document.createElement('div');
+                parent.replaceChild(placeholder, editGenderSelect);
+                parent.replaceChild(editGenderSelect, placeholder);
+
+                new bootstrap.Modal(document.getElementById('editDietModal')).show();
+            });
+        });
+
+        // Show a preview of the new image when selected
+        editImageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentImage.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
         });
     });
 
-    // Show a preview of the new image when selected
-    editImageInput.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentImage.src = e.target.result;
-            }
-            reader.readAsDataURL(file);
-        }
+    document.addEventListener('DOMContentLoaded', function() {
+        const viewButtons = document.querySelectorAll('.view-workout');
+
+        viewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const workout = JSON.parse(this.getAttribute('data-workout'));
+
+                document.getElementById('view_workout_image').src = workout.image ? workout.image : 'path/to/default/image.jpg';
+                document.getElementById('view_workout_name').textContent = workout.name;
+                document.getElementById('view_vedio_frame').src = workout.vedio_link.replace('watch?v=', 'embed/');
+                document.getElementById('view_category').textContent = workout.category;
+                document.getElementById('view_gender').textContent = workout.gender;
+                document.getElementById('view_description').textContent = workout.description;
+
+                new bootstrap.Modal(document.getElementById('viewWorkoutModal')).show();
+            });
+        });
     });
-});
 
 
 
+    function confirmDelete(uuid) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to delete this workout?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-workout/' + uuid;
+            }
+        });
+    }
 </script>
+@include('CustomSweetAlert');
 @endsection
