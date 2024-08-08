@@ -244,6 +244,9 @@ class User extends Authenticatable
                 }
             }
 
+            $userProfile->profile_status = GymUserAccountStatusEnum::BODY_MESUREMENT_DETAIL; // Set to your desired status
+            $userProfile->save();
+
             // Retrieve goals and levels for the user
             $goals = $userProfile->goals()->get();
             $levels = $userProfile->levels()->get();
