@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\GymUserAccountStatusEnum;
 use App\Models\InjuryUser;
 use App\Models\User;
 use App\Services\OtpService;
@@ -224,6 +225,9 @@ class GymUserControllerApi extends Controller
                 ]);
                 $injuryUsers[] = $injuryUser;
             }
+
+            $user->profile_status = GymUserAccountStatusEnum::USER_INJURY_DETAIL;
+            $user->save();
 
             return response()->json([
                 'status' => 200,

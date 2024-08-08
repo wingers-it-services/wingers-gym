@@ -46,6 +46,7 @@ Route::post('/profile-part-four-updated', [GymUserControllerApi::class, 'profile
 
 Route::post('/add-user-injuries', [GymUserControllerApi::class, 'addUserInjuries']);
 
+Route::post('/email-login',[GymUserLoginControllerApi::class,'loginWithEmail']);
 Route::middleware('auth:api')->group(function () {
 
     Route::post('/fetch-subscription', [UserSubscriptionControllerApi::class, 'fetchSubscription']);
