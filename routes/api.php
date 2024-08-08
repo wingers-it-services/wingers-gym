@@ -7,6 +7,7 @@ use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\GymUserLoginControllerApi;
 use App\Http\Controllers\LocationControllerApi;
 use App\Http\Controllers\SiteSettingControllerApi;
+use App\Http\Controllers\SupplimentControllerApi;
 use App\Http\Controllers\UserDietControllerApi;
 use App\Http\Controllers\UserInjuryControllerApi;
 use App\Http\Controllers\UserLevelControllerApi;
@@ -58,6 +59,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/fetch-user-workout', [UserWorkoutControllerApi::class, 'fetchUserWorkout']);
     
     Route::get('/fetch-user-gym', [GymUserControllerApi::class, 'fetchUserGym']);
+    
+    Route::get('/fetch-equipments', [EquipmentControllerApi::class, 'fetchEquipments']);
 
-    Route::get('/fetch-equipment', [EquipmentControllerApi::class, 'fetchEquipments']);
+    Route::get('/fetch-suppliments', [SupplimentControllerApi::class, 'fetchSuppliments']);
 });
