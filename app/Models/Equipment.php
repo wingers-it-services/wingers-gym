@@ -24,6 +24,7 @@ class Equipment extends Model
         'company_website',
         'description',
         'warrenty',
+        'warrenty_details',
         'item_weight',
         'colour',
         'tension_level',

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\EquipmentControllerApi;
 use App\Http\Controllers\GoalControllerApi;
 use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\GymUserLoginControllerApi;
@@ -46,16 +48,16 @@ Route::post('/profile-part-four-updated', [GymUserControllerApi::class, 'profile
 
 Route::post('/add-user-injuries', [GymUserControllerApi::class, 'addUserInjuries']);
 
-Route::post('/email-login',[GymUserLoginControllerApi::class,'loginWithEmail']);
+Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
 Route::middleware('auth:api')->group(function () {
 
     Route::post('/fetch-subscription', [UserSubscriptionControllerApi::class, 'fetchSubscription']);
 
     Route::post('/fetch-user-diets', [UserDietControllerApi::class, 'fetchUserDiet']);
-    
-    Route::post('/fetch-user-workout', [UserWorkoutControllerApi::class, 'fetchUserWorkout']);
 
+    Route::post('/fetch-user-workout', [UserWorkoutControllerApi::class, 'fetchUserWorkout']);
+    
     Route::get('/fetch-user-gym', [GymUserControllerApi::class, 'fetchUserGym']);
 
-
+    Route::get('/fetch-equipment', [EquipmentControllerApi::class, 'fetchEquipments']);
 });
