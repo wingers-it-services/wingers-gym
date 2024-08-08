@@ -571,26 +571,26 @@
 
                                                     <div class="card-body">
                                                         <div class="table-responsive">
-                                                            <table class="table table-bordered table-striped verticle-middle table-responsive-sm">
+                                                            <table id="example3" class="table table-bordered table-striped verticle-middle table-responsive-sm">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th scope="col">Plan</th>
-                                                                        <th scope="col">Amount</th>
-                                                                        <th scope="col">Validity</th>
-                                                                        <th scope="col">Progress</th>
+                                                                        <th scope="col">Height</th>
+                                                                        <th scope="col">Weight</th>
+                                                                        <th scope="col">BMI</th>
+                                                                        <!-- <th scope="col">Progress</th>
                                                                         <th scope="col">Deadline</th>
-                                                                        <th scope="col">Label</th>
+                                                                        <th scope="col">Label</th> -->
                                                                         <th scope="col" class="text-end">
                                                                             Action</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-
+                                                                    @foreach ($bmis as $bmi)
                                                                     <tr>
-                                                                        <td>muskan</td>
-                                                                        <td>500</td>
-                                                                        <td>2 Months</td>
-                                                                        <td>
+                                                                        <td>{{$bmi->height}}</td>
+                                                                        <td>{{$bmi->weight}}</td>
+                                                                        <td>{{$bmi->bmi}}</td>
+                                                                        <!-- <td>
                                                                             <div class="progress" style="background: rgba(255, 193, 7, .1)">
                                                                                 <div class="progress-bar bg-warning" style="width: 70%;" role="progressbar"><span class="sr-only">70%
                                                                                         Complete</span>
@@ -598,13 +598,13 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>Jun 28,2018</td>
-                                                                        <td><span class="badge badge-warning">70%</span>
+                                                                        <td><span class="badge badge-warning">70%</span> -->
                                                                         </td>
                                                                         <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
                                                                                 </a><a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
                                                                         </td>
                                                                     </tr>
-
+                                                                    @endforeach
                                                                 </tbody>
                                                             </table>
                                                         </div>

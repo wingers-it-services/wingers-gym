@@ -8,6 +8,7 @@ use App\Models\Workout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Traits\SessionTrait;
+use Exception;
 
 class WorkoutController extends Controller
 {
@@ -61,4 +62,51 @@ class WorkoutController extends Controller
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
+
+    public function updateWorkout(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'workout_id' => 'required',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'vedio_link' => 'required',
+                'name' => 'required',
+                'gender' => 'required',
+                'category' => 'required',
+                'description' => 'required',
+            ]);
+    
+            $workout = $this->workout->findOrFail($request->workout_id);
+    
+            $imagePath = $workout->image; // Default to existing image path
+    
+            if ($request->hasFile('image')) {
+                if ($workout->image) {
+                    $existingImagePath = public_path($workout->image);
+                    if (file_exists($existingImagePath)) {
+                        unlink($existingImagePath);
+                    }
+                }
+                $imagefile = $request->file('image');
+                $filename = time() . '_' . $imagefile->getClientOriginalName();
+                $imagePath = 'workout_images/' . $filename;
+                $imagefile->move(public_path('workout_images/'), $filename);
+            }
+    
+            $workout->vedio_link = $validatedData['vedio_link'];
+            $workout->name = $validatedData['name'];
+            $workout->gender = $validatedData['gender'];
+            $workout->category = $validatedData['category'];
+            $workout->description = $validatedData['description'];
+            $workout->image = $imagePath; // Update image path
+    
+            $workout->save();
+    
+            return redirect()->back()->with('status', 'success')->with('message', 'Workout updated successfully.');
+        } catch (Exception $e) {
+            Log::error('[WorkoutController][updateWorkout] Error updating workout ' . $e->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Error while updating workout.');
+        }
+    }
+    
 }
