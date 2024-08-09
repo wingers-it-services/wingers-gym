@@ -33,7 +33,7 @@ class GymSubscription extends Model
             'validity' => $subscriptionArray['validity'],
             'description' => $subscriptionArray['description'],
             'gym_id' => $gymId,
-            'status' => GymSubscriptionStatusEnum::Active,
+            'status' => GymSubscriptionStatusEnum::ACTIVE,
             'start_date' => $subscriptionArray['start_date']
         ]);
     }
