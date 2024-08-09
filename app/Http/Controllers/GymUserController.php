@@ -151,9 +151,9 @@ class GymUserController extends Controller
         $userSubscriptions = $this->userHistory->where('gym_id', $gymId)->where('user_id', $userId)->where('subscription_id', $subscriptionId)->get();
         $bmis = $this->bmi->where('gym_id', $gymId)->where('user_id', $userId)->get();
         // $trainers = $this->gymStaff->where('designation_id', "1")->get();
-        // $trainers = $this->gymStaff->where('gym_id', $gymId)->where('designation_id', "1")->get();
+        $trainers = $this->gymStaff->where('gym_id', $gymId)->where('designation_id', 1)->get();
         // return view('GymOwner.view-gym-details', compact('userDetail', 'workouts', 'diets', 'bmis', 'trainers'));
-        return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets', 'bmis'));
+        return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets', 'bmis', 'trainers'));
     }
 
     public function updateUser(Request $request)
@@ -323,7 +323,7 @@ class GymUserController extends Controller
 
             $this->user->addTrainer($validatedData);
 
-            return redirect()->back()->with('success', 'Trainer Alloted succesfully.');
+            return redirect()->back()->with('status', 'success')->with('message', 'Trainer Alloted succesfully.');
         } catch (Throwable $th) {
             Log::error("[GymUserController][allocateTrainerToUser] error " . $th->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'Failed to allocate trainer. Please try again.');
@@ -393,5 +393,40 @@ class GymUserController extends Controller
             'message' => 'Subscription updated successfully!',
             'subscription' => $subscription
         ]);
+    }
+
+    public function addUserSubscription(Request $request)
+    {
+       
+        try {
+            $validatedData = $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'subscription_id' => 'required|exists:gym_subscriptions,id',
+                'joining_date' => 'required|date',
+                'amount' => 'required|numeric',
+                'end_date' => 'required|date',
+                'description' => 'required|string',
+            ]);
+
+            // Fetch subscription details
+            $subscription = $this->gymSubscription->find($validatedData['subscription_id']);
+            
+            // Create user subscription history
+            $this->userHistory->create([
+                'user_id' => $validatedData['user_id'],
+                'subscription_id' => $subscription->id,
+                'joining_date' => $validatedData['joining_date'],
+                'end_date' => $validatedData['end_date'],
+                'amount' => $validatedData['amount'],
+                'description' => $validatedData['description'],
+            ]);
+
+            return redirect()->route('listUserSubscriptions', ['user' => $validatedData['user_id']])
+                ->with('status', 'success')
+                ->with('message', 'Subscription added successfully');
+        } catch (Throwable $th) {
+            Log::error("[GymSubscriptionController][addUserSubscription] error " . $th->getMessage());
+            return redirect()->back()->with('error', $th->getMessage());
+        }
     }
 }

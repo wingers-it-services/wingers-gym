@@ -74,6 +74,7 @@
                                         </div>
                                         <hr class="mb-4">
                                         <button class="btn btn-primary btn-lg btn-block" type="submit">Add Diet</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -95,6 +96,7 @@
                                 <th scope="col">Gender</th>
                                 <th scope="col">Goal</th>
                                 <th scope="col">Max-Min Age</th>
+                                <th scope="col" class="text-end">View</th>
                                 <th scope="col" class="text-end">Action</th>
                             </tr>
                         </thead>
@@ -108,6 +110,11 @@
                                 <td>{{$subscription->gender }}</td>
                                 <td>{{$subscription->goal }}</td>
                                 <td>{{$subscription->min_age }} - {{ $subscription->max_age }}</td>
+                                <td class="text-end">
+                                    <a class="dropdown-item view-workout" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#d" data-workout="{{ json_encode($subscription) }}">
+                                        <i class="fa fa-eye color-muted"></i>
+                                    </a>
+                                </td>
                                 <td class="text-end">
                                     <span><a href="javascript:void(0);" class="me-4 edit-book-button" data-bs-toggle="modal" data-bs-target="#editSuscription" data-book='@json($subscription)'><i class="fa fa-pencil color-muted"></i> </a>
                                         <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
@@ -160,12 +167,12 @@
 
                     <div class="form-group">
                         <label for="edit_diet">Diet Description</label>
-                        <textarea type="text" class="form-control" id="edit_diet" rows="4" name="diet" required>
+                        <textarea type="text" class="form-control" id="edit_diet" rows="4" name="diet" required></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="edit_alternative_diet">Alternative Diet</label>
-                        <textarea type="text" class="form-control" rows="4" id="edit_alternative_diet" name="alternative_diet">
+                        <textarea type="text" class="form-control" rows="4" id="edit_alternative_diet" name="alternative_diet"></textarea>
                     </div>
 
                     <div class="form-group">
@@ -189,6 +196,29 @@
         </div>
     </div>
 </div>
+
+<!-- Modal HTML -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Workout Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Image -->
+                <!-- <img id="modalImage" src="" alt="Workout Image" class="img-fluid" style="width: 20%;"> -->
+                <div class="form-data text-center">
+                        <img id="modalImage" src="" class="img-fluid" style="width: 40%;">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <p id="modalDetails" class="w-100 mt-3"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -225,6 +255,32 @@
                 }
                 reader.readAsDataURL(file);
             }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handling view workout modal
+        document.querySelectorAll('.view-workout').forEach(button => {
+            button.addEventListener('click', function() {
+                const workout = JSON.parse(this.getAttribute('data-workout'));
+
+                // Set the image src
+                document.getElementById('modalImage').src = workout.image ? workout.image : 'images/profile/17.jpg';
+
+                // Set workout details
+                const details = `
+                    <strong>Diet Name:</strong> ${workout.name}<br>
+                    <strong>Goal:</strong> ${workout.goal}<br>
+                    <strong>Diet Description:</strong> ${workout.diet}<br>
+                    <strong>Alternative Description:</strong> ${workout.alternative_diet}<br>
+                    <strong>Gender:</strong> ${workout.gender}<br>
+                    <strong>Min-Max Age:</strong> ${workout.min_age}-${workout.max_age}
+                `;
+                document.getElementById('modalDetails').innerHTML = details;
+
+                // Show modal
+                new bootstrap.Modal(document.getElementById('viewModal')).show();
+            });
         });
     });
 

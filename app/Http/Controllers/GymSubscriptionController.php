@@ -44,7 +44,7 @@ class GymSubscriptionController extends Controller
             $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
 
             $validatedData = $request->validate([
-                'subscription_name' => '',
+                'subscription_name' => 'required',
                 'amount' => 'required',
                 'validity' => 'required',
                 'description' => 'required',

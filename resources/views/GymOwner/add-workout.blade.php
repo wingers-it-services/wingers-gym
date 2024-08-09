@@ -89,7 +89,6 @@
                         <thead>
                             <tr>
                                 <th scope="col">Image</th>
-                                <th scope="col">Video Link</th>
                                 <th scope="col">Category</th>
                                 <th scope="col">Workout Name</th>
                                 <th scope="col">Gender</th>
@@ -103,11 +102,10 @@
                                 <td>
                                     <img width="80" src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}" loading="lazy" alt="Profile Image">
                                 </td>
-                                <td>{{$subscription->vedio_link }}</td>
                                 <td>{{$subscription->category }}</td>
                                 <td>{{$subscription->name }}</td>
                                 <td>{{$subscription->gender }}</td>
-                                <td>
+                                <td class="text-end"> 
                                 <a class="dropdown-item view-workout" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#viewModal" data-workout="{{ json_encode($subscription) }}">
                                     <i class="fa fa-eye color-muted"></i>
                                 </a>
