@@ -87,7 +87,7 @@
 										<div class="col-md-6 mb-3">
 											<label for="employee_id">Staff Assigned</label>
 											<select class="me-sm-2 form-control default-select" id="staff_assign_id" name="staff_assign_id">
-												<option selected>Choose...</option>
+												<option value="" selected>Choose...</option>
 												@foreach ($gymStaff as $staff)
 												<option value="{{ $staff->id }}">{{ $staff->designation_name}}</option>
 												@endforeach

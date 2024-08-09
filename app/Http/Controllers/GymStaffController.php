@@ -51,7 +51,10 @@ class GymStaffController extends Controller
 
     public function showAddGymStaff(Request $request)
     {
-        $designations = $this->designation->get();
+        $gym_uuid = $this->getGymSession()['uuid'];
+        $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+
+        $designations = $this->designation->where('gym_id', $gymId)->get();
         return view('GymOwner.add-gym-staff', compact('designations'));
     }
 
