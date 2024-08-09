@@ -23,8 +23,8 @@
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th class="ps-5 width200">Address</th>
-                                        <th>Joined</th> 
-                                        <th>View</th> 
+                                        <th>Joined</th>
+                                        <th>View</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -62,13 +62,12 @@
                                             <a href="javascript:void(0);" class="me-4 edit-book-button" data-bs-toggle="modal" data-bs-target="#editSuscription" data-book=''>
                                                 <i class="fa fa-pencil color-muted"></i>
                                             </a>
-                                        <!-- </td>
-                                        <td class="text-end"> -->
                                             <a onclick="confirmDelete('{{ $user->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close">
                                                 <i class="fas fa-trash"> </i>
                                             </a>
                                         </td>
-                                        <!-- </td> -->
+
+                                       
                                     </tr>
                                     @endforeach
                                 </tbody>

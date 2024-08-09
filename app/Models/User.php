@@ -43,7 +43,8 @@ class User extends Authenticatable
         'dob',
         'height',
         'weight',
-        'days'
+        'days',
+        'trainer_id'
     ];
 
     protected static function boot()

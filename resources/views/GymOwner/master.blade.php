@@ -899,7 +899,7 @@
 						</a>
 						<ul aria-expanded="false">
 							<li><a href="/add-gym-staff">Add New Staff</a></li>
-							<li><a href="/gym-staff">Staf List</a></li>
+							<li><a href="/gym-staff">Staff List</a></li>
 							<li><a href="/staff-details">Staff Details</a></li>
 							<li><a href="/viewGymDesignation"> Designation</a></li>
 						</ul>

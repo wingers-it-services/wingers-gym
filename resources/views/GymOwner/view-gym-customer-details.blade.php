@@ -30,17 +30,17 @@
                                 <div class="row">
                                     <div class="col-xl-6 col-lg-12 col-sm-12">
                                         <div class="card overflow-hidden">
-                                            <div class="text-center p-3 overlay-box " style="background-image: url(https://fito.dexignzone.com/laravel/demo/images/big/img1.jpg);">
+                                            <div class="text-center p-3 overlay-box" style="background-image: url(https://fito.dexignzone.com/laravel/demo/images/big/img1.jpg);">
                                                 <div class="profile-photo">
-                                                    <img src="https://fito.dexignzone.com/laravel/demo/images/profile/profile.png" width="100" class="img-fluid rounded-circle" alt="">
+                                                    <img src="{{ asset($userDetail->image) }}" width="100" class="img-fluid rounded-circle" alt="">
                                                 </div>
                                                 <h3 class="mt-3 mb-1 text-white">{{ $userDetail->firstname }} {{ $userDetail->lastname }} </h3>
                                                 <p class="text-white mb-0">Email: {{ $userDetail->email }} Phone: {{ $userDetail->phone_no }}</p>
-                                                <!-- <p class="text-white mb-0">Phone: 9978116971</p> -->
-                                                <p class="text-white mb-0">Gender: {{ $userDetail->gender }} Password: {{ $userDetail->password  }}</p>
+                                                <p class="text-white mb-0">Gender: {{ $userDetail->gender }} Password: {{ $userDetail->password }}</p>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-xl-6 col-lg-12 col-sm-12">
                                         <div class="card overflow-hidden">
                                             <ul class="list-group list-group-flush">
@@ -111,65 +111,63 @@
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Add Subcription</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal">
-                                                    </button>
+                                                    <h5 class="modal-title">Add Subscription</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <!-- Subscription Selection -->
-                                                            <h4 class="mb-3 text-black">Select Subscription</h4>
-                                                            <div class="mb-3">
-                                                                <select class="form-control default-select" id="subscription_id" name="subscription_id">
-                                                                    <option value="" data-description="" data-amount="" data-validity="">-- Select Subscription --</option>
-                                                                    @foreach ($gymSubscriptions as $subscription)
-                                                                    <option value="{{ $subscription->id }}" data-description="{{ $subscription->description }}" data-amount="{{ $subscription->amount }}" data-validity="{{ $subscription->validity }}">
-                                                                        {{ $subscription->subscription_name }}
-                                                                    </option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
+                                                    <form action="{{ route('addUserSubscription') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
+                                                        <div class="row">
                                                             <div class="col-lg-12">
+                                                                <!-- Subscription Selection -->
+                                                                <h4 class="mb-3 text-black">Select Subscription</h4>
+                                                                <div class="mb-3">
+                                                                    <select class="form-control default-select" id="subscription_id" name="subscription_id" required>
+                                                                        <option value="" data-description="" data-amount="" data-validity="">-- Select Subscription --</option>
+                                                                        @foreach ($gymSubscriptions as $subscription)
+                                                                        <option value="{{ $subscription->id }}" data-description="{{ $subscription->description }}" data-amount="{{ $subscription->amount }}" data-validity="{{ $subscription->validity }}">
+                                                                            {{ $subscription->subscription_name }}
+                                                                        </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
                                                                 <!-- Subscription Description -->
                                                                 <h4 class="mb-3 text-black">Subscription Description</h4>
                                                                 <div class="mb-3">
                                                                     <textarea class="form-control" id="description" name="description" required readonly></textarea>
                                                                 </div>
+                                                                <!-- Joining Date -->
+                                                                <div class="mb-3">
+                                                                    <label for="joining_date" class="form-label">Member Joining Date</label>
+                                                                    <input type="date" class="form-control" id="joining_date" name="joining_date" required>
+                                                                </div>
+                                                                <!-- Amount and End Date -->
+                                                                <ul class="list-group mb-3">
+                                                                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                                                        <div>
+                                                                            <small class="text-muted">Subscription Amount</small>
+                                                                        </div>
+                                                                        <span class="text-muted" id="subscription_amount">₹0</span>
+                                                                        <input type="hidden" id="amount" name="amount">
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                                                        <div>
+                                                                            <small class="text-muted">Subscription End Date</small>
+                                                                            <input type="hidden" id="end_date" name="end_date">
+                                                                        </div>
+                                                                        <span class="text-muted" id="subscription_end_date"></span>
+                                                                    </li>
+                                                                </ul>
                                                             </div>
-                                                            <div class="mb-3">
-                                                                <label for="joining_date" class="form-label">Member Joining Date</label>
-                                                                <input type="date" class="form-control" id="joining_date" name="joining_date" required>
-                                                            </div>
-                                                            <ul class="list-group mb-3">
-                                                                <li class="list-group-item d-flex justify-content-between lh-condensed">
-                                                                    <div>
-                                                                        <small class="text-muted">Subscription Amount</small>
-                                                                    </div>
-                                                                    <span class="text-muted" id="subscription_amount">₹0</span>
-                                                                    <input type="hidden" id="amount" name="amount">
-                                                                </li>
-                                                                <li class="list-group-item d-flex justify-content-between lh-condensed">
-                                                                    <div>
-                                                                        <small class="text-muted">Subscription End Date</small>
-                                                                        <input type="hidden" id="end_date" name="end_date">
-                                                                    </div>
-                                                                    <span class="text-muted" id="subscription_end_date"></span>
-                                                                </li>
-                                                                <li class="list-group-item d-flex justify-content-between">
-                                                                    <span>Total (USD)</span>
-                                                                    <strong id="total_amount">₹0</strong>
-                                                                </li>
-                                                            </ul>
                                                         </div>
-                                                    </div>
-                                                    <div class="dropdown mt-sm-0 mt-3">
-                                                        <button id="addSubscriptionButton" class="btn btn-outline-primary rounded">Add Subscription</button>
-                                                    </div>
+                                                        <div class="dropdown mt-sm-0 mt-3">
+                                                            <button type="submit" id="addSubscriptionButton" class="btn btn-outline-primary rounded">Add Subscription</button>
+                                                        </div>
+                                                    </form>
                                                 </div>
-
-
                                             </div>
+
                                         </div>
 
                                     </div>
@@ -620,124 +618,126 @@
 
                         <div class="tab-pane fade" id="trainers">
                             <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
+                                <form id="trainerForm" action="{{ route('allotTrainer') }}" method="POST" class="form-horizontal">
+                                    @csrf
+                                    <div class="card-body">
+                                        <div class="row">
 
-                                        <div class="col-lg-8 order-lg-1">
-                                            <form class="needs-validation" novalidate="" action="/add-user-by-gym" method="post">
-
+                                            <div class="col-lg-8 order-lg-1">
                                                 <div class="row">
                                                     <div class="col-md-6 mb-3">
-                                                        <label for="lastName">Trainer</label>
-                                                        <select class="me-sm-2 form-control default-select" id="designation" name="designation">
-                                                            <option selected>Choose...</option>
-                                                            {{-- @foreach ($gymStaff as $staff) --}}
-                                                            <option></option>
-                                                            {{-- @endforeach --}}
+
+                                                        <label for="trainer">Select a Trainer:</label>
+                                                        <select class="me-sm-2 form-control default-select" id="trainer" name="trainer_id">
+                                                            <option value="0">Select</option>
+                                                            @foreach ($trainers as $trainer)
+                                                            <option value="{{$trainer->id}}">{{$trainer->name}}</option>
+                                                            @endforeach
                                                         </select>
-                                                        <div class="invalid-feedback">
-                                                            Valid last name is required.
-                                                        </div>
+                                                        <br><br>
+                                                        <input type="hidden" name="user_id" value="{{$userDetail->id}}">
                                                     </div>
-
                                                 </div>
-                                                <hr>
-                                                <input type="submit" class="btn btn-primary" value="Submit">
-                                            </form>
+                                            </div>
                                         </div>
+                                        <hr>
+                                        <input type="submit" class="btn btn-primary" value="Submit">
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal fade" id="editWorkoutModal" tabindex="-1" role="dialog" aria-labelledby="editWorkoutModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Edit Workout</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="editWorkoutForm" method="POST" action="/update-user-workout">
-                                    @csrf
-                                    <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
-                                    <input type="hidden" id="edit_workout_id" name="workout_id">
-                                    <div class="form-group">
-                                        <label>Exercise Name</label>
-                                        <input type="text" id="edit_exercise_name" name="exercise_name" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Sets</label>
-                                        <input type="number" id="edit_sets" name="sets" min="0" max="1000" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Reps</label>
-                                        <input type="number" id="edit_reps" name="reps" class="form-control" min="0" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Weight</label>
-                                        <input type="number" id="edit_weight" name="weight" placeholder="Enter Weight in Kg" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Description</label>
-                                        <textarea type="text" id="edit_notes" rows="10" name="notes" class="form-control" required></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Update</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Edit Diet</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="editDietForm" method="POST" action="/update-user-diet">
-                                    @csrf
-                                    <input type="hidden" id="edit_diet_id" name="diet_id">
-                                    <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
-                                    <div class="form-group">
-                                        <label>Meal Name</label>
-                                        <input type="text" id="edit_meal_name" name="meal_name" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Calories</label>
-                                        <input type="number" id="edit_calories" name="calories" min="0" max="1000" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Protein</label>
-                                        <input type="number" id="edit_protein" name="protein" class="form-control" min="0" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Carbs</label>
-                                        <input type="number" id="edit_carbs" name="carbs" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Fats</label>
-                                        <input type="number" id="edit_fats" name="fats" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Description</label>
-                                        <textarea type="text" id="diet_edit_notes" rows="10" name="notes" class="form-control" required></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Update</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
             </div>
+        </div>
+
+        <div class="modal fade" id="editWorkoutModal" tabindex="-1" role="dialog" aria-labelledby="editWorkoutModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Workout</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editWorkoutForm" method="POST" action="/update-user-workout">
+                            @csrf
+                            <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
+                            <input type="hidden" id="edit_workout_id" name="workout_id">
+                            <div class="form-group">
+                                <label>Exercise Name</label>
+                                <input type="text" id="edit_exercise_name" name="exercise_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Sets</label>
+                                <input type="number" id="edit_sets" name="sets" min="0" max="1000" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Reps</label>
+                                <input type="number" id="edit_reps" name="reps" class="form-control" min="0" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Weight</label>
+                                <input type="number" id="edit_weight" name="weight" placeholder="Enter Weight in Kg" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea type="text" id="edit_notes" rows="10" name="notes" class="form-control" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Diet</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editDietForm" method="POST" action="/update-user-diet">
+                            @csrf
+                            <input type="hidden" id="edit_diet_id" name="diet_id">
+                            <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
+                            <div class="form-group">
+                                <label>Meal Name</label>
+                                <input type="text" id="edit_meal_name" name="meal_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Calories</label>
+                                <input type="number" id="edit_calories" name="calories" min="0" max="1000" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Protein</label>
+                                <input type="number" id="edit_protein" name="protein" class="form-control" min="0" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Carbs</label>
+                                <input type="number" id="edit_carbs" name="carbs" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Fats</label>
+                                <input type="number" id="edit_fats" name="fats" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea type="text" id="diet_edit_notes" rows="10" name="notes" class="form-control" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </div\
+
+
+
+
+
+                </div>
         </div>
     </div>
 </div>
@@ -862,83 +862,83 @@
         }
     }
 
-    document.querySelector('#addSubscriptionButton').addEventListener('click', function() {
-        const userId = @json($userDetail -> id); // Get the user ID
-        const subscriptionId = document.querySelector('#subscription_id').value;
-        const joiningDate = document.querySelector('#joining_date').value;
-        const amount = document.querySelector('#amount').value;
-        const endDate = document.querySelector('#end_date').value;
+    // document.querySelector('#addSubscriptionButton').addEventListener('click', function() {
+    //     const userId = @json($userDetail -> id); // Get the user ID
+    //     const subscriptionId = document.querySelector('#subscription_id').value;
+    //     const joiningDate = document.querySelector('#joining_date').value;
+    //     const amount = document.querySelector('#amount').value;
+    //     const endDate = document.querySelector('#end_date').value;
 
-        fetch(`/check-subscription/${userId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    subscription_id: subscriptionId,
-                    joining_date: joiningDate,
-                    amount: amount,
-                    end_date: endDate
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'exists') {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Subscription Exists',
-                        text: `${data.message} The existing subscription ends on ${data.end_date}. Do you want to change the subscription?`,
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes, change it!',
-                        cancelButtonText: 'No, keep it'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Call the update subscription route
-                            fetch(`/update-user-subscription/` + userId, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                    },
-                                    body: JSON.stringify({
-                                        subscription_id: subscriptionId,
-                                        joining_date: joiningDate,
-                                        amount: amount,
-                                        end_date: endDate
-                                    })
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Subscription Updated',
-                                        text: data.message,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            // Optionally reload the page or update the UI
-                                            location.reload();
-                                        }
-                                    });
-                                });
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Subscription Created',
-                        text: data.message,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Optionally reload the page or update the UI
-                            location.reload();
-                        }
-                    });
-                }
-            });
-    });
+    //     fetch(`/check-subscription/${userId}`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    //             },
+    //             body: JSON.stringify({
+    //                 subscription_id: subscriptionId,
+    //                 joining_date: joiningDate,
+    //                 amount: amount,
+    //                 end_date: endDate
+    //             })
+    //         })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (data.status === 'exists') {
+    //                 Swal.fire({
+    //                     icon: 'info',
+    //                     title: 'Subscription Exists',
+    //                     text: `${data.message} The existing subscription ends on ${data.end_date}. Do you want to change the subscription?`,
+    //                     showCancelButton: true,
+    //                     confirmButtonText: 'Yes, change it!',
+    //                     cancelButtonText: 'No, keep it'
+    //                 }).then((result) => {
+    //                     if (result.isConfirmed) {
+    //                         // Call the update subscription route
+    //                         fetch(`/update-user-subscription/` + userId, {
+    //                                 method: 'POST',
+    //                                 headers: {
+    //                                     'Content-Type': 'application/json',
+    //                                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    //                                 },
+    //                                 body: JSON.stringify({
+    //                                     subscription_id: subscriptionId,
+    //                                     joining_date: joiningDate,
+    //                                     amount: amount,
+    //                                     end_date: endDate
+    //                                 })
+    //                             })
+    //                             .then(response => response.json())
+    //                             .then(data => {
+    //                                 Swal.fire({
+    //                                     icon: 'success',
+    //                                     title: 'Subscription Updated',
+    //                                     text: data.message,
+    //                                     confirmButtonText: 'OK'
+    //                                 }).then((result) => {
+    //                                     if (result.isConfirmed) {
+    //                                         // Optionally reload the page or update the UI
+    //                                         location.reload();
+    //                                     }
+    //                                 });
+    //                             });
+    //                     }
+    //                 });
+    //             } else {
+    //                 Swal.fire({
+    //                     icon: 'success',
+    //                     title: 'Subscription Created',
+    //                     text: data.message,
+    //                     confirmButtonText: 'OK'
+    //                 }).then((result) => {
+    //                     if (result.isConfirmed) {
+    //                         // Optionally reload the page or update the UI
+    //                         location.reload();
+    //                     }
+    //                 });
+    //             }
+    //         });
+    // });
 
     function calculateBMI() {
         // Get height and weight values
