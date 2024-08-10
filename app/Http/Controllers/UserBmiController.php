@@ -7,6 +7,7 @@ use App\Models\userBmi;
 use App\Models\UserBodyMeasurement;
 use App\Traits\SessionTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class UserBmiController extends Controller
@@ -47,8 +48,8 @@ class UserBmiController extends Controller
             ]);
 
             $userId = $request->all()['user_id'];
-            $gym_uuid = $this->getGymSession()['uuid'];
-            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
             $this->userBodyMeasurement->createBodyMeasurement($validatedData, $userId, $gymId);
             $this->bmi->createBmi($validatedData, $userId, $gymId);
 

@@ -6,6 +6,7 @@ use App\Models\Gym;
 use App\Models\GymSubscription;
 use App\Traits\SessionTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -24,8 +25,8 @@ class GymSubscriptionController extends Controller
     public function listSubscriptionPlan()
     {
 
-        $gym_uuid = $this->getGymSession()['uuid'];
-        $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
         $subscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
         return view('GymOwner.subscription-list', compact('subscriptions'));
@@ -40,8 +41,8 @@ class GymSubscriptionController extends Controller
     public function createGymSubscriptionPlan(Request $request)
     {
         try {
-            $gym_uuid = $this->getGymSession()['uuid'];
-            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
             $validatedData = $request->validate([
                 'subscription_name' => 'required',

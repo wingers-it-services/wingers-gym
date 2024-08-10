@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Traits\SessionTrait;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class DietController extends Controller
 {
@@ -26,7 +27,8 @@ class DietController extends Controller
     }
     public function viewDiet()
     {
-        $gymId = $this->gym->where('uuid', $this->getGymSession()['uuid'])->first()->id;
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
         $diets = $this->diet->where('gym_id', $gymId)->get();
         return view('GymOwner.add-diet', compact('diets'));
     }
@@ -34,8 +36,8 @@ class DietController extends Controller
     public function addDiet(Request $request)
     {
         try {
-            $gym_uuid = $this->getGymSession()['uuid'];
-            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
             $validatedData = $request->validate([
                 'image' => 'required',

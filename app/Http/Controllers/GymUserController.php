@@ -13,9 +13,11 @@ use App\Models\UserBodyMeasurement;
 use App\Models\UserWorkout;
 use App\Models\UserDiet;
 use App\Models\UserSubscriptionHistory;
+use App\Models\Workout;
 use App\Services\UserService;
 use App\Traits\SessionTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -62,16 +64,16 @@ class GymUserController extends Controller
 
     public function listGymUser()
     {
-        $gym_uuid = $this->getGymSession()['uuid'];
-        $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+        $gymUser = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
         $users = $this->user->where('gym_id', $gymId)->get();
         return view('GymOwner.gym-customers', compact('users'));
     }
 
     public function addGymUser()
     {
-        $gym_uuid = $this->getGymSession()['uuid'];
-        $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+        $gymUser = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
 
         $gymStaff = GymStaff::join('designations', 'designations.id', 'gym_staffs.designation_id')
             ->where('gym_staffs.gym_id', $gymId)->get();
@@ -104,8 +106,8 @@ class GymUserController extends Controller
                 'password'             => 'required'
             ]);
 
-            $gym_uuid = $this->getGymSession()['uuid'];
-            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+            $gymUser = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
 
             $user = $this->userService->createUserAccount($validateData, $gymId);
 
@@ -138,9 +140,8 @@ class GymUserController extends Controller
     public function showUserProfile($uuid)
     {
         $userDetail = $this->user->where('uuid', $uuid)->first();
-        // $diets = $this->diet->all();
-
-        $gymId = $this->gym->where('uuid', $this->getGymSession()['uuid'])->first()->id;
+        $gymUser = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
         $userId = $userDetail->id;
         $designations = $this->designation->get();
         $workouts = $this->workout->where('gym_id', $gymId)->where('user_id', $userId)->get();
@@ -150,9 +151,8 @@ class GymUserController extends Controller
         $subscriptionId = $userDetail->subscription_id;
         $userSubscriptions = $this->userHistory->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $bmis = $this->bmi->where('gym_id', $gymId)->where('user_id', $userId)->get();
-        // $trainers = $this->gymStaff->where('designation_id', "1")->get();
         $trainers = $this->gymStaff->where('gym_id', $gymId)->where('designation_id', 1)->get();
-        // return view('GymOwner.view-gym-details', compact('userDetail', 'workouts', 'diets', 'bmis', 'trainers'));
+
         return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets', 'bmis', 'trainers'));
     }
 
@@ -173,8 +173,8 @@ class GymUserController extends Controller
                 'image'             => 'nullable'
             ]);
 
-            $gym_uuid = $this->getGymSession()['uuid'];
-            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+            $gymUser = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
 
             $isProfileUpdated = $this->userService->createUserAccount($request->all(), $gymId);
 
@@ -200,8 +200,8 @@ class GymUserController extends Controller
                 "notes" => 'required',
             ]);
 
-            $gym_uuid = $this->getGymSession()['uuid'];
-            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+            $gymUser = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
 
             $this->workout->addWorkout($validatedData, $gymId);
 
@@ -226,8 +226,8 @@ class GymUserController extends Controller
                 "notes" => 'required',
             ]);
 
-            $gym_uuid = $this->getGymSession()['uuid'];
-            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+            $gymUser = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
 
             $this->diet->addUserDiet($validatedData, $gymId);
 
@@ -399,8 +399,8 @@ class GymUserController extends Controller
     {
         try {
 
-            $gym_uuid = $this->getGymSession()['uuid'];
-            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id; 
+            $gymUser = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
 
             $validatedData = $request->validate([
                 'user_id' => 'required',
@@ -413,7 +413,7 @@ class GymUserController extends Controller
 
             // Fetch subscription details
             $subscription = $this->gymSubscription->find($validatedData['subscription_id']);
-            
+
             // Create user subscription history
             $this->userHistory->create([
                 'gym_id' => $gymId,
@@ -435,5 +435,15 @@ class GymUserController extends Controller
             Log::error("[GymSubscriptionController][addUserSubscription] error " . $th->getMessage());
             return redirect()->back()->with('error', $th->getMessage());
         }
+    }
+
+    public function autocompleteWorkout(Request $request)
+    {
+        $gymUser = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
+        $query = $request->get('query');
+        $workouts = Workout::where('name', 'LIKE', "%{$query}%")->where('gym_id',$gymId)->pluck('name');
+
+        return response()->json($workouts);
     }
 }

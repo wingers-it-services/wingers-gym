@@ -209,9 +209,9 @@
                                                                         <td>{{ \Carbon\Carbon::parse($subscription->joining_date)->format('M d, Y') }}</td>
                                                                         <td>{{ \Carbon\Carbon::parse($subscription->end_date)->format('M d, Y') }}</td>
                                                                         <td>
-                                                                       
+
                                                                             {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'Active' : ($subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'Inactive' : 'Unknown') }}
-                                                                        
+
                                                                         </td>
                                                                         <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
                                                                                 </a><a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
@@ -238,12 +238,14 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form method="POST" action="/add-user-workout">
+                                                    <form autocomplete="off" method="POST" action="/add-user-workout">
                                                         @csrf
                                                         <input type="text" id="user_id" name="user_id" value="{{$userDetail->id}}" class="form-control" hidden>
                                                         <div class="form-group">
                                                             <label>Excerise Name</label>
-                                                            <input type="text" id="exercise_name" name="exercise_name" class="form-control" required>
+                                                            <div class="autocomplete">
+                                                                <input id="workoutInput" type="text" name="exercise_name" placeholder="Workout Name" required>
+                                                            </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Sets</label>
@@ -978,7 +980,92 @@
             alert('Please enter valid height and weight values.');
         }
     }
+
+    function autocomplete(inp) {
+        var currentFocus;
+
+        inp.addEventListener("input", function(e) {
+            var val = this.value;
+            closeAllLists();
+            if (!val) {
+                return false;
+            }
+            currentFocus = -1;
+            $.ajax({
+                url: "{{ url('/autocomplete-workout') }}",
+                type: "GET",
+                data: {
+                    query: val
+                },
+                dataType: 'json',
+                success: function(data) {
+                    a = document.createElement("DIV");
+                    a.setAttribute("id", inp.id + "autocomplete-list");
+                    a.setAttribute("class", "autocomplete-items");
+                    inp.parentNode.appendChild(a);
+                    for (i = 0; i < data.length; i++) {
+                        b = document.createElement("DIV");
+                        b.innerHTML = "<strong>" + data[i].substr(0, val.length) + "</strong>";
+                        b.innerHTML += data[i].substr(val.length);
+                        b.innerHTML += "<input type='hidden' value='" + data[i] + "'>";
+                        b.addEventListener("click", function(e) {
+                            inp.value = this.getElementsByTagName("input")[0].value;
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    }
+                }
+            });
+        });
+
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) { // down key
+                currentFocus++;
+                addActive(x);
+            } else if (e.keyCode == 38) { // up key
+                currentFocus--;
+                addActive(x);
+            } else if (e.keyCode == 13) { // enter key
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    if (x) x[currentFocus].click();
+                }
+            }
+        });
+
+        function addActive(x) {
+            if (!x) return false;
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            x[currentFocus].classList.add("autocomplete-active");
+        }
+
+        function removeActive(x) {
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+            }
+        }
+
+        function closeAllLists(elmnt) {
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            }
+        }
+
+        document.addEventListener("click", function(e) {
+            closeAllLists(e.target);
+        });
+    }
+
+    /* Initialize the autocomplete function on the workoutInput element */
+    autocomplete(document.getElementById("workoutInput"));
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>741
 @include('CustomSweetAlert');
 @endsection

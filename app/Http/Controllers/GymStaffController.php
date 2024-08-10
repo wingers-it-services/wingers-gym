@@ -10,6 +10,7 @@ use App\Traits\SessionTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class GymStaffController extends Controller
@@ -42,8 +43,8 @@ class GymStaffController extends Controller
     public function listGymStaff()
     {
         $gymStaffs = $this->gymStaff->all();
-        $gym_uuid = $this->getGymSession()['uuid'];
-        $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
         $gymStaffMembers = $this->gymStaff->where('gym_id', $gymId)->with('designation')->get();
         $designations = $this->designation->get();
         return view('GymOwner.gym-staf-list', compact('gymStaffMembers', 'designations'));
@@ -51,8 +52,8 @@ class GymStaffController extends Controller
 
     public function showAddGymStaff(Request $request)
     {
-        $gym_uuid = $this->getGymSession()['uuid'];
-        $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
         $designations = $this->designation->where('gym_id', $gymId)->get();
         return view('GymOwner.add-gym-staff', compact('designations'));
@@ -73,8 +74,8 @@ class GymStaffController extends Controller
                 "blood_group" => 'nullable'
             ]);
 
-            $gym_uuid = $this->getGymSession()['uuid'];
-            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
             $imagePath = null;
             if ($request->hasFile('staff_photo')) {
@@ -196,8 +197,8 @@ class GymStaffController extends Controller
 
     public function showUpdateStaff(Request $request, $uuid)
     {
-        $gym_uuid = $this->getGymSession()['uuid'];
-        $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
         $staffDetail = $this->gymStaff->where('uuid', $uuid)->first();
         $designations = $this->designation->where('gym_id', $gymId)->get();
@@ -217,11 +218,11 @@ class GymStaffController extends Controller
                 "blood_group" => 'nullable',
                 "image" => 'nullable'
             ]);
-    
+
             $staff = $this->gymStaff->where('uuid', $request->uuid)->first();
-    
+
             $imagePath = $staff->image; // Default to existing image path
-    
+
             if ($request->hasFile('image')) {
                 if ($staff->image) {
                     $existingImagePath = public_path($staff->image);
@@ -234,9 +235,9 @@ class GymStaffController extends Controller
                 $imagePath = 'gymStaff_images/' . $filename;
                 $imagefile->move(public_path('gymStaff_images/'), $filename);
             }
-    
+
             $isStaffUpdated = $this->gymStaff->updateStaff($validatedData, $imagePath);
-    
+
             if (!$isStaffUpdated) {
                 return redirect()->back()->with('status', 'error')->with('message', 'error while updating user.');
             }
@@ -246,7 +247,7 @@ class GymStaffController extends Controller
             return redirect()->back()->with('status', 'error')->with('message', 'error while updating user.');
         }
     }
-    
+
     public function deleteGymStaff($uuid)
     {
         $gymStaff = $this->gymStaff->where('uuid', $uuid)->firstOrFail();
