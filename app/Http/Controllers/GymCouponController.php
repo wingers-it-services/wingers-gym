@@ -6,6 +6,7 @@ use App\Models\Gym;
 use App\Models\GymCoupon;
 use App\Traits\SessionTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -21,8 +22,8 @@ class GymCouponController extends Controller
     }
     public function listGymCoupons()
     {
-        $gym_uuid = $this->getGymSession()['uuid'];
-        $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
         $coupons = $this->gymCoupon->where('gym_id', $gymId)->get();
         return view('GymOwner.GymCoupon.createListGymCoupon', compact('coupons'));

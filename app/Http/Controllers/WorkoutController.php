@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Traits\SessionTrait;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class WorkoutController extends Controller
 {
@@ -25,7 +26,8 @@ class WorkoutController extends Controller
     }
     public function viewWorkout()
     {
-        $gymId = $this->gym->where('uuid', $this->getGymSession()['uuid'])->first()->id;
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
         $workouts = $this->workout->where('gym_id', $gymId)->get();
 
         return view('GymOwner.add-workout', compact('workouts'));
@@ -34,8 +36,8 @@ class WorkoutController extends Controller
     public function addWorkout(Request $request)
     {
         try {
-            $gym_uuid = $this->getGymSession()['uuid'];
-            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
             $validatedData = $request->validate([
                 'image' => 'required',
@@ -76,11 +78,11 @@ class WorkoutController extends Controller
                 'category' => 'required',
                 'description' => 'required',
             ]);
-    
+
             $workout = $this->workout->findOrFail($request->workout_id);
-    
+
             $imagePath = $workout->image; // Default to existing image path
-    
+
             if ($request->hasFile('image')) {
                 if ($workout->image) {
                     $existingImagePath = public_path($workout->image);
@@ -93,16 +95,16 @@ class WorkoutController extends Controller
                 $imagePath = 'workout_images/' . $filename;
                 $imagefile->move(public_path('workout_images/'), $filename);
             }
-    
+
             $workout->vedio_link = $validatedData['vedio_link'];
             $workout->name = $validatedData['name'];
             $workout->gender = $validatedData['gender'];
             $workout->category = $validatedData['category'];
             $workout->description = $validatedData['description'];
             $workout->image = $imagePath; // Update image path
-    
+
             $workout->save();
-    
+
             return redirect()->back()->with('status', 'success')->with('message', 'Workout updated successfully.');
         } catch (Exception $e) {
             Log::error('[WorkoutController][updateWorkout] Error updating workout ' . $e->getMessage());
@@ -116,6 +118,5 @@ class WorkoutController extends Controller
 
         $workout->delete();
         return redirect()->back()->with('status', 'success')->with('message', 'Workout deleted successfully!');
-    } 
-    
+    }
 }

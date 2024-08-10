@@ -139,8 +139,6 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::post('/check-subscription/{userId}', [GymUserController::class, 'checkSubscription'])->name('check-subscription');
     Route::post('/update-user-subscription/{userId}', [GymUserController::class, 'updateSubscription'])->name('update-user-subscription');
 
-
-
     Route::get('/gym-coupon', [GymCouponController::class, 'listGymCoupons'])->name('listGymCoupons');
     Route::post('/gym-coupon', [GymCouponController::class, 'addGymCoupon']);
     Route::get('/gymCouponView', [GymCouponController::class, 'viewGymCoupon'])->name('viewGymCoupon');
@@ -190,6 +188,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::post('/update-workout', [WorkoutController::class, 'updateWorkout'])->name('update-workout');
     Route::get('/delete-workout/{uuid}', [WorkoutController::class, 'deleteWorkout'])->name('delete-workout');
 
+
+
     Route::get('/viewAddEnquiry', [GymEnquiryController::class, 'viewAddEnquiry'])->name('viewAddEnquiry');
     Route::post('/addGymEnquiry', [GymEnquiryController::class, 'addGymEnquiry'])->name('addGymEnquiry');
     Route::get('/viewEnquiry/{uuid}', [GymEnquiryController::class, 'viewEnquiry'])->name('viewEnquiry');
@@ -235,3 +235,5 @@ Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
 
 Route::post('/addUserSubscriptionByGym', [GymUserController::class, 'addUserSubscriptionByGym'])->name('addUserSubscriptionByGym');
+
+Route::get('/autocomplete-workout', [GymUserController::class, 'autocompleteWorkout'])->name('autocomplete-workout');

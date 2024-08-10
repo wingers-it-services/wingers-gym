@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Designation;
 use App\Models\Gym;
 use App\Traits\SessionTrait;
+use Illuminate\Support\Facades\Auth;
 
 class GymDesignationController extends Controller
 {
@@ -30,8 +31,8 @@ class GymDesignationController extends Controller
      */
     public function viewGymDesignation()
     {
-        $gym_uuid = $this->getGymSession()['uuid'];
-        $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
         $designations = $this->designation->where('gym_id', $gymId)->get();
         return view('GymOwner.gymDesignation', compact('designations'));
@@ -56,8 +57,8 @@ class GymDesignationController extends Controller
                 'designation_name' => 'required'
             ]);
 
-            $gym_uuid = $this->getGymSession()['uuid'];
-            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id;
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
             $this->designation->addAdminDesignation($validatedData, $gymId);
 
