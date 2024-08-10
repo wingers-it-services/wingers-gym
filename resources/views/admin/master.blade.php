@@ -871,6 +871,18 @@
                         </a>
                     </li>
 
+                    <li><a href="/admin/add-workout" class="ai-icon" aria-expanded="false">
+							<i class="fa fa-money" aria-hidden="true"></i>
+							<span class="nav-text">Add Gym Workout</span>
+						</a>
+					</li>
+
+					<li><a href="/admin/add-diet" class="ai-icon" aria-expanded="false">
+							<i class="fa fa-money" aria-hidden="true"></i>
+							<span class="nav-text">Add Gym Diet</span>
+						</a>
+					</li>
+
                     <li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
                             <i class="fa fa-address-card-o" aria-hidden="true"></i>
                             <span class="nav-text">GYM</span>
