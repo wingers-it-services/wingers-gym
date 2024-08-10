@@ -234,4 +234,4 @@ Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
 
-Route::post('/addUserSubscription', [GymUserController::class, 'addUserSubscription'])->name('addUserSubscription');
+Route::post('/addUserSubscriptionByGym', [GymUserController::class, 'addUserSubscriptionByGym'])->name('addUserSubscriptionByGym');
