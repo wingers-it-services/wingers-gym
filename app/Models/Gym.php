@@ -14,6 +14,8 @@ class Gym extends Authenticatable
     use SoftDeletes;
     use SessionTrait;
 
+     protected $guard = 'gym';
+
     protected $fillable = [
 
         'gym_name',

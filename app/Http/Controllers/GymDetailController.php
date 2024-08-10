@@ -7,6 +7,8 @@ use App\Services\GymService;
 use App\Traits\SessionTrait;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class GymDetailController extends Controller
@@ -25,41 +27,50 @@ class GymDetailController extends Controller
 
     public function showDashboard(Request $request)
     {
-        $gymSession = $this->getGymSession();
-        $uuid = $gymSession['uuid'];
-        $gymDetail = $this->gym->where('uuid', $uuid)->first();
+        $gymUser = Auth::guard('gym')->user();
+        $gymDetail = $this->gym->where('uuid', $gymUser->uuid)->first();
         Log::error('[GymDetailController][showDashboard] user image null : ' . empty($gymDetail->image));
         Log::error('[GymDetailController][showDashboard] user image src : ' . $gymDetail->image);
         return view('GymOwner.dashboard', compact('gymDetail'));
     }
+
     public function showGymProfile(Request $request)
     {
-        $gymSession = $this->getGymSession();
-        // dd($gymSession);
-        $uuid = $gymSession['uuid'];
-        $gymDetail = $this->gym->where('uuid', $uuid)->first();
+        $gymUser = Auth::guard('gym')->user();
+        $gymDetail = $this->gym->where('uuid', $gymUser->uuid)->first();
 
         return view('GymOwner.gymProfile', compact('gymDetail'));
     }
+
     public function gymLogin(Request $request)
     {
         try {
-            $credentials = $request->all();
-            $gymAccount = $this->gym->where([
-                'email' => $credentials['email'],
-                'password' => $credentials['password']
-            ])->first();
+            // Validate the incoming request
+            $request->validate([
+                'email'    => 'required|email',
+                'password' => 'required'
+            ]);
 
-            if (!$gymAccount) {
-                session()->flush();
-                return redirect()->back()->with('status', 'error')->with('message', 'Invalid credential');
+            // Get the credentials from the request
+            $credentials = $request->only('email', 'password');
+
+            // Find the gym account using the email
+            $gymAccount = Gym::where('email', $credentials['email'])->first();
+            if (!$gymAccount || !Hash::check($request->password, $gymAccount->password)) {
+                return back()->with('status', 'error')->with('message', 'The provided credentials do not match our records.');
             }
-            $this->storeGymSession($gymAccount);
-            return redirect('/dashboard')->with('status', 'success')->with('message', 'login successfully');
+            // Check if the account exists and the password matches
+            if (Auth::guard('gym')->attempt($credentials)) {
+                // Redirect to the dashboard on success
+                return redirect('/dashboard')->with('status', 'success')->with('message', 'Login successfully');
+            } else {
+                // Redirect back with an error message on failure
+                return redirect()->back()->with('status', 'error')->with('message', 'Invalid credentials or account is not active');
+            }
         } catch (Exception $e) {
-            // dd($e);
+            // Log the error and redirect back with an error message
             Log::error('[GymDetailController][gymLogin] Error Login Gym ' . 'Request=' . $request . ', Exception=' . $e->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', 'Invalid credentials or account is not active');
+            return redirect()->back()->with('status', 'error')->with('message', 'An error occurred during login. Please try again later.');
         }
     }
 

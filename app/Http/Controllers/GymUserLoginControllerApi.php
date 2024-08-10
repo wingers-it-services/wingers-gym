@@ -57,6 +57,7 @@ class GymUserLoginControllerApi extends Controller
             if ($user->account_status !== GymUserAccountStatusEnum::USER_INJURY_DETAIL) {
                 return response()->json([
                     'status'  => 403,
+                    'user'    =>$user,
                     'message' => 'Account not completed. Please complete your account.',
                 ], 403);
             }

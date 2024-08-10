@@ -183,6 +183,15 @@ Route::get('/adminUserprofile', function () {
     return view('admin.adminUser.adminUserprofile');
 });
 
+Route::get('/add-diet', function () {
+    return view('admin.add-diet');
+});
+
+Route::get('/add-workout', function () {
+    return view('admin.add-workout');
+});
+
+
 Route::get('/viewAdminCoupons', [AdminCouponController::class, 'viewAdminCoupons'])->name('viewAdminCoupons');
 Route::post('/addAdminCoupon', [AdminCouponController::class, 'addAdminCoupon'])->name('addAdminCoupon');
 Route::get('/editViewCoupon', [AdminCouponController::class, 'editViewCoupon'])->name('editViewCoupon');

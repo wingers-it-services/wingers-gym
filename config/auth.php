@@ -41,6 +41,11 @@ return [
             'provider' => 'users',
         ],
 
+        'gym' => [
+            'driver' => 'session',
+            'provider' => 'gyms',
+        ],
+
         'api' => [
             'driver'   => 'passport', // or 'passport' if using Laravel Passport
             'provider' => 'users',
@@ -68,6 +73,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+        'gyms' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Gym::class,
         ],
 
         // 'users' => [
