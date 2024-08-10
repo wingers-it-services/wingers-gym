@@ -115,7 +115,7 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{ route('addUserSubscription') }}" method="POST">
+                                                    <form action="{{ route('addUserSubscriptionByGym') }}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
                                                         <div class="row">
@@ -195,6 +195,7 @@
                                                                         <th scope="col">Validity</th>
                                                                         <th scope="col">Start Date</th>
                                                                         <th scope="col">End Date</th>
+                                                                        <th scope="col">Status</th>
                                                                         <th scope="col" class="text-end">Action
                                                                         </th>
                                                                     </tr>
@@ -207,6 +208,11 @@
                                                                         <td>{{$subscription->subscription->validity}} Months</td>
                                                                         <td>{{ \Carbon\Carbon::parse($subscription->joining_date)->format('M d, Y') }}</td>
                                                                         <td>{{ \Carbon\Carbon::parse($subscription->end_date)->format('M d, Y') }}</td>
+                                                                        <td>
+                                                                       
+                                                                            {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'Active' : ($subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'Inactive' : 'Unknown') }}
+                                                                        
+                                                                        </td>
                                                                         <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
                                                                                 </a><a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
                                                                         </td>
@@ -731,15 +737,10 @@
                     </div>
                 </div>
             </div>
-            </div\
-
-
-
-
-
-                </div>
         </div>
     </div>
+</div>
+</div>
 </div>
 </div>
 
@@ -822,28 +823,36 @@
     }
 
     document.getElementById('subscription_id').addEventListener('change', function() {
-        var selectedOption = this.options[this.selectedIndex];
-        var description = selectedOption.getAttribute('data-description');
-        var amount = selectedOption.getAttribute('data-amount');
-        var validity = selectedOption.getAttribute('data-validity');
+        const selectedOption = this.options[this.selectedIndex];
+        const amount = selectedOption.getAttribute('data-amount');
+        const description = selectedOption.getAttribute('data-description');
+        const validity = selectedOption.getAttribute('data-validity');
 
-        document.getElementById('description').value = description;
-        document.getElementById('subscription_amount').innerText = '₹' + amount;
-        document.getElementById('total_amount').innerText = '₹' + amount;
+        // Set the amount and description in the form
         document.getElementById('amount').value = amount;
+        document.getElementById('subscription_amount').innerText = '₹' + amount;
+        document.getElementById('description').value = description;
 
-        var joiningDate = document.getElementById('joining_date').value;
+        // Calculate and set the end date
+        const joiningDate = document.getElementById('joining_date').value;
         if (joiningDate) {
-            updateEndDate(joiningDate, validity);
+            const endDate = new Date(joiningDate);
+            endDate.setMonth(endDate.getMonth() + parseInt(validity));
+            document.getElementById('end_date').value = endDate.toISOString().split('T')[0];
+            document.getElementById('subscription_end_date').innerText = endDate.toISOString().split('T')[0];
         }
     });
 
     document.getElementById('joining_date').addEventListener('change', function() {
-        var selectedOption = document.getElementById('subscription_id').options[document.getElementById('subscription_id').selectedIndex];
-        var validity = selectedOption.getAttribute('data-validity');
+        const selectedOption = document.getElementById('subscription_id').options[document.getElementById('subscription_id').selectedIndex];
+        const validity = selectedOption.getAttribute('data-validity');
 
-        updateEndDate(this.value, validity);
+        const endDate = new Date(this.value);
+        endDate.setMonth(endDate.getMonth() + parseInt(validity));
+        document.getElementById('end_date').value = endDate.toISOString().split('T')[0];
+        document.getElementById('subscription_end_date').innerText = endDate.toISOString().split('T')[0];
     });
+
 
     function updateEndDate(joiningDate, validity) {
         if (joiningDate && validity) {

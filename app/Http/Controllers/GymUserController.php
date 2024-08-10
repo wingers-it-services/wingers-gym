@@ -148,7 +148,7 @@ class GymUserController extends Controller
         $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
 
         $subscriptionId = $userDetail->subscription_id;
-        $userSubscriptions = $this->userHistory->where('gym_id', $gymId)->where('user_id', $userId)->where('subscription_id', $subscriptionId)->get();
+        $userSubscriptions = $this->userHistory->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $bmis = $this->bmi->where('gym_id', $gymId)->where('user_id', $userId)->get();
         // $trainers = $this->gymStaff->where('designation_id', "1")->get();
         $trainers = $this->gymStaff->where('gym_id', $gymId)->where('designation_id', 1)->get();
@@ -395,12 +395,15 @@ class GymUserController extends Controller
         ]);
     }
 
-    public function addUserSubscription(Request $request)
+    public function addUserSubscriptionByGym(Request $request)
     {
-       
         try {
+
+            $gym_uuid = $this->getGymSession()['uuid'];
+            $gymId = $this->gym->where('uuid', $gym_uuid)->first()->id; 
+
             $validatedData = $request->validate([
-                'user_id' => 'required|exists:users,id',
+                'user_id' => 'required',
                 'subscription_id' => 'required|exists:gym_subscriptions,id',
                 'joining_date' => 'required|date',
                 'amount' => 'required|numeric',
@@ -413,15 +416,19 @@ class GymUserController extends Controller
             
             // Create user subscription history
             $this->userHistory->create([
+                'gym_id' => $gymId,
+                'original_transaction_id' => 1,
                 'user_id' => $validatedData['user_id'],
                 'subscription_id' => $subscription->id,
                 'joining_date' => $validatedData['joining_date'],
                 'end_date' => $validatedData['end_date'],
                 'amount' => $validatedData['amount'],
+                'status' => 1,
+                'coupon_id' => 2,
                 'description' => $validatedData['description'],
             ]);
 
-            return redirect()->route('listUserSubscriptions', ['user' => $validatedData['user_id']])
+            return redirect()->back()
                 ->with('status', 'success')
                 ->with('message', 'Subscription added successfully');
         } catch (Throwable $th) {
