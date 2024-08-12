@@ -13,6 +13,7 @@
                 <li class="breadcrumb-item active"><a href="javascript:void(0)">Staff Details</a></li>
             </ol>
         </div>
+        
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">

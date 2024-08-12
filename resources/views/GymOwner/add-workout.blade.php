@@ -28,7 +28,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label for="vedio_link">vedio Link </label>
+                                            <label for="vedio_link">Video Link </label>
                                             <input type="text" class="form-control" id="vedio_link" name="vedio_link" placeholder="">
                                         </div>
 
@@ -65,7 +65,6 @@
                                                     <option>Choose...</option>
                                                     <option value="gym">Gym</option>
                                                     <option value="home">Home</option>
-
                                                 </select>
                                             </div>
                                         </div>
