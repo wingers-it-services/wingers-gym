@@ -28,7 +28,7 @@ class WorkoutController extends Controller
     {
         $gym = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
-        $workouts = $this->workout->where('gym_id', $gymId)->get();
+        $workouts = $this->workout->where('added_by', $gymId)->get();
 
         return view('GymOwner.add-workout', compact('workouts'));
     }

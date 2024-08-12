@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('user_diets', function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique();
+            $table->integer('gym_id');
             $table->integer('user_id');
             $table->string('meal_name');
             $table->integer('calories');

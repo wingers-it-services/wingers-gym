@@ -45,7 +45,12 @@
                                         <div class="card overflow-hidden">
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Member Subscription</span> <strong class="text-muted">{{ $userDetail->subscription->subscription_name }} </strong></li>
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Staff Assigned</span> <strong class="text-muted">{{ $userDetail->staff->name }}</strong></li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span class="mb-0">Staff Assigned</span>
+                                                    @if($userDetail->staff)
+                                                    <strong class="text-muted">{{ $userDetail->staff->name }}</strong>
+                                                    @endif
+                                                </li>
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Member Blood Group</span> <strong class="text-muted">{{ $userDetail->blood_group}} </strong></li>
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Joining Date</span> <strong class="text-muted">{{ $userDetail->joining_date }}</strong></li>
                                             </ul>
