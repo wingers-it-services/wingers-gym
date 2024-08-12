@@ -58,7 +58,8 @@
 
                                                 </select>
                                             </div>
-                                        </div>  <div class="col-md-6 mb-3">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
                                             <label for="gender">User Type</label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="user_type" name="user_type">
@@ -114,9 +115,9 @@
                                 <td>{{$subscription->name }}</td>
                                 <td>{{$subscription->gender }}</td>
                                 <td>
-                                <a class="dropdown-item view-workout" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#viewModal" data-workout="{{ json_encode($subscription) }}">
-                                    <i class="fa fa-eye color-muted"></i>
-                                </a>
+                                    <a class="dropdown-item view-workout" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#viewModal" data-workout="{{ json_encode($subscription) }}">
+                                        <i class="fa fa-eye color-muted"></i>
+                                    </a>
                                 </td>
 
                                 <td class="text-end">
@@ -193,12 +194,13 @@
 
 
 <!-- Modal Structure -->
-<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewModalLabel">Workout Details</h5>
+                <h5 class="modal-title">Workout Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
             </div>
             <div class="modal-body d-flex">
                 <div class="w-50 pe-2">
@@ -215,7 +217,7 @@
                         </video>
                         <!-- Iframe -->
                         <iframe id="modalIframe" class="w-100" height="315" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen></iframe>
                     </div>
                 </div>
@@ -275,10 +277,10 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Handling view workout modal
         document.querySelectorAll('.view-workout').forEach(button => {
-            button.addEventListener('click', function () {
+            button.addEventListener('click', function() {
                 const workout = JSON.parse(this.getAttribute('data-workout'));
 
                 // Set the image src
