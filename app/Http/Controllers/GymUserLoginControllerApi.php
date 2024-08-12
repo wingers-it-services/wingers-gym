@@ -53,18 +53,18 @@ class GymUserLoginControllerApi extends Controller
                     'message' => 'Invalid password, please try again.',
                 ], 401);
             }
+            $token = $user->createToken('MyAppToken')->accessToken;
 
-            if ($user->account_status !== GymUserAccountStatusEnum::USER_INJURY_DETAIL) {
+            if ($user->profile_status !== GymUserAccountStatusEnum::USER_INJURY_DETAIL) {
                 return response()->json([
-                    'status'  => 403,
-                    'user'    =>$user,
+                    'status'       => 200,
+                    'user'         => $user,
+                    'access_token' => $token,
                     'message' => 'Account not completed. Please complete your account.',
-                ], 403);
+                ], 200);
             }
 
             // Create token if authentication is successful
-            $token = $user->createToken('MyAppToken')->accessToken;
-
             return response()->json([
                 'status'       => 200,
                 'user'         => $user,
