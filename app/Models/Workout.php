@@ -33,7 +33,7 @@ class Workout extends Model
                 'image'       => $imagePath,
                 'description' => $workoutArray['description'],
                 'category'    => $workoutArray['category'],
-                'added_by'    => $workoutArray['added_by']
+                'user_type'   => $workoutArray['user_type']
             ]);
         } catch (\Throwable $e) {
             Log::error('[Workout][addWorkout] Error adding workout: ' . $e->getMessage());

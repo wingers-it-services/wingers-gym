@@ -220,8 +220,8 @@ class GymStaffController extends Controller
             ]);
 
             $staff = $this->gymStaff->where('uuid', $request->uuid)->first();
-
-            $imagePath = $staff->image; // Default to existing image path
+// dd($staff);
+            // $imagePath = $staff->image; // Default to existing image path
 
             if ($request->hasFile('image')) {
                 if ($staff->image) {

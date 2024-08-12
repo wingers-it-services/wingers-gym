@@ -46,6 +46,7 @@ class WorkoutController extends Controller
                 'gender' => 'required',
                 'category' => 'required',
                 'description' => 'required',
+                'user_type' => 'required',
             ]);
 
             $imagePath = null;
