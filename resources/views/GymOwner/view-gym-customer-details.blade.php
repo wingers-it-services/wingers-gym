@@ -235,7 +235,7 @@
 
                                 <div class="tab-pane fade" id="workout">
                                     <div class="modal fade" id="addNewWorkout">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">Add New Workout</h5>
@@ -247,23 +247,38 @@
                                                         @csrf
                                                         <input type="text" id="user_id" name="user_id" value="{{$userDetail->id}}" class="form-control" hidden>
                                                         <div class="form-group">
-                                                            <label>Excerise Name</label>
-                                                            <div class="autocomplete">
-                                                                <input id="workoutInput" type="text" name="exercise_name" placeholder="Workout Name" required>
+                                                            <label>Exercise Name</label>
+                                                            <input id="workoutInput" class="form-control" type="text" name="exercise_name" placeholder="Workout Name" required>
+                                                        </div>
+                                                        <div id="workoutDetails">
+                                                            <div style="display: flex; gap: 10px; align-items: center;">
+                                                                <img id="workoutImage" src="" alt="Workout Image" style="display:none; width: 320px; height: 240px;">
+                                                                <video id="workoutVideo" controls style="display:none; width: 320px; height: 240px;">
+                                                                    <source id="workoutVideoSource" src="" type="video/mp4">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </div>
+                                                            <div id="workoutName" style="display:none; margin-top: 10px;"></div>
+                                                            <div id="workoutGender" style="display:none; margin-top: 10px;"></div>
+                                                            <div id="workoutCategory" style="display:none; margin-top: 10px;"></div>
+                                                            <div id="workoutDescription" style="display:none; margin-top: 10px;"></div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <div class="col-md-4">
+                                                                <label for="sets">Sets</label>
+                                                                <input type="number" id="sets" name="sets" min="0" max="1000" class="form-control" required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label for="reps">Reps</label>
+                                                                <input type="number" id="reps" name="reps" min="0" class="form-control" required />
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label for="weight">Weight</label>
+                                                                <input type="number" id="weight" name="weight" placeholder="Enter Weight in Kg" class="form-control" required>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label>Sets</label>
-                                                            <input type="number" name="sets" min="0" max="1000" class="form-control" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Reps</label>
-                                                            <input type="number" name="reps" class="form-control" name="" min="0" required />
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Weight</label>
-                                                            <input type="number" name="weight" placeholder="Enter Weight in Kg" class="form-control" required>
-                                                        </div>
+
                                                         <div class="form-group">
                                                             <label>Description</label>
                                                             <textarea type="text" rows="10" name="notes" class="form-control" required></textarea>
@@ -556,14 +571,16 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-4 mb-3">
+                                                    <div class="col-md-6 mb-3">
                                                         <button type="button" class="btn btn-primary btn-lg btn-block" onclick="calculateBMI()">Calculate BMI</button>
                                                     </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <button type="submit" class="btn btn-secondary btn-lg btn-block">Submit</button>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
+                                                    <div class="col-md-6 mb-3">
                                                         <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset</button>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                   <div class="col-md-12 mb-3">
+                                                        <button type="submit" class="btn btn-secondary btn-lg btn-block">Submit</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -747,15 +764,7 @@
         </div>
     </div>
 </div>
-</div>
-</div>
-</div>
 
-
-
-</div>
-</div>
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -986,11 +995,14 @@
         }
     }
 
+    document.addEventListener("DOMContentLoaded", function() {
+        autocomplete(document.getElementById('workoutInput'));
+    });
+
     function autocomplete(inp) {
         var currentFocus;
-
         inp.addEventListener("input", function(e) {
-            var val = this.value;
+            var a, b, i, val = this.value;
             closeAllLists();
             if (!val) {
                 return false;
@@ -1004,17 +1016,18 @@
                 },
                 dataType: 'json',
                 success: function(data) {
-                    a = document.createElement("DIV");
+                    var a = document.createElement("DIV");
                     a.setAttribute("id", inp.id + "autocomplete-list");
                     a.setAttribute("class", "autocomplete-items");
                     inp.parentNode.appendChild(a);
-                    for (i = 0; i < data.length; i++) {
-                        b = document.createElement("DIV");
+                    for (var i = 0; i < data.length; i++) {
+                        var b = document.createElement("DIV");
                         b.innerHTML = "<strong>" + data[i].substr(0, val.length) + "</strong>";
                         b.innerHTML += data[i].substr(val.length);
                         b.innerHTML += "<input type='hidden' value='" + data[i] + "'>";
                         b.addEventListener("click", function(e) {
                             inp.value = this.getElementsByTagName("input")[0].value;
+                            fetchWorkoutDetails(inp.value);
                             closeAllLists();
                         });
                         a.appendChild(b);
@@ -1026,13 +1039,13 @@
         inp.addEventListener("keydown", function(e) {
             var x = document.getElementById(this.id + "autocomplete-list");
             if (x) x = x.getElementsByTagName("div");
-            if (e.keyCode == 40) { // down key
+            if (e.keyCode == 40) {
                 currentFocus++;
                 addActive(x);
-            } else if (e.keyCode == 38) { // up key
+            } else if (e.keyCode == 38) {
                 currentFocus--;
                 addActive(x);
-            } else if (e.keyCode == 13) { // enter key
+            } else if (e.keyCode == 13) {
                 e.preventDefault();
                 if (currentFocus > -1) {
                     if (x) x[currentFocus].click();
@@ -1068,8 +1081,62 @@
         });
     }
 
-    /* Initialize the autocomplete function on the workoutInput element */
-    autocomplete(document.getElementById("workoutInput"));
+    function fetchWorkoutDetails(exerciseName) {
+        $.ajax({
+            url: "{{ url('/fetch-workout-details') }}", // Adjust the route to your controller method
+            type: "GET",
+            data: {
+                exercise_name: exerciseName
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data) {
+                    // Update the image
+                    if (data.image) {
+                        $("#workoutImage").attr("src", data.image).show();
+                    } else {
+                        $("#workoutImage").hide();
+                    }
+
+                    // Update the video
+                    if (data.vedio_link) {
+                        $("#workoutVideoSource").attr("src", data.vedio_link);
+                        $("#workoutVideo").show()[0].load();
+                    } else {
+                        $("#workoutVideo").hide();
+                    }
+
+                    if (data.name) {
+                        $("#workoutName").html(data.name).show();
+                    } else {
+                        $("#workoutName").hide();
+                    }
+
+                    if (data.gender) {
+                        $("#workoutGender").html(data.gender).show();
+                    } else {
+                        $("#workoutGender").hide();
+                    }
+
+                    if (data.category) {
+                        $("#workoutCategory").html(data.category).show();
+                    } else {
+                        $("#workoutCategory").hide();
+                    }
+
+                    // Update the description
+                    if (data.description) {
+                        $("#workoutDescription").html(data.description).show();
+                    } else {
+                        $("#workoutDescription").hide();
+                    }
+                }
+            },
+            error: function() {
+                console.error('Error fetching workout details');
+            }
+        });
+    }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>741
 @include('CustomSweetAlert');
