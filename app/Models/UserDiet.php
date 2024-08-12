@@ -17,14 +17,14 @@ class UserDiet extends Model
     {
         try {
             return $this->create([
-                'gym_id' => $gym_id,
-                'user_id' => $addDiet['user_id'],
+                'gym_id'    => $gym_id,
+                'user_id'   => $addDiet['user_id'],
                 'meal_name' => $addDiet['meal_name'],
-                'calories' => $addDiet['calories'],
-                'protein' => $addDiet['protein'],
-                'carbs' => $addDiet['carbs'],
-                'fats' => $addDiet['fats'],
-                'notes' => $addDiet['notes'],
+                'calories'  => $addDiet['calories'],
+                'protein'   => $addDiet['protein'],
+                'carbs'     => $addDiet['carbs'],
+                'fats'      => $addDiet['fats'],
+                'notes'     => $addDiet['notes'],
             ]);
         } catch (\Throwable $e) {
             Log::error('[UserDiet][addUserDiet] Error adding gym detail: ' . $e->getMessage());

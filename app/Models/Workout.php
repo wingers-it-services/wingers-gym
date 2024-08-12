@@ -12,26 +12,28 @@ class Workout extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'gym_id',
         'image',
+        'user_type',
         'vedio_link',
         'name',
         'gender',
         'category',
-        'description'
+        'description',
+        'added_by'
     ];
 
-    public function addWorkout(array $workoutArray, $imagePath, $gymId)
+    public function addWorkout(array $workoutArray, $imagePath, $addedBy)
     {
         try {
             return $this->create([
-                'gym_id' => $gymId,
-                'name' => $workoutArray['name'],
-                'vedio_link' => $workoutArray['vedio_link'],
-                'gender' => $workoutArray['gender'],
-                'image'   => $imagePath,
+                'added_by'    => $addedBy,
+                'name'        => $workoutArray['name'],
+                'vedio_link'  => $workoutArray['vedio_link'],
+                'gender'      => $workoutArray['gender'],
+                'image'       => $imagePath,
                 'description' => $workoutArray['description'],
-                'category' => $workoutArray['category']
+                'category'    => $workoutArray['category'],
+                'added_by'    => $workoutArray['added_by']
             ]);
         } catch (\Throwable $e) {
             Log::error('[Workout][addWorkout] Error adding workout: ' . $e->getMessage());

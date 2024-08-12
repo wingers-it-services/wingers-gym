@@ -12,7 +12,6 @@
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
-
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-12">
@@ -59,10 +58,20 @@
 
                                                 </select>
                                             </div>
+                                        </div>  <div class="col-md-6 mb-3">
+                                            <label for="gender">User Type</label>
+                                            <div class="input-group">
+                                                <select class="me-sm-2 form-control default-select" id="user_type" name="user_type">
+                                                    <option>Choose...</option>
+                                                    <option value="gym">Gym</option>
+                                                    <option value="home">Home</option>
+
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-12 mb-3">
                                             <label for="description">Description</label>
-                                            <textarea type="text" rows="5" class="form-control" id="description" name="description" required=""></textarea>
+                                            <textarea type="text" rows="25" class="form-control" id="description" name="description" required=""></textarea>
                                             <div class="invalid-feedback">
                                                 Product name is required.
                                             </div>
@@ -105,7 +114,7 @@
                                 <td>{{$subscription->category }}</td>
                                 <td>{{$subscription->name }}</td>
                                 <td>{{$subscription->gender }}</td>
-                                <td class="text-end"> 
+                                <td>
                                 <a class="dropdown-item view-workout" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#viewModal" data-workout="{{ json_encode($subscription) }}">
                                     <i class="fa fa-eye color-muted"></i>
                                 </a>

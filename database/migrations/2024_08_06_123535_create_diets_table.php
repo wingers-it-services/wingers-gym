@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('min_age');
             $table->integer('max_age');
             $table->string('goal');
+            $table->bigInteger('added_by');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -55,6 +55,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('/fetch-subscription', [UserSubscriptionControllerApi::class, 'fetchSubscription']);
 
+    Route::post('/fetch-subscription-histry', [UserSubscriptionControllerApi::class, 'fetchSubscriptionHistry']);
+
     Route::post('/fetch-user-diets', [UserDietControllerApi::class, 'fetchUserDiet']);
 
     Route::post('/fetch-user-workout', [UserWorkoutControllerApi::class, 'fetchUserWorkout']);

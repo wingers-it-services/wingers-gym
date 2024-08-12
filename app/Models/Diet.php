@@ -20,7 +20,8 @@ class Diet extends Model
         'alternative_diet',
         'min_age',
         'max_age',
-        'goal'
+        'goal',
+        'added_by'
     ];
 
 
@@ -28,15 +29,15 @@ class Diet extends Model
     {
         try {
             return $this->create([
-                'gym_id' => $gymId,
-                'name' => $workoutArray['name'],
-                'diet' => $workoutArray['diet'],
-                'gender' => $workoutArray['gender'],
-                'image'   => $imagePath,
+                'gym_id'           => $gymId,
+                'name'             => $workoutArray['name'],
+                'diet'             => $workoutArray['diet'],
+                'gender'           => $workoutArray['gender'],
+                'image'            => $imagePath,
                 'alternative_diet' => $workoutArray['alternative_diet'],
-                'min_age' => $workoutArray['min_age'],
-                'max_age' => $workoutArray['max_age'],
-                'goal' => $workoutArray['goal']
+                'min_age'          => $workoutArray['min_age'],
+                'max_age'          => $workoutArray['max_age'],
+                'goal'             => $workoutArray['goal']
             ]);
         } catch (\Throwable $e) {
             Log::error('[Workout][addWorkout] Error adding workout: ' . $e->getMessage());
