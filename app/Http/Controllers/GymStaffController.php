@@ -204,26 +204,27 @@ class GymStaffController extends Controller
         $designations = $this->designation->where('gym_id', $gymId)->get();
         return view('GymOwner.edit-gym-staff', compact('staffDetail', 'designations'));
     }
+
     public function updateStaff(Request $request)
     {
         try {
             $validatedData = $request->validate([
-                'uuid' => 'required',
-                "full_name" => 'required',
-                "email" => 'required',
+                'uuid'         => 'required',
+                "full_name"    => 'required',
+                "email"        => 'required',
                 "phone_number" => 'required',
                 "joining_date" => 'required',
-                "salary" => 'required',
-                "designation" => 'required',
-                "blood_group" => 'nullable',
-                "image" => 'nullable'
+                "salary"       => 'required',
+                "designation"  => 'required',
+                "blood_group"  => 'nullable',
+                "image"        => 'nullable',
+                'employee_id'  => 'nullable'
             ]);
 
             $staff = $this->gymStaff->where('uuid', $request->uuid)->first();
-// dd($staff);
-            // $imagePath = $staff->image; // Default to existing image path
-
+            $imagePath = $staff->image; 
             if ($request->hasFile('image')) {
+                Log::info('[shdfhhf][sjdhhfw]jhwhowiow');
                 if ($staff->image) {
                     $existingImagePath = public_path($staff->image);
                     if (file_exists($existingImagePath)) {
@@ -236,7 +237,9 @@ class GymStaffController extends Controller
                 $imagefile->move(public_path('gymStaff_images/'), $filename);
             }
 
-            $isStaffUpdated = $this->gymStaff->updateStaff($validatedData, $imagePath);
+            $data=$request->all();
+
+            $isStaffUpdated = $this->gymStaff->updateStaff($data, $imagePath);
 
             if (!$isStaffUpdated) {
                 return redirect()->back()->with('status', 'error')->with('message', 'error while updating user.');
@@ -257,7 +260,8 @@ class GymStaffController extends Controller
 
     public function staffDetails()
     {
-        $gymStaffs = $this->gymStaff->get();
+        $gym = Auth::guard('gym')->user();
+        $gymStaffs = $this->gymStaff->where('gym_id',$gym->id)->get();
         return view('GymOwner.staff-details', compact('gymStaffs'));
     }
 }

@@ -35,6 +35,8 @@ class WorkoutController extends Controller
 
     public function addWorkout(Request $request)
     {
+
+        dd($request->all());
         try {
             $gym = Auth::guard('gym')->user();
             $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;

@@ -18,7 +18,7 @@ class SupplimentControllerApi extends Controller
     public function fetchSuppliments()
     {
         try {
-            $suppliments = $this->suppliment->get();
+            $suppliments = $this->suppliment->paginate(10);
 
             if ($suppliments->isEmpty()) {
                 return response()->json([

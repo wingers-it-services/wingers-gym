@@ -18,7 +18,7 @@ class EquipmentControllerApi extends Controller
     public function fetchEquipments()
     {
         try {
-            $equipments = $this->equipment->get();
+            $equipments = $this->equipment->paginate(10);
 
             if ($equipments->isEmpty()) {
                 return response()->json([

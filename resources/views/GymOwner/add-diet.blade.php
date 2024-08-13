@@ -39,7 +39,7 @@
                                             <label for="gender">Gender</label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="gender" name="gender">
-                                                    <option>Choose...</option>
+                                                    <option value="">Choose...</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
 

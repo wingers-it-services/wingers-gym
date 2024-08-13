@@ -125,6 +125,7 @@
                                     </div>
 
 
+
                                     <div class="mb-3">
                                         <label for="address">Address</label>
                                         <input type="text" class="form-control" id="address" value="{{ $staffDetail->address }}" name="address" required="">

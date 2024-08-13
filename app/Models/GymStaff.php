@@ -63,7 +63,7 @@ class GymStaff extends Model
             $staffDetail->update([
                 'name' => $updateStaff['full_name'],
                 'blood_group' => $updateStaff['blood_group'],
-                'employee_id' => $updateStaff['staff_id'],
+                'employee_id' => $updateStaff['employee_id'],
                 'email' => $updateStaff['email'],
                 'number' => $updateStaff['phone_number'],
                 'designation_id' => $updateStaff['designation'],
