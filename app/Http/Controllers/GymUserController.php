@@ -88,7 +88,7 @@ class GymUserController extends Controller
             $validateData = $request->validate([
                 'firstname'         => 'required',
                 'lastname'          => 'required',
-                'email'             => 'required|unique:users,email',
+                'email'             => 'required|unique:gym_users,email',
                 'gender'            => 'required',
                 'subscription_id'   => 'required',
                 'blood_group'       => 'nullable',

@@ -27,7 +27,7 @@
                                             <label for="productCode">Type</label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="blood_group" name="blood_group">
-                                                    <option>Choose...</option>
+                                                    <option value="">Choose...</option>
                                                     <option value="male">Image</option>
                                                     <option value="female">Video</option>
 
@@ -43,10 +43,9 @@
                                             <label for="productCode">Gender</label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="blood_group" name="blood_group">
-                                                    <option>Choose...</option>
+                                                    <option value="">Choose...</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
-
                                                 </select>
                                             </div>
                                         </div>

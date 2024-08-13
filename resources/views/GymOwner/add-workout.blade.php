@@ -52,7 +52,7 @@
                                             <label for="gender">Gender</label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="gender" name="gender">
-                                                    <option>Choose...</option>
+                                                    <option value="">Choose...</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
 
@@ -63,7 +63,7 @@
                                             <label for="gender">User Type</label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="user_type" name="user_type">
-                                                    <option>Choose...</option>
+                                                    <option value="">Choose...</option>
                                                     <option value="gym">Gym</option>
                                                     <option value="home">Home</option>
                                                 </select>

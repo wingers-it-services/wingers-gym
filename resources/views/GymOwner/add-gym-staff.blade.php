@@ -110,7 +110,7 @@
 												<div class="form-group">
 													<label class="text-label">Blood Group<span class="required">*</span></label>
 													<select class="me-sm-2 form-control default-select" id="blood_group" name="blood_group">
-														<option selected>Choose...</option>
+														<option value="">Choose...</option>
 														<option value="A+">A+</option>
 														<option value="A-">A-</option>
 														<option value="B+">B+</option>
