@@ -130,4 +130,25 @@ class GymDetailController extends Controller
             return redirect()->route('showGymProfile')->with('status', 'error')->with('message', 'error while updating gym.');
         }
     }
+
+  /**
+   * The fetchGymProfile function retrieves a gym's profile information and returns it as a JSON
+   * response.
+   * 
+   * @return The `fetchGymProfile` function is returning a JSON response containing the gym profile
+   * information, including the profile image URL.
+   */
+    public function fetchGymProfile()
+    {
+        $gym = Auth::guard('gym')->user();
+        $gym = $this->gym->findOrFail($gym->id);
+        $gym->profile_image_url = url('images/' . $gym->image);
+        return response()->json($gym);
+    }
+
+    public function GymProfileView()
+    {
+        $gym = Auth::guard('gym')->user();
+        return view('GymOwner.gym-profile',compact('gym'));
+    }
 }

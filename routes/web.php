@@ -63,9 +63,6 @@ Route::get('/enquiry', function () {
 Route::get('/inbox', function () {
     return view('GymOwner.inbox');
 });
-Route::get('/gym-profile', function () {
-    return view('GymOwner.gym-profile');
-});
 Route::get('/enquiry-read', function () {
     return view('GymOwner.enquiry-read');
 });
@@ -209,6 +206,11 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     // deleteGymDesignation
     Route::get('/deleteGymDesignation/{uuid}', [GymDesignationController::class, 'deleteGymDesignation'])->name('deleteGymDesignation');
+
+    Route::get('/fetch-gym-profile', [GymDetailController::class, 'fetchGymProfile'])->name('fetchGymProfile');
+
+
+    Route::get('/gym-profile', [GymDetailController::class,'GymProfileView']);
 });
 
 Route::get('/packages', [AdminController::class, 'showPackages']);

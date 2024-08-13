@@ -298,7 +298,7 @@
                                         </h5>
                                     </div>
                                     <div class="col-lg-9 col-md-8 col-sm-6 mb-1">
-                                        <span>Mitchell C.Shay</span>
+                                        <span>{{$gym->username}}</span>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
