@@ -15,6 +15,13 @@ class SupplimentControllerApi extends Controller
         $this->suppliment = $suppliment;
     }
 
+   /**
+    * The function fetches a list of supplements and returns a JSON response with the status and
+    * message.
+    * 
+    * @return The `fetchSuppliments` function returns a JSON response with status code 200 if
+    * suppliments are found, and status code 500 if there is an error.
+    */
     public function fetchSuppliments()
     {
         try {

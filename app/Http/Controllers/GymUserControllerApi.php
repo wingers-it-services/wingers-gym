@@ -19,17 +19,33 @@ class GymUserControllerApi extends Controller
     protected $otpService;
     protected $user;
     protected $userService;
+    protected $injuryUser;
 
     public function __construct(
         OtpService $otpService,
         User $user,
-        UserService $userService
+        UserService $userService,
+        InjuryUser $injuryUser
     ) {
         $this->otpService = $otpService;
         $this->user = $user;
         $this->userService = $userService;
+        $this->injuryUser = $injuryUser;
     }
 
+   /**
+    * The function `sendMobileOtp` validates a phone number, generates a mobile OTP, and returns a JSON
+    * response with the result.
+    * 
+    * @param Request request The `sendMobileOtp` function is used to send a one-time password (OTP) to
+    * a mobile phone number for verification purposes. Here's a breakdown of the parameters used in the
+    * function:
+    * 
+    * @return The `sendMobileOtp` function is returning a JSON response with the result of generating a
+    * mobile OTP along with the corresponding status code. The result is returned in the JSON format
+    * and the status code is included in the response. If an error occurs during the process, an error
+    * response is returned with a message indicating the issue encountered.
+    */
     public function sendMobileOtp(Request $request)
     {
         try {
@@ -44,6 +60,19 @@ class GymUserControllerApi extends Controller
         }
     }
 
+   /**
+    * The function `sendEmailOtp` validates the email input, sends an OTP to the provided email
+    * address, and returns a JSON response with the result.
+    * 
+    * @param Request request The `sendEmailOtp` function is responsible for sending a One Time Password
+    * (OTP) to a user's email address for verification. Here's a breakdown of the code snippet you
+    * provided:
+    * 
+    * @return The `sendEmailOtp` function is returning a JSON response with the data returned from the
+    * `sendOtptoEmail` method of the ``. The response status code is determined by the
+    * `'status'` key in the result array. If an exception is caught during the process, an error
+    * response is returned with a message indicating the error that occurred.
+    */
     public function sendEmailOtp(Request $request)
     {
         try {
@@ -58,12 +87,24 @@ class GymUserControllerApi extends Controller
         }
     }
 
+  /**
+   * This PHP function verifies a mobile OTP provided by the user and returns a JSON response based on
+   * the verification result.
+   * 
+   * @param Request request The `verifyMobileOtp` function is used to verify a mobile OTP (One Time
+   * Password) provided by the user. Here is a breakdown of the parameters used in this function:
+   * 
+   * @return The `verifyMobileOtp` function is returning a JSON response with the data stored in the
+   * `` variable along with the HTTP status code specified in the `['status']` field. If
+   * an exception is caught during the process, it will log an error message and return an error
+   * response with a message indicating the failure to verify the OTP.
+   */
     public function verifyMobileOtp(Request $request)
     {
         try {
             $request->validate([
                 'phone_no' => 'required',
-                'otp' => 'required|digits:4',
+                'otp'      => 'required|digits:4',
             ]);
             $result = $this->otpService->verifyMobileOtp($request->phone_no, $request->otp);
             return response()->json($result, $result['status']);
@@ -73,12 +114,24 @@ class GymUserControllerApi extends Controller
         }
     }
 
+   /**
+    * The function `verifyEmailOtp` validates an email and OTP, then calls a service to verify the OTP
+    * and returns the result as a JSON response.
+    * 
+    * @param Request request The `verifyEmailOtp` function is used to verify an OTP (One-Time Password)
+    * sent to a user's email address. Here's a breakdown of the parameters used in the function:
+    * 
+    * @return The `verifyEmailOtp` function is returning a JSON response with the data stored in the
+    * `` variable and the HTTP status code specified in the `['status']` value. If an
+    * exception is caught during the process, it will log an error message and return an error response
+    * with a message indicating the failure to verify the OTP.
+    */
     public function verifyEmailOtp(Request $request)
     {
         try {
             $request->validate([
                 'email' => 'required',
-                'otp' => 'required|digits:4',
+                'otp'   => 'required|digits:4',
             ]);
             $result = $this->otpService->verifyEmailOtp($request->email, $request->otp);
             return response()->json($result, $result['status']);
@@ -88,6 +141,18 @@ class GymUserControllerApi extends Controller
         }
     }
 
+   /**
+    * The function `registerGymUser` validates and registers a new gym user with optional profile image
+    * upload.
+    * 
+    * @param Request request The `registerGymUser` function is a controller method that handles the
+    * registration of a user for a gym. Here's a breakdown of the function:
+    * 
+    * @return The `registerGymUser` function returns a JSON response with the following structure:
+    * - `status`: The status of the registration process (success or error)
+    * - `message`: A message related to the status of the registration process
+    * - `user`: The user data if the registration was successful, or `null` if there was an error
+    */
     public function registerGymUser(Request $request)
     {
         try {
@@ -121,6 +186,18 @@ class GymUserControllerApi extends Controller
         }
     }
 
+   /**
+    * The function `verifyOtp` in PHP validates OTP, email, and phone number inputs, verifies the OTP
+    * using a service, and returns a JSON response with the result.
+    * 
+    * @param Request request The `verifyOtp` function is used to verify a one-time password (OTP)
+    * provided by the user. Here is an explanation of the parameters used in the function:
+    * 
+    * @return The `verifyOtp` function is returning a JSON response with the data stored in the
+    * `` variable along with the HTTP status code specified in `['status']`. If an
+    * exception occurs during the verification process, an error response is returned with a message
+    * indicating the error that occurred.
+    */
     public function verifyOtp(Request $request)
     {
         try {
@@ -139,6 +216,19 @@ class GymUserControllerApi extends Controller
         }
     }
 
+  /**
+   * The function `profilePartFour` in PHP validates and processes a request to update a user's profile
+   * information, handling any exceptions that may occur.
+   * 
+   * @param Request request The `profilePartFour` function in the code snippet is a controller method
+   * that handles a POST request to update a user's profile information. Here's a breakdown of the
+   * parameters being validated in the request:
+   * 
+   * @return The function `profilePartFour` is returning a JSON response with the data stored in the
+   * variable `` and the HTTP status code stored in `['status']`. If an exception occurs
+   * during the process, an error response is returned with a message indicating the error that
+   * occurred.
+   */
     public function profilePartFour(Request $request)
     {
         try {
@@ -163,6 +253,13 @@ class GymUserControllerApi extends Controller
         }
     }
 
+   /**
+    * The function fetches the gyms associated with the authenticated user and returns a JSON response
+    * with the gyms data or appropriate error messages.
+    * 
+    * @return The `fetchUserGym` function returns a JSON response with status codes and messages based
+    * on the outcome of fetching a user's gyms.
+    */
     public function fetchUserGym()
     {
         try {
@@ -178,7 +275,7 @@ class GymUserControllerApi extends Controller
             if ($gyms->isEmpty()) {
                 return response()->json([
                     'status'   => 422,
-                    'gyms' => $gyms,
+                    'gyms'     => $gyms,
                     'message'  => 'There is no gyms'
                 ], 200);
             }
@@ -197,21 +294,30 @@ class GymUserControllerApi extends Controller
         }
     }
 
+   /**
+    * The function `addUserInjuries` adds injuries to a user based on the provided UUID and injury IDs.
+    * 
+    * @param Request request The `addUserInjuries` function is designed to add injuries to a user based
+    * on the provided UUID and injury IDs. Here is a breakdown of the process:
+    * 
+    * @return The function `addUserInjuries` returns a JSON response with status code, message, and
+    * either the successfully added injury users or an error message if an exception occurs.
+    */
     public function addUserInjuries(Request $request)
     {
         try {
             $request->validate([
-                'uuid' => 'required',
-                'injury_ids' => 'array|required',
+                'uuid'         => 'required',
+                'injury_ids'   => 'array|required',
                 'injury_ids.*' => 'exists:user_injuries,id'
             ]);
 
             // Fetch the user using UUID
-            $user = User::where('uuid', $request->uuid)->first();
+            $user = $this->user->where('uuid', $request->uuid)->first();
 
             if (!$user) {
                 return response()->json([
-                    'status' => 404,
+                    'status'  => 404,
                     'message' => 'User not found',
                 ], 404);
             }
@@ -219,8 +325,8 @@ class GymUserControllerApi extends Controller
             // Associate each injury with the user
             $injuryUsers = [];
             foreach ($request->injury_ids as $injuryId) {
-                $injuryUser = InjuryUser::create([
-                    'user_id' => $user->id,
+                $injuryUser = $this->injuryUser->create([
+                    'user_id'   => $user->id,
                     'injury_id' => $injuryId,
                 ]);
                 $injuryUsers[] = $injuryUser;
@@ -230,15 +336,15 @@ class GymUserControllerApi extends Controller
             $user->save();
 
             return response()->json([
-                'status' => 200,
-                'message' => 'Injuries added successfully',
+                'status'      => 200,
+                'message'     => 'Injuries added successfully',
                 'injuryUsers' => $injuryUsers,
             ], 200);
         } catch (\Exception $e) {
             Log::error("[GymUserControllerApi][addUserInjuries] Error adding injuries: " . $e->getMessage());
             return response()->json([
-                'status' => 500,
-                'message' => 'An error occurred while adding injuries',
+                'status'       => 500,
+                'message'      => 'An error occurred while adding injuries',
                 'errorMessage' => $e->getMessage(),
             ], 500);
         }

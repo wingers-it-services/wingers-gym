@@ -22,18 +22,16 @@ class GymUserLoginControllerApi extends Controller
         try {
             $request->validate([
                 'email_or_phone' => 'required|string',
-                'password' => 'required|string',
+                'password'       => 'required|string',
             ]);
 
             $credentials = $request->only('email_or_phone', 'password');
 
             // Determine if the input is an email or a phone number
             if (filter_var($credentials['email_or_phone'], FILTER_VALIDATE_EMAIL)) {
-                // Input is an email
                 $user = $this->user->where('email', $credentials['email_or_phone'])->first();
                 $inputType = 'email';
             } else {
-                // Input is a phone number
                 $user = $this->user->where('phone_no', $credentials['email_or_phone'])->first();
                 $inputType = 'phone number';
             }
@@ -60,7 +58,7 @@ class GymUserLoginControllerApi extends Controller
                     'status'       => 200,
                     'user'         => $user,
                     'access_token' => $token,
-                    'message' => 'Account not completed. Please complete your account.',
+                    'message'      => 'Account not completed. Please complete your account.',
                 ], 200);
             }
 
@@ -93,7 +91,7 @@ class GymUserLoginControllerApi extends Controller
                 'email' => 'required|email'
             ]);
 
-            $user = User::where('email', $request->email)->first();
+            $user = $this->user->where('email', $request->email)->first();
 
             if ($user) {
                 if ($user->profile_status == GymUserAccountStatusEnum::USER_INJURY_DETAIL) {

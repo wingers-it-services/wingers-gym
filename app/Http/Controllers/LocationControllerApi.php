@@ -32,12 +32,27 @@ class LocationControllerApi extends Controller
         $this->gym = $gym;
     }
 
+   /**
+    * The fetchCountryList function retrieves a list of countries and returns it as a JSON response.
+    * 
+    * @return A JSON response containing a list of all countries fetched from the database.
+    */
     public function fetchCountryList()
     {
         $countries = $this->country->all();
         return response()->json($countries);
     }
 
+    /**
+     * This PHP function fetches a list of states based on a provided country ID and handles any errors
+     * that may occur during the process.
+     * 
+     * @param Request request The `fetchStateList` function is a PHP function that takes a `Request`
+     * object as a parameter. This function is responsible for fetching a list of states based on the
+     * provided `countryId` in the request.
+     * 
+     * @return An array of states based on the provided countryId is being returned as a JSON response.
+     */
     public function fetchStateList(Request $request)
     {
         try {
@@ -54,6 +69,18 @@ class LocationControllerApi extends Controller
         }
     }
 
+   /**
+    * This PHP function fetches a list of cities based on a provided state ID and handles any errors
+    * that may occur during the process.
+    * 
+    * @param Request request The `fetchCityList` function is a PHP method that takes a `Request` object
+    * as a parameter. This function is responsible for fetching a list of cities based on the provided
+    * `stateId` parameter.
+    * 
+    * @return The `fetchCityList` function returns a JSON response containing a list of cities based on
+    * the provided `stateId`. If an error occurs during the process, an error response with a message
+    * indicating the issue is returned.
+    */
     public function fetchCityList(Request $request)
     {
         try {
@@ -70,7 +97,16 @@ class LocationControllerApi extends Controller
         }
     }
 
-
+  /**
+   * This PHP function fetches gyms based on a specified city ID and handles errors gracefully.
+   * 
+   * @param Request request The `fetchGymsByCity` function is a controller method that fetches gyms
+   * based on the `cityId` provided in the request. Here's a breakdown of the code:
+   * 
+   * @return The `fetchGymsByCity` function returns a JSON response containing a list of gyms that
+   * belong to a specific city based on the `cityId` provided in the request. If an error occurs during
+   * the process of fetching gyms, an error response with a message indicating the issue is returned.
+   */
     public function fetchGymsByCity(Request $request)
     {
         try {

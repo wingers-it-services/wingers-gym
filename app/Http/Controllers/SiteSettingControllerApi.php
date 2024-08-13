@@ -14,6 +14,13 @@ class SiteSettingControllerApi extends Controller
         $this->siteSetting = $siteSetting;
     }
 
+    /**
+     * The function fetches measurement data from site settings and returns it in a JSON response,
+     * handling exceptions if any occur.
+     * 
+     * @return The `fetchMeasurement` function returns a JSON response with status, measurements, and a
+     * message.
+     */
     public function fetchMeasurement()
     {
         try {

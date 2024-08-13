@@ -15,6 +15,13 @@ class EquipmentControllerApi extends Controller
         $this->equipment = $equipment;
     }
 
+   /**
+    * The function fetches equipment data and returns a JSON response with the equipment details or an
+    * error message if there is an issue.
+    * 
+    * @return The `fetchEquipments` function returns a JSON response with status code 200 in case of
+    * success or status code 500 in case of an error.
+    */
     public function fetchEquipments()
     {
         try {
