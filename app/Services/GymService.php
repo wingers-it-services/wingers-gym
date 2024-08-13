@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Gym;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class GymService
 {
@@ -41,9 +42,15 @@ class GymService
         $gymData = [];
         foreach ($fieldsToUpdate as $field) {
             if (array_key_exists($field, $enteredGymData)) {
-                $gymData[$field] = $enteredGymData[$field];
+                // Hash the password before storing it
+                if ($field === 'password') {
+                    $gymData[$field] = Hash::make($enteredGymData[$field]);
+                } else {
+                    $gymData[$field] = $enteredGymData[$field];
+                }
             }
         }
+      
 
         $gym = $this->gym->updateOrCreate(
             ['email' => $enteredGymData['email']],
