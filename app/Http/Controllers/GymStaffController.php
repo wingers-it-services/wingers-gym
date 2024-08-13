@@ -209,20 +209,22 @@ class GymStaffController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'uuid'         => 'required',
-                "full_name"    => 'required',
-                "email"        => 'required',
+                'uuid' => 'required',
+                "staff_id" => 'required',
+                "full_name" => 'required',
+                "email" => 'required',
                 "phone_number" => 'required',
                 "joining_date" => 'required',
-                "salary"       => 'required',
-                "designation"  => 'required',
-                "blood_group"  => 'nullable',
-                "image"        => 'nullable',
-                'employee_id'  => 'nullable'
+                "salary" => 'required',
+                "designation" => 'required',
+                "address" => 'required',
+                "blood_group" => 'nullable',
+                "image" => 'nullable'
             ]);
 
             $staff = $this->gymStaff->where('uuid', $request->uuid)->first();
-            $imagePath = $staff->image; 
+            $imagePath = $staff->image; // Default to existing image path
+
             if ($request->hasFile('image')) {
                 Log::info('[shdfhhf][sjdhhfw]jhwhowiow');
                 if ($staff->image) {
