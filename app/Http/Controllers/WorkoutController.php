@@ -36,19 +36,18 @@ class WorkoutController extends Controller
     public function addWorkout(Request $request)
     {
 
-        dd($request->all());
         try {
             $gym = Auth::guard('gym')->user();
             $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
             $validatedData = $request->validate([
-                'image' => 'required',
-                'vedio_link' => 'required',
-                'name' => 'required',
-                'gender' => 'required',
-                'category' => 'required',
+                'image'       => 'required',
+                'vedio_link'  => 'required',
+                'name'        => 'required',
+                'gender'      => 'required',
+                'category'    => 'required',
                 'description' => 'required',
-                'user_type' => 'required',
+                'user_type'   => 'required',
             ]);
 
             $imagePath = null;
@@ -65,7 +64,7 @@ class WorkoutController extends Controller
             return redirect()->back()->with('status', 'success')->with('message', 'Workout added successfully.');
         } catch (\Throwable $th) {
             Log::error("[WorkoutController][addWorkout] error " . $th->getMessage());
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
         }
     }
 
@@ -73,12 +72,12 @@ class WorkoutController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'workout_id' => 'required',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'vedio_link' => 'required',
-                'name' => 'required',
-                'gender' => 'required',
-                'category' => 'required',
+                'workout_id'  => 'required',
+                'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'vedio_link'  => 'required',
+                'name'        => 'required',
+                'gender'      => 'required',
+                'category'    => 'required',
                 'description' => 'required',
             ]);
 

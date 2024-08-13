@@ -291,4 +291,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Gym::class, 'gym_user_gyms', 'user_id', 'gym_id');
     }
+
+    public function trainer()
+    {
+        return $this->hasOneThrough(GymStaff::class,UsersTrainerHistry::class,'user_id', 'id','id','trainer_id');
+    }
+    
 }

@@ -17,6 +17,18 @@ class GymUserLoginControllerApi extends Controller
         $this->user = $user;
     }
 
+   /**
+    * The function userLogin handles user authentication by validating credentials, checking user
+    * existence, and returning appropriate responses based on the login status.
+    * 
+    * @param Request request The `userLogin` function you provided is a controller method that handles
+    * user authentication based on email or phone number and password. Here's a breakdown of the
+    * process:
+    * 
+    * @return The function `userLogin` returns a JSON response with different status codes and messages
+    * based on the validation and authentication process. Here is a summary of the possible return
+    * scenarios:
+    */
     public function userLogin(Request $request)
     {
         try {
@@ -83,6 +95,16 @@ class GymUserLoginControllerApi extends Controller
         }
     }
 
+   /**
+    * The function `loginWithEmail` in PHP validates a user's email, checks their profile status, and
+    * returns a response based on the user's status.
+    * 
+    * @param Request request The `loginWithEmail` function is a controller method that handles user
+    * login with email. Here's a breakdown of the code:
+    * 
+    * @return The `loginWithEmail` function returns a JSON response based on the conditions met during
+    * the login process. Here are the possible return scenarios:
+    */
     public function loginWithEmail(Request $request)
     {
         try {

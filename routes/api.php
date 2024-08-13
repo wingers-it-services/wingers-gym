@@ -5,6 +5,7 @@ use App\Http\Controllers\EquipmentControllerApi;
 use App\Http\Controllers\GoalControllerApi;
 use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\GymUserLoginControllerApi;
+use App\Http\Controllers\GymUserTrainerControllerApi;
 use App\Http\Controllers\LocationControllerApi;
 use App\Http\Controllers\ReelControllerApi;
 use App\Http\Controllers\SiteSettingControllerApi;
@@ -51,6 +52,7 @@ Route::post('/profile-part-four-updated', [GymUserControllerApi::class, 'profile
 Route::post('/add-user-injuries', [GymUserControllerApi::class, 'addUserInjuries']);
 
 Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
+
 Route::middleware('auth:api')->group(function () {
 
     Route::post('/fetch-subscription', [UserSubscriptionControllerApi::class, 'fetchSubscription']);
@@ -68,4 +70,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/fetch-suppliments', [SupplimentControllerApi::class, 'fetchSuppliments']);
 
     Route::get('/fetch-reels', [ReelControllerApi::class, 'fetchReels']);
+
+    Route::post('/fetch-trainer',[GymUserTrainerControllerApi::class,'fetchUserTrainer']);
 });
