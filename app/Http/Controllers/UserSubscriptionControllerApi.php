@@ -21,6 +21,13 @@ class UserSubscriptionControllerApi extends Controller
         $this->gymSubscription = $gymSubscription;
     }
 
+   /**
+    * The function fetches gym subscriptions and returns a JSON response with the subscription details
+    * or an error message if there is an issue.
+    * 
+    * @return The `fetchSubscription` function returns a JSON response with status, subscriptions data,
+    * and a message.
+    */
     public function fetchSubscription()
     {
         try {
@@ -49,6 +56,13 @@ class UserSubscriptionControllerApi extends Controller
         }
     }
 
+   /**
+    * The function fetches a user's subscription history and returns it in a JSON response, handling
+    * authentication, empty subscriptions, and error cases.
+    * 
+    * @return The `fetchSubscriptionHistry` function returns a JSON response with the status,
+    * subscriptions data, and a message based on the logic within the function.
+    */
     public function fetchSubscriptionHistry()
     {
         try {

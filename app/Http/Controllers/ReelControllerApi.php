@@ -15,6 +15,15 @@ class ReelControllerApi extends Controller
         $this->reel = $reel;
     }
 
+   /**
+    * The function fetches reels data and returns a JSON response with the status, reels data, and a
+    * message indicating success or failure.
+    * 
+    * @return The `fetchReels` function returns a JSON response. If the fetched reels are empty, it
+    * returns a JSON response indicating that there are no reels. If reels are fetched successfully, it
+    * returns a JSON response with the fetched reels and a success message. If an exception occurs
+    * during the process, it logs the error and returns a JSON response indicating the error message.
+    */
     public function fetchReels()
     {
         try {

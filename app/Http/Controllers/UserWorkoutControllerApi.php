@@ -18,6 +18,13 @@ class UserWorkoutControllerApi extends Controller
         $this->userWorkout = $userWorkout;
     }
 
+  /**
+   * The function fetches a user's workouts and returns a JSON response with the workout details or an
+   * error message if there is an issue.
+   * 
+   * @return The `fetchUserWorkout` function returns a JSON response with status, workouts data, and a
+   * message.
+   */
     public function fetchUserWorkout()
     {
         try {

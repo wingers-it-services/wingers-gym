@@ -15,6 +15,17 @@ class UserLevelControllerApi extends Controller
         $this->level = $level;
     }
 
+   /**
+    * This PHP function fetches user levels and returns a JSON response with the fetched data or an
+    * error message if there is an issue.
+    * 
+    * @param Request request The `fetchLevel` function is responsible for fetching user levels. It
+    * retrieves the levels from the database and returns a JSON response with the levels if they exist,
+    * along with a status and message.
+    * 
+    * @return The `fetchLevel` function returns a JSON response with status code, levels data, and a
+    * message.
+    */
     public function fetchLevel(Request $request)
     {
         try {

@@ -15,6 +15,17 @@ class GoalControllerApi extends Controller
         $this->goal = $goal;
     }
 
+   /**
+    * The function fetches goals data and returns a JSON response with success or error messages.
+    * 
+    * @param Request request The `fetchGoal` function is designed to retrieve goals from the database
+    * and return a JSON response with the fetched goals. Here's a breakdown of the function:
+    * 
+    * @return The `fetchGoal` function returns a JSON response with status code 200 if goals are
+    * fetched successfully. If there are no goals available, it returns a message stating "There is no
+    * goal". If an error occurs during the fetching process, it returns a JSON response with status
+    * code 500 and an error message.
+    */
     public function fetchGoal(Request $request)
     {
         try {
