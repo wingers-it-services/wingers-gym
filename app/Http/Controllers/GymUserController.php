@@ -317,7 +317,7 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "trainer_id" => 'required',
+                "staff_assign_id" => 'required',
                 "user_id" => 'required'
             ]);
 
@@ -398,7 +398,6 @@ class GymUserController extends Controller
     public function addUserSubscriptionByGym(Request $request)
     {
         try {
-
             $gymUser = Auth::guard('gym')->user();
             $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
 
@@ -410,6 +409,17 @@ class GymUserController extends Controller
                 'end_date' => 'required|date',
                 'description' => 'required|string',
             ]);
+
+            // Fetch user subscription status
+            $userSubscription = $this->userHistory->where('user_id', $validatedData['user_id'])
+                ->orderBy('end_date', 'desc')
+                ->first();
+
+            // Check if user already has an active subscription
+            if ($userSubscription && $userSubscription->status == 1 && $userSubscription->end_date > now()) {
+                // If subscription is active, return an error message with SweetAlert
+                return redirect()->back()->with('status', 'error')->with('message', 'User already has an active subscription until ' . $userSubscription->end_date);
+            }
 
             // Fetch subscription details
             $subscription = $this->gymSubscription->find($validatedData['subscription_id']);
@@ -433,9 +443,10 @@ class GymUserController extends Controller
                 ->with('message', 'Subscription added successfully');
         } catch (Throwable $th) {
             Log::error("[GymSubscriptionController][addUserSubscription] error " . $th->getMessage());
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
         }
     }
+
 
     public function autocompleteWorkout(Request $request)
     {
@@ -455,7 +466,6 @@ class GymUserController extends Controller
         if ($workout) {
             return response()->json([
                 'image' => asset($workout->image),
-                'name' => $workout->name,
                 'gender' => $workout->gender,
                 'category' => $workout->category,
                 'vedio_link' => $workout->vedio_link,

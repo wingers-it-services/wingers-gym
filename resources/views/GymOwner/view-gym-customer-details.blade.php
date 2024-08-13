@@ -9,6 +9,32 @@
         margin-right: 8px;
         /* Add space between icon and text */
     }
+
+    /* Style the autocomplete container */
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #ddd;
+        border-top: none;
+        z-index: 99;
+        background-color: #fff;
+        max-height: 100px;
+        overflow-y: auto;
+        width: 100%;
+    }
+
+    /* Style each item in the autocomplete dropdown */
+    .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Style the active item in the autocomplete dropdown */
+    .autocomplete-active {
+        background-color: #007bff;
+        color: #fff;
+    }
 </style>
 <div class="content-body ">
     <div class="container-fluid">
@@ -70,9 +96,6 @@
                                         <div class="card overflow-hidden">
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">End Date</span> <strong class="text-muted">{{ $userDetail->end_date }} </strong></li>
-                                                <!-- <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Email</span> <strong class="text-muted">{{ $userDetail->email }}</strong></li>
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Phone Number</span> <strong class="text-muted">{{ $userDetail->member_number }}</strong></li>
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Gender</span> <strong class="text-muted">{{ $userDetail->gender}}</strong></li> -->
                                             </ul>
                                         </div>
                                     </div>
@@ -246,22 +269,26 @@
                                                     <form autocomplete="off" method="POST" action="/add-user-workout">
                                                         @csrf
                                                         <input type="text" id="user_id" name="user_id" value="{{$userDetail->id}}" class="form-control" hidden>
+
                                                         <div class="form-group">
                                                             <label>Exercise Name</label>
                                                             <input id="workoutInput" class="form-control" type="text" name="exercise_name" placeholder="Workout Name" required>
                                                         </div>
-                                                        <div id="workoutDetails">
-                                                            <div style="display: flex; gap: 10px; align-items: center;">
-                                                                <img id="workoutImage" src="" alt="Workout Image" style="display:none; width: 320px; height: 240px;">
-                                                                <video id="workoutVideo" controls style="display:none; width: 320px; height: 240px;">
-                                                                    <source id="workoutVideoSource" src="" type="video/mp4">
-                                                                    Your browser does not support the video tag.
-                                                                </video>
+
+                                                        <!-- Workout Details Section -->
+                                                        <div id="workoutDetails" class="form-group">
+                                                            <div class="row">
+                                                                <div style="display: flex; gap: 10px; align-items: center; overflow: auto;">
+                                                                    <img id="workoutImage" src="" alt="Workout Image" style="display:none; width: 100%; max-width: 350px; height: auto;">
+                                                                    <video id="workoutVideo" controls style="display:none; width: 100%; max-width: 350px; height: auto;">
+                                                                        <source id="workoutVideoSource" src="" type="video/mp4">
+                                                                        Your browser does not support the video tag.
+                                                                    </video>
+                                                                </div>
+                                                                <div id="workoutGender" style="display:none; margin-top: 10px;"></div>
+                                                                <div id="workoutCategory" style="display:none; margin-top: 10px;"></div>
+                                                                <div id="workoutDescription" style="display:none; margin-top: 10px;"></div>
                                                             </div>
-                                                            <div id="workoutName" style="display:none; margin-top: 10px;"></div>
-                                                            <div id="workoutGender" style="display:none; margin-top: 10px;"></div>
-                                                            <div id="workoutCategory" style="display:none; margin-top: 10px;"></div>
-                                                            <div id="workoutDescription" style="display:none; margin-top: 10px;"></div>
                                                         </div>
 
                                                         <div class="form-group row">
@@ -287,6 +314,7 @@
                                                         <button class="btn btn-primary">Submit</button>
                                                     </form>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -454,138 +482,7 @@
                                 </div>
 
                                 <div class="tab-pane fade" id="bmi">
-                                    <form class="needs-validation" id="bmiForm" novalidate="" action="{{ route('addUserBodyMeasurement') }}" method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <!-- Left section -->
-                                                    <div class="col-lg-4 order-lg-1">
-                                                        <div class="row">
-                                                            <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="chest">Chest (cm)</label>
-                                                                <input type="text" class="form-control" id="chest" name="chest" placeholder="" required="">
-                                                                <div class="invalid-feedback">Valid first name is
-                                                                    required.</div>
-                                                            </div>
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="triceps">Triceps (cm)</label>
-                                                                <input type="text" class="form-control" id="triceps" name="triceps" placeholder="" required="">
-                                                                <div class="invalid-feedback">Valid last name is
-                                                                    required.</div>
-                                                            </div>
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="biceps">Biceps (cm)</label>
-                                                                <input type="email" class="form-control" id="biceps" name="biceps">
-                                                                <div class="invalid-feedback">Please enter a valid
-                                                                    email address.</div>
-                                                            </div>
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="lats">Lats (cm)</label>
-                                                                <input type="text" class="form-control" id="lats" name="lats" placeholder="" required="">
-                                                            </div>
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="shoulder">Shoulder (cm)</label>
-                                                                <input type="text" class="form-control" id="shoulder" name="shoulder" placeholder="" required="">
-                                                            </div>
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="abs">Abs
-                                                                    (cm)</label>
-                                                                <input type="text" class="form-control" id="abs" name="abs" placeholder="" required="">
-                                                            </div>
 
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Center section for the human body skeleton -->
-                                                    <div class="col-lg-4 order-lg-2 text-center mb-4">
-                                                        <img src="/images/bmi_images/male-skeleton.png" alt="Human Body Skeleton" style="margin-top: 20px; margin-left:-46px;">
-                                                    </div>
-
-                                                    <!-- Right section -->
-
-                                                    <div class="col-lg-4 order-lg-3">
-
-                                                        <div class="row">
-                                                            <div class="col-md-12 mb-3">
-
-                                                                <label for="forearms">Furams (cm)</label>
-                                                                <input type="text" class="form-control" id="forearms" name="forearms" placeholder="" required="">
-                                                                <div class="invalid-feedback">Valid first name is
-                                                                    required.</div>
-                                                            </div>
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="traps">Traps (cm)</label>
-                                                                <input type="text" class="form-control" id="traps" name="traps" placeholder="" required="">
-                                                                <div class="invalid-feedback">Valid last name is
-                                                                    required.</div>
-                                                            </div>
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="glutes">Glutes (cm)</label>
-                                                                <input type="email" class="form-control" id="glutes" name="glutes">
-                                                                <div class="invalid-feedback">Please enter a valid
-                                                                    email address.</div>
-                                                            </div>
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="quads">Quades (cm)</label>
-                                                                <input type="text" class="form-control" id="quads" name="quads" placeholder="" required="">
-                                                            </div>
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="hamstring">Hamtring (cm)</label>
-                                                                <input type="text" class="form-control" id="hamstring" name="hamstring" placeholder="" required="">
-                                                            </div>
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="calves">Claves
-                                                                    (cm)</label>
-                                                                <input type="text" class="form-control" id="calves" name="calves" placeholder="" required="">
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- BMI Calculation Section -->
-                                        <div class="row mt-5">
-                                            <div class="col-lg-12">
-                                                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                                    <span class="text-black">Calculate BMI</span>
-                                                </h4>
-                                                <div class="row">
-                                                    <div class="col-md-4 mb-3">
-                                                        <label for="height">Height (cm)</label>
-                                                        <input type="number" class="form-control" id="height" name="height" placeholder="Enter height in cm" required>
-                                                        <div class="invalid-feedback">Height is required.</div>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <label for="bmi_weight">Weight (kg)</label>
-                                                        <input type="number" class="form-control" id="bmi_weight" name="weight" placeholder="Enter weight in kg" required>
-                                                        <div class="invalid-feedback">Weight is required.</div>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <label for="bmi">BMI</label>
-                                                        <input type="number" class="form-control" id="calculatedBmi" name="bmi" placeholder="BMI will be calculated" readonly>
-                                                        <!-- <input type="hidden" name="bmi" id="calculatedBmi" required class="form-control"> -->
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6 mb-3">
-                                                        <button type="button" class="btn btn-primary btn-lg btn-block" onclick="calculateBMI()">Calculate BMI</button>
-                                                    </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset</button>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                   <div class="col-md-12 mb-3">
-                                                        <button type="submit" class="btn btn-secondary btn-lg btn-block">Submit</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
                                     <!-- End of BMI Calculation Section -->
                                     <div class="col-xl-12 col-xxl-12">
                                         <div class="row">
@@ -595,7 +492,12 @@
                                                         <div class="me-auto pe-3">
                                                             <h4 class="text-black fs-20">BMI List</h4>
                                                         </div>
+
+                                                        <div class="dropdown mt-sm-0 mt-3">
+                                                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addNewBmi" class="btn btn-outline-primary rounded">Add BMI</a>
+                                                        </div>
                                                     </div>
+
 
                                                     <div class="card-body">
                                                         <div class="table-responsive">
@@ -643,39 +545,41 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="tab-pane fade" id="trainers">
-                            <div class="card">
-                                <form id="trainerForm" action="{{ route('allotTrainer') }}" method="POST" class="form-horizontal">
-                                    @csrf
-                                    <div class="card-body">
-                                        <div class="row">
-
-                                            <div class="col-lg-8 order-lg-1">
+                                <div class="tab-pane fade" id="trainers">
+                                    <div class="card">
+                                        <form id="trainerForm" action="{{ route('allotTrainer') }}" method="POST" class="form-horizontal">
+                                            @csrf
+                                            <div class="card-body">
                                                 <div class="row">
-                                                    <div class="col-md-6 mb-3">
 
-                                                        <label for="trainer">Select a Trainer:</label>
-                                                        <select class="me-sm-2 form-control default-select" id="trainer" name="trainer_id">
-                                                            <option value="0">Select</option>
-                                                            @foreach ($trainers as $trainer)
-                                                            <option value="{{$trainer->id}}">{{$trainer->name}}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <br><br>
-                                                        <input type="hidden" name="user_id" value="{{$userDetail->id}}">
+                                                    <div class="col-lg-8 order-lg-1">
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-3">
+
+                                                                <label for="trainer">Select a Trainer:</label>
+                                                                <select class="me-sm-2 form-control default-select" id="trainer" name="staff_assign_id">
+                                                                    <option value="0">Select</option>
+                                                                    @foreach ($trainers as $trainer)
+                                                                    <option value="{{$trainer->id}}">{{$trainer->name}}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <br><br>
+                                                                <input type="hidden" name="user_id" value="{{$userDetail->id}}">
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                <hr>
+                                                <input type="submit" class="btn btn-primary" value="Submit">
                                             </div>
-                                        </div>
-                                        <hr>
-                                        <input type="submit" class="btn btn-primary" value="Submit">
+                                        </form>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>
@@ -762,10 +666,246 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="modal fade" id="addNewBmi" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add BMI</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="needs-validation" id="bmiForm" novalidate action="{{ route('addUserBodyMeasurement') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="row">
+                                <!-- Left section -->
+                                <div class="col-lg-4 mb-4">
+                                    <div class="row">
+                                        <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="chest">Chest (cm)</label>
+                                            <input type="text" class="form-control" id="chest" name="chest" placeholder="" required>
+                                            <div class="invalid-feedback">Chest measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="triceps">Triceps (cm)</label>
+                                            <input type="text" class="form-control" id="triceps" name="triceps" placeholder="" required>
+                                            <div class="invalid-feedback">Triceps measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="biceps">Biceps (cm)</label>
+                                            <input type="text" class="form-control" id="biceps" name="biceps" placeholder="">
+                                            <div class="invalid-feedback">Biceps measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="lats">Lats (cm)</label>
+                                            <input type="text" class="form-control" id="lats" name="lats" placeholder="" required>
+                                            <div class="invalid-feedback">Lats measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="shoulder">Shoulder (cm)</label>
+                                            <input type="text" class="form-control" id="shoulder" name="shoulder" placeholder="" required>
+                                            <div class="invalid-feedback">Shoulder measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="abs">Abs (cm)</label>
+                                            <input type="text" class="form-control" id="abs" name="abs" placeholder="" required>
+                                            <div class="invalid-feedback">Abs measurement is required.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Center section for the human body skeleton -->
+                                <div class="col-lg-4 mb-4 text-center">
+                                    <img src="/images/bmi_images/male-skeleton.png" alt="Human Body Skeleton" class="img-fluid" style="margin-top: 45px; margin-left: -25px; max-width: 129%; height: 90%;">
+                                </div>
+
+                                <!-- Right section -->
+                                <div class="col-lg-4 mb-4">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="forearms">Forearms (cm)</label>
+                                            <input type="text" class="form-control" id="forearms" name="forearms" placeholder="" required>
+                                            <div class="invalid-feedback">Forearms measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="traps">Traps (cm)</label>
+                                            <input type="text" class="form-control" id="traps" name="traps" placeholder="" required>
+                                            <div class="invalid-feedback">Traps measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="glutes">Glutes (cm)</label>
+                                            <input type="text" class="form-control" id="glutes" name="glutes" placeholder="">
+                                            <div class="invalid-feedback">Glutes measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="quads">Quads (cm)</label>
+                                            <input type="text" class="form-control" id="quads" name="quads" placeholder="" required>
+                                            <div class="invalid-feedback">Quads measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="hamstring">Hamstring (cm)</label>
+                                            <input type="text" class="form-control" id="hamstring" name="hamstring" placeholder="" required>
+                                            <div class="invalid-feedback">Hamstring measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="calves">Calves (cm)</label>
+                                            <input type="text" class="form-control" id="calves" name="calves" placeholder="" required>
+                                            <div class="invalid-feedback">Calves measurement is required.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BMI Calculation Section -->
+                            <div class="row mt-5">
+                                <div class="col-lg-12">
+                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-black">Calculate BMI</span>
+                                    </h4>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="height">Height (cm)</label>
+                                            <input type="number" class="form-control" id="height" name="height" placeholder="Enter height in cm" required>
+                                            <div class="invalid-feedback">Height is required.</div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="bmi_weight">Weight (kg)</label>
+                                            <input type="number" class="form-control" id="bmi_weight" name="weight" placeholder="Enter weight in kg" required>
+                                            <div class="invalid-feedback">Weight is required.</div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="bmi">BMI</label>
+                                            <input type="number" class="form-control" id="calculatedBmi" name="bmi" placeholder="BMI will be calculated" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <button type="button" class="btn btn-primary btn-lg btn-block" onclick="calculateBMI()">Calculate BMI</button>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <button type="submit" class="btn btn-secondary btn-lg btn-block">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit BMI and Body Measurement Modal -->
+        <div class="modal fade" id="editBmiModal" tabindex="-1" role="dialog" aria-labelledby="editBmiModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit BMI and Body Measurements</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="needs-validation" id="editBmiForm" novalidate action=" " method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="bmi_id" id="edit_bmi_id">
+                            <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
+
+                            <div class="row">
+                                <!-- Left section (same as add modal) -->
+                                <div class="col-lg-4 mb-4">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="edit_chest">Chest (cm)</label>
+                                            <input type="text" class="form-control" id="edit_chest" name="chest" required>
+                                            <div class="invalid-feedback">Chest measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="edit_triceps">Triceps (cm)</label>
+                                            <input type="text" class="form-control" id="edit_triceps" name="triceps" required>
+                                            <div class="invalid-feedback">Triceps measurement is required.</div>
+                                        </div>
+                                        <!-- Add other fields similarly -->
+                                    </div>
+                                </div>
+
+                                <!-- Center section for the human body skeleton -->
+                                <div class="col-lg-4 mb-4 text-center">
+                                    <img src="/images/bmi_images/male-skeleton.png" alt="Human Body Skeleton" class="img-fluid" style="margin-top: 45px; margin-left: -25px; max-width: 129%; height: 90%;">
+                                </div>
+
+                                <!-- Right section (same as add modal) -->
+                                <div class="col-lg-4 mb-4">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="edit_forearms">Forearms (cm)</label>
+                                            <input type="text" class="form-control" id="edit_forearms" name="forearms" required>
+                                            <div class="invalid-feedback">Forearms measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="edit_traps">Traps (cm)</label>
+                                            <input type="text" class="form-control" id="edit_traps" name="traps" required>
+                                            <div class="invalid-feedback">Traps measurement is required.</div>
+                                        </div>
+                                        <!-- Add other fields similarly -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BMI Calculation Section -->
+                            <div class="row mt-5">
+                                <div class="col-lg-12">
+                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-black">Edit BMI</span>
+                                    </h4>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="edit_height">Height (cm)</label>
+                                            <input type="number" class="form-control" id="edit_height" name="height" required>
+                                            <div class="invalid-feedback">Height is required.</div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="edit_weight">Weight (kg)</label>
+                                            <input type="number" class="form-control" id="edit_weight" name="weight" required>
+                                            <div class="invalid-feedback">Weight is required.</div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="edit_bmi">BMI</label>
+                                            <input type="number" class="form-control" id="edit_calculatedBmi" name="bmi" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <button type="button" class="btn btn-primary btn-lg btn-block" onclick="calculateBMI()">Calculate BMI</button>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <button type="submit" class="btn btn-secondary btn-lg btn-block">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
     </div>
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const editButtons = document.querySelectorAll('.edit-workout');
@@ -970,9 +1110,6 @@
         const height = document.querySelector('#height').value;
         const weight = document.querySelector('#bmi_weight').value;
 
-        console.log('Height:', height);
-        console.log('Weight:', weight);
-
         // Check if height and weight are not empty and valid
         if (height && weight && height > 0 && weight > 0) {
             // Convert height from cm to meters
@@ -988,7 +1125,6 @@
             document.querySelector('#bmi').value = roundedBmi;
             document.querySelector('#calculatedBmi').value = roundedBmi;
 
-            console.log('Calculated BMI:', roundedBmi);
         } else {
             // Handle invalid input
             alert('Please enter valid height and weight values.');
@@ -1001,6 +1137,7 @@
 
     function autocomplete(inp) {
         var currentFocus;
+
         inp.addEventListener("input", function(e) {
             var a, b, i, val = this.value;
             closeAllLists();
@@ -1008,6 +1145,7 @@
                 return false;
             }
             currentFocus = -1;
+
             $.ajax({
                 url: "{{ url('/autocomplete-workout') }}",
                 type: "GET",
@@ -1020,18 +1158,19 @@
                     a.setAttribute("id", inp.id + "autocomplete-list");
                     a.setAttribute("class", "autocomplete-items");
                     inp.parentNode.appendChild(a);
-                    for (var i = 0; i < data.length; i++) {
+
+                    data.forEach(item => {
                         var b = document.createElement("DIV");
-                        b.innerHTML = "<strong>" + data[i].substr(0, val.length) + "</strong>";
-                        b.innerHTML += data[i].substr(val.length);
-                        b.innerHTML += "<input type='hidden' value='" + data[i] + "'>";
+                        b.innerHTML = "<strong>" + item.substr(0, val.length) + "</strong>";
+                        b.innerHTML += item.substr(val.length);
+                        b.innerHTML += "<input type='hidden' value='" + item + "'>";
                         b.addEventListener("click", function(e) {
                             inp.value = this.getElementsByTagName("input")[0].value;
                             fetchWorkoutDetails(inp.value);
                             closeAllLists();
                         });
                         a.appendChild(b);
-                    }
+                    });
                 }
             });
         });
@@ -1081,6 +1220,7 @@
         });
     }
 
+
     function fetchWorkoutDetails(exerciseName) {
         $.ajax({
             url: "{{ url('/fetch-workout-details') }}", // Adjust the route to your controller method
@@ -1104,12 +1244,6 @@
                         $("#workoutVideo").show()[0].load();
                     } else {
                         $("#workoutVideo").hide();
-                    }
-
-                    if (data.name) {
-                        $("#workoutName").html(data.name).show();
-                    } else {
-                        $("#workoutName").hide();
                     }
 
                     if (data.gender) {
