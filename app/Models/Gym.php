@@ -7,6 +7,7 @@ use App\Traits\SessionTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
 
 class Gym extends Authenticatable
@@ -60,7 +61,7 @@ class Gym extends Authenticatable
                 'username' => $updateGym['username'],
                 'gym_name' => $updateGym['gym_name'],
                 'email' => $updateGym['email'],
-                'password' => $updateGym['password'],
+                'password' =>Hash::make($updateGym['password']),
                 'address' => $updateGym['address'],
                 'country' => $updateGym['country'],
                 'state' => $updateGym['state'],
