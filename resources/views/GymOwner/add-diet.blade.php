@@ -209,8 +209,8 @@
                 <!-- Image -->
                 <!-- <img id="modalImage" src="" alt="Workout Image" class="img-fluid" style="width: 20%;"> -->
                 <div class="form-data text-center">
-                        <img id="modalImage" src="" class="img-fluid" style="width: 40%;">
-                    </div>
+                    <img id="modalImage" src="" class="img-fluid" style="width: 40%;">
+                </div>
             </div>
             <div class="modal-footer">
                 <p id="modalDetails" class="w-100 mt-3"></p>
@@ -222,53 +222,56 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const editButtons = document.querySelectorAll('.edit-book-button');
-        const editImageInput = document.getElementById('edit_image');
-        const currentImage = document.getElementById('current_image');
-        const editGenderSelect = document.getElementById('edit_gender');
+        // Function to initialize event listeners for edit and view buttons
+        function initializeEventListeners() {
+            // Edit Diet Modal
+            const editButtons = document.querySelectorAll('.edit-book-button');
+            const editImageInput = document.getElementById('edit_image');
+            const currentImage = document.getElementById('current_image');
+            const editGenderSelect = document.getElementById('edit_gender');
 
-        editButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const diet = JSON.parse(this.getAttribute('data-book'));
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const diet = JSON.parse(this.getAttribute('data-book'));
 
-                document.getElementById('edit_diet_id').value = diet.id;
-                document.getElementById('edit_name').value = diet.name;
-                currentImage.src = diet.image; // Set the src of the image element
-                editGenderSelect.value = diet.gender;
-                document.getElementById('edit_diet').value = diet.diet;
-                document.getElementById('edit_alternative_diet').value = diet.alternative_diet;
-                document.getElementById('edit_min_age').value = diet.min_age;
-                document.getElementById('edit_max_age').value = diet.max_age;
-                document.getElementById('edit_goal').value = diet.goal;
+                    document.getElementById('edit_diet_id').value = diet.id;
+                    document.getElementById('edit_name').value = diet.name;
+                    currentImage.src = diet.image; // Set the src of the image element
+                    editGenderSelect.value = diet.gender;
+                    document.getElementById('edit_diet').value = diet.diet;
+                    document.getElementById('edit_alternative_diet').value = diet.alternative_diet;
+                    document.getElementById('edit_min_age').value = diet.min_age;
+                    document.getElementById('edit_max_age').value = diet.max_age;
+                    document.getElementById('edit_goal').value = diet.goal;
 
-                new bootstrap.Modal(document.getElementById('editDietModal')).show();
+                    new bootstrap.Modal(document.getElementById('editDietModal')).show();
+                });
             });
-        });
 
-        // Show a preview of the new image when selected
-        editImageInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentImage.src = e.target.result;
-                }
-                reader.readAsDataURL(file);
+            // Show a preview of the new image when selected
+            if (editImageInput) {
+                editImageInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            currentImage.src = e.target.result;
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
             }
-        });
-    });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Handling view workout modal
-        document.querySelectorAll('.view-workout').forEach(button => {
-            button.addEventListener('click', function() {
-                const workout = JSON.parse(this.getAttribute('data-workout'));
+            // View Workout Modal
+            document.querySelectorAll('.view-workout').forEach(button => {
+                button.addEventListener('click', function() {
+                    const workout = JSON.parse(this.getAttribute('data-workout'));
 
-                // Set the image src
-                document.getElementById('modalImage').src = workout.image ? workout.image : 'images/profile/17.jpg';
+                    // Set the image src
+                    document.getElementById('modalImage').src = workout.image ? workout.image : 'images/profile/17.jpg';
 
-                // Set workout details
-                const details = `
+                    // Set workout details
+                    const details = `
                     <strong>Diet Name:</strong> ${workout.name}<br>
                     <strong>Goal:</strong> ${workout.goal}<br>
                     <strong>Diet Description:</strong> ${workout.diet}<br>
@@ -276,13 +279,23 @@
                     <strong>Gender:</strong> ${workout.gender}<br>
                     <strong>Min-Max Age:</strong> ${workout.min_age}-${workout.max_age}
                 `;
-                document.getElementById('modalDetails').innerHTML = details;
+                    document.getElementById('modalDetails').innerHTML = details;
 
-                // Show modal
-                new bootstrap.Modal(document.getElementById('viewModal')).show();
+                    // Show modal
+                    new bootstrap.Modal(document.getElementById('viewModal')).show();
+                });
             });
+        }
+
+        // Initial call to set up event listeners
+        initializeEventListeners();
+
+        // Reinitialize event listeners after DataTable redraw (or similar events)
+        $('#example3').on('draw.dt', function() {
+            initializeEventListeners(); // Reattach event listeners
         });
     });
+
 
     function confirmDelete(uuid) {
         Swal.fire({

@@ -200,7 +200,6 @@
             <div class="modal-header">
                 <h5 class="modal-title">Workout Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
             </div>
             <div class="modal-body d-flex">
                 <div class="w-50 pe-2">
@@ -234,94 +233,104 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const editButtons = document.querySelectorAll('.edit-workout');
-        const editImageInput = document.getElementById('edit_image');
-        const currentImage = document.getElementById('current_image');
-        const editGenderSelect = document.getElementById('edit_gender');
+        function initializeEventListeners() {
+            const editButtons = document.querySelectorAll('.edit-workout');
+            const editImageInput = document.getElementById('edit_image');
+            const currentImage = document.getElementById('current_image');
+            const editGenderSelect = document.getElementById('edit_gender');
 
-        editButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const workout = JSON.parse(this.getAttribute('data-workout'));
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const workout = JSON.parse(this.getAttribute('data-workout'));
 
-                document.getElementById('edit_workout_id').value = workout.id;
-                document.getElementById('edit_vedio_link').value = workout.vedio_link;
-                currentImage.src = workout.image; // Set the src of the image element
-                document.getElementById('edit_name').value = workout.name;
-                document.getElementById('edit_category').value = workout.category;
-                document.getElementById('edit_description').value = workout.description;
+                    document.getElementById('edit_workout_id').value = workout.id;
+                    document.getElementById('edit_vedio_link').value = workout.vedio_link;
+                    currentImage.src = workout.image; // Set the src of the image element
+                    document.getElementById('edit_name').value = workout.name;
+                    document.getElementById('edit_category').value = workout.category;
+                    document.getElementById('edit_description').value = workout.description;
 
-                // Set the selected option for the gender dropdown
-                editGenderSelect.value = workout.gender;
-                console.log(`Gender set to: ${workout.gender}`); // Debugging line to check the gender value
+                    // Set the selected option for the gender dropdown
+                    editGenderSelect.value = workout.gender;
 
-                // Force re-render of the select element
-                const parent = editGenderSelect.parentElement;
-                const placeholder = document.createElement('div');
-                parent.replaceChild(placeholder, editGenderSelect);
-                parent.replaceChild(editGenderSelect, placeholder);
+                    // Force re-render of the select element
+                    const parent = editGenderSelect.parentElement;
+                    const placeholder = document.createElement('div');
+                    parent.replaceChild(placeholder, editGenderSelect);
+                    parent.replaceChild(editGenderSelect, placeholder);
 
-                new bootstrap.Modal(document.getElementById('editDietModal')).show();
+                    new bootstrap.Modal(document.getElementById('editDietModal')).show();
+                });
             });
-        });
 
-        // Show a preview of the new image when selected
-        editImageInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentImage.src = e.target.result;
-                }
-                reader.readAsDataURL(file);
+            // Show a preview of the new image when selected
+            if (editImageInput) {
+                editImageInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            currentImage.src = e.target.result;
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
             }
-        });
-    });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Handling view workout modal
-        document.querySelectorAll('.view-workout').forEach(button => {
-            button.addEventListener('click', function() {
-                const workout = JSON.parse(this.getAttribute('data-workout'));
+            // Handling view workout modal
+            document.querySelectorAll('.view-workout').forEach(button => {
+                button.addEventListener('click', function() {
+                    const workout = JSON.parse(this.getAttribute('data-workout'));
 
-                // Set the image src
-                document.getElementById('modalImage').src = workout.image ? workout.image : 'images/profile/17.jpg';
+                    // Set the image src
+                    document.getElementById('modalImage').src = workout.image ? workout.image : 'images/profile/17.jpg';
 
-                // Handle video or iframe
-                const videoContainer = document.getElementById('videoContainer');
-                const modalVideo = document.getElementById('modalVideo');
-                const modalIframe = document.getElementById('modalIframe');
-                const videoSource = document.getElementById('modalVideoSource');
+                    // Handle video or iframe
+                    const videoContainer = document.getElementById('videoContainer');
+                    const modalVideo = document.getElementById('modalVideo');
+                    const modalIframe = document.getElementById('modalIframe');
+                    const videoSource = document.getElementById('modalVideoSource');
 
-                // Clear previous video sources
-                modalVideo.style.display = 'none';
-                modalIframe.style.display = 'none';
+                    // Clear previous video sources
+                    modalVideo.style.display = 'none';
+                    modalIframe.style.display = 'none';
 
-                // Check if it's an embedded video or a direct video file
-                if (workout.vedio_link.includes('youtube.com') || workout.vedio_link.includes('vimeo.com')) {
-                    // Embed video (e.g., YouTube or Vimeo)
-                    modalIframe.src = workout.vedio_link;
-                    modalIframe.style.display = 'block';
-                } else {
-                    // Direct video file
-                    videoSource.src = workout.vedio_link;
-                    modalVideo.style.display = 'block';
-                    modalVideo.load();
-                }
+                    // Check if it's an embedded video or a direct video file
+                    if (workout.vedio_link.includes('youtube.com') || workout.vedio_link.includes('vimeo.com')) {
+                        // Embed video (e.g., YouTube or Vimeo)
+                        modalIframe.src = workout.vedio_link;
+                        modalIframe.style.display = 'block';
+                    } else {
+                        // Direct video file
+                        videoSource.src = workout.vedio_link;
+                        modalVideo.style.display = 'block';
+                        modalVideo.load();
+                    }
 
-                // Set workout details
-                const details = `
+                    // Set workout details
+                    const details = `
                     <strong>Category:</strong> ${workout.category}<br>
                     <strong>Workout Name:</strong> ${workout.name}<br>
                     <strong>Gender:</strong> ${workout.gender}<br>
                     <strong>Description:</strong> ${workout.description}
                 `;
-                document.getElementById('modalDetails').innerHTML = details;
+                    document.getElementById('modalDetails').innerHTML = details;
 
-                // Show modal
-                new bootstrap.Modal(document.getElementById('viewModal')).show();
+                    // Show modal
+                    new bootstrap.Modal(document.getElementById('viewModal')).show();
+                });
             });
+        }
+
+        // Initial call to set up event listeners
+        initializeEventListeners();
+
+        // Reinitialize event listeners after DataTable redraw
+        $('#example3').on('draw.dt', function() {
+            initializeEventListeners(); // Reattach event listeners
         });
     });
+
 
 
     function confirmDelete(uuid) {
@@ -339,6 +348,20 @@
             }
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const viewModal = document.getElementById('viewModal');
+        const modal = new bootstrap.Modal(viewModal);
+
+        // Handle the close event to ensure the fade backdrop is removed
+        viewModal.addEventListener('hidden.bs.modal', function() {
+            document.body.classList.remove('modal-open'); // Ensure body class is removed
+            const modalBackdrops = document.querySelectorAll('.modal-backdrop');
+            modalBackdrops.forEach(function(backdrop) {
+                backdrop.parentNode.removeChild(backdrop); // Remove the backdrop element
+            });
+        });
+    });
 </script>
 @include('CustomSweetAlert');
 @endsection

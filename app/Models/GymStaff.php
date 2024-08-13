@@ -81,6 +81,7 @@ class GymStaff extends Model
 
             return $staffDetail->save();
         } catch (\Throwable $e) {
+            dd($e);
             Log::error('[GymStaff][updateStaff] Error while updating user detail: ' . $e->getMessage());
         }
     }

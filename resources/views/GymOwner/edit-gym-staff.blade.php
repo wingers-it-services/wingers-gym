@@ -51,7 +51,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="employee_id">Staff Emp Id</label>
-                                            <input type="text" class="form-control" id="employee_id" name="employee_id" placeholder="" value="{{ $staffDetail->employee_id }}" required="">
+                                            <input type="text" class="form-control" id="employee_id" name="staff_id" placeholder="" value="{{ $staffDetail->employee_id }}" required="">
                                             <div class="invalid-feedback">
                                                 Valid first name is required.
                                             </div>

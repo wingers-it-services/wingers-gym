@@ -22,7 +22,7 @@
                                          <th>Phone</th>
                                          <th>Blood Group</th>
                                          <th>Joined</th>
-                                         <th class="text-end">Action</th>
+                                         <th>Action</th>
                                      </tr>
                                  </thead>
                                  <tbody id="customers">
@@ -54,26 +54,18 @@
                                          </td>
                                          <td class="py-2">{{ $gymStaffMember->blood_group }}</td>
                                          <td class="py-2">{{ $gymStaffMember->joining_date }}</td>
-                                         <td class="py-2 text-end">
-                                             <div class="dropdown"><button class="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown"><span class="fs--1"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1">
-                                                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                 <rect x="0" y="0" width="24" height="24">
-                                                                 </rect>
-                                                                 <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                 <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                 <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                             </g>
-                                                         </svg></span></button>
-                                                 <div class="dropdown-menu dropdown-menu-end border py-0">
-                                                     <div class="py-2">
-                                                         <a class="dropdown-item" href="/editStaff/{{ $gymStaffMember->uuid }}">Edit</a>
-                                                         <a class="dropdown-item text-danger" onclick="confirmDelete('{{ $gymStaffMember->uuid }}')">Delete</a>
-                                                         </form>
-
-                                                     </div>
-                                                 </div>
-                                             </div>
+                                         <td>
+                                             <!-- Edit Button -->
+                                             <a href="/editStaff/{{ $gymStaffMember->uuid }}" data-bs-toggle="tooltip" data-placement="top" title="Edit">
+                                                 <i class="fa fa-pencil color-muted"></i>
+                                             </a>
+                                             &nbsp; &nbsp; 
+                                             <!-- Delete Button -->
+                                             <a href="javascript:void(0);" onclick="confirmDelete('{{ $gymStaffMember->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close">
+                                                 <i class="fas fa-trash"> </i>
+                                             </a>
                                          </td>
+
                                      </tr>
                                      @endforeach
 
