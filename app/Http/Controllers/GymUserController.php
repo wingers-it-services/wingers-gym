@@ -150,10 +150,11 @@ class GymUserController extends Controller
 
         $subscriptionId = $userDetail->subscription_id;
         $userSubscriptions = $this->userHistory->where('gym_id', $gymId)->where('user_id', $userId)->get();
-        $bmis = $this->bmi->where('gym_id', $gymId)->where('user_id', $userId)->get();
+        $bmis = $this->bmi->with('bodyMeasurement')->where('gym_id', $gymId)->where('user_id', $userId)->get();
+        $bodyMeasurement = $this->userBodyMeasurement->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $trainers = $this->gymStaff->where('gym_id', $gymId)->where('designation_id', 1)->get();
 
-        return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets', 'bmis', 'trainers'));
+        return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets', 'bmis', 'trainers', 'bodyMeasurement'));
     }
 
     public function updateUser(Request $request)

@@ -476,7 +476,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -507,9 +506,6 @@
                                                                         <th scope="col">Height</th>
                                                                         <th scope="col">Weight</th>
                                                                         <th scope="col">BMI</th>
-                                                                        <!-- <th scope="col">Progress</th>
-                                                                        <th scope="col">Deadline</th>
-                                                                        <th scope="col">Label</th> -->
                                                                         <th scope="col" class="text-end">
                                                                             Action</th>
                                                                     </tr>
@@ -517,24 +513,29 @@
                                                                 <tbody>
                                                                     @foreach ($bmis as $bmi)
                                                                     <tr>
-                                                                        <td>{{$bmi->height}}</td>
-                                                                        <td>{{$bmi->weight}}</td>
-                                                                        <td>{{$bmi->bmi}}</td>
-                                                                        <!-- <td>
-                                                                            <div class="progress" style="background: rgba(255, 193, 7, .1)">
-                                                                                <div class="progress-bar bg-warning" style="width: 70%;" role="progressbar"><span class="sr-only">70%
-                                                                                        Complete</span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>Jun 28,2018</td>
-                                                                        <td><span class="badge badge-warning">70%</span> -->
-                                                                        </td>
-                                                                        <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
-                                                                                </a><a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
+                                                                        <td>{{ $bmi->height }}</td>
+                                                                        <td>{{ $bmi->weight }}</td>
+                                                                        <td>{{ $bmi->bmi }}</td>
+                                                                        <td class="text-end">
+                                                                            <span>
+                                                                                <a href="javascript:void(0);"
+                                                                                    class="me-4 edit-bmi"
+                                                                                    data-bs-toggle="tooltip"
+                                                                                    data-placement="top"
+                                                                                    title="Edit"
+                                                                                    data-bmi="{{ json_encode($bmi) }}"
+                                                                                    data-body-measurement="{{ json_encode($bmi->bodyMeasurement) }}">
+                                                                                    <i class="fa fa-pencil color-muted"></i>
+                                                                                </a>
+                                                                                &nbsp; &nbsp;
+                                                                                <a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close">
+                                                                                    <i class="fas fa-times color-danger"></i>
+                                                                                </a>
+                                                                            </span>
                                                                         </td>
                                                                     </tr>
                                                                     @endforeach
+
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -547,8 +548,52 @@
                                 </div>
 
                                 <div class="tab-pane fade" id="trainers">
+                                    <div class="modal fade" id="addNewTainer">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Assign Trainer</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('addUserSubscriptionByGym') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <input type="hidden" name="user_id" value="{{$userDetail->id}}">
+                                                                <!-- Subscription Selection -->
+                                                                <div class="mb-3">
+                                                                    <label for="trainer">Select a Trainer:</label>
+                                                                    <select class="me-sm-2 form-control default-select" id="trainer" name="staff_assign_id">
+                                                                        <option value="0">Select</option>
+                                                                        @foreach ($trainers as $trainer)
+                                                                        <option value="{{$trainer->id}}">{{$trainer->name}}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                                <!-- Subscription Description -->
+
+                                                                <div class="mb-3">
+                                                                    <label for="trainer">Trainer Status:</label>
+                                                                    <input class="form-control" id="description" name="description" required>
+                                                                </div>
+                                                                <!-- Joining Date -->
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="dropdown mt-sm-0 mt-3">
+                                                            <button type="submit" id="addSubscriptionButton" class="btn btn-outline-primary rounded">Assign</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
                                     <div class="card">
-                                        <form id="trainerForm" action="{{ route('allotTrainer') }}" method="POST" class="form-horizontal">
+                                        <!-- <form id="trainerForm" action="{{ route('allotTrainer') }}" method="POST" class="form-horizontal">
                                             @csrf
                                             <div class="card-body">
                                                 <div class="row">
@@ -573,9 +618,54 @@
                                                 <hr>
                                                 <input type="submit" class="btn btn-primary" value="Submit">
                                             </div>
-                                        </form>
+                                        </form> -->
+
+                                        <div class="col-xl-12 col-xxl-12">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="card">
+                                                        <div class="card-header d-sm-flex d-block pb-0 border-0">
+                                                            <div class="me-auto pe-3">
+                                                                <h4 class="text-black fs-20">Assigned Trainers List</h4>
+                                                            </div>
+
+                                                            <div class="dropdown mt-sm-0 mt-3">
+                                                                <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addNewTainer" class="btn btn-outline-primary rounded">Assign Trainers</a>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="card-body">
+                                                            <div class="table-responsive">
+                                                                <table id="example3" class="table table-bordered table-striped verticle-middle table-responsive-sm">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col">Trainer Name</th>
+                                                                            <th scope="col">Status</th>
+                                                                            <th scope="col" class="text-end">Action
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach($userSubscriptions as $subscription)
+                                                                        <tr>
+                                                                            <td>{{$subscription->subscription->subscription_name}}</td>
+                                                                            <td>{{$subscription->subscription->amount}}</td>
+                                                                            <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
+                                                                                    </a><a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
 
@@ -829,7 +919,26 @@
                                             <input type="text" class="form-control" id="edit_triceps" name="triceps" required>
                                             <div class="invalid-feedback">Triceps measurement is required.</div>
                                         </div>
-                                        <!-- Add other fields similarly -->
+                                        <div class="col-md-12 mb-3">
+                                            <label for="biceps">Biceps (cm)</label>
+                                            <input type="text" class="form-control" id="edit_biceps" name="biceps" placeholder="">
+                                            <div class="invalid-feedback">Biceps measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="lats">Lats (cm)</label>
+                                            <input type="text" class="form-control" id="edit_lats" name="lats" placeholder="" required>
+                                            <div class="invalid-feedback">Lats measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="shoulder">Shoulder (cm)</label>
+                                            <input type="text" class="form-control" id="edit_shoulder" name="shoulder" placeholder="" required>
+                                            <div class="invalid-feedback">Shoulder measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="abs">Abs (cm)</label>
+                                            <input type="text" class="form-control" id="edit_abs" name="abs" placeholder="" required>
+                                            <div class="invalid-feedback">Abs measurement is required.</div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -851,7 +960,26 @@
                                             <input type="text" class="form-control" id="edit_traps" name="traps" required>
                                             <div class="invalid-feedback">Traps measurement is required.</div>
                                         </div>
-                                        <!-- Add other fields similarly -->
+                                        <div class="col-md-12 mb-3">
+                                            <label for="glutes">Glutes (cm)</label>
+                                            <input type="text" class="form-control" id="edit_glutes" name="glutes" placeholder="">
+                                            <div class="invalid-feedback">Glutes measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="quads">Quads (cm)</label>
+                                            <input type="text" class="form-control" id="edit_quads" name="quads" placeholder="" required>
+                                            <div class="invalid-feedback">Quads measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="hamstring">Hamstring (cm)</label>
+                                            <input type="text" class="form-control" id="edit_hamstring" name="hamstring" placeholder="" required>
+                                            <div class="invalid-feedback">Hamstring measurement is required.</div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="calves">Calves (cm)</label>
+                                            <input type="text" class="form-control" id="edit_calves" name="calves" placeholder="" required>
+                                            <div class="invalid-feedback">Calves measurement is required.</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -898,7 +1026,6 @@
                 </div>
             </div>
         </div>
-
 
 
 
@@ -1026,6 +1153,56 @@
             document.getElementById('end_date').value = '';
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const editButtons = document.querySelectorAll('.edit-bmi');
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const bmiData = this.getAttribute('data-bmi');
+            const bodyMeasurementData = this.getAttribute('data-body-measurement');
+
+            if (bmiData && bodyMeasurementData) {
+                const bmi = JSON.parse(bmiData);
+                const bodyMeasurement = JSON.parse(bodyMeasurementData);
+
+                console.log('BMI Data:', bmi);
+                console.log('Body Measurement:', bodyMeasurement);
+
+                // Assuming bodyMeasurement is an array, we'll take the first measurement
+                const firstMeasurement = bodyMeasurement[0] || {};
+
+                // Populate BMI fields
+                document.getElementById('edit_height').value = bmi.height || '';
+                document.getElementById('edit_weight').value = bmi.weight || '';
+                document.getElementById('edit_calculatedBmi').value = bmi.bmi || '';
+
+                // Populate Body Measurement fields
+                document.getElementById('edit_chest').value = firstMeasurement.chest || '';
+                document.getElementById('edit_triceps').value = firstMeasurement.triceps || '';
+                document.getElementById('edit_biceps').value = firstMeasurement.biceps || '';
+                document.getElementById('edit_lats').value = firstMeasurement.lats || '';
+                document.getElementById('edit_shoulder').value = firstMeasurement.shoulder || '';
+                document.getElementById('edit_abs').value = firstMeasurement.abs || '';
+                document.getElementById('edit_forearms').value = firstMeasurement.forearms || '';
+                document.getElementById('edit_traps').value = firstMeasurement.traps || '';
+                document.getElementById('edit_glutes').value = firstMeasurement.glutes || '';
+                document.getElementById('edit_quads').value = firstMeasurement.quads || '';
+                document.getElementById('edit_hamstring').value = firstMeasurement.hamstring || '';
+                document.getElementById('edit_calves').value = firstMeasurement.calves || '';
+
+                // Show the modal
+                new bootstrap.Modal(document.getElementById('editBmiModal')).show();
+            } else {
+                console.error('BMI or Body Measurement data is missing.');
+            }
+        });
+    });
+});
+
+
+
+
 
     // document.querySelector('#addSubscriptionButton').addEventListener('click', function() {
     //     const userId = @json($userDetail -> id); // Get the user ID

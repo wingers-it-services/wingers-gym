@@ -37,6 +37,12 @@ class userBmi extends Model
             Log::error("[Bmi][createBmi] error " . $th->getMessage());
         }
     }
+
+    public function bodyMeasurement()
+    {
+        return $this->hasMany(UserBodyMeasurement::class, 'user_id');
+    }
+
     protected static function boot()
     {
         parent::boot();
