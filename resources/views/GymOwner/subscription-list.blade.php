@@ -22,7 +22,7 @@
                         <input type="text" id="editName" name="subscription_name" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label>Validaty (in months)</label>
+                        <label>Validity (in months)</label>
                         <input type="number" name="validity" id="editValidity" min="0" max="1000" class="form-control" required>
                     </div>
                     <div class="form-group">
@@ -65,7 +65,7 @@
                                     <input type="text" id="subscription_name" name="subscription_name" class="form-control" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Validaty (in months)</label>
+                                    <label>Validity (in months)</label>
                                     <input type="number" name="validity" min="0" max="1000" class="form-control" required>
                                 </div>
                                 <div class="form-group">
