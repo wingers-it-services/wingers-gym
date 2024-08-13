@@ -15,7 +15,7 @@
                              <table id="example3" class="display min-w850">
                                  <thead>
                                      <tr>
-                                         <th>Staff Id</th>
+                                         <th>Employee Id</th>
                                          <th>Name</th>
                                          <th>Designation</th>
                                          <th>Salary</th>
@@ -30,7 +30,7 @@
                                      <tr class="btn-reveal-trigger">
                                          <td class="py-2">
                                              <div class="form-check custom-checkbox mx-2">
-                                                 {{ $gymStaffMember->id }}
+                                                 {{ $gymStaffMember->employee_id }}
                                              </div>
                                          </td>
                                          <td class="py-3">

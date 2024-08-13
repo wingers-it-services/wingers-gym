@@ -64,14 +64,14 @@ class GymStaffController extends Controller
     {
         try {
             $request->validate([
-                "staff_id" => 'required',
-                "full_name" => 'required',
-                "email" => 'required',
+                "staff_id"     => 'required',
+                "full_name"    => 'required',
+                "email"        => 'required',
                 "phone_number" => 'required',
                 "joining_date" => 'required',
-                "salary" => 'required',
-                "designation" => 'required',
-                "blood_group" => 'nullable'
+                "salary"       => 'required',
+                "designation"  => 'required',
+                "blood_group"  => 'required'
             ]);
 
             $gym = Auth::guard('gym')->user();
@@ -90,7 +90,7 @@ class GymStaffController extends Controller
             return redirect()->route('listGymStaff')->with('status', 'success')->with('message', 'Gym Staff saved successfully.');
         } catch (\Throwable $th) {
             Log::error("[GymStaffController][addGymStaff] error " . $th->getMessage());
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
         }
     }
 
@@ -210,7 +210,7 @@ class GymStaffController extends Controller
         try {
             $validatedData = $request->validate([
                 'uuid' => 'required',
-                "staff_id" => 'required',
+                "employee_id" => 'required',
                 "full_name" => 'required',
                 "email" => 'required',
                 "phone_number" => 'required',
