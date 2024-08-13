@@ -51,7 +51,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="employee_id">Staff Emp Id</label>
-                                            <input type="text" class="form-control" id="employee_id" name="staff_id" placeholder="" value="{{ $staffDetail->employee_id }}" required="">
+                                            <input type="text" class="form-control" id="employee_id" name="employee_id" placeholder="" value="{{ $staffDetail->employee_id }}" required="">
                                             <div class="invalid-feedback">
                                                 Valid first name is required.
                                             </div>
@@ -84,8 +84,8 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label for="number">Staff Number</label>
-                                            <input type="text" class="form-control" id="number" name="number" placeholder="" value="{{ $staffDetail->number }}" required="">
+                                            <label for="number">Phone Number</label>
+                                            <input type="text" class="form-control" id="number" name="phone_number" placeholder="" value="{{ $staffDetail->number }}" required="">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
@@ -113,15 +113,6 @@
                                                 <option {{ $staffDetail->blood_group == 'O-' ? 'selected' : '' }} value="O-">O-</option>
                                             </select>
                                         </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="joining_date">Phone Number</label>
-                                            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="" value="{{ $staffDetail->number }}" required="">
-                                        </div>
-
-
                                     </div>
 
 
