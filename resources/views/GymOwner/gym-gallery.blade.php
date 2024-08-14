@@ -19,17 +19,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="" action="">
+                    <form method="post" action="{{route('addGymGallery')}}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label>Upload Image/Video</label>
-                            <input type="file" class="form-control" id="image" name="image" required="">
-                                            <div class="invalid-feedback">
-                                                Gym Image is required.
-                                            </div>
+                            <input type="file" class="form-control" id="upload_file" name="upload_file" required="">
+                             <div class="invalid-feedback">Gym Image is required.</div>
                         </div>
-
-
                         <button class="btn btn-primary">Submit</button>
                     </form>
                 </div>
@@ -78,11 +74,5 @@
 </div>
 </div>
 </div>
-
-
-
-
-
-
-
+@include('CustomSweetAlert');
  @endsection
