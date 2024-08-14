@@ -63,6 +63,7 @@ class GymUserLoginControllerApi extends Controller
                     'message' => 'Invalid password, please try again.',
                 ], 401);
             }
+
             $token = $user->createToken('MyAppToken')->accessToken;
 
             if ($user->profile_status !== GymUserAccountStatusEnum::USER_INJURY_DETAIL) {
@@ -126,6 +127,7 @@ class GymUserLoginControllerApi extends Controller
                         'message'      => 'Login successfully',
                     ]);
                 }
+                
                 return response()->json([
                     'status'   => 403,
                     'user'     => $user,

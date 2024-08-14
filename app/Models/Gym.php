@@ -18,7 +18,6 @@ class Gym extends Authenticatable
      protected $guard = 'gym';
 
     protected $fillable = [
-
         'gym_name',
         'email',
         'phone_no',
@@ -33,8 +32,21 @@ class Gym extends Authenticatable
         'gym_type',
         'face_link',
         'insta_link'
-
     ];
+
+    public function getImageAttribute()
+    {
+        $imagePath = $this->attributes['image'];
+        $defaultImagePath = 'images/profile/17.jpg';
+        $fullImagePath = $imagePath; 
+
+        // Check if the file exists in the public directory
+        if ($imagePath && file_exists(public_path($fullImagePath))) {
+            return asset($fullImagePath);
+        }
+
+        return asset($defaultImagePath);
+    }
 
     protected static function boot()
     {
