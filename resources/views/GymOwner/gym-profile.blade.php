@@ -19,16 +19,15 @@
             </div>
             <div class="profile-info">
                 <div class="profile-photo">
-                    <img src="https://fito.dexignzone.com/laravel/demo/images/profile/profile.png" class="img-fluid rounded-circle" alt="">
+                    <img src="{{$gym->image}}" class="img-fluid rounded-circle" alt="">
                 </div>
                 <div class="profile-details">
                     <div class="profile-name px-3 pt-2">
-                        <h4 class="text-primary mb-0">Mitchell C. Shay</h4>
-                        <p>UX / UI Designer</p>
+                        <h4 class="text-primary mb-0">{{$gym->gym_name}}</h4>
                     </div>
                     <div class="profile-email px-2 pt-2">
-                        <h4 class="text-muted mb-0">hello@email.com</h4>
-                        <p>Email</p>
+                        <p>Email: {{$gym->email}}<br>Phone No: {{$gym->phone_no}}</p>
+                        <!-- <h4 class="text-muted mb-0">{{$gym->phone_no}}</h4> -->
                     </div>
                     <div class="dropdown ms-auto">
                         <a href="#" class="btn btn-primary light sharp" data-bs-toggle="dropdown" aria-expanded="true"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg></a>

@@ -106,6 +106,7 @@ class GymDetailController extends Controller
             $request->validate([
                 "username" => 'required',
                 "email" => 'required',
+                "phone_no" => 'required',
                 "password" => 'required',
                 "gym_name" => 'required',
                 "address" => 'required',
