@@ -964,11 +964,11 @@
 						<span class="nav-text">GYM Profile</span></a>
 				</li>
 
-				<li>
-					<a href="/faq" aria-expanded="false">
-						<i class="fa fa-question-circle" aria-hidden="true"></i>
-						<span class="nav-text">FAQ</span>
-					</a>
+					<li>
+						<a href="/gym-faq" aria-expanded="false">
+							<i class="fa fa-question-circle" aria-hidden="true"></i>
+							<span class="nav-text">FAQ</span>
+						</a>
 
 				</li>
 

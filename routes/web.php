@@ -64,8 +64,8 @@ Route::get('/inbox', function () {
 Route::get('/enquiry-read', function () {
     return view('GymOwner.enquiry-read');
 });
-Route::get('/faq', function () {
-    return view('GymOwner.faq');
+Route::get('/gym-faq', function () {
+    return view('GymOwner.gym-faq');
 });
 /* GymOwner register */
 Route::get('/register', function () {

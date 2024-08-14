@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="page-titles">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Product</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Diet</a></li>
             </ol>
         </div>
         <div class="row">
@@ -23,14 +23,14 @@
                                             <label for="image">Diet Image</label>
                                             <input type="file" class="form-control" id="image" name="image" required="">
                                             <div class="invalid-feedback">
-                                                Product image is required.
+                                                Diet image is required.
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="name">Diet Name</label>
                                             <input type="text" class="form-control" id="name" name="name" required="">
                                             <div class="invalid-feedback">
-                                                Product name is required.
+                                                Diet name is required.
                                             </div>
                                         </div>
                                     </div>
@@ -50,11 +50,17 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="min_age">Min Age </label>
                                             <input type="number" class="form-control" id="min_age" name="min_age" placeholder="">
+                                            <div class="invalid-feedback">
+                                               Min Age is required.
+                                            </div>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="max_age">Max Age </label>
                                             <input type="number" class="form-control" id="max_age" name="max_age" placeholder="">
+                                            <div class="invalid-feedback">
+                                                Max Age is required.
+                                             </div>
                                         </div>
 
 
