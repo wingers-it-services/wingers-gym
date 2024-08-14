@@ -37,7 +37,7 @@
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Gallery</h4>
-            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addimage" class="btn btn-outline-primary rounded">Add New Image</a>
+            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addimage" class="btn btn-outline-primary rounded">Add New Image/Video</a>
         </div>
 
         <div class="card-body pb-1">

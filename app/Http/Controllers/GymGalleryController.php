@@ -41,7 +41,7 @@ class GymGalleryController extends Controller
     {
         try {
             $request->validate([
-                "upload_file" => 'required'
+                "upload_file" => 'required|mimes:jpeg,jpg,png,gif,mp4,mov,avi'
             ]);
 
             $gym = Auth::guard('gym')->user();
