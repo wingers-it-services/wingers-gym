@@ -13,7 +13,7 @@ class UserWorkout extends Model
     use SoftDeletes;
     use SessionTrait;
 
-    protected $fillable = ['user_id', 'exercise_name', 'sets', 'reps', 'weight', 'notes', 'gym_id'];
+    protected $fillable = ['user_id', 'exercise_name', 'sets', 'reps', 'weight', 'workout_des', 'gym_id'];
 
     public function addWorkout(array $addWorkout, $gym_id)
     {
@@ -25,7 +25,7 @@ class UserWorkout extends Model
                 'sets' => $addWorkout['sets'],
                 'reps' => $addWorkout['reps'],
                 'weight' => $addWorkout['weight'],
-                'notes' => $addWorkout['notes'],
+                'workout_des' => $addWorkout['workout_des'],
             ]);
         } catch (\Throwable $e) {
             Log::error('[UserWorkout][addWorkout] Error adding gym detail: ' . $e->getMessage());

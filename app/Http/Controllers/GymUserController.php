@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\UserBodyMeasurement;
 use App\Models\UserWorkout;
 use App\Models\UserDiet;
+use App\Models\UsersTrainerHistry;
 use App\Models\UserSubscriptionHistory;
 use App\Models\Workout;
 use App\Services\UserService;
@@ -34,7 +35,8 @@ class GymUserController extends Controller
     protected $gymStaff;
     protected $designation;
     protected $gymSubscription;
-    protected $userHistory;
+    protected $userSubscriptionHistory;
+    protected $trainersHistory;
 
     public function __construct(
         User $user,
@@ -47,7 +49,8 @@ class GymUserController extends Controller
         GymStaff $gymStaff,
         Designation $designation,
         GymSubscription $gymSubscription,
-        UserSubscriptionHistory $userHistory
+        UserSubscriptionHistory $userSubscriptionHistory,
+        UsersTrainerHistry $trainersHistory
     ) {
         $this->user = $user;
         $this->gym = $gym;
@@ -59,7 +62,8 @@ class GymUserController extends Controller
         $this->gymStaff = $gymStaff;
         $this->designation = $designation;
         $this->gymSubscription = $gymSubscription;
-        $this->userHistory = $userHistory;
+        $this->userSubscriptionHistory = $userSubscriptionHistory;
+        $this->trainersHistory = $trainersHistory;
     }
 
     public function listGymUser()
@@ -147,14 +151,13 @@ class GymUserController extends Controller
         $workouts = $this->workout->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $diets = $this->diet->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
-
-        $subscriptionId = $userDetail->subscription_id;
-        $userSubscriptions = $this->userHistory->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $bmis = $this->bmi->with('bodyMeasurement')->where('gym_id', $gymId)->where('user_id', $userId)->get();
-        $bodyMeasurement = $this->userBodyMeasurement->where('gym_id', $gymId)->where('user_id', $userId)->get();
+        $subscriptionId = $userDetail->subscription_id;
+        $userSubscriptions = $this->userSubscriptionHistory->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $trainers = $this->gymStaff->where('gym_id', $gymId)->where('designation_id', 1)->get();
+        $trainersHistories = $this->trainersHistory->where('gym_id', $gymId)->where('user_id', $userId)->get();
 
-        return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets', 'bmis', 'trainers', 'bodyMeasurement'));
+        return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets',  'trainers', 'bmis', 'trainersHistories'));
     }
 
     public function updateUser(Request $request)
@@ -184,7 +187,7 @@ class GymUserController extends Controller
             }
             return redirect()->back()->with('status', 'error')->with('message', 'error while updating user.');
         } catch (\Exception $e) {
-            Log::error('[GymDetailController][updateUser] Error updating user ' . 'Request=' . $request . ', Exception=' . $e->getMessage());
+            Log::error('[GymUserController][updateUser] Error updating user ' . 'Request=' . $request . ', Exception=' . $e->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'error while updating user.');
         }
     }
@@ -198,7 +201,7 @@ class GymUserController extends Controller
                 "sets" => 'required|integer|min:1',
                 "reps" => 'required|integer|min:1',
                 "weight" => 'required|numeric|min:0',
-                "notes" => 'required',
+                "workout_des" => 'required',
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -250,7 +253,7 @@ class GymUserController extends Controller
                 'sets' => 'required|integer|min:1',
                 'reps' => 'required|integer|min:1',
                 'weight' => 'required|numeric|min:0',
-                'notes' => 'required',
+                'workout_des' => 'required',
             ]);
 
             $workout = $this->workout->findOrFail($request->workout_id);
@@ -318,17 +321,37 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "staff_assign_id" => 'required',
-                "user_id" => 'required'
+                "trainer_id" => 'required',
+                "user_id" => 'required',
+                "status" => 'required'
             ]);
 
-            $this->user->addTrainer($validatedData);
+            $gymUser = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
+
+            $activeTrainer = $this->trainersHistory->where([
+                ['user_id', '=', $validatedData['user_id']],
+                ['status', '=', \App\Enums\TrainerAssignToUserStatus::ACTIVE],
+            ])->first();
+
+            if ($activeTrainer) {
+                return redirect()->back()->with('status', 'error')->with('message', 'A trainer is already allocated to this user.');
+            }
+            $this->trainersHistory->addTrainer($validatedData, $gymId);
 
             return redirect()->back()->with('status', 'success')->with('message', 'Trainer Alloted succesfully.');
         } catch (Throwable $th) {
             Log::error("[GymUserController][allocateTrainerToUser] error " . $th->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', 'Failed to allocate trainer. Please try again.');
+            return redirect()->back()->with('status', 'error')->with('message', 'Failed to allocate trainer. Please try again.' . $th->getMessage());
         }
+    }
+
+    public function deleteTrainer($uuid)
+    {
+        $trainer = $this->trainersHistory->where('uuid', $uuid)->firstOrFail();
+
+        $trainer->delete();
+        return redirect()->back()->with('status', 'success')->with('message', 'Trainer deleted successfully!');
     }
 
     public function checkSubscription(Request $request, $userId)
@@ -366,7 +389,7 @@ class GymUserController extends Controller
     public function updateSubscription(Request $request, $userId)
     {
         // Inactivate the existing subscription in UserSubscriptionHistory table
-        $subscriptionHistory = $this->userHistory->where('user_id', $userId)->latest()->update(['status' => 0]);
+        $subscriptionHistory = $this->userSubscriptionHistory->where('user_id', $userId)->latest()->update(['status' => 0]);
 
         // Update the subscription details in gym_users table
         User::where('user_id', $userId)->update([
@@ -412,7 +435,7 @@ class GymUserController extends Controller
             ]);
 
             // Fetch user subscription status
-            $userSubscription = $this->userHistory->where('user_id', $validatedData['user_id'])
+            $userSubscription = $this->userSubscriptionHistory->where('user_id', $validatedData['user_id'])
                 ->orderBy('end_date', 'desc')
                 ->first();
 
@@ -426,7 +449,7 @@ class GymUserController extends Controller
             $subscription = $this->gymSubscription->find($validatedData['subscription_id']);
 
             // Create user subscription history
-            $this->userHistory->create([
+            $this->userSubscriptionHistory->create([
                 'gym_id' => $gymId,
                 'original_transaction_id' => 1,
                 'user_id' => $validatedData['user_id'],
@@ -443,7 +466,7 @@ class GymUserController extends Controller
                 ->with('status', 'success')
                 ->with('message', 'Subscription added successfully');
         } catch (Throwable $th) {
-            Log::error("[GymSubscriptionController][addUserSubscription] error " . $th->getMessage());
+            Log::error("[GymUserController][addUserSubscription] error " . $th->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
         }
     }
@@ -475,5 +498,120 @@ class GymUserController extends Controller
         } else {
             return response()->json(null);
         }
+    }
+
+    public function getUserBmi($userId)
+    {
+        $bmi = $this->bmi->where('user_id', $userId)->first();
+        $bodyMeasurement = $this->userBodyMeasurement->where('user_id', $userId)->first();
+
+        if ($bmi && $bodyMeasurement) {
+            return response()->json([
+                'success' => true,
+                'bmi' => $bmi,
+                'bodyMeasurement' => $bodyMeasurement,
+            ]);
+        } else {
+            return response()->json(['success' => false]);
+        }
+    }
+
+    public function updateUserBmi(Request $request)
+    {
+        try {
+            // Validate the incoming request data
+            $request->validate([
+                'user_id' => 'required',
+                'height' => 'required|numeric|min:1',
+                'weight' => 'required|numeric|min:1',
+                'bmi' => 'required|numeric|min:0',
+                // Add validation rules for body measurements
+                'chest' => 'nullable|numeric|min:0',
+                'triceps' => 'nullable|numeric|min:0',
+                'biceps' => 'nullable|numeric|min:0',
+                'lats' => 'nullable|numeric|min:0',
+                'shoulder' => 'nullable|numeric|min:0',
+                'abs' => 'nullable|numeric|min:0',
+                'forearms' => 'nullable|numeric|min:0',
+                'traps' => 'nullable|numeric|min:0',
+                'glutes' => 'nullable|numeric|min:0',
+                'quads' => 'nullable|numeric|min:0',
+                'hamstring' => 'nullable|numeric|min:0',
+                'calves' => 'nullable|numeric|min:0',
+            ]);
+
+            // Update or create the BMI record
+            $bmi = $this->bmi->updateOrCreate(
+                ['user_id' => $request->user_id],
+                [
+                    'height' => $request->height,
+                    'weight' => $request->weight,
+                    'bmi' => $request->bmi
+                ]
+            );
+
+            // Update or create the body measurement record
+            $bodyMeasurement = $this->userBodyMeasurement->updateOrCreate(
+                ['user_id' => $request->user_id],
+                [
+                    'chest' => $request->chest,
+                    'triceps' => $request->triceps,
+                    'biceps' => $request->biceps,
+                    'lats' => $request->lats,
+                    'shoulder' => $request->shoulder,
+                    'abs' => $request->abs,
+                    'forearms' => $request->forearms,
+                    'traps' => $request->traps,
+                    'glutes' => $request->glutes,
+                    'quads' => $request->quads,
+                    'hamstring' => $request->hamstring,
+                    'calves' => $request->calves,
+                ]
+            );
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Body Measurement And BMI Updated Successfully');
+        } catch (Throwable $th) {
+            Log::error("[GymUserController][updateUserBmi] error " . $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
+        }
+    }
+
+    public function updateSubscriptionStatus(Request $request, $user_id)
+    {
+        try {
+            // Validate the status input
+            $validatedData = $request->validate([
+                'status' => 'required|integer|in:0,1,2',
+            ]);
+
+
+            // Find the latest subscription history entry by user_id
+            $subscriptionHistory = $this->userSubscriptionHistory
+                ->where('user_id', $user_id)
+                ->orderBy('end_date', 'desc')
+                ->first();
+
+            if (!$subscriptionHistory) {
+                return redirect()->back()->with('status', 'error')->with('message', 'No subscription history found for the user.');
+            }
+
+            // Update the status
+            $subscriptionHistory->update([
+                'status' => $validatedData['status']
+            ]);
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Subscription status updated successfully');
+        } catch (Throwable $th) {
+            Log::error("[GymUserController][updateSubscriptionStatus] error " . $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Failed to update subscription status. Please try again.' . $th->getMessage());
+        }
+    }
+
+    public function deleteSubcriptionHistory($uuid)
+    {
+        $subHistory = $this->userSubscriptionHistory->where('uuid', $uuid)->firstOrFail();
+
+        $subHistory->delete();
+        return redirect()->back()->with('status', 'success')->with('message', 'User Subscription History deleted successfully!');
     }
 }

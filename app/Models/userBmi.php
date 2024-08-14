@@ -33,7 +33,6 @@ class userBmi extends Model
                 'bmi'=> $createBmiArray['bmi']
             ]);
         } catch (Throwable $th) {
-            dd($th);
             Log::error("[Bmi][createBmi] error " . $th->getMessage());
         }
     }

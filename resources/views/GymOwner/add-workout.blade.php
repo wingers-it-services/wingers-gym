@@ -350,18 +350,22 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const viewModal = document.getElementById('viewModal');
-        const modal = new bootstrap.Modal(viewModal);
+    const viewModal = document.getElementById('viewModal');
+    const modal = new bootstrap.Modal(viewModal);
 
-        // Handle the close event to ensure the fade backdrop is removed
-        viewModal.addEventListener('hidden.bs.modal', function() {
-            document.body.classList.remove('modal-open'); // Ensure body class is removed
-            const modalBackdrops = document.querySelectorAll('.modal-backdrop');
-            modalBackdrops.forEach(function(backdrop) {
-                backdrop.parentNode.removeChild(backdrop); // Remove the backdrop element
-            });
+    // Handle the close event to ensure the fade backdrop is removed
+    viewModal.addEventListener('hidden.bs.modal', function() {
+        document.body.classList.remove('modal-open'); // Ensure body class is removed
+        document.body.style.overflow = ''; // Reset body overflow style
+
+        // Remove modal backdrops
+        const modalBackdrops = document.querySelectorAll('.modal-backdrop');
+        modalBackdrops.forEach(function(backdrop) {
+            backdrop.remove(); // Remove the backdrop element
         });
     });
+});
+
 </script>
 @include('CustomSweetAlert');
 @endsection

@@ -192,6 +192,11 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     Route::post('/addBmi', [UserBmiController::class, 'createUserBodyMeasurement'])->name('addUserBodyMeasurement');
     Route::post('/allocateTrainer', [GymUserController::class, 'allocateTrainerToUser'])->name('allotTrainer');
+    Route::get('/deleteTrainer/{uuid}', [GymUserController::class, 'deleteTrainer'])->name('deleteTrainer');
+    Route::get('/get-user-bmi/{userId}', [GymUserController::class, 'getUserBmi']);
+    Route::post('/update-user-bmi', [GymUserController::class, 'updateUserBmi'])->name('updateUserBmi');
+
+
 
     // gymCustomersSubscriptionPayment
     Route::get('/gym-customers-subscription-payment', [GymCustomerPaymentController::class, 'listGymCustomersSubscriptionPayment'])->name('listGymCustomersSubscriptionPayment');
@@ -205,13 +210,15 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     // deleteGymDesignation
     Route::get('/deleteGymDesignation/{uuid}', [GymDesignationController::class, 'deleteGymDesignation'])->name('deleteGymDesignation');
 
-    Route::get('/fetch-gym-profile', [GymDetailController::class, 'fetchGymProfile'])->name('fetchGymProfile');
+    Route::post('/addUserSubscriptionByGym', [GymUserController::class, 'addUserSubscriptionByGym'])->name('addUserSubscriptionByGym');
+    Route::post('/update-subscription-status/{user_id}', [GymUserController::class, 'updateSubscriptionStatus'])->name('update-subscription-status');
+    Route::get('/deleteSubcriptionHistory/{uuid}', [GymUserController::class, 'deleteSubcriptionHistory'])->name('deleteSubcriptionHistory');
 
-    Route::get('/gym-profile', [GymDetailController::class, 'GymProfileView']);
 
-    Route::post('/add-gym-gallery', [GymGalleryController::class, 'addGymGallery'])->name('addGymGallery');
+    Route::get('/autocomplete-workout', [GymUserController::class, 'autocompleteWorkout'])->name('autocomplete-workout');
+    Route::get('/fetch-workout-details', [GymUserController::class, 'fetchWorkoutDetails'])->name('fetch-workout-details');
 
-    Route::get('/gym-gallery', [GymGalleryController::class, 'gymGalleryView']);
+
 });
 
 Route::get('/packages', [AdminController::class, 'showPackages']);
@@ -236,8 +243,3 @@ Route::get('/rooms', [AdminController::class, 'showRooms']);
 Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
-
-Route::post('/addUserSubscriptionByGym', [GymUserController::class, 'addUserSubscriptionByGym'])->name('addUserSubscriptionByGym');
-
-Route::get('/autocomplete-workout', [GymUserController::class, 'autocompleteWorkout'])->name('autocomplete-workout');
-Route::get('/fetch-workout-details', [GymUserController::class, 'fetchWorkoutDetails'])->name('fetch-workout-details');

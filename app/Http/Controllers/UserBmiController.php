@@ -56,7 +56,7 @@ class UserBmiController extends Controller
             return redirect()->back()->with('status', 'success')->with('message', 'Data saved successfully.');
         } catch (\Throwable $th) {
             Log::error("[UserBmiController][createUserBmi] error " . $th->getMessage());
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
         }
     }
 }
