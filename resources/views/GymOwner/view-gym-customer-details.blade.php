@@ -238,11 +238,19 @@
                                                                         <td>{{ \Carbon\Carbon::parse($subscription->end_date)->format('M d, Y') }}</td>
                                                                         <td>
 
-                                                                            {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'Active' : ($subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'Inactive' : 'Unknown') }}
+                                                                            <form action="/update-subscription-status/{{$userDetail->id}}" method="POST">
+                                                                                @csrf
+                                                                                @method('POST')
+                                                                                <select name="status" onchange="this.form.submit()" class="form-select">
+                                                                                    <option value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'selected' : '' }}>Active</option>
+                                                                                    <option value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'selected' : '' }}>Inactive</option>
+                                                                                    <option value="{{ \App\Enums\GymSubscriptionStatusEnum::EXPIRE }}" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::EXPIRE ? 'selected' : '' }}>Expired</option>
+                                                                                </select>
+                                                                            </form>
 
                                                                         </td>
                                                                         <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
-                                                                                </a><a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
+                                                                                </a><a href="javascript:void()" onclick="confirmSubscriptionDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
                                                                         </td>
                                                                     </tr>
                                                                     @endforeach
@@ -308,7 +316,7 @@
 
                                                         <div class="form-group">
                                                             <label>Description</label>
-                                                            <textarea type="text" rows="10" name="notes" class="form-control" required></textarea>
+                                                            <textarea type="text" rows="10" name="workout_des" class="form-control" required></textarea>
                                                         </div>
 
                                                         <button class="btn btn-primary">Submit</button>
@@ -518,15 +526,10 @@
                                                                         <td>{{ $bmi->bmi }}</td>
                                                                         <td class="text-end">
                                                                             <span>
-                                                                                <a href="javascript:void(0);"
-                                                                                    class="me-4 edit-bmi"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-placement="top"
-                                                                                    title="Edit"
-                                                                                    data-bmi="{{ json_encode($bmi) }}"
-                                                                                    data-body-measurement="{{ json_encode($bmi->bodyMeasurement) }}">
+                                                                                <a href="javascript:void()" class="edit-bmi" data-user-id="{{ $userDetail->id }}" data-bs-toggle="tooltip" data-placement="top" title="Edit">
                                                                                     <i class="fa fa-pencil color-muted"></i>
                                                                                 </a>
+
                                                                                 &nbsp; &nbsp;
                                                                                 <a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close">
                                                                                     <i class="fas fa-times color-danger"></i>
@@ -556,16 +559,15 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{ route('addUserSubscriptionByGym') }}" method="POST">
+                                                    <form action="/allocateTrainer" method="POST">
                                                         @csrf
-                                                        <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
                                                         <div class="row">
                                                             <div class="col-lg-12">
                                                                 <input type="hidden" name="user_id" value="{{$userDetail->id}}">
                                                                 <!-- Subscription Selection -->
                                                                 <div class="mb-3">
                                                                     <label for="trainer">Select a Trainer:</label>
-                                                                    <select class="me-sm-2 form-control default-select" id="trainer" name="staff_assign_id">
+                                                                    <select class="me-sm-2 form-control default-select" id="trainer" name="trainer_id">
                                                                         <option value="0">Select</option>
                                                                         @foreach ($trainers as $trainer)
                                                                         <option value="{{$trainer->id}}">{{$trainer->name}}</option>
@@ -575,15 +577,17 @@
                                                                 <!-- Subscription Description -->
 
                                                                 <div class="mb-3">
-                                                                    <label for="trainer">Trainer Status:</label>
-                                                                    <input class="form-control" id="description" name="description" required>
+                                                                    <label for="status">Select Trainer Status:</label>
+                                                                    <select class="me-sm-2 form-control default-select" id="status" name="status">
+                                                                        <option>Select</option>
+                                                                        <option value="{{ \App\Enums\TrainerAssignToUserStatus::ACTIVE }}">Active</option>
+                                                                        <option value="{{ \App\Enums\TrainerAssignToUserStatus::INACTIVE }}">Inactive</option>
+                                                                    </select>
                                                                 </div>
-                                                                <!-- Joining Date -->
-
                                                             </div>
                                                         </div>
                                                         <div class="dropdown mt-sm-0 mt-3">
-                                                            <button type="submit" id="addSubscriptionButton" class="btn btn-outline-primary rounded">Assign</button>
+                                                            <button type="submit" class="btn btn-outline-primary rounded">Assign</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -646,12 +650,14 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        @foreach($userSubscriptions as $subscription)
+                                                                        @foreach($trainersHistories as $trainer)
                                                                         <tr>
-                                                                            <td>{{$subscription->subscription->subscription_name}}</td>
-                                                                            <td>{{$subscription->subscription->amount}}</td>
+                                                                            <td>{{$trainer->trainer->name}}</td>
+                                                                            <td>
+                                                                                {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::ACTIVE ? 'Active' : ($trainer->status == \App\Enums\TrainerAssignToUserStatus::INACTIVE ? 'Inactive' : 'Unknown') }}
+                                                                            </td>
                                                                             <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
-                                                                                    </a><a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
+                                                                                    </a><a href="javascript:void()" onclick="confirmTrainerDelete('{{ $trainer->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
                                                                             </td>
                                                                         </tr>
                                                                         @endforeach
@@ -705,7 +711,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea type="text" id="edit_notes" rows="10" name="notes" class="form-control" required></textarea>
+                                <textarea type="text" id="edit_notes" rows="10" name="workout_des" class="form-control" required></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Update</button>
                         </form>
@@ -865,9 +871,14 @@
                                             <input type="number" class="form-control" id="bmi_weight" name="weight" placeholder="Enter weight in kg" required>
                                             <div class="invalid-feedback">Weight is required.</div>
                                         </div>
+                                        <!-- BMI Result Display -->
                                         <div class="col-md-4 mb-3">
-                                            <label for="bmi">BMI</label>
-                                            <input type="number" class="form-control" id="calculatedBmi" name="bmi" placeholder="BMI will be calculated" readonly>
+                                            <div id="bmiResult" style="display: none;">
+                                                <h4>Your BMI is: <br><br><span id="bmiDisplay"></span></h4>
+
+                                                <!-- Hidden input to store BMI value for submission -->
+                                                <input type="hidden" id="storeBmi" name="bmi">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -883,8 +894,11 @@
                                             <button type="submit" class="btn btn-secondary btn-lg btn-block">Submit</button>
                                         </div>
                                     </div>
+
+
                                 </div>
                             </div>
+
                         </form>
                     </div>
                 </div>
@@ -900,9 +914,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form class="needs-validation" id="editBmiForm" novalidate action=" " method="POST" enctype="multipart/form-data">
+                        <form class="needs-validation" id="editBmiForm" novalidate action="/update-user-bmi" method="POST" enctype="multipart/form-data">
                             @csrf
-                            <input type="hidden" name="bmi_id" id="edit_bmi_id">
                             <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
 
                             <div class="row">
@@ -997,18 +1010,18 @@
                                             <div class="invalid-feedback">Height is required.</div>
                                         </div>
                                         <div class="col-md-4 mb-3">
-                                            <label for="edit_weight">Weight (kg)</label>
-                                            <input type="number" class="form-control" id="edit_weight" name="weight" required>
+                                            <label for="edit_body_weight">Weight (kg)</label>
+                                            <input type="number" class="form-control" id="edit_body_weight" name="weight" required>
                                             <div class="invalid-feedback">Weight is required.</div>
                                         </div>
                                         <div class="col-md-4 mb-3">
-                                            <label for="edit_bmi">BMI</label>
-                                            <input type="number" class="form-control" id="edit_calculatedBmi" name="bmi" readonly>
+                                            <label for="edit_calculatedBmi">BMI</label>
+                                            <input type="number" class="form-control" id="edit_calculatedBmi" name="bmi" placeholder="BMI will be calculated" readonly>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <button type="button" class="btn btn-primary btn-lg btn-block" onclick="calculateBMI()">Calculate BMI</button>
+                                            <button type="button" class="btn btn-primary btn-lg btn-block" onclick="calculateEditBmi()">Calculate BMI</button>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset</button>
@@ -1026,9 +1039,6 @@
                 </div>
             </div>
         </div>
-
-
-
     </div>
 </div>
 
@@ -1046,7 +1056,7 @@
                 document.getElementById('edit_sets').value = workout.sets;
                 document.getElementById('edit_reps').value = workout.reps;
                 document.getElementById('edit_weight').value = workout.weight;
-                document.getElementById('edit_notes').value = workout.notes;
+                document.getElementById('edit_notes').value = workout.workout_des;
 
                 new bootstrap.Modal(document.getElementById('editWorkoutModal')).show();
             });
@@ -1155,50 +1165,56 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-    const editButtons = document.querySelectorAll('.edit-bmi');
+        const editButtons = document.querySelectorAll('.edit-bmi');
 
-    editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const bmiData = this.getAttribute('data-bmi');
-            const bodyMeasurementData = this.getAttribute('data-body-measurement');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
 
-            if (bmiData && bodyMeasurementData) {
-                const bmi = JSON.parse(bmiData);
-                const bodyMeasurement = JSON.parse(bodyMeasurementData);
+                if (userId) {
+                    // Make an AJAX request to fetch the BMI and body measurement data
+                    fetch(`/get-user-bmi/${userId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const bmi = data.bmi;
+                                const bodyMeasurement = data.bodyMeasurement;
 
-                console.log('BMI Data:', bmi);
-                console.log('Body Measurement:', bodyMeasurement);
+                                // Populate BMI fields
+                                document.getElementById('edit_height').value = bmi.height || '';
+                                document.getElementById('edit_body_weight').value = bmi.weight || '';
+                                document.getElementById('edit_calculatedBmi').value = bmi.bmi || '';
 
-                // Assuming bodyMeasurement is an array, we'll take the first measurement
-                const firstMeasurement = bodyMeasurement[0] || {};
+                                // Populate Body Measurement fields
+                                document.getElementById('edit_chest').value = bodyMeasurement.chest || '';
+                                document.getElementById('edit_triceps').value = bodyMeasurement.triceps || '';
+                                document.getElementById('edit_biceps').value = bodyMeasurement.biceps || '';
+                                document.getElementById('edit_lats').value = bodyMeasurement.lats || '';
+                                document.getElementById('edit_shoulder').value = bodyMeasurement.shoulder || '';
+                                document.getElementById('edit_abs').value = bodyMeasurement.abs || '';
+                                document.getElementById('edit_forearms').value = bodyMeasurement.forearms || '';
+                                document.getElementById('edit_traps').value = bodyMeasurement.traps || '';
+                                document.getElementById('edit_glutes').value = bodyMeasurement.glutes || '';
+                                document.getElementById('edit_quads').value = bodyMeasurement.quads || '';
+                                document.getElementById('edit_hamstring').value = bodyMeasurement.hamstring || '';
+                                document.getElementById('edit_calves').value = bodyMeasurement.calves || '';
 
-                // Populate BMI fields
-                document.getElementById('edit_height').value = bmi.height || '';
-                document.getElementById('edit_weight').value = bmi.weight || '';
-                document.getElementById('edit_calculatedBmi').value = bmi.bmi || '';
-
-                // Populate Body Measurement fields
-                document.getElementById('edit_chest').value = firstMeasurement.chest || '';
-                document.getElementById('edit_triceps').value = firstMeasurement.triceps || '';
-                document.getElementById('edit_biceps').value = firstMeasurement.biceps || '';
-                document.getElementById('edit_lats').value = firstMeasurement.lats || '';
-                document.getElementById('edit_shoulder').value = firstMeasurement.shoulder || '';
-                document.getElementById('edit_abs').value = firstMeasurement.abs || '';
-                document.getElementById('edit_forearms').value = firstMeasurement.forearms || '';
-                document.getElementById('edit_traps').value = firstMeasurement.traps || '';
-                document.getElementById('edit_glutes').value = firstMeasurement.glutes || '';
-                document.getElementById('edit_quads').value = firstMeasurement.quads || '';
-                document.getElementById('edit_hamstring').value = firstMeasurement.hamstring || '';
-                document.getElementById('edit_calves').value = firstMeasurement.calves || '';
-
-                // Show the modal
-                new bootstrap.Modal(document.getElementById('editBmiModal')).show();
-            } else {
-                console.error('BMI or Body Measurement data is missing.');
-            }
+                                // Show the modal
+                                new bootstrap.Modal(document.getElementById('editBmiModal')).show();
+                            } else {
+                                console.error('Data not found for the given user.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching data:', error);
+                        });
+                } else {
+                    console.error('User ID is missing.');
+                }
+            });
         });
     });
-});
+
 
 
 
@@ -1298,15 +1314,43 @@
             // Round BMI to two decimal places
             const roundedBmi = bmi.toFixed(2);
 
-            // Update the BMI input field
-            document.querySelector('#bmi').value = roundedBmi;
-            document.querySelector('#calculatedBmi').value = roundedBmi;
+            // Display the BMI result
+            document.querySelector('#storeBmi').value = roundedBmi;
+            document.querySelector('#bmiResult').style.display = 'block';
+            document.querySelector('#bmiDisplay').textContent = roundedBmi;
 
         } else {
             // Handle invalid input
             alert('Please enter valid height and weight values.');
         }
     }
+
+    function calculateEditBmi() {
+        // Get height and weight values from the form
+        let height = parseFloat(document.getElementById('edit_height').value);
+        let weight = parseFloat(document.getElementById('edit_body_weight').value);
+
+        // Check if height and weight are valid
+        if (height && weight && height > 0 && weight > 0) {
+            // Convert height from cm to meters
+            const heightInMeters = height / 100;
+
+            // Calculate BMI
+            const bmi = weight / (heightInMeters * heightInMeters);
+
+            // Round BMI to two decimal places
+            const roundedBmi = bmi.toFixed(2);
+
+            // Display the BMI result
+            document.getElementById('edit_calculatedBmi').value = roundedBmi; // Update the BMI input field
+        } else {
+            // Handle invalid input
+            alert('Please enter valid height and weight values.');
+        }
+    }
+
+
+
 
     document.addEventListener("DOMContentLoaded", function() {
         autocomplete(document.getElementById('workoutInput'));
@@ -1437,9 +1481,11 @@
 
                     // Update the description
                     if (data.description) {
-                        $("#workoutDescription").html(data.description).show();
+                        // Update the textarea with the description
+                        $("textarea[name='workout_des']").val(data.description);
                     } else {
-                        $("#workoutDescription").hide();
+                        // Clear the textarea if no description is found
+                        $("textarea[name='workout_des']").val('');
                     }
                 }
             },
@@ -1448,7 +1494,39 @@
             }
         });
     }
+
+    function confirmTrainerDelete(uuid) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to delete this Trainer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/deleteTrainer/' + uuid;
+            }
+        });
+    }
+
+    function confirmSubscriptionDelete(uuid) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to delete this Subscription histoy.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/deleteSubcriptionHistory/' + uuid;
+            }
+        });
+    }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>741
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @include('CustomSweetAlert');
 @endsection
