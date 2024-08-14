@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GymUserAccountStatusEnum;
+use App\Enums\UserTypeEnum;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -44,7 +45,8 @@ class User extends Authenticatable
         'height',
         'weight',
         'days',
-        'trainer_id'
+        'trainer_id',
+        'user_type'
     ];
 
     protected static function boot()
@@ -173,6 +175,7 @@ class User extends Authenticatable
                 'profile_status'       => GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED,
                 'is_email_verified'    => true,
                 'is_phone_no_verified' => true,
+                'user_type'            => UserTypeEnum::HOMEUSER,
             ]);
 
             if ($imagePath) {

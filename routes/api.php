@@ -6,6 +6,7 @@ use App\Http\Controllers\GoalControllerApi;
 use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\GymUserLoginControllerApi;
 use App\Http\Controllers\GymUserTrainerControllerApi;
+use App\Http\Controllers\HomeUserLoginControllerApi;
 use App\Http\Controllers\LocationControllerApi;
 use App\Http\Controllers\ReelControllerApi;
 use App\Http\Controllers\SiteSettingControllerApi;
@@ -72,4 +73,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/fetch-reels', [ReelControllerApi::class, 'fetchReels']);
 
     Route::post('/fetch-trainer',[GymUserTrainerControllerApi::class,'fetchUserTrainer']);
+
 });
+
+
+Route::post('/check-email',[HomeUserLoginControllerApi::class,'checkEmail'])->name('checkEmail');
