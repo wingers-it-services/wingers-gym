@@ -12,6 +12,7 @@ use App\Http\Controllers\GymUserController;
 use App\Http\Controllers\UserBmiController;
 use App\Traits\SessionTrait;
 use App\Http\Controllers\GymDesignationController;
+use App\Http\Controllers\GymGalleryController;
 use App\Http\Controllers\WorkoutController;
 use App\Http\Middleware\EnsureGymTokenIsValid;
 use Illuminate\Support\Facades\Route;
@@ -45,9 +46,6 @@ Route::get('/invoice', function () {
 // });
 
 Route::get('/gym-customers', [GymUserController::class, 'listGymUser'])->name('gymCustomerList');
-Route::get('/gym-gallery', function () {
-    return view('GymOwner.gym-gallery');
-});
 Route::get('/customers-payment', function () {
     return view('GymOwner.customers-payment');
 });
@@ -62,9 +60,6 @@ Route::get('/enquiry', function () {
 });
 Route::get('/inbox', function () {
     return view('GymOwner.inbox');
-});
-Route::get('/gym-profile', function () {
-    return view('GymOwner.gym-profile');
 });
 Route::get('/enquiry-read', function () {
     return view('GymOwner.enquiry-read');
@@ -209,6 +204,14 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     // deleteGymDesignation
     Route::get('/deleteGymDesignation/{uuid}', [GymDesignationController::class, 'deleteGymDesignation'])->name('deleteGymDesignation');
+
+    Route::get('/fetch-gym-profile', [GymDetailController::class, 'fetchGymProfile'])->name('fetchGymProfile');
+
+    Route::get('/gym-profile', [GymDetailController::class, 'GymProfileView']);
+
+    Route::post('/add-gym-gallery', [GymGalleryController::class, 'addGymGallery'])->name('addGymGallery');
+
+    Route::get('/gym-gallery', [GymGalleryController::class, 'gymGalleryView']);
 });
 
 Route::get('/packages', [AdminController::class, 'showPackages']);

@@ -21,6 +21,7 @@ class Gym extends Authenticatable
 
         'gym_name',
         'email',
+        'phone_no',
         'password',
         'image',
         'username',
@@ -61,6 +62,7 @@ class Gym extends Authenticatable
                 'username' => $updateGym['username'],
                 'gym_name' => $updateGym['gym_name'],
                 'email' => $updateGym['email'],
+                'phone_no' => $updateGym['phone_no'],
                 'password' =>Hash::make($updateGym['password']),
                 'address' => $updateGym['address'],
                 'country' => $updateGym['country'],
