@@ -20,6 +20,15 @@ class GymDetailControllerApi extends Controller
         $this->gymUserGym = $gymUserGym;
     }
 
+   /**
+    * This PHP function fetches gym details based on a provided UUID, checks authorization, and returns
+    * a JSON response with the results or error message.
+    * 
+    * @param Request request The `fetchGymDetails` function is responsible for fetching details of a
+    * gym based on the provided UUID. Here is a breakdown of the function:
+    * 
+    * @return The `fetchGymDetails` function returns a JSON response with the following structure:
+    */
     public function fetchGymDetails(Request $request)
     {
         try {
@@ -27,10 +36,8 @@ class GymDetailControllerApi extends Controller
                 'uuid' => 'required|string'
             ]);
 
-            // Get the authenticated user
             $user = auth()->user();
 
-            // Find the gym by UUID
             $gymDetails = $this->gym
                 ->where('uuid', $request->uuid)
                 ->first();
@@ -43,7 +50,6 @@ class GymDetailControllerApi extends Controller
                 ], 422);
             }
 
-            // Check if the authenticated user is associated with this gym
             $isAssociated = $this->gymUserGym
                 ->where('gym_id', $gymDetails->id)
                 ->where('user_id', $user->id)
