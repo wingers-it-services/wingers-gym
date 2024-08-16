@@ -401,17 +401,18 @@
 					if (data && ('day' + i) in data) {
 						var dayStatus = '';
 						switch (data['day' + i]) {
-							case 0:
+							case "0":
 								dayStatus = 'style="background-color: indianred;"';
 								break;
-							case 0.5:
+							case "0.5":
 								dayStatus = 'style="background-color: burlywood;"';
 								break;
-							case 1:
+							case "1":
 								dayStatus = 'style="background-color: darkseagreen;"';
 								break;
-							case 2:
+							case "2":
 								dayStatus = 'style="background-color: grey;"';
+								break;
 							default:
 								dayStatus = 'style="background-color: "#f1f1fb";"';
 								break;

@@ -822,12 +822,14 @@
 									</div>
 								</div>
 							</li> --}}
+
+							
 						<li class="nav-item dropdown header-profile">
 							<a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
-								<img id="user-image" src="{{asset('images/profile/17.jpg')}}" width="20" alt="">
+								<img id="user-image" src="{{ Auth::guard('gym')->user()->image }}" width="20" alt="">
 							</a>
 							<div class="dropdown-menu dropdown-menu-end">
-								<a href="#" class="dropdown-item ai-icon">
+								<a href="/gym-profile" class="dropdown-item ai-icon">
 									<svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 										<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
 										<circle cx="12" cy="7" r="4"></circle>
@@ -1056,27 +1058,27 @@
 	<script src="https://fito.dexignzone.com/laravel/demo/js/plugins-init/fullcalendar-init.js" type="text/javascript"></script>
 
 	<script>
-		$(document).ready(function() {
-			$.ajax({
-				url: '/fetch-gym-profile', // Endpoint to fetch profile image
-				method: 'GET',
-				success: function(data) {
-					console.log('fetch-gym-profile');
-					// Check if the image URL is provided and not empty
-					if (data.image && data.image.trim() !== '') {
-						$('#user-image').attr('src', data.image);
-					} else {
-						// Keep default image if URL is blank or invalid
-						$('#user-image').attr('src', '{{ asset('images/profile/17.jpg') }}');
-					}
-				},
-				error: function(xhr, status, error) {
-					console.error('Error fetching user profile:', error);
-					// Ensure default image is shown in case of error
-					$('#user-image').attr('src', '{{ asset('images/profile/17.jpg') }}');
-				}
-			});
-		});
+		// $(document).ready(function() {
+		// 	$.ajax({
+		// 		url: '/fetch-gym-profile', // Endpoint to fetch profile image
+		// 		method: 'GET',
+		// 		success: function(data) {
+		// 			console.log('fetch-gym-profile');
+		// 			// Check if the image URL is provided and not empty
+		// 			if (data.image && data.image.trim() !== '') {
+		// 				$('#user-image').attr('src', data.image);
+		// 			} else {
+		// 				// Keep default image if URL is blank or invalid
+		// 				$('#user-image').attr('src', '{{ asset('images/profile/17.jpg') }}');
+		// 			}
+		// 		},
+		// 		error: function(xhr, status, error) {
+		// 			console.error('Error fetching user profile:', error);
+		// 			// Ensure default image is shown in case of error
+		// 			$('#user-image').attr('src', '{{ asset('images/profile/17.jpg') }}');
+		// 		}
+		// 	});
+		// });
 
 		function featuredmenus() {
 

@@ -120,7 +120,7 @@ class GymStaffController extends Controller
             return response()->json(['status' => 200, 'data' => $gym], 200);
         } catch (\Throwable $th) {
             Log::error("[GymStaffController][addGymStaff] error " . $th->getMessage());
-            return response()->json(['status' => 200, 'data' => $gym], 500);
+            return response()->json(['status' => 500], 500);
         }
     }
 
