@@ -294,34 +294,46 @@ class GymUserControllerApi extends Controller
         }
     }
 
-   /**
-    * The function `addUserInjuries` adds injuries to a user based on the provided UUID and injury IDs.
-    * 
-    * @param Request request The `addUserInjuries` function is designed to add injuries to a user based
-    * on the provided UUID and injury IDs. Here is a breakdown of the process:
-    * 
-    * @return The function `addUserInjuries` returns a JSON response with status code, message, and
-    * either the successfully added injury users or an error message if an exception occurs.
-    */
+    /**
+     * The function `addUserInjuries` in PHP validates and associates injuries with a user, updating
+     * the user's profile status accordingly.
+     * 
+     * @param Request request The `addUserInjuries` function is designed to handle the addition of
+     * injuries for a user in a gym management system. Let me explain the key points of this function:
+     * 
+     * @return The function `addUserInjuries` returns a JSON response with status code, message, and
+     * additional data.
+     */
     public function addUserInjuries(Request $request)
     {
         try {
             $request->validate([
-                'uuid'         => 'required',
-                'injury_ids'   => 'array|required',
-                'injury_ids.*' => 'exists:user_injuries,id'
+                'uuid'         => 'required|string',
+                'injury_ids'   => 'array',
+                'injury_ids.*' => 'exists:user_injuries,id',
             ]);
-
+    
             // Fetch the user using UUID
             $user = $this->user->where('uuid', $request->uuid)->first();
-
+    
             if (!$user) {
                 return response()->json([
                     'status'  => 404,
                     'message' => 'User not found',
                 ], 404);
             }
-
+    
+            // If no injury IDs are provided, mark the user's profile status as completed
+            if (empty($request->injury_ids)) {
+                $user->profile_status = GymUserAccountStatusEnum::USER_INJURY_DETAIL;
+                $user->save();
+    
+                return response()->json([
+                    'status'  => 200,
+                    'message' => 'User has no injuries. Profile status updated to completed.',
+                ], 200);
+            }
+    
             // Associate each injury with the user
             $injuryUsers = [];
             foreach ($request->injury_ids as $injuryId) {
@@ -331,10 +343,11 @@ class GymUserControllerApi extends Controller
                 ]);
                 $injuryUsers[] = $injuryUser;
             }
-
+    
+            // Update profile status to USER_INJURY_DETAIL
             $user->profile_status = GymUserAccountStatusEnum::USER_INJURY_DETAIL;
             $user->save();
-
+    
             return response()->json([
                 'status'      => 200,
                 'message'     => 'Injuries added successfully',
@@ -349,4 +362,5 @@ class GymUserControllerApi extends Controller
             ], 500);
         }
     }
+    
 }
