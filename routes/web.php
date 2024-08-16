@@ -218,6 +218,14 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/autocomplete-workout', [GymUserController::class, 'autocompleteWorkout'])->name('autocomplete-workout');
     Route::get('/fetch-workout-details', [GymUserController::class, 'fetchWorkoutDetails'])->name('fetch-workout-details');
 
+    
+    Route::get('/fetch-gym-profile', [GymDetailController::class, 'fetchGymProfile'])->name('fetchGymProfile');
+
+    Route::get('/gym-profile', [GymDetailController::class, 'GymProfileView']);
+
+    Route::post('/add-gym-gallery', [GymGalleryController::class, 'addGymGallery'])->name('addGymGallery');
+
+    Route::get('/gym-gallery', [GymGalleryController::class, 'gymGalleryView']);
 
 });
 

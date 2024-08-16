@@ -3,6 +3,7 @@
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentControllerApi;
 use App\Http\Controllers\GoalControllerApi;
+use App\Http\Controllers\GymDetailControllerApi;
 use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\GymUserLoginControllerApi;
 use App\Http\Controllers\GymUserTrainerControllerApi;
@@ -60,7 +61,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('/fetch-subscription-histry', [UserSubscriptionControllerApi::class, 'fetchSubscriptionHistry']);
 
-    Route::post('/fetch-user-diets', [UserDietControllerApi::class, 'fetchUserDiet']);
+    Route::get('/fetch-user-diets', [UserDietControllerApi::class, 'fetchUserDiet']);
 
     Route::post('/fetch-user-workout', [UserWorkoutControllerApi::class, 'fetchUserWorkout']);
     
@@ -73,6 +74,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/fetch-reels', [ReelControllerApi::class, 'fetchReels']);
 
     Route::post('/fetch-trainer',[GymUserTrainerControllerApi::class,'fetchUserTrainer']);
+
+    Route::post('/fetch-gym-details',[GymDetailControllerApi::class,'fetchGymDetails']);
 
 });
 
