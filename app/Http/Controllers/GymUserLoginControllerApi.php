@@ -116,9 +116,9 @@ class GymUserLoginControllerApi extends Controller
 
             $user = $this->user->where('email', $request->email)->first();
 
+            $token = $user->createToken('API Token')->accessToken;
             if ($user) {
                 if ($user->profile_status == GymUserAccountStatusEnum::USER_INJURY_DETAIL) {
-                    $token = $user->createToken('API Token')->accessToken;
 
                     return response()->json([
                         'status'       => 200,
@@ -129,9 +129,10 @@ class GymUserLoginControllerApi extends Controller
                 }
                 
                 return response()->json([
-                    'status'   => 403,
-                    'user'     => $user,
-                    'message'  => 'User profile is not completed.',
+                    'status'       => 403,
+                    'user'         => $user,
+                    'access_token' => $token,
+                    'message'      => 'User profile is not completed.',
                 ]);
             }
 
@@ -140,6 +141,7 @@ class GymUserLoginControllerApi extends Controller
                 'user'     => $user,
                 'message'  => 'User does not exist.'
             ], 422);
+
         } catch (\Exception $e) {
             Log::error('[GymUserLoginControllerApi][loginWithEmail] Error during login: ' . $e->getMessage());
             return response()->json([
