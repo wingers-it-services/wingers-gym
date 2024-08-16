@@ -120,18 +120,24 @@
 								<li class="nav-item">
 									<a class="nav-link active" data-bs-toggle="tab" href="#profile"><i class="la la-user me-2"></i> Profile</a>
 								</li>
-								<li class="nav-item">
+								<!-- <li class="nav-item">
 									<a class="nav-link" data-bs-toggle="tab" href="#home"><i class="la la-home me-2"></i> Expenses</a>
-								</li>
+								</li> -->
 								<li class="nav-item">
 									<a class="nav-link" data-bs-toggle="tab" href="#contact"><i class="la la-phone me-2"></i> Documents</a>
 								</li>
 								<li class="nav-item">
 									<a class="nav-link" data-bs-toggle="tab" href="#assets"><i class="la la-envelope me-2"></i> Assets</a>
 								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-bs-toggle="tab" href="#leaves"><i class="la la-envelope me-2"></i> Leaves</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-bs-toggle="tab" href="#assets"><i class="la la-envelope me-2"></i> Salary Slip</a>
+								</li>
 							</ul>
 							<div class="tab-content">
-								<div class="tab-pane fade show active" id="home" role="tabpanel">
+								<!-- <div class="tab-pane fade show active" id="home" role="tabpanel">
 									<div class="pt-4">
 										<h4>This is home title</h4>
 										<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
@@ -139,16 +145,16 @@
 										<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
 										</p>
 									</div>
-								</div>
-								<div class="tab-pane fade" id="profile">
+								</div> -->
+								<div class="tab-pane fade show active" id="profile">
 									<div class="pt-4">
-										<h4>This is profile title</h4>
-										<p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.
-										</p>
-										<p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.
-										</p>
+										<h4 id="staff-profile-title">Select a staff member to view details</h4>
+										<div id="staff-profile-content">
+											<!-- Profile details will be dynamically populated here -->
+										</div>
 									</div>
 								</div>
+
 								<div class="tab-pane fade" id="contact">
 									<div class="pt-4">
 										<h4>This is contact title</h4>
@@ -172,6 +178,7 @@
 																	<th scope="col">Asset Category</th>
 																	<th scope="col">Asset Tag</th>
 																	<th scope="col">Date Of Allocation</th>
+																	<th scope="col">Price</th>
 																	<th scope="col">Status</th>
 																	<th scope="col">Image</th>
 																	<th scope="col">Action</th>
@@ -184,8 +191,65 @@
 																	<td>Dr. Jackson</td>
 																	<td>Dr. Jackson</td>
 																	<td>01 August 2020</td>
+																	<td>$5000</td>
 																	<td><span class="badge badge-rounded badge-primary">Checkin</span></td>
 																	<td>$120</td>
+																	<td>
+																		<div class="dropdown custom-dropdown mb-0">
+																			<div class="btn sharp btn-primary tp-btn" data-bs-toggle="dropdown">
+																				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1">
+																					<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+																						<rect x="0" y="0" width="24" height="24" />
+																						<circle fill="#000000" cx="12" cy="5" r="2" />
+																						<circle fill="#000000" cx="12" cy="12" r="2" />
+																						<circle fill="#000000" cx="12" cy="19" r="2" />
+																					</g>
+																				</svg>
+																			</div>
+																			<div class="dropdown-menu dropdown-menu-end">
+																				<a class="dropdown-item" href="javascript:void(0);">Details</a>
+																				<a class="dropdown-item text-danger" href="javascript:void(0);">Cancel</a>
+																			</div>
+																		</div>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade" id="leaves">
+									<div class="pt-4">
+										<div class="col-xl-12 col-lg-12 col-xxl-12 col-sm-12">
+											<div class="card">
+												<div class="card-body">
+													<div class="table-responsive recentOrderTable">
+														<table class="table verticle-middle table-responsive-md">
+															<thead>
+																<tr>
+																	<th scope="col">Leave Name</th>
+																	<th scope="col">From</th>
+																	<th scope="col">To</th>
+																	<!-- <th scope="col">Asset Tag</th>
+																	<th scope="col">Date Of Allocation</th>
+																	<th scope="col">Price</th>
+																	<th scope="col">Status</th> -->
+																	<!-- <th scope="col">Image</th> -->
+																	<th scope="col">Action</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td>Full Day</td>
+																	<td>01 August 2020</td>
+																	<td>01 August 2020</td>
+																	<!-- <td>01 August 2020</td>
+																	<td>$5000</td>
+																	<td><span class="badge badge-rounded badge-primary">Checkin</span></td>-->
+																	<!-- <td>$120</td>  -->
 																	<td>
 																		<div class="dropdown custom-dropdown mb-0">
 																			<div class="btn sharp btn-primary tp-btn" data-bs-toggle="dropdown">
@@ -241,16 +305,38 @@
 	}
 
 	function showStaffData(input) {
-		gymId = parseInt(input.getAttribute("data-gym-id"));
-		staffId = parseInt(input.getAttribute("data-employee-id"));
+		var gymId = parseInt(input.getAttribute("data-gym-id"));
+		var staffId = parseInt(input.getAttribute("data-employee-id"));
+		var staffName = input.getAttribute("data-employee-name");
 
+		// Fetch the attendance chart or any other data
 		fetchAttendanceChart(gymId, staffId);
+
+		// Hide the default information section
 		hideDefaultInfoSectionSection();
 
+		// Display the staff details in the designated section
 		document.getElementById('employee-details-section').style.display = "flex";
-		document.getElementById('staff-name').innerText = input.getAttribute("data-employee-name");
+		document.getElementById('staff-name').innerText = staffName;
 		document.getElementById('staff-name-section').style.display = "contents";
+
+		// Update the Profile tab with the selected staff's details
+		document.getElementById('staff-profile-title').innerText = staffName + " Profile";
+		document.getElementById('staff-profile-content').innerHTML = `
+        <img src="${input.getAttribute('data-employee-image')}" alt="${staffName}" style="height: 160px;" class="me-4 food-image rounded">
+        <ul>
+            <li><strong>ID:</strong> ${staffId}</li>
+            <li><strong>Name:</strong> ${staffName}</li>
+            <li><strong>Number:</strong> ${input.getAttribute('data-employee-number')}</li>
+        </ul>
+    `;
+
+		// Optionally switch to the profile tab if not already there
+		var profileTab = document.querySelector('.nav-link[href="#profile"]');
+		var tabInstance = new bootstrap.Tab(profileTab);
+		tabInstance.show();
 	}
+
 
 	function markStaffAttendance(input) {
 		var gymId = parseInt(input.getAttribute("data-gym-id"));

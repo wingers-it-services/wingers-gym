@@ -18,7 +18,8 @@
                             <table id="example3" class="table table-sm mb-0 table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Member id</th>
+                                        <th>Id</th>
+                                        <th>Image</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
@@ -32,9 +33,17 @@
                                     @foreach ($users as $user)
                                     <tr class="btn-reveal-trigger">
                                         <td class="py-2">{{ $user->id }}</td>
+                                        <td>
+                                            <div class="media d-flex align-items-center">
+                                                <div class="avatar avatar-xl me-2">
+                                                    <div class=""><img class="rounded-circle img-fluid" src="{{ $user->image }}" width="50" alt="image">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td class="py-2">{{ $user->firstname . ' ' . $user->lastname }}</td>
                                         <td class="py-2">{{ $user->email }}</td>
-                                        <td class="py-2">{{ $user->member_number }}</td>
+                                        <td class="py-2">{{ $user->phone_no }}</td>
                                         <td class="py-2">{{ $user->address }}</td>
                                         <td class="py-2">{{ $user->joining_date }}</td>
                                         <td>
@@ -43,15 +52,16 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="javascript:void(0);" class="me-4 edit-book-button" data-bs-toggle="modal" data-bs-target="#editSuscription" data-book=''>
+                                            <a href="/update-gym-user/{{ $user->uuid }}" data-bs-toggle="tooltip" data-placement="top" title="Edit">
                                                 <i class="fa fa-pencil color-muted"></i>
                                             </a>
+                                            &nbsp; &nbsp;
                                             <a onclick="confirmDelete('{{ $user->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close">
                                                 <i class="fas fa-trash"> </i>
                                             </a>
                                         </td>
 
-                                       
+
                                     </tr>
                                     @endforeach
                                 </tbody>

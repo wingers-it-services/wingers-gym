@@ -489,7 +489,6 @@
                                 </div>
 
                                 <div class="tab-pane fade" id="bmi">
-
                                     <!-- End of BMI Calculation Section -->
                                     <div class="col-xl-12 col-xxl-12">
                                         <div class="row">
@@ -597,33 +596,6 @@
 
                                     </div>
                                     <div class="card">
-                                        <!-- <form id="trainerForm" action="{{ route('allotTrainer') }}" method="POST" class="form-horizontal">
-                                            @csrf
-                                            <div class="card-body">
-                                                <div class="row">
-
-                                                    <div class="col-lg-8 order-lg-1">
-                                                        <div class="row">
-                                                            <div class="col-md-6 mb-3">
-
-                                                                <label for="trainer">Select a Trainer:</label>
-                                                                <select class="me-sm-2 form-control default-select" id="trainer" name="staff_assign_id">
-                                                                    <option value="0">Select</option>
-                                                                    @foreach ($trainers as $trainer)
-                                                                    <option value="{{$trainer->id}}">{{$trainer->name}}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <br><br>
-                                                                <input type="hidden" name="user_id" value="{{$userDetail->id}}">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <hr>
-                                                <input type="submit" class="btn btn-primary" value="Submit">
-                                            </div>
-                                        </form> -->
-
                                         <div class="col-xl-12 col-xxl-12">
                                             <div class="row">
                                                 <div class="col-12">
@@ -654,7 +626,16 @@
                                                                         <tr>
                                                                             <td>{{$trainer->trainer->name}}</td>
                                                                             <td>
-                                                                                {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::ACTIVE ? 'Active' : ($trainer->status == \App\Enums\TrainerAssignToUserStatus::INACTIVE ? 'Inactive' : 'Unknown') }}
+                                                                                <form action="/update-trainer-status/{{$userDetail->id}}" method="POST">
+                                                                                    @csrf
+                                                                                    @method('POST')
+                                                                                    <input type="hidden" name="trainer_id" value="{{ $trainer->id }}"> <!-- Hidden field for trainer_id -->
+                                                                                    <select name="status" onchange="this.form.submit()" class="form-select">
+                                                                                        <option value="{{ \App\Enums\TrainerAssignToUserStatus::ACTIVE }}" {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::ACTIVE ? 'selected' : '' }}>Active</option>
+                                                                                        <option value="{{ \App\Enums\TrainerAssignToUserStatus::INACTIVE }}" {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::INACTIVE ? 'selected' : '' }}>Inactive</option>
+                                                                                    </select>
+                                                                                </form>
+
                                                                             </td>
                                                                             <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
                                                                                     </a><a href="javascript:void()" onclick="confirmTrainerDelete('{{ $trainer->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
@@ -671,11 +652,8 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -891,7 +869,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12 mb-3">
-                                            <button type="submit" class="btn btn-secondary btn-lg btn-block">Submit</button>
+                                            <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
                                         </div>
                                     </div>
 
@@ -1029,7 +1007,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12 mb-3">
-                                            <button type="submit" class="btn btn-secondary btn-lg btn-block">Update</button>
+                                            <button type="submit" class="btn btn-success btn-lg btn-block">Update</button>
                                         </div>
                                     </div>
                                 </div>
