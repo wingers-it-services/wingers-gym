@@ -12,4 +12,9 @@ class GymUserGym extends Model
         'gym_id'
        
     ];
+
+    public static function countUsersInGym(int $gymId)
+    {
+        return self::where('gym_id', $gymId)->count();
+    }
 }

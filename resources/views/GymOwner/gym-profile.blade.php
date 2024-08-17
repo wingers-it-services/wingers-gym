@@ -52,7 +52,7 @@
                 <div class="text-center">
                     <div class="row">
                         <div class="col">
-                            <h3 class="m-b-0">150</h3><span>Follower</span>
+                            <h3 class="m-b-0">{{ $totalUsers }}</h3><span>Follower</span>
                         </div>
                         <div class="col">
                             <h3 class="m-b-0">140</h3><span>Place Stay</span>
@@ -297,7 +297,7 @@
                                         </h5>
                                     </div>
                                     <div class="col-lg-9 col-md-8 col-sm-6 mb-1">
-                                        <span>{{$gym->username}}</span>
+                                        <span>{{$gym->gym_name}}</span>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
@@ -307,7 +307,7 @@
                                         </h5>
                                     </div>
                                     <div class="col-lg-9 col-md-8 col-sm-6">
-                                        <span>example@examplel.com</span>
+                                    <span>{{$gym->email}}</span>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
@@ -337,7 +337,7 @@
                                         </h5>
                                     </div>
                                     <div class="col-lg-9 col-md-8 col-sm-6">
-                                        <span>Rosemont Avenue Melbourne, Florida</span>
+                                        <span>{{$gym->address}}</span>
                                     </div>
                                 </div>
                                 <div class="row mb-4">

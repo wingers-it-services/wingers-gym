@@ -253,13 +253,13 @@ class GymUserControllerApi extends Controller
         }
     }
 
-   /**
-    * The function fetches the gyms associated with the authenticated user and returns a JSON response
-    * with the gyms data or appropriate error messages.
-    * 
-    * @return The `fetchUserGym` function returns a JSON response with status codes and messages based
-    * on the outcome of fetching a user's gyms.
-    */
+    /**
+     * The function fetches gyms associated with the authenticated user and counts the number of users
+     * in each gym, returning the results in a JSON response.
+     * 
+     * @return The `fetchUserGym` function returns a JSON response with the status code, gyms data, and
+     * a message based on the outcome of the gym fetching process.
+     */
     public function fetchUserGym()
     {
         try {
@@ -270,30 +270,38 @@ class GymUserControllerApi extends Controller
                     'message' => 'User not authenticated',
                 ], 401);
             }
-            $gyms = $user->gyms;
-
+    
+            // Fetch gyms associated with the user and count the users in each gym
+            // $gyms = $user->gyms()->withCount('users')->get();
+    
+            $gyms = $user->gyms()->withCount('users')->get()->map(function ($gym) {
+                return array_merge($gym->toArray(), [
+                    'review'      => 0, // Assuming review is a method or attribute in the Gym model
+                    'total_years' => 1, // Assuming total_years is a method or attribute in the Gym model
+                ]);
+            });
             if ($gyms->isEmpty()) {
                 return response()->json([
                     'status'   => 422,
                     'gyms'     => $gyms,
-                    'message'  => 'There is no gyms'
+                    'message'  => 'There are no gyms',
                 ], 200);
             }
-
+    
             return response()->json([
                 'status'  => 200,
                 'gyms'    => $gyms,
-                'message' => 'User gyms Fetch Successfully'
+                'message' => 'User gyms fetched successfully',
             ], 200);
         } catch (\Exception $e) {
             Log::error('[GymUserControllerApi][fetchUserGym]Error fetching gyms details: ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
-                'message' => 'Error fetching gyms details: ' . $e->getMessage()
+                'message' => 'Error fetching gyms details: ' . $e->getMessage(),
             ], 500);
         }
     }
-
+    
     /**
      * The function `addUserInjuries` in PHP validates and associates injuries with a user, updating
      * the user's profile status accordingly.

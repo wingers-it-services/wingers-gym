@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gym;
+use App\Models\GymUserGym;
 use App\Services\GymService;
 use App\Traits\SessionTrait;
 use Exception;
@@ -16,13 +17,16 @@ class GymDetailController extends Controller
     use SessionTrait;
     protected $gym;
     protected $gymService;
+    protected $gymUserGym;
 
     public function __construct(
         Gym $gym,
-        GymService $gymService
+        GymService $gymService,
+        GymUserGym $gymUserGym
     ) {
         $this->gym = $gym;
         $this->gymService = $gymService;
+        $this->gymUserGym = $gymUserGym;
     }
 
     public function showDashboard(Request $request)
@@ -132,24 +136,45 @@ class GymDetailController extends Controller
         }
     }
 
-  /**
-   * The fetchGymProfile function retrieves a gym's profile information and returns it as a JSON
-   * response.
-   * 
-   * @return The `fetchGymProfile` function is returning a JSON response containing the gym profile
-   * information, including the profile image URL.
-   */
+    /**
+     * The function fetches a gym profile, including the profile image URL, and returns it as a JSON
+     * response, handling exceptions and logging errors if any occur.
+     * 
+     * @return The `fetchGymProfile` function is returning a JSON response containing the gym profile
+     * information. If an error occurs during the process, it will log the error and redirect back with
+     * an error message.
+     */
     public function fetchGymProfile()
     {
-        $gym = Auth::guard('gym')->user();
-        $gym = $this->gym->findOrFail($gym->id);
-        $gym->profile_image_url = url('images/' . $gym->image);
-        return response()->json($gym);
+        try {
+            $gym = Auth::guard('gym')->user();
+            $gym = $this->gym->findOrFail($gym->id);
+            $gym->profile_image_url = url('images/' . $gym->image);
+
+            return response()->json($gym);
+        } catch (\Exception $e) {
+            Log::error('[GymDetailController][fetchGymProfile] Error fetching gym profile: ' . $e->getMessage());
+            return redirect()->back() - with('status', 'error') > with('message', 'Error fetching gym profile view: ' . $e->getMessage());
+        }
     }
 
+    /**
+     * The GymProfileView function retrieves the gym profile data and total number of users in the gym,
+     * displaying it in the gym-profile view, with error handling and logging in case of exceptions.
+     * 
+     * @return The GymProfileView function is returning a view called 'gym-profile' with the variables 
+     * and  passed to it using the compact function. If an exception occurs during the process,
+     * it will log the error message and redirect back with a status of 'error' and a message indicating
+     * the error that occurred.
+     */
     public function GymProfileView()
     {
-        $gym = Auth::guard('gym')->user();
-        return view('GymOwner.gym-profile',compact('gym'));
+        try {
+            $gym = Auth::guard('gym')->user();
+            $totalUsers = $this->gymUserGym->countUsersInGym($gym->id);
+            return view('GymOwner.gym-profile', compact('gym', 'totalUsers'));
+        } catch (\Exception $e) {
+            Log::error('[GymDetailController][GymProfileView] Error fetching gym profile view: ' . $e->getMessage());
+        }
     }
 }
