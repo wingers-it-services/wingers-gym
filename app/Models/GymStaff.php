@@ -16,6 +16,7 @@ class GymStaff extends Model
     protected $table = 'gym_staffs';
     protected $fillable = [
         'name',
+        'gender',
         'designation_id',
         'salary',
         'image',
@@ -25,7 +26,14 @@ class GymStaff extends Model
         'email',
         'number',
         'address',
-        'joining_date'
+        'joining_date',
+        'experience',
+        'dob',
+        'whatsapp_no',
+        'fees',
+        'staff_commission',
+        'gym_commission'
+
     ];
 
 
@@ -34,6 +42,7 @@ class GymStaff extends Model
         try {
             $this->create([
                 'name' => $gymStaffArray['full_name'],
+                'gender' => $gymStaffArray['gender'],
                 'blood_group' => $gymStaffArray['blood_group'],
                 'employee_id' => $gymStaffArray['staff_id'],
                 'email' => $gymStaffArray['email'],
@@ -42,6 +51,12 @@ class GymStaff extends Model
                 'joining_date' => $gymStaffArray['joining_date'],
                 'address' => $gymStaffArray['address'],
                 'salary' => $gymStaffArray['salary'],
+                'experience' => $gymStaffArray['experience'],
+                'dob' => $gymStaffArray['dob'],
+                'whatsapp_no' => $gymStaffArray['whatsapp_no'],
+                'fees' => $gymStaffArray['fees'],
+                'staff_commission' => $gymStaffArray['staff_commission'],
+                'gym_commission' => $gymStaffArray['gym_commission'],
                 'image' => $imagePath,
                 'gym_id' => $gymId
             ]);
@@ -62,6 +77,7 @@ class GymStaff extends Model
         try {
             $staffDetail->update([
                 'name' => $updateStaff['full_name'],
+                'gender' => $updateStaff['gender'],
                 'blood_group' => $updateStaff['blood_group'],
                 'employee_id' => $updateStaff['employee_id'],
                 'email' => $updateStaff['email'],
@@ -70,6 +86,12 @@ class GymStaff extends Model
                 'joining_date' => $updateStaff['joining_date'],
                 'address' => $updateStaff['address'],
                 'salary' => $updateStaff['salary'],
+                'experience' => $updateStaff['experience'],
+                'dob' => $updateStaff['dob'],
+                'whatsapp_no' => $updateStaff['whatsapp_no'],
+                'fees' => $updateStaff['fees'],
+                'staff_commission' => $updateStaff['staff_commission'],
+                'gym_commission' => $updateStaff['gym_commission'],
             ]);
 
             if (isset($imagePath)) {
@@ -81,7 +103,6 @@ class GymStaff extends Model
 
             return $staffDetail->save();
         } catch (\Throwable $e) {
-            dd($e);
             Log::error('[GymStaff][updateStaff] Error while updating user detail: ' . $e->getMessage());
         }
     }
