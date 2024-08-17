@@ -149,7 +149,7 @@
                                                 <select class="me-sm-2 form-control default-select" id="designation" name="designation">
                                                     <option selected>Choose...</option>
                                                     @foreach ($designations as $designation)
-                                                    <option value="{{ $designation->id }}" {{ $staffDetail->designation_id == $designation->id ? 'selected' : '' }}>
+                                                    <option value="{{ $designation->id }}" data-is-commission-based="{{ $designation->is_commission_based }}" {{ $staffDetail->designation_id == $designation->id ? 'selected' : '' }}>
                                                         {{ $designation->designation_name }}
                                                     </option>
                                                     @endforeach
@@ -161,19 +161,19 @@
                                             <div class="col-lg-4 mb-2" id="fees-field">
 												<div class="form-group">
 													<label class="text-label">Fees<span class="required">*</span></label>
-													<input type="number" name="fees" id="fees" placeholder="10000" class="form-control">
+													<input type="number" name="fees" id="fees" placeholder="10000" value="{{$staffDetail->fees}}" class="form-control">
 												</div>
 											</div>
 											<div class="col-lg-4 mb-2" id="staff-commission-field">
 												<div class="form-group">
 													<label class="text-label">Staff Commission<span class="required">*</span></label>
-													<input type="number" name="staff_commission" id="staff_commission" placeholder="10000" class="form-control">
+													<input type="number" name="staff_commission" id="staff_commission" value="{{$staffDetail->staff_commission}}" placeholder="10000" class="form-control">
 												</div>
 											</div>
 											<div class="col-lg-4 mb-2" id="gym-commission-field">
 												<div class="form-group">
 													<label class="text-label">Gym Commission<span class="required">*</span></label>
-													<input type="number" name="gym_commission" id="gym_commission" placeholder="10000" class="form-control">
+													<input type="number" name="gym_commission" id="gym_commission" value="{{$staffDetail->gym_commission}}" placeholder="10000" class="form-control">
 												</div>
 											</div>
                                         </div>
@@ -232,6 +232,36 @@
                 }, false)
             })
     })()
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const designationSelect = document.getElementById('designation');
+    const feesField = document.getElementById('fees-field');
+    const staffCommissionField = document.getElementById('staff-commission-field');
+    const gymCommissionField = document.getElementById('gym-commission-field');
+
+    // Function to toggle fields based on commission-based value
+    function toggleFields() {
+        const selectedOption = designationSelect.options[designationSelect.selectedIndex];
+        const isCommissionBased = selectedOption ? selectedOption.getAttribute('data-is-commission-based') === '1' : false;
+
+        if (isCommissionBased) {
+            feesField.style.display = 'block';
+            staffCommissionField.style.display = 'block';
+            gymCommissionField.style.display = 'block';
+        } else {
+            feesField.style.display = 'none';
+            staffCommissionField.style.display = 'none';
+            gymCommissionField.style.display = 'none';
+        }
+    }
+
+    // Initialize visibility based on the initially selected option
+    toggleFields();
+
+    // Add event listener to handle changes
+    designationSelect.addEventListener('change', toggleFields);
+});
+
 </script>
 @include('CustomSweetAlert');
 @endsection
