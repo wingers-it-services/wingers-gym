@@ -30,7 +30,7 @@
 									<a class="nav-link" href="#wizard_Payment"> <span>3</span></a>
 								</li>
 							</ul>
-							<form name="myForm" method="post" enctype="multipart/form-data" action="/gym-staff" >
+							<form name="myForm" method="post" enctype="multipart/form-data" action="/gym-staff">
 								@csrf
 								<div class="tab-content">
 									<div id="wizard_Service" class="tab-pane" role="tabpanel" style="display: block;text-align: center;">
@@ -54,56 +54,72 @@
 												</div>
 											</div>
 										</div>
+										
 									</div>
 									<div id="wizard_Details" class="tab-pane" role="tabpanel">
 										<div class="row">
 											<div class="col-lg-6 mb-2">
 												<div class="form-group">
 													<label class="text-label">Employee Id<span class="required">*</span></label>
-													<input type="number" name="staff_id" class="form-control" placeholder="123" >
+													<input type="number" name="staff_id" class="form-control" placeholder="123">
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
 												<div class="form-group">
 													<label class="text-label">Full Name<span class="required">*</span></label>
-													<input type="text" name="full_name" class="form-control" placeholder="Montana" >
+													<input type="text" name="full_name" class="form-control" placeholder="Montana">
+												</div>
+											</div>
+											<div class="col-md-6 mb-3">
+												<label for="gender">Gender</label>
+												<select class="me-sm-2 form-control default-select" id="gender" name="gender">
+													<option selected>Choose...</option>
+													<option value="male">Male</option>
+													<option value="female">Female</option>
+													<option value="Other">Other</option>
+												</select>
+											</div>
+											<div class="col-lg-6 mb-2">
+												<div class="form-group">
+													<label class="text-label">Experience in Years<span class="required">*</span></label>
+													<input type="text" class="form-control" id="experience" name="experience" placeholder="Experience">
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
 												<div class="form-group">
 													<label class="text-label">Email Address<span class="required">*</span></label>
-													<input type="email" class="form-control" id="email" name="email" placeholder="example@example.com.com" >
+													<input type="email" class="form-control" id="email" name="email" placeholder="example@example.com.com">
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
 												<div class="form-group">
 													<label class="text-label">Phone Number<span class="required">*</span></label>
-													<input type="text" name="phone_number" id="phone_number" class="form-control" placeholder="(+1)408-657-9007" >
+													<input type="text" name="phone_number" id="phone_number" class="form-control" placeholder="(+1)408-657-9007">
+												</div>
+											</div>
+											<div class="col-lg-6 mb-2">
+												<div class="form-group">
+													<label class="text-label">Date Of Birth<span class="required">*</span></label>
+													<input type="date" name="dob" id="dob" class="form-control">
+												</div>
+											</div>
+											<div class="col-lg-6 mb-2">
+												<div class="form-group">
+													<label class="text-label">Whatsapp Number<span class="required">*</span></label>
+													<input type="text" name="whatsapp_no" id="whatsapp_no" class="form-control" placeholder="(+1)408-657-9007">
 												</div>
 											</div>
 
 											<div class="col-lg-6 mb-2">
 												<div class="form-group">
 													<label class="text-label">Joining Date<span class="required">*</span></label>
-													<input type="date" name="joining_date" id="joining_date" class="form-control" >
+													<input type="date" name="joining_date" id="joining_date" class="form-control">
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
 												<div class="form-group">
 													<label class="text-label">Salary<span class="required">*</span></label>
-													<input type="text" name="salary" id="salary" placeholder="10000" class="form-control" >
-												</div>
-											</div>
-											<div class="col-lg-6 mb-2">
-												<div class="form-group">
-													<label class="text-label">Designation<span class="required">*</span></label>
-													<select class="me-sm-2 form-control default-select" id="designation" name="designation">
-														<option selected>Choose...</option>
-                                                        @foreach($designations as $designation)
-														<option value="{{$designation->id}}">{{$designation->designation_name}}</option>
-
-                                                        @endforeach
-													</select>
+													<input type="text" name="salary" id="salary" placeholder="10000" class="form-control">
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
@@ -122,94 +138,46 @@
 													</select>
 												</div>
 											</div>
+											<div class="col-lg-6 mb-2">
+												<div class="form-group">
+													<label class="text-label">Designation<span class="required">*</span></label>
+													<select class="me-sm-2 form-control default-select" id="designation" name="designation">
+														<option value="" selected>Choose...</option>
+														@foreach($designations as $designation)
+														<option value="{{ $designation->id }}" data-is-commission-based="{{ $designation->is_commission_based }}">
+															{{ $designation->designation_name }}
+														</option>
+														@endforeach
+													</select>
+												</div>
+											</div>
+											<div class="col-lg-4 mb-2" id="fees-field">
+												<div class="form-group">
+													<label class="text-label">Fees<span class="required">*</span></label>
+													<input type="number" name="fees" id="fees" placeholder="10000" class="form-control">
+												</div>
+											</div>
+											<div class="col-lg-4 mb-2" id="staff-commission-field">
+												<div class="form-group">
+													<label class="text-label">Staff Commission<span class="required">*</span></label>
+													<input type="number" name="staff_commission" id="staff_commission" placeholder="10000" class="form-control">
+												</div>
+											</div>
+											<div class="col-lg-4 mb-2" id="gym-commission-field">
+												<div class="form-group">
+													<label class="text-label">Gym Commission<span class="required">*</span></label>
+													<input type="number" name="gym_commission" id="gym_commission" placeholder="10000" class="form-control">
+												</div>
+											</div>
+
 											<div class="col-lg-12 mb-3">
 												<div class="form-group">
 													<label class="text-label">Address<span class="required">*</span></label>
-													<textarea type="text" name="address" rows="4" class="form-control" ></textarea>
-
+													<textarea type="text" name="address" rows="4" class="form-control"></textarea>
 												</div>
 											</div>
 										</div>
 									</div>
-
-
-									<!-- <div id="wizard_Details" class="tab-pane" role="tabpanel">
-										<div class="row  align-items-center">
-											<div class="col-sm-4 mb-2">
-												<span>Monday<span class="required">*</span></span>
-											</div>
-											<div class="col-6 col-sm-4 mb-2">
-												<div class="form-group">
-													<input class="form-control" value="9.00" type="number" name="input1" id="input1">
-												</div>
-											</div>
-											<div class="col-6 col-sm-4 mb-2">
-												<div class="form-group">
-													<input class="form-control" value="6.00" type="number" name="input2" id="input2">
-												</div>
-											</div>
-										</div>
-										<div class="row  align-items-center">
-											<div class="col-sm-4 mb-2">
-												<span>Tuesday<span class="required">*</span></span>
-											</div>
-											<div class="col-6 col-sm-4 mb-2">
-												<div class="form-group">
-													<input class="form-control" value="9.00" type="number" name="input3" id="input3">
-												</div>
-											</div>
-											<div class="col-6 col-sm-4 mb-2">
-												<div class="form-group">
-													<input class="form-control" value="6.00" type="number" name="input4" id="input4">
-												</div>
-											</div>
-										</div>
-										<div class="row  align-items-center">
-											<div class="col-sm-4 mb-2">
-												<span>Wednesday<span class="required">*</span></span>
-											</div>
-											<div class="col-6 col-sm-4 mb-2">
-												<div class="form-group">
-													<input class="form-control" value="9.00" type="number" name="input5" id="input5">
-												</div>
-											</div>
-											<div class="col-6 col-sm-4 mb-2">
-												<div class="form-group">
-													<input class="form-control" value="6.00" type="number" name="input6" id="input6">
-												</div>
-											</div>
-										</div>
-										<div class="row  align-items-center">
-											<div class="col-sm-4 mb-2">
-												<span>Thrusday<span class="required">*</span></span>
-											</div>
-											<div class="col-6 col-sm-4 mb-2">
-												<div class="form-group">
-													<input class="form-control" value="9.00" type="number" name="input7" id="input7">
-												</div>
-											</div>
-											<div class="col-6 col-sm-4 mb-2">
-												<div class="form-group">
-													<input class="form-control" value="6.00" type="number" name="input8" id="input8">
-												</div>
-											</div>
-										</div>
-										<div class="row align-items-center">
-											<div class="col-sm-4 mb-2">
-												<span>Friday<span class="required">*</span></span>
-											</div>
-											<div class="col-6 col-sm-4 mb-2">
-												<div class="form-group">
-													<input class="form-control" value="9.00" type="number" name="input9" id="input9">
-												</div>
-											</div>
-											<div class="col-6 col-sm-4 mb-2">
-												<div class="form-group">
-													<input class="form-control" value="6.00" type="number" name="input10" id="input10">
-												</div>
-											</div>
-										</div>
-									</div>  -->
 									<div id="wizard_Payment" class="tab-pane" role="tabpanel">
 										<div class="row emial-setup">
 											<div class="col-lg-3 col-sm-6 col-6">
@@ -267,22 +235,8 @@
 		</div>
 	</div>
 </div>
-<!--**********************************
-            Content body end
-        ***********************************-->
-
-
-
-<!--**********************************
-        Scripts
-    ***********************************-->
-
-
-
 <script>
 	var loadFile = function(event) {
-		// var selected_image = document.getElementById('selected_image');
-
 		var input = event.target;
 		var image = document.getElementById('selected_image');
 		if (input.files && input.files[0]) {
@@ -302,6 +256,36 @@
 		}
 
 	};
+
+	document.addEventListener('DOMContentLoaded', function() {
+    const designationSelect = document.getElementById('designation');
+    const feesField = document.getElementById('fees-field');
+    const staffCommissionField = document.getElementById('staff-commission-field');
+    const gymCommissionField = document.getElementById('gym-commission-field');
+
+    // Function to toggle fields based on commission-based value
+    function toggleFields() {
+        const selectedOption = designationSelect.options[designationSelect.selectedIndex];
+        const isCommissionBased = selectedOption ? selectedOption.getAttribute('data-is-commission-based') === '1' : false;
+
+        if (isCommissionBased) {
+            feesField.style.display = 'block';
+            staffCommissionField.style.display = 'block';
+            gymCommissionField.style.display = 'block';
+        } else {
+            feesField.style.display = 'none';
+            staffCommissionField.style.display = 'none';
+            gymCommissionField.style.display = 'none';
+        }
+    }
+
+    // Initialize visibility based on the initially selected option
+    toggleFields();
+
+    // Add event listener to handle changes
+    designationSelect.addEventListener('change', toggleFields);
+});
+
 </script>
 @include('CustomSweetAlert');
 @endsection

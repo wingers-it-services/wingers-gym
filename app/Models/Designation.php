@@ -15,7 +15,9 @@ class Designation extends Model
     protected $fillable = [
         'designation_name',
         'gym_id',
-        'status'
+        'status',
+        'is_commission_based',
+        'is_assigned_to_member'
     ];
 
     protected static function boot()

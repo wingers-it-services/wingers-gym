@@ -13,7 +13,7 @@
                 <li class="breadcrumb-item active"><a href="javascript:void(0)">Staff Details</a></li>
             </ol>
         </div>
-        
+
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
@@ -33,9 +33,23 @@
                                         </li>
 
                                     </ul>
-                                    <div class="input-group">
-                                        <input class="form-control form-control-sm" id="image" name="image" onchange="loadFile(event)" accept="image/*" type="file">
+                                    <div class="row">
+                                        <div class="input-group">
+                                            <input class="form-control form-control-sm" id="image" name="image" onchange="loadFile(event)" accept="image/*" type="file">
+                                        </div>
                                     </div>
+
+                                    <div class="row" style="padding-top: 8%;">
+                                        <label for="address">Address</label>
+
+                                        <div class="input-group">
+                                            <textarea type="text" class="form-control form-control-sm" rows="10" id="address" name="address" required="">{{ $staffDetail->address }}</textarea>
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please enter your shipping address.
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="col-lg-8 order-lg-1">
                                     <h4 class="mb-3">Staff Details</h4>
@@ -57,75 +71,113 @@
                                             </div>
                                         </div>
 
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="email">Email <span class="text-muted">(Optional)</span></label>
-                                            <input type="email" class="form-control" id="email" name="email" value="{{ $staffDetail->email }}">
-                                            <div class="invalid-feedback">
-                                                Please enter a valid email address for shipping updates.
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="gender">Gender</label>
+                                                <select class="me-sm-2 form-control default-select" id="gender" name="gender">
+                                                    <option value="">Choose...</option>
+                                                    <option {{ $staffDetail->gender == 'male' ? 'selected' : '' }} value="male">Male</option>
+                                                    <option {{ $staffDetail->gender == 'female' ? 'selected' : '' }} value="female">Female</option>
+                                                    <option {{ $staffDetail->gender == 'Other' ? 'selected' : '' }} value="Other">Other</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="employee_id">Experience in Years</label>
+                                                <input type="text" class="form-control" id="experience" name="experience" placeholder="" value="{{ $staffDetail->experience }}" required="">
+                                                <div class="invalid-feedback">
+                                                    Valid experience year is required.
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="email">Email <span class="text-muted">(Optional)</span></label>
+                                                <input type="email" class="form-control" id="email" name="email" value="{{ $staffDetail->email }}">
+                                                <div class="invalid-feedback">
+                                                    Please enter a valid email address for shipping updates.
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="number">Phone Number</label>
+                                                <input type="text" class="form-control" id="number" name="phone_number" placeholder="" value="{{ $staffDetail->number }}" required="">
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <label for="designation_id">Staff Designation</label>
-                                            <select class="me-sm-2 form-control default-select" id="designation" name="designation">
-                                                <option selected>Choose...</option>
-                                                @foreach ($designations as $designation)
-                                                <option value="{{ $designation->id }}" {{ $staffDetail->designation_id == $designation->id ? 'selected' : '' }}>
-                                                    {{ $designation->designation_name }}
-                                                </option>
-                                                @endforeach
-                                            </select>
-                                            <div class="invalid-feedback">
-                                                Valid last name is required.
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="text-label">Date Of Birth<span class="required">*</span></label>
+                                                <input type="date" name="dob" id="dob" class="form-control" value="{{$staffDetail->dob}}">
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label class="text-label">Whatsapp Number<span class="required">*</span></label>
+                                                <input type="text" name="whatsapp_no" id="whatsapp_no" class="form-control" value="{{$staffDetail->whatsapp_no}}" placeholder="(+1)408-657-9007">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="number">Phone Number</label>
-                                            <input type="text" class="form-control" id="number" name="phone_number" placeholder="" value="{{ $staffDetail->number }}" required="">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="joining_date">Staff Joining Date</label>
+                                                <input type="text" class="form-control" id="joining_date" name="joining_date" placeholder="" value="{{ $staffDetail->joining_date }}" required="">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="salary">Staff Salary</label>
+                                                <input type="text" class="form-control" id="salary" name="salary" placeholder="" value="{{ $staffDetail->salary }}" required="">
+                                            </div>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <label for="salary">Staff Salary</label>
-                                            <input type="text" class="form-control" id="salary" name="salary" placeholder="" value="{{ $staffDetail->salary }}" required="">
+                                        <div class="row">
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="blood_group">Staff Blood Group</label>
+                                                <select class="me-sm-2 form-control default-select" id="blood_group" name="blood_group">
+                                                    <option {{ $staffDetail->blood_group == 'A+' ? 'selected' : '' }} value="A+">A+</option>
+                                                    <option {{ $staffDetail->blood_group == 'A-' ? 'selected' : '' }} value="A-">A-</option>
+                                                    <option {{ $staffDetail->blood_group == 'B+' ? 'selected' : '' }} value="B+">B+</option>
+                                                    <option {{ $staffDetail->blood_group == 'B-' ? 'selected' : '' }} value="B-">B-</option>
+                                                    <option {{ $staffDetail->blood_group == 'AB+' ? 'selected' : '' }} value="AB+">AB+</option>
+                                                    <option {{ $staffDetail->blood_group == 'AB-' ? 'selected' : '' }} value="AB-">AB-</option>
+                                                    <option {{ $staffDetail->blood_group == 'O+' ? 'selected' : '' }} value="O+">O+</option>
+                                                    <option {{ $staffDetail->blood_group == 'O-' ? 'selected' : '' }} value="O-">O-</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="designation_id">Staff Designation</label>
+                                                <select class="me-sm-2 form-control default-select" id="designation" name="designation">
+                                                    <option selected>Choose...</option>
+                                                    @foreach ($designations as $designation)
+                                                    <option value="{{ $designation->id }}" {{ $staffDetail->designation_id == $designation->id ? 'selected' : '' }}>
+                                                        {{ $designation->designation_name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    Valid last name is required.
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 mb-2" id="fees-field">
+												<div class="form-group">
+													<label class="text-label">Fees<span class="required">*</span></label>
+													<input type="number" name="fees" id="fees" placeholder="10000" class="form-control">
+												</div>
+											</div>
+											<div class="col-lg-4 mb-2" id="staff-commission-field">
+												<div class="form-group">
+													<label class="text-label">Staff Commission<span class="required">*</span></label>
+													<input type="number" name="staff_commission" id="staff_commission" placeholder="10000" class="form-control">
+												</div>
+											</div>
+											<div class="col-lg-4 mb-2" id="gym-commission-field">
+												<div class="form-group">
+													<label class="text-label">Gym Commission<span class="required">*</span></label>
+													<input type="number" name="gym_commission" id="gym_commission" placeholder="10000" class="form-control">
+												</div>
+											</div>
                                         </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="joining_date">Staff Joining Date</label>
-                                            <input type="text" class="form-control" id="joining_date" name="joining_date" placeholder="" value="{{ $staffDetail->joining_date }}" required="">
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="blood_group">Staff Blood Group</label>
-                                            <select class="me-sm-2 form-control default-select" id="blood_group" name="blood_group">
-                                                <option {{ $staffDetail->blood_group == 'A+' ? 'selected' : '' }} value="A+">A+</option>
-                                                <option {{ $staffDetail->blood_group == 'A-' ? 'selected' : '' }} value="A-">A-</option>
-                                                <option {{ $staffDetail->blood_group == 'B+' ? 'selected' : '' }} value="B+">B+</option>
-                                                <option {{ $staffDetail->blood_group == 'B-' ? 'selected' : '' }} value="B-">B-</option>
-                                                <option {{ $staffDetail->blood_group == 'AB+' ? 'selected' : '' }} value="AB+">AB+</option>
-                                                <option {{ $staffDetail->blood_group == 'AB-' ? 'selected' : '' }} value="AB-">AB-</option>
-                                                <option {{ $staffDetail->blood_group == 'O+' ? 'selected' : '' }} value="O+">O+</option>
-                                                <option {{ $staffDetail->blood_group == 'O-' ? 'selected' : '' }} value="O-">O-</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-
-                                    <div class="mb-3">
-                                        <label for="address">Address</label>
-                                        <input type="text" class="form-control" id="address" value="{{ $staffDetail->address }}" name="address" required="">
-                                        <div class="invalid-feedback">
-                                            Please enter your shipping address.
-                                        </div>
-                                    </div>
-                                    <hr class="mb-4">
-                                    <button class="btn btn-primary btn-lg btn-block" type="submit">Update</button>
+                                        <button class="btn btn-primary btn-lg btn-block" type="submit">Update</button>
                         </form>
                     </div>
                 </div>
