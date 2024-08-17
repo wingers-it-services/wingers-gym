@@ -37,11 +37,11 @@
 										</div>
 										<div class="col-auto">
 											<div class="form-check form-check-inline">
-												<input class="form-check-input" type="radio" id="commission_yes" name="is_commission_based" value="yes" required>
+												<input class="form-check-input" type="radio" id="commission_yes" name="is_commission_based" value="1" required>
 												<label class="form-check-label" for="commission_yes">Yes</label>
 											</div>
 											<div class="form-check form-check-inline">
-												<input class="form-check-input" type="radio" id="commission_no" name="is_commission_based" value="no" required>
+												<input class="form-check-input" type="radio" id="commission_no" name="is_commission_based" value="0" required>
 												<label class="form-check-label" for="commission_no">No</label>
 											</div>
 										</div>
@@ -55,11 +55,11 @@
 										</div>
 										<div class="col-auto">
 											<div class="form-check form-check-inline">
-												<input class="form-check-input" type="radio" id="assigned_yes" name="is_assigned_to_member" value="yes" required>
+												<input class="form-check-input" type="radio" id="assigned_yes" name="is_assigned_to_member" value="1" required>
 												<label class="form-check-label" for="assigned_yes">Yes</label>
 											</div>
 											<div class="form-check form-check-inline">
-												<input class="form-check-input" type="radio" id="assigned_no" name="is_assigned_to_member" value="no" required>
+												<input class="form-check-input" type="radio" id="assigned_no" name="is_assigned_to_member" value="0" required>
 												<label class="form-check-label" for="assigned_no">No</label>
 											</div>
 										</div>
@@ -122,8 +122,8 @@
 												@else
 												<a class="dropdown-item" href="javascript:void(0);">Activate</a>
 												@endif
-												<a class="dropdown-item" href="javascript:void(0);">Edit</a>
-												<a class="dropdown-item" href="/deleteGymDesignation/{{ $designation->uuid }}">Delete</a>
+												<a class="dropdown-item" href="javascript:void(0);" >Edit</a>
+												<a class="dropdown-item" onclick="confirmDelete('{{ $designation->uuid }}')">Delete</a>
 											</div>
 										</div>
 									</div>
@@ -138,8 +138,22 @@
 		</div>
 	</div>
 </div>
-<!--**********************************
-            Content body end
-        ***********************************-->
-
+<script>
+     function confirmDelete(uuid) {
+         Swal.fire({
+             title: 'Are you sure?',
+             text: 'Are you sure you want to delete this designation?.',
+             icon: 'warning',
+             showCancelButton: true,
+             confirmButtonColor: '#3085d6',
+             cancelButtonColor: '#d33',
+             confirmButtonText: 'Yes, delete it!'
+         }).then((result) => {
+             if (result.isConfirmed) {
+                 window.location.href = '/deleteGymDesignation/' + uuid;
+             }
+         });
+     }
+ </script>
+@include('CustomSweetAlert');
 @endsection
