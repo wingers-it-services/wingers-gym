@@ -22,7 +22,14 @@
 							<div class="tab-pane fade show active" id="Breakfast" role="tabpanel">
 								<div class="featured-menus owl-carousel">
 									@foreach ($gymStaffs as $gymStaff)
-									<div class="items" id="staff-cards" data-gym-id='{{$gymStaff->gym_id}}' data-employee-id='{{$gymStaff->id}}' data-employee-name='{{$gymStaff->name}}' onclick="showStaffData(this);">
+									<div class="items" id="staff-cards" data-gym-id='{{$gymStaff->gym_id}}' data-employee-id='{{$gymStaff->id}}' data-employee-name='{{$gymStaff->name}}'
+										data-employee-email='{{$gymStaff->email}}'
+										data-employee-phone-number='{{$gymStaff->number}}'
+										data-employee-designation='{{$gymStaff->designation->designation_name}}'
+										data-employee-salary='{{$gymStaff->salary}}'
+										data-employee-blood-group='{{$gymStaff->blood_group}}'
+										data-employee-joining-date='{{$gymStaff->joining_date}}'
+										data-employee-address='{{$gymStaff->address}}' onclick="showStaffData(this);">
 										<div class="d-sm-flex p-3 border border-light rounded">
 											<img class="me-4 food-image rounded" src="{{ $gymStaff->image }}" alt="" style="height: 160px;">
 											<div>
@@ -110,7 +117,7 @@
 			<div class="col-xl-12">
 				<div class="card">
 					<div class="card-header">
-						<h4 class="card-title">Default Tab</h4>
+						<h4 class="card-title">Staff Details</h4>
 					</div>
 					<div class="card-body">
 						<!-- Nav tabs -->
@@ -133,25 +140,36 @@
 									<a class="nav-link" data-bs-toggle="tab" href="#leaves"><i class="la la-envelope me-2"></i> Leaves</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#assets"><i class="la la-envelope me-2"></i> Salary Slip</a>
+									<a class="nav-link" data-bs-toggle="tab" href="#slip"><i class="la la-envelope me-2"></i> Salary Slip</a>
 								</li>
 							</ul>
 							<div class="tab-content">
-								<!-- <div class="tab-pane fade show active" id="home" role="tabpanel">
-									<div class="pt-4">
-										<h4>This is home title</h4>
-										<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
-										</p>
-										<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
-										</p>
-									</div>
-								</div> -->
 								<div class="tab-pane fade show active" id="profile">
 									<div class="pt-4">
-										<h4 id="staff-profile-title">Select a staff member to view details</h4>
-										<div id="staff-profile-content">
-											<!-- Profile details will be dynamically populated here -->
+
+									</div>
+									<div class="row">
+										<div class="col-xl-6 col-lg-12 col-sm-12">
+											<div class="card overflow-hidden">
+												<ul class="list-group list-group-flush">
+													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Name:</span> <strong class="text-muted" id="profile-name"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Email:</span> <strong class="text-muted" id="profile-email"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Phone Number:</span> <strong class="text-muted" id="profile-phone-number"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Designation:</span> <strong class="text-muted" id="profile-designation"></strong></li>
+												</ul>
+											</div>
 										</div>
+										<div class="col-xl-6 col-lg-12 col-sm-12">
+											<div class="card overflow-hidden">
+												<ul class="list-group list-group-flush">
+													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Salary:</span> <strong class="text-muted" id="profile-salary"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Blood Group:</span> <strong class="text-muted" id="profile-blood-group"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Joining Date:</span> <strong class="text-muted" id="profile-joining-date"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Address:</span> <strong class="text-muted" id="profile-address"></strong></li>
+												</ul>
+											</div>
+										</div>
+
 									</div>
 								</div>
 
@@ -165,9 +183,76 @@
 									</div>
 								</div>
 								<div class="tab-pane fade" id="assets">
+									<!-- Add New Asset Modal -->
+									<div class="modal fade" id="addNewAssets" tabindex="-1" aria-labelledby="addNewAssetsLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="addNewAssetsLabel">Add New Asset</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<form action="" method="POST" enctype="multipart/form-data">
+													@csrf
+													<div class="modal-body">
+														<div class="mb-3">
+															<label for="assetName" class="form-label">Asset Name</label>
+															<input type="text" class="form-control" id="assetName" name="asset_name" required>
+														</div>
+														<div class="mb-3">
+															<label for="assetCategory" class="form-label">Asset Category</label>
+															<input type="text" class="form-control" id="assetCategory" name="asset_category" required>
+														</div>
+														<div class="mb-3">
+															<label for="assetTag" class="form-label">Asset Tag</label>
+															<input type="text" class="form-control" id="assetTag" name="asset_tag" required>
+														</div>
+														<div class="mb-3">
+															<label for="dateOfAllocation" class="form-label">Date Of Allocation</label>
+															<input type="date" class="form-control" id="dateOfAllocation" name="date_of_allocation" required>
+														</div>
+														<div class="mb-3">
+															<label for="price" class="form-label">Price</label>
+															<input type="number" class="form-control" id="price" name="price" required>
+														</div>
+														<div class="mb-3">
+															<label for="status" class="form-label">Status</label>
+															<select class="form-control" id="status" name="status" required>
+																<option value="">Select Status</option>
+																<option value="In Use">Allocated</option>
+																<option value="Under Repair">Under Repair</option>
+																<option value="Retired">Retired</option>
+															</select>
+														</div>
+														<div class="mb-3">
+															<label for="assetImage" class="form-label">Asset Image</label>
+															<input type="file" class="form-control" id="assetImage" name="asset_image">
+														</div>
+														<!-- <div class="mb-3">
+															<label for="comments" class="form-label">Comments/Notes</label>
+															<textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
+														</div> -->
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+														<button type="submit" class="btn btn-primary">Save Asset</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+
 									<div class="pt-4">
 										<div class="col-xl-12 col-lg-12 col-xxl-12 col-sm-12">
 											<div class="card">
+												<div class="card-header d-sm-flex d-block pb-0 border-0">
+													<div class="me-auto pe-3">
+														<h4 class="text-black fs-20">Staff Asset List</h4>
+													</div>
+
+													<div class="dropdown mt-sm-0 mt-3">
+														<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addNewAssets" class="btn btn-outline-primary rounded">Add Assets</a>
+													</div>
+												</div>
 												<div class="card-body">
 													<div class="table-responsive recentOrderTable">
 														<table class="table verticle-middle table-responsive-md">
@@ -188,12 +273,12 @@
 																<tr>
 																	<td>12</td>
 																	<td>Mr. Bobby</td>
-																	<td>Dr. Jackson</td>
-																	<td>Dr. Jackson</td>
+																	<td>Electronics</td>
+																	<td>A-12</td>
 																	<td>01 August 2020</td>
 																	<td>$5000</td>
-																	<td><span class="badge badge-rounded badge-primary">Checkin</span></td>
-																	<td>$120</td>
+																	<td><span class="badge badge-rounded badge-primary">In Use</span></td>
+																	<td><img src="" alt=""></td>
 																	<td>
 																		<div class="dropdown custom-dropdown mb-0">
 																			<div class="btn sharp btn-primary tp-btn" data-bs-toggle="dropdown">
@@ -222,15 +307,75 @@
 									</div>
 								</div>
 								<div class="tab-pane fade" id="leaves">
+									<div class="modal fade" id="addNewLeaves" tabindex="-1" aria-labelledby="addNewLeaveLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="addNewLeaveLabel">Add New Leave</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<form action="/add-leave" method="POST">
+													@csrf
+													<div class="modal-body">
+														<div class="mb-3">
+															<div class="form-group">
+																<label for="leave_type" class="form-label">Leave Type</label>
+																<select class="form-control" id="leave_type" name="leave_type" required>
+																	<option value="">Select Leave Type</option>
+																	<option value="Sick Leave">Sick Leave</option>
+																	<option value="Vacation">Vacation</option>
+																	<option value="Unpaid Leave">Unpaid Leave</option>
+																</select>
+															</div>
+														</div>
+														<div class="mb-3">
+															<label for="start_date" class="form-label">Start Date</label>
+															<input type="date" class="form-control" id="start_date" name="start_date" required>
+														</div>
+														<div class="mb-3">
+															<label for="end_date" class="form-label">End Date</label>
+															<input type="date" class="form-control" id="end_date" name="end_date" required>
+														</div>
+														<div class="mb-3">
+															<label for="reason" class="form-label">Reason for Leave</label>
+															<textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
+														</div>
+														<!-- <div class="mb-3">
+															<label for="status" class="form-label">Status</label>
+															<select class="form-select" id="status" name="status" required>
+																<option value="">Select Status</option>
+																<option value="Pending">Pending</option>
+																<option value="Approved">Approved</option>
+																<option value="Rejected">Rejected</option>
+															</select>
+														</div> -->
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+														<button type="submit" class="btn btn-primary">Save Leave</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
 									<div class="pt-4">
 										<div class="col-xl-12 col-lg-12 col-xxl-12 col-sm-12">
 											<div class="card">
+												<div class="card-header d-sm-flex d-block pb-0 border-0">
+													<div class="me-auto pe-3">
+														<h4 class="text-black fs-20">Staff Leaves List</h4>
+													</div>
+
+													<div class="dropdown mt-sm-0 mt-3">
+														<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addNewLeaves" class="btn btn-outline-primary rounded">Add Leaves</a>
+													</div>
+												</div>
 												<div class="card-body">
 													<div class="table-responsive recentOrderTable">
 														<table class="table verticle-middle table-responsive-md">
 															<thead>
 																<tr>
-																	<th scope="col">Leave Name</th>
+																	<th scope="col">Leave Type</th>
 																	<th scope="col">From</th>
 																	<th scope="col">To</th>
 																	<!-- <th scope="col">Asset Tag</th>
@@ -243,7 +388,7 @@
 															</thead>
 															<tbody>
 																<tr>
-																	<td>Full Day</td>
+																	<td>Sick Leave</td>
 																	<td>01 August 2020</td>
 																	<td>01 August 2020</td>
 																	<!-- <td>01 August 2020</td>
@@ -277,6 +422,15 @@
 										</div>
 									</div>
 								</div>
+								<div class="tab-pane fade" id="slip">
+									<div class="pt-4">
+										<h4>This is contact title</h4>
+										<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
+										</p>
+										<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
+										</p>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -308,6 +462,13 @@
 		var gymId = parseInt(input.getAttribute("data-gym-id"));
 		var staffId = parseInt(input.getAttribute("data-employee-id"));
 		var staffName = input.getAttribute("data-employee-name");
+		var staffEmail = input.getAttribute("data-employee-email");
+		var staffPhoneNumber = input.getAttribute("data-employee-phone-number");
+		var staffDesignation = input.getAttribute("data-employee-designation");
+		var staffSalary = input.getAttribute("data-employee-salary");
+		var staffBloodGroup = input.getAttribute("data-employee-blood-group");
+		var staffJoiningDate = input.getAttribute("data-employee-joining-date");
+		var staffAddress = input.getAttribute("data-employee-address");
 
 		// Fetch the attendance chart or any other data
 		fetchAttendanceChart(gymId, staffId);
@@ -321,21 +482,21 @@
 		document.getElementById('staff-name-section').style.display = "contents";
 
 		// Update the Profile tab with the selected staff's details
-		document.getElementById('staff-profile-title').innerText = staffName + " Profile";
-		document.getElementById('staff-profile-content').innerHTML = `
-        <img src="${input.getAttribute('data-employee-image')}" alt="${staffName}" style="height: 160px;" class="me-4 food-image rounded">
-        <ul>
-            <li><strong>ID:</strong> ${staffId}</li>
-            <li><strong>Name:</strong> ${staffName}</li>
-            <li><strong>Number:</strong> ${input.getAttribute('data-employee-number')}</li>
-        </ul>
-    `;
+		document.getElementById('profile-name').innerText = staffName;
+		document.getElementById('profile-email').innerText = staffEmail;
+		document.getElementById('profile-phone-number').innerText = staffPhoneNumber;
+		document.getElementById('profile-designation').innerText = staffDesignation;
+		document.getElementById('profile-salary').innerText = staffSalary;
+		document.getElementById('profile-blood-group').innerText = staffBloodGroup;
+		document.getElementById('profile-joining-date').innerText = staffJoiningDate;
+		document.getElementById('profile-address').innerText = staffAddress;
 
 		// Optionally switch to the profile tab if not already there
 		var profileTab = document.querySelector('.nav-link[href="#profile"]');
 		var tabInstance = new bootstrap.Tab(profileTab);
 		tabInstance.show();
 	}
+
 
 
 	function markStaffAttendance(input) {
