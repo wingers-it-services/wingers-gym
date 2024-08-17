@@ -107,7 +107,8 @@ class GymUserController extends Controller
                 'subscription_status'  => 'nullable',
                 'profile_status'       => 'nullable',
                 'staff_assign_id'      => 'nullable',
-                'password'             => 'required'
+                'password'             => 'required',
+                'phone_no'              => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -160,35 +161,62 @@ class GymUserController extends Controller
         return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets',  'trainers', 'bmis', 'trainersHistories'));
     }
 
-    public function updateUser(Request $request)
+    public function viewUpdateUser(Request $request, $uuid)
+    {
+
+        $userDetail = $this->user->where('uuid', $uuid)->first();
+
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
+        $gymStaff = GymStaff::join('designations', 'designations.id', 'gym_staffs.designation_id')
+            ->where('gym_staffs.gym_id', $gymId)->get();
+        $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
+        $selectedSubscriptionId = $userDetail->subscription_id;
+
+        return view('GymOwner.edit-gym-customer', compact('userDetail', 'gymStaff', 'gymSubscriptions', 'selectedSubscriptionId'));
+    }
+
+    public function updateUser(Request $request, $uuid)
     {
         try {
+            $user = $this->user->where('uuid', $uuid)->first();
+
             $request->validate([
-                'email' => 'nullable',
-                'member_number'     => 'required',
-                'employee_id'       => 'required',
-                'subscription_id'   => 'required',
+                'email'             => 'required',
+                'gender'            => 'required',
                 'blood_group'       => 'nullable',
-                'joining_date'      => 'required',
                 'address'           => 'required',
                 'country'           => 'required',
                 'state'             => 'required',
                 'zip_code'          => 'required',
-                'image'             => 'nullable'
+                'image'             => 'nullable',
+                'staff_assign_id'      => 'nullable',
+                'password'             => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
             $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
 
+            if (isset($request->image)) {
+                // Delete existing image only if a new one is provided
+                if ($user->image) {
+                    $oldImagePath = public_path($user->image);
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+                // Upload the new image
+            }
+
             $isProfileUpdated = $this->userService->createUserAccount($request->all(), $gymId);
 
             if ($isProfileUpdated) {
-                return redirect()->route('listGymUser')->with('status', 'success')->with('message', 'User profile and workout data updated successfully.');
+                return redirect()->back()->with('status', 'success')->with('message', 'User updated successfully.');
             }
-            return redirect()->back()->with('status', 'error')->with('message', 'error while updating user.');
+            return redirect()->route('listGymUser')->with('status', 'error')->with('message', 'error while updating user.');
         } catch (\Exception $e) {
             Log::error('[GymUserController][updateUser] Error updating user ' . 'Request=' . $request . ', Exception=' . $e->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', 'error while updating user.');
+            return redirect()->back()->with('status', 'error')->with('message', 'error while updating user.' . $e->getMessage());
         }
     }
 
@@ -613,5 +641,54 @@ class GymUserController extends Controller
 
         $subHistory->delete();
         return redirect()->back()->with('status', 'success')->with('message', 'User Subscription History deleted successfully!');
+    }
+
+    public function updateTrainerStatus(Request $request, $user_id)
+    {
+        try {
+            // Validate the status input
+            $validatedData = $request->validate([
+                'status' => 'required|integer|in:0,1',
+                'trainer_id' => 'required', // Ensure trainer_id is provided and valid
+            ]);
+
+            // If the status is set to ACTIVE
+            if ($validatedData['status'] == \App\Enums\TrainerAssignToUserStatus::ACTIVE) {
+                // Check if there is already an active trainer for the user
+                $activeTrainer = $this->trainersHistory
+                    ->where('user_id', $user_id)
+                    ->where('status', \App\Enums\TrainerAssignToUserStatus::ACTIVE)
+                    ->first();
+
+                if ($activeTrainer) {
+                    return redirect()->back()->with('status', 'error')->with('message', 'Another trainer is already active. Please deactivate the existing trainer before assigning a new one.');
+                }
+
+                // Deactivate all other trainers for the user (optional, if you want to enforce single active trainer)
+                $this->trainersHistory->where('user_id', $user_id)
+                    ->where('status', \App\Enums\TrainerAssignToUserStatus::ACTIVE)
+                    ->update(['status' => \App\Enums\TrainerAssignToUserStatus::INACTIVE]);
+            }
+
+            // Find the specific trainer history entry
+            $trainerHistory = $this->trainersHistory
+                ->where('user_id', $user_id)
+                ->where('id', $validatedData['trainer_id']) // Ensure the trainer_id is provided in the request
+                ->first();
+
+            if (!$trainerHistory) {
+                return redirect()->back()->with('status', 'error')->with('message', 'Trainer not found for the user.');
+            }
+
+            // Update the status
+            $trainerHistory->update([
+                'status' => $validatedData['status']
+            ]);
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Trainer status updated successfully.');
+        } catch (Throwable $th) {
+            Log::error("[GymUserController][updateTrainerStatus] error " . $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Failed to update trainer status. Please try again.' . $th->getMessage());
+        }
     }
 }

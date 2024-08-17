@@ -41,9 +41,6 @@ Route::get('/order-list', function () {
 Route::get('/invoice', function () {
     return view('GymOwner.invoice');
 });
-// Route::get('/gym-customers', function () {
-//     return view('GymOwner.gym-customers');
-// });
 
 Route::get('/gym-customers', [GymUserController::class, 'listGymUser'])->name('gymCustomerList');
 Route::get('/customers-payment', function () {
@@ -123,7 +120,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::post('/add-user-by-gym', [GymUserController::class, 'addUserByGym'])->name('add-user-by-gym');
 
     /* listGymUser */
-    Route::post('/updateUser', [GymUserController::class, 'updateUser'])->name('updateUser');
+    Route::get('/update-gym-user/{uuid}', [GymUserController::class, 'viewUpdateUser'])->name('update-gym-user');
+    Route::post('/update-user/{uuid}', [GymUserController::class, 'updateUser'])->name('update-user');
     Route::post('/add-user-workout', [GymUserController::class, 'addUserWorkout'])->name('add-user-workout');
     Route::get('/delete-user/{uuid}', [GymUserController::class, 'deleteGymUser'])->name('delete-user');
     Route::post('/update-user-workout', [GymUserController::class, 'updateUserWorkout'])->name('update-user-workout');
@@ -192,6 +190,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     Route::post('/addBmi', [UserBmiController::class, 'createUserBodyMeasurement'])->name('addUserBodyMeasurement');
     Route::post('/allocateTrainer', [GymUserController::class, 'allocateTrainerToUser'])->name('allotTrainer');
+    Route::post('/update-trainer-status/{user_id}', [GymUserController::class, 'updateTrainerStatus'])->name('update-trainer-status');
     Route::get('/deleteTrainer/{uuid}', [GymUserController::class, 'deleteTrainer'])->name('deleteTrainer');
     Route::get('/get-user-bmi/{userId}', [GymUserController::class, 'getUserBmi']);
     Route::post('/update-user-bmi', [GymUserController::class, 'updateUserBmi'])->name('updateUserBmi');

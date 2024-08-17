@@ -41,7 +41,8 @@ class UserService
             'staff_assign_id',
             'gym_id',
             'password',
-            'user_type'
+            'user_type',
+            'phone_no'
         ];
 
         $userData = [];

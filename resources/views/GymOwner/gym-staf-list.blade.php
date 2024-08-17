@@ -16,6 +16,7 @@
                                  <thead>
                                      <tr>
                                          <th>Employee Id</th>
+                                         <th>Image</th>
                                          <th>Name</th>
                                          <th>Designation</th>
                                          <th>Salary</th>
@@ -40,11 +41,13 @@
                                                          <div class=""><img class="rounded-circle img-fluid" src="{{ $gymStaffMember->image }}" width="30" alt="image">
                                                          </div>
                                                      </div>
-                                                     <div class="media-body">
-                                                         <h5 class="mb-0 fs--1">{{ $gymStaffMember->name }}</h5>
-                                                     </div>
                                                  </div>
                                              </a>
+                                         </td>
+                                         <td>
+                                             <div class="media-body">
+                                                 <h5 class="mb-0 fs--1">{{ $gymStaffMember->name }}</h5>
+                                             </div>
                                          </td>
                                          <td class="py-2">
                                              {{ isset($gymStaffMember->designation->designation_name) ? $gymStaffMember->designation->designation_name : '--' }}
@@ -59,7 +62,7 @@
                                              <a href="/editStaff/{{ $gymStaffMember->uuid }}" data-bs-toggle="tooltip" data-placement="top" title="Edit">
                                                  <i class="fa fa-pencil color-muted"></i>
                                              </a>
-                                             &nbsp; &nbsp; 
+                                             &nbsp; &nbsp;
                                              <!-- Delete Button -->
                                              <a href="javascript:void(0);" onclick="confirmDelete('{{ $gymStaffMember->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close">
                                                  <i class="fas fa-trash"> </i>
