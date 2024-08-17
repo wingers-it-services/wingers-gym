@@ -42,7 +42,9 @@ class Designation extends Model
         $this->create([
             'designation_name' => $designation['designation_name'],
             'gym_id' => $gymId,
-            'status' => 1
+            'status' => 1,
+            'is_commission_based' => $designation['is_commission_based'],
+            'is_assigned_to_member' => $designation['is_assigned_to_member']
         ]);
     }
 }

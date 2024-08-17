@@ -55,7 +55,7 @@
                                          <td class="py-2">&#8377; {{ $gymStaffMember->salary }}</td>
                                          <td class="py-2"> <a href="tel:{{ $gymStaffMember->number }}">{{ $gymStaffMember->number }}</a>
                                          </td>
-                                         <td class="py-2">{{ $gymStaffMember->blood_group }}</td>
+                                         <td class="py-2 text-center">{{ $gymStaffMember->blood_group }}</td>
                                          <td class="py-2">{{ $gymStaffMember->joining_date }}</td>
                                          <td>
                                              <!-- Edit Button -->

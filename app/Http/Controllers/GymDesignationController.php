@@ -54,7 +54,9 @@ class GymDesignationController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'designation_name' => 'required'
+                'designation_name' => 'required',
+                'is_commission_based' => 'required',
+                'is_assigned_to_member' => 'required'
             ]);
 
             $gym = Auth::guard('gym')->user();
@@ -62,10 +64,10 @@ class GymDesignationController extends Controller
 
             $this->designation->addAdminDesignation($validatedData, $gymId);
 
-            return redirect()->route('viewGymDesignation')->with('success', 'Gym Designation added successfully!');
+            return redirect()->back()->with('status', 'success')->with('message', 'Gym Designation Added successfully!');
         } catch (\Exception $e) {
             Log::error('[GymDesignationController][addGymDesignation]Error adding : ' . 'Request=' . $e->getMessage());
-            return back()->with('status', 'error')->with('message', 'Designation Not Added ');
+            return back()->with('status', 'error')->with('message', 'Designation Not Added' . $e->getMessage());
         }
     }
 
@@ -73,6 +75,6 @@ class GymDesignationController extends Controller
     {
         $designation = $this->designation->where('uuid', $uuid)->firstOrFail();
         $designation->delete();
-        return redirect()->route('viewGymDesignation')->with('success', 'Designation deleted successfully!');
+        return redirect()->back()->with('status', 'success')->with('message', 'Designation deleted successfully!');
     }
 }
