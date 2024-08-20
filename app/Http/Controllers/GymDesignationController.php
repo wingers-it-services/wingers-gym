@@ -71,6 +71,38 @@ class GymDesignationController extends Controller
         }
     }
 
+    public function updateGymDesignation(Request $request)
+    {
+        try {
+            // Validate incoming request
+            $request->validate([
+                'designation_id' => 'required',
+                'designation_name' => 'required',
+                'is_commission_based' => 'required',
+                'is_assigned_to_member' => 'required',
+            ]);
+
+            // Find the designation by ID
+            $designation = $this->designation->findOrFail($request->designation_id);
+
+            if (!$designation) {
+                return redirect()->back()->with('error', 'Designation not found.');
+            }
+
+            // Update the designation details
+            $designation->designation_name = $request->input('designation_name');
+            $designation->is_commission_based = $request->input('is_commission_based');
+            $designation->is_assigned_to_member = $request->input('is_assigned_to_member');
+            $designation->save();
+
+            // Redirect back with success message
+            return redirect()->back()->with('status', 'success')->with('message', 'Designation updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('[GymDesignationController][addGymDesignation]Error adding : ' . 'Request=' . $e->getMessage());
+            return back()->with('status', 'error')->with('message', 'Designation Not Updated' . $e->getMessage());
+        }
+    }
+
     public function deleteGymDesignation(string $uuid)
     {
         $designation = $this->designation->where('uuid', $uuid)->firstOrFail();

@@ -76,6 +76,69 @@
 
 			</div>
 
+			<!-- Edit Designation Modal -->
+			<div class="modal fade" id="editDesignation">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Edit Designation</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body">
+							<form method="POST" id="editDesignationForm" action="/update-designation">
+								@csrf
+								<input type="hidden" id="edit_designation_id" name="designation_id">
+								<div class="form-group">
+									<label>Designation Name</label>
+									<input type="text" id="edit_designation_name" name="designation_name" class="form-control" required>
+								</div>
+
+								<div class="form-group">
+									<div class="row align-items-center">
+										<div class="col-auto">
+											<label>Commission Based:</label>
+										</div>
+										<div class="col-auto">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" id="edit_commission_yes" name="is_commission_based" value="1" required>
+												<label class="form-check-label" for="edit_commission_yes">Yes</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" id="edit_commission_no" name="is_commission_based" value="0" required>
+												<label class="form-check-label" for="edit_commission_no">No</label>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="row align-items-center">
+										<div class="col-auto">
+											<label>Assigned to Member:</label>
+										</div>
+										<div class="col-auto">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" id="edit_assigned_yes" name="is_assigned_to_member" value="1" required>
+												<label class="form-check-label" for="edit_assigned_yes">Yes</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" id="edit_assigned_no" name="is_assigned_to_member" value="0" required>
+												<label class="form-check-label" for="edit_assigned_no">No</label>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="text-end">
+									<button class="btn btn-primary">Update</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
 			<div class="col-xl-12 col-xxl-12">
 				<div class="row">
 					<div class="col-xl-12">
@@ -105,8 +168,14 @@
 
 									</div>
 									<div class="d-flex mb-3 me-auto ps-3 pe-3 align-items-center">
-										<span class="badge badge-rounded badge-success">Commision Based: Yes </span>
-										<span class="badge badge-rounded badge-danger">Assignable to user: Yes</span>
+										<span class="badge badge-rounded badge-success">
+											Commission Based: {{ $designation->is_commission_based == 1 ? 'Yes' : 'No' }}
+										</span>
+										<span class="badge badge-rounded badge-danger">
+											Assignable to user: {{ $designation->is_assigned_to_member == 1 ? 'Yes' : 'No' }}
+										</span>
+
+
 
 										<div class="dropdown mb-3">
 											<button type="button" class="btn rounded border-light" data-bs-toggle="dropdown" aria-expanded="false">
@@ -122,7 +191,10 @@
 												@else
 												<a class="dropdown-item" href="javascript:void(0);">Activate</a>
 												@endif
-												<a class="dropdown-item" href="javascript:void(0);" >Edit</a>
+												<a class="dropdown-item" href="javascript:void(0);"
+													onclick="editDesignation('{{ $designation->id }}', '{{ $designation->designation_name }}', '{{ $designation->is_commission_based }}', '{{ $designation->is_assigned_to_member }}')">
+													Edit
+												</a>
 												<a class="dropdown-item" onclick="confirmDelete('{{ $designation->uuid }}')">Delete</a>
 											</div>
 										</div>
@@ -139,21 +211,47 @@
 	</div>
 </div>
 <script>
-     function confirmDelete(uuid) {
-         Swal.fire({
-             title: 'Are you sure?',
-             text: 'Are you sure you want to delete this designation?.',
-             icon: 'warning',
-             showCancelButton: true,
-             confirmButtonColor: '#3085d6',
-             cancelButtonColor: '#d33',
-             confirmButtonText: 'Yes, delete it!'
-         }).then((result) => {
-             if (result.isConfirmed) {
-                 window.location.href = '/deleteGymDesignation/' + uuid;
-             }
-         });
-     }
- </script>
+	function confirmDelete(uuid) {
+		Swal.fire({
+			title: 'Are you sure?',
+			text: 'Are you sure you want to delete this designation?.',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				window.location.href = '/deleteGymDesignation/' + uuid;
+			}
+		});
+	}
+
+	function editDesignation(id, name, commissionBased, assignedToMember) {
+		// Set the hidden field with the designation ID
+		document.getElementById('edit_designation_id').value = id;
+
+		// Set the designation name
+		document.getElementById('edit_designation_name').value = name;
+
+		// Set the radio buttons for commission based using IDs
+		if (commissionBased == 1) {
+			document.getElementById('edit_commission_yes').checked = true;
+		} else {
+			document.getElementById('edit_commission_no').checked = true;
+		}
+
+		// Set the radio buttons for assigned to member using IDs
+		if (assignedToMember == 1) {
+			document.getElementById('edit_assigned_yes').checked = true;
+		} else {
+			document.getElementById('edit_assigned_no').checked = true;
+		}
+
+		// Show the edit modal
+		var myModal = new bootstrap.Modal(document.getElementById('editDesignation'));
+		myModal.show();
+	}
+</script>
 @include('CustomSweetAlert');
 @endsection
