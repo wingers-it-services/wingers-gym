@@ -74,7 +74,7 @@ class UserSubscriptionControllerApi extends Controller
                     'message' => 'User not authenticated',
                 ], 401);
             }
-            $subscriptions = $this->userSubscriptionHistory->where('user_id',$user->id)->get();
+            $subscriptions = $this->userSubscriptionHistory->with('subscription')->where('user_id',$user->id)->get();
 
             if ($subscriptions->isEmpty()) {
                 return response()->json([
