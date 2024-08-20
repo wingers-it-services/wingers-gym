@@ -205,6 +205,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     //addGymDesignation
     Route::post('/addGymDesignation', [GymDesignationController::class, 'addGymDesignation'])->name('addGymDesignation');
+    Route::post('/update-designation', [GymDesignationController::class, 'updateGymDesignation'])->name('update-designation');
+
 
     // deleteGymDesignation
     Route::get('/deleteGymDesignation/{uuid}', [GymDesignationController::class, 'deleteGymDesignation'])->name('deleteGymDesignation');

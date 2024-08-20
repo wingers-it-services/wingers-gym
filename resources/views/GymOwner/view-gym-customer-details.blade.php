@@ -224,7 +224,7 @@
                                                                         <th scope="col">Start Date</th>
                                                                         <th scope="col">End Date</th>
                                                                         <th scope="col">Status</th>
-                                                                        <th scope="col" class="text-end">Action
+                                                                        <!-- <th scope="col" class="text-end">Action -->
                                                                         </th>
                                                                     </tr>
                                                                 </thead>
@@ -244,14 +244,14 @@
                                                                                 <select name="status" onchange="this.form.submit()" class="form-select">
                                                                                     <option value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'selected' : '' }}>Active</option>
                                                                                     <option value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'selected' : '' }}>Inactive</option>
-                                                                                    <option value="{{ \App\Enums\GymSubscriptionStatusEnum::EXPIRE }}" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::EXPIRE ? 'selected' : '' }}>Expired</option>
+                                                                                    <!-- <option value="{{ \App\Enums\GymSubscriptionStatusEnum::EXPIRE }}" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::EXPIRE ? 'selected' : '' }}>Expired</option> -->
                                                                                 </select>
                                                                             </form>
 
                                                                         </td>
-                                                                        <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
+                                                                        <!-- <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
                                                                                 </a><a href="javascript:void()" onclick="confirmSubscriptionDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
-                                                                        </td>
+                                                                        </td> -->
                                                                     </tr>
                                                                     @endforeach
                                                                 </tbody>
@@ -617,7 +617,7 @@
                                                                         <tr>
                                                                             <th scope="col">Trainer Name</th>
                                                                             <th scope="col">Status</th>
-                                                                            <th scope="col" class="text-end">Action
+                                                                            <!-- <th scope="col" class="text-end">Action -->
                                                                             </th>
                                                                         </tr>
                                                                     </thead>
@@ -637,9 +637,9 @@
                                                                                 </form>
 
                                                                             </td>
-                                                                            <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
+                                                                            <!-- <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
                                                                                     </a><a href="javascript:void()" onclick="confirmTrainerDelete('{{ $trainer->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
-                                                                            </td>
+                                                                            </td> -->
                                                                         </tr>
                                                                         @endforeach
                                                                     </tbody>

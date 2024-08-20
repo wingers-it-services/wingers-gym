@@ -823,7 +823,7 @@
 								</div>
 							</li> --}}
 
-							
+
 						<li class="nav-item dropdown header-profile">
 							<a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
 								<img id="user-image" src="{{ Auth::guard('gym')->user()->image }}" width="20" alt="">
@@ -897,7 +897,7 @@
 
 				<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
 						<i class="fa fa-address-card-o" aria-hidden="true"></i>
-						<span class="nav-text">GYM Staff</span>
+						<span class="nav-text">Gym Staff</span>
 					</a>
 					<ul aria-expanded="false">
 						<li><a href="/add-gym-staff">Add New Staff</a></li>
@@ -908,9 +908,9 @@
 				</li>
 
 
-				<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
+				<li><a class="has-arrow ai-icon" href="/gym-customers" aria-expanded="false">
 						<i class="fa fa-users" aria-hidden="true"></i>
-						<span class="nav-text">GYM Members</span>
+						<span class="nav-text">Gym Members</span>
 					</a>
 
 					<ul aria-expanded="false">
@@ -966,11 +966,11 @@
 						<span class="nav-text">GYM Profile</span></a>
 				</li>
 
-					<li>
-						<a href="/gym-faq" aria-expanded="false">
-							<i class="fa fa-question-circle" aria-hidden="true"></i>
-							<span class="nav-text">FAQ</span>
-						</a>
+				<li>
+					<a href="/gym-faq" aria-expanded="false">
+						<i class="fa fa-question-circle" aria-hidden="true"></i>
+						<span class="nav-text">FAQ</span>
+					</a>
 
 				</li>
 
