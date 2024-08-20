@@ -159,25 +159,28 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 mb-2" id="fees-field">
-												<div class="form-group">
-													<label class="text-label">Fees<span class="required">*</span></label>
-													<input type="number" name="fees" id="fees" placeholder="10000" class="form-control">
-												</div>
-											</div>
-											<div class="col-lg-4 mb-2" id="staff-commission-field">
-												<div class="form-group">
-													<label class="text-label">Staff Commission<span class="required">*</span></label>
-													<input type="number" name="staff_commission" id="staff_commission" placeholder="10000" class="form-control">
-												</div>
-											</div>
-											<div class="col-lg-4 mb-2" id="gym-commission-field">
-												<div class="form-group">
-													<label class="text-label">Gym Commission<span class="required">*</span></label>
-													<input type="number" name="gym_commission" id="gym_commission" placeholder="10000" class="form-control">
-												</div>
-											</div>
+                                                <div class="form-group">
+                                                    <label class="text-label">Fees<span class="required">*</span></label>
+                                                    <input type="number" name="fees" id="fees" placeholder="10000" value="{{$staffDetail->fees}}" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 mb-2" id="staff-commission-field">
+                                                <div class="form-group">
+                                                    <label class="text-label">Staff Commission<span class="required">*</span></label>
+                                                    <input type="number" name="staff_commission" id="staff_commission" value="{{$staffDetail->staff_commission}}" placeholder="10000" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 mb-2" id="gym-commission-field">
+                                                <div class="form-group">
+                                                    <label class="text-label">Gym Commission<span class="required">*</span></label>
+                                                    <input type="number" name="gym_commission" id="gym_commission" value="{{$staffDetail->gym_commission}}" placeholder="10000" class="form-control">
+                                                </div>
+                                            </div>
                                         </div>
                                         <button class="btn btn-primary btn-lg btn-block" type="submit">Update</button>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>

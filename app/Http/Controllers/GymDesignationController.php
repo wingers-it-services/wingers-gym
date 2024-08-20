@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\GymDesignationEnum;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Designation;
 use App\Models\Gym;
+use App\Models\Reel;
 use App\Traits\SessionTrait;
 use Illuminate\Support\Facades\Auth;
 
@@ -102,6 +104,61 @@ class GymDesignationController extends Controller
             return back()->with('status', 'error')->with('message', 'Designation Not Updated' . $e->getMessage());
         }
     }
+
+    public function deactivateDesignation(Request $request, $id)
+    {
+        try {
+            // Find the designation by ID
+            $designation = $this->designation->findOrFail($id);
+
+            // Update the status to inactive
+            $designation->status = GymDesignationEnum::InActive;
+            $designation->save();
+
+            // Return a JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Designation Deactivated Successfully.'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error deactivating designation: ' . $e->getMessage());
+
+            // Return a JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to deactivate designation: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function activateDesignation(Request $request, $id)
+    {
+        try {
+            // Find the designation by ID
+            $designation = $this->designation->findOrFail($id);
+
+            // Update the status to active
+            $designation->status = GymDesignationEnum::Active;
+            $designation->save();
+
+            // Return a JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Designation Activated Successfully.'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error activating designation: ' . $e->getMessage());
+
+            // Return a JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to activate designation: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+
+
 
     public function deleteGymDesignation(string $uuid)
     {

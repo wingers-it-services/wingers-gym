@@ -71,7 +71,10 @@ class GymStaffController extends Controller
                 "joining_date" => 'required',
                 "salary"       => 'required',
                 "designation"  => 'required',
-                "blood_group"  => 'required'
+                "blood_group"  => 'required',
+                'staff_commission'    => 'required|max:100',
+                'gym_commission'      => 'required|max:100'
+
             ]);
 
             $gym = Auth::guard('gym')->user();
@@ -239,7 +242,7 @@ class GymStaffController extends Controller
                 $imagefile->move(public_path('gymStaff_images/'), $filename);
             }
 
-            $data=$request->all();
+            $data = $request->all();
 
             $isStaffUpdated = $this->gymStaff->updateStaff($data, $imagePath);
 
@@ -263,7 +266,7 @@ class GymStaffController extends Controller
     public function staffDetails()
     {
         $gym = Auth::guard('gym')->user();
-        $gymStaffs = $this->gymStaff->where('gym_id',$gym->id)->get();
+        $gymStaffs = $this->gymStaff->where('gym_id', $gym->id)->get();
         return view('GymOwner.staff-details', compact('gymStaffs'));
     }
 }

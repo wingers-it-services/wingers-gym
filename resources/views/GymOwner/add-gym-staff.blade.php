@@ -54,7 +54,7 @@
 												</div>
 											</div>
 										</div>
-										
+
 									</div>
 									<div id="wizard_Details" class="tab-pane" role="tabpanel">
 										<div class="row">
@@ -159,14 +159,14 @@
 											</div>
 											<div class="col-lg-4 mb-2" id="staff-commission-field">
 												<div class="form-group">
-													<label class="text-label">Staff Commission<span class="required">*</span></label>
-													<input type="number" name="staff_commission" id="staff_commission" placeholder="10000" class="form-control">
+													<label class="text-label">Staff Commission (in %) <span class="required">*</span></label>
+													<input type="number" name="staff_commission" id="staff_commission" placeholder="20" class="form-control">
 												</div>
 											</div>
 											<div class="col-lg-4 mb-2" id="gym-commission-field">
 												<div class="form-group">
 													<label class="text-label">Gym Commission<span class="required">*</span></label>
-													<input type="number" name="gym_commission" id="gym_commission" placeholder="10000" class="form-control">
+													<input type="number" name="gym_commission" id="gym_commission" placeholder="80" class="form-control" readonly>
 												</div>
 											</div>
 
@@ -258,34 +258,48 @@
 	};
 
 	document.addEventListener('DOMContentLoaded', function() {
-    const designationSelect = document.getElementById('designation');
-    const feesField = document.getElementById('fees-field');
-    const staffCommissionField = document.getElementById('staff-commission-field');
-    const gymCommissionField = document.getElementById('gym-commission-field');
+		const designationSelect = document.getElementById('designation');
+		const feesField = document.getElementById('fees-field');
+		const staffCommissionField = document.getElementById('staff-commission-field');
+		const gymCommissionField = document.getElementById('gym-commission-field');
 
-    // Function to toggle fields based on commission-based value
-    function toggleFields() {
-        const selectedOption = designationSelect.options[designationSelect.selectedIndex];
-        const isCommissionBased = selectedOption ? selectedOption.getAttribute('data-is-commission-based') === '1' : false;
+		// Function to toggle fields based on commission-based value
+		function toggleFields() {
+			const selectedOption = designationSelect.options[designationSelect.selectedIndex];
+			const isCommissionBased = selectedOption ? selectedOption.getAttribute('data-is-commission-based') === '1' : false;
 
-        if (isCommissionBased) {
-            feesField.style.display = 'block';
-            staffCommissionField.style.display = 'block';
-            gymCommissionField.style.display = 'block';
-        } else {
-            feesField.style.display = 'none';
-            staffCommissionField.style.display = 'none';
-            gymCommissionField.style.display = 'none';
-        }
-    }
+			if (isCommissionBased) {
+				feesField.style.display = 'block';
+				staffCommissionField.style.display = 'block';
+				gymCommissionField.style.display = 'block';
+			} else {
+				feesField.style.display = 'none';
+				staffCommissionField.style.display = 'none';
+				gymCommissionField.style.display = 'none';
+			}
+		}
 
-    // Initialize visibility based on the initially selected option
-    toggleFields();
+		// Initialize visibility based on the initially selected option
+		toggleFields();
 
-    // Add event listener to handle changes
-    designationSelect.addEventListener('change', toggleFields);
-});
+		// Add event listener to handle changes
+		designationSelect.addEventListener('change', toggleFields);
+	});
 
+	document.addEventListener('DOMContentLoaded', function() {
+		const staffCommissionInput = document.getElementById('staff_commission');
+		const gymCommissionInput = document.getElementById('gym_commission');
+
+		// Add event listener to calculate Gym Commission based on Staff Commission
+		staffCommissionInput.addEventListener('input', function() {
+			const staffCommissionPercentage = parseFloat(staffCommissionInput.value) || 0;
+
+			// Calculate Gym Commission as the remaining percentage
+			const gymCommissionPercentage = 100 - staffCommissionPercentage;
+
+			gymCommissionInput.value = gymCommissionPercentage.toFixed(2);
+		});
+	});
 </script>
 @include('CustomSweetAlert');
 @endsection

@@ -206,6 +206,10 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     //addGymDesignation
     Route::post('/addGymDesignation', [GymDesignationController::class, 'addGymDesignation'])->name('addGymDesignation');
     Route::post('/update-designation', [GymDesignationController::class, 'updateGymDesignation'])->name('update-designation');
+    Route::get('/update-designation-status/{id}', [GymDesignationController::class, 'deactivateDesignation'])->name('update-designation-status');
+    Route::get('/activate-designation-status/{id}', [GymDesignationController::class, 'activateDesignation'])->name('activate-designation-status');
+
+
 
 
     // deleteGymDesignation

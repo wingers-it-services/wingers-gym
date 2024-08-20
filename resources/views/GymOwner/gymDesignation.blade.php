@@ -187,10 +187,9 @@
 											</button>
 											<div class="dropdown-menu dropdown-menu-end">
 												@if ($designation->status)
-												<a class="dropdown-item" href="javascript:void(0);">Deactivate</a>
+												<a class="dropdown-item" href="javascript:void(0);" onclick="deactivateDesignation('{{ $designation->id }}')">Deactivate</a>
 												@else
-												<a class="dropdown-item" href="javascript:void(0);">Activate</a>
-												@endif
+												<a class="dropdown-item" href="javascript:void(0);" onclick="activateDesignation('{{ $designation->id }}')">Activate</a> @endif
 												<a class="dropdown-item" href="javascript:void(0);"
 													onclick="editDesignation('{{ $designation->id }}', '{{ $designation->designation_name }}', '{{ $designation->is_commission_based }}', '{{ $designation->is_assigned_to_member }}')">
 													Edit
@@ -251,6 +250,100 @@
 		// Show the edit modal
 		var myModal = new bootstrap.Modal(document.getElementById('editDesignation'));
 		myModal.show();
+	}
+
+	function deactivateDesignation(id) {
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, deactivate it!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					url: `/update-designation-status/` + id,
+					type: 'GET',
+					data: {
+						_token: $('meta[name="csrf-token"]').attr('content')
+					},
+					success: function(data) {
+						if (data.status === 'success') {
+							Swal.fire(
+								'Deactivated!',
+								'Designation has been deactivated.',
+								'success'
+							).then(() => {
+								location.reload(); // Reload the page to see the updated status
+							});
+						} else {
+							Swal.fire(
+								'Failed!',
+								'Failed to deactivate designation: ' + data.message,
+								'error'
+							);
+						}
+					},
+					error: function(xhr, status, error) {
+						console.error('Error:', error);
+						Swal.fire(
+							'Error!',
+							'Failed to deactivate designation.',
+							'error'
+						);
+					}
+				});
+			}
+		});
+	}
+
+	function activateDesignation(id) {
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "You want to activate this designation!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, activate it!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					url: `/activate-designation-status/` + id,
+					type: 'GET',
+					data: {
+						_token: $('meta[name="csrf-token"]').attr('content')
+					},
+					success: function(data) {
+						if (data.status === 'success') {
+							Swal.fire(
+								'Activated!',
+								'Designation has been activated.',
+								'success'
+							).then(() => {
+								location.reload(); // Reload the page to see the updated status
+							});
+						} else {
+							Swal.fire(
+								'Failed!',
+								'Failed to activate designation: ' + data.message,
+								'error'
+							);
+						}
+					},
+					error: function(xhr, status, error) {
+						console.error('Error:', error);
+						Swal.fire(
+							'Error!',
+							'Failed to activate designation.',
+							'error'
+						);
+					}
+				});
+			}
+		});
 	}
 </script>
 @include('CustomSweetAlert');
