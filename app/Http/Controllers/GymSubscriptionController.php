@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Gym;
 use App\Models\GymSubscription;
+use App\Models\User;
 use App\Traits\SessionTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -15,22 +17,63 @@ class GymSubscriptionController extends Controller
     use SessionTrait;
     protected $gymSubscription;
     protected $gym;
+    protected $user;
 
-    public function __construct(GymSubscription $gymSubscription, Gym $gym)
-    {
+    public function __construct(
+        GymSubscription $gymSubscription,
+        Gym $gym,
+        User $user
+    ) {
         $this->gymSubscription = $gymSubscription;
         $this->gym = $gym;
+        $this->user = $user;
     }
 
     public function listSubscriptionPlan()
     {
-
         $gym = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
-
-        $subscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
-        return view('GymOwner.subscription-list', compact('subscriptions'));
+    
+        // Get the total number of users in the gym
+        $totalUsers = $this->user->where('gym_id', $gymId)->count();
+    
+        // Get user counts grouped by subscription_id
+        $usersBySubscription = $this->user->select('subscription_id', DB::raw('count(*) as user_count'))
+            ->where('gym_id', $gymId)
+            ->groupBy('subscription_id')
+            ->get();
+    
+        // Fetch subscriptions ordered by their ID
+        $subscriptions = $this->gymSubscription->where('gym_id', $gymId)
+            ->orderBy('id') // Order by subscription ID
+            ->get();
+    
+        $subscriptionDetails = [];
+    
+        foreach ($subscriptions as $subscription) {
+            $subscriptionId = $subscription->id;
+    
+            // Get user count for the current subscription_id
+            $userCount = $usersBySubscription->where('subscription_id', $subscriptionId)->first()->user_count ?? 0;
+    
+            // Calculate the percentage of users with this subscription_id
+            $percentage = $totalUsers > 0 ? ($userCount / $totalUsers) * 100 : 0;
+    
+            // Add the subscription details to the array
+            $subscriptionDetails[] = [
+                'subscription' => $subscription,
+                'user_count' => $userCount,
+                'percentage' => number_format($percentage, 2), // Format percentage to 2 decimal places
+            ];
+        }
+    
+        Log::info('Total Users: ' . $totalUsers);
+        Log::info('Subscription Details: ' . json_encode($subscriptionDetails));
+    
+        return view('GymOwner.subscription-list', compact('subscriptionDetails', 'totalUsers'));
     }
+    
+
 
     public function viewGymSubscription(Request $request)
     {
@@ -95,5 +138,5 @@ class GymSubscriptionController extends Controller
 
         $plan->delete();
         return redirect()->back()->with('status', 'success')->with('message', 'Suscription deleted successfully!');
-    } 
+    }
 }

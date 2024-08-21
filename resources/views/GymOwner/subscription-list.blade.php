@@ -118,19 +118,25 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($subscriptions as $subscription)
-                                            <tr>
-                                                <td>{{$subscription->subscription_name }}</td>
-                                                <td>{{$subscription->amount }}</td>
-                                                <td>{{$subscription->validity }} Months</td>
-                                                <td>{{ \Carbon\Carbon::parse($subscription->start_date)->format('M d, Y') }}</td>
-                                                <td><span class="badge badge-warning">70%</span>
-                                                <td class="text-end">
-                                                    <span><a href="javascript:void(0);" class="me-4 edit-book-button" data-bs-toggle="modal" data-bs-target="#editSuscription" data-book='@json($subscription)'><i class="fa fa-pencil color-muted"></i> </a>
-                                                        <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
-                                                </td>
-                                            </tr>
-                                            @endforeach
+                                        @foreach($subscriptionDetails as $data)
+            <tr>
+                <td>{{ $data['subscription']->subscription_name }}</td>
+                <td>{{ $data['subscription']->amount }}</td>
+                <td>{{ $data['subscription']->validity }} Months</td>
+                <td>{{ \Carbon\Carbon::parse($data['subscription']->start_date)->format('M d, Y') }}</td>
+                <td><span class="badge badge-warning">{{ $data['percentage'] }}%</span></td>
+                <td class="text-end">
+                    <span>
+                        <a href="javascript:void(0);" class="me-4 edit-book-button" data-bs-toggle="modal" data-bs-target="#editSuscription" data-book='@json($data['subscription'])'>
+                            <i class="fa fa-pencil color-muted"></i>
+                        </a>
+                        <a onclick="confirmDelete('{{ $data['subscription']->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </span>
+                </td>
+            </tr>
+        @endforeach
                                         </tbody>
                                     </table>
                                 </div>
