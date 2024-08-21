@@ -24,6 +24,12 @@ class GymSubscription extends Model
         'start_date'
     ];
 
+    public function userSubscriptions()
+    {
+        return $this->hasMany(UserSubscriptionHistory::class, 'subscription_id');
+    }
+
+
 
     public function createSubscription(array $subscriptionArray, int $gymId)
     {

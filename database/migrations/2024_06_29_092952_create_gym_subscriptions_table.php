@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('amount');
             $table->date('start_date');
             $table->string('validity');
-            $table->string('description');
+            $table->longText('description');
             $table->string('gym_id');
             $table->softDeletes();
             $table->timestamps();

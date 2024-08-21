@@ -29,18 +29,20 @@ class UserSubscriptionControllerApi extends Controller
     * @return The `fetchSubscription` function returns a JSON response with status, subscriptions data,
     * and a message.
     */
-    public function fetchSubscription()
+    public function fetchSubscription(Request $request)
     {
         try {
-            
-            $subscriptions = $this->gymSubscription->get();
+            $request->validate([
+                'gym_id' => 'required',
+            ]);
+            $subscriptions = $this->gymSubscription->where('gym_id',$request->gym_id)->get();
 
             if ($subscriptions->isEmpty()) {
                 return response()->json([
                     'status'        => 422,
                     'subscriptions' => $subscriptions,
                     'message'       => 'There is no subscriptions'
-                ], 200);
+                ], 422);
             }
 
             return response()->json([
@@ -87,7 +89,7 @@ class UserSubscriptionControllerApi extends Controller
                     'status'        => 422,
                     'subscriptions' => $subscriptions,
                     'message'       => 'There is no subscriptions'
-                ], 200);
+                ], 422);
             }
 
             return response()->json([
