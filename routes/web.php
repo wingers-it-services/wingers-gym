@@ -102,6 +102,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/add-gym-staff', [GymStaffController::class, 'showAddGymStaff']);
     Route::post('/gym-staff', [GymStaffController::class, 'addGymStaff']);
     Route::get('/staff-details', [GymStaffController::class, 'staffDetails']);
+    Route::get('/add-staff-asset', [GymStaffController::class, 'addStaffAsset']);
 
     /* markGymStaffAttendance */
     Route::post('/mark-gym-staff-attendance', [GymStaffController::class, 'markGymStaffAttendance'])->name('markGymStaffAttendance');
@@ -192,8 +193,10 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::post('/allocateTrainer', [GymUserController::class, 'allocateTrainerToUser'])->name('allotTrainer');
     Route::post('/update-trainer-status/{user_id}', [GymUserController::class, 'updateTrainerStatus'])->name('update-trainer-status');
     Route::get('/deleteTrainer/{uuid}', [GymUserController::class, 'deleteTrainer'])->name('deleteTrainer');
-    Route::get('/get-user-bmi/{userId}', [GymUserController::class, 'getUserBmi']);
-    Route::post('/update-user-bmi', [GymUserController::class, 'updateUserBmi'])->name('updateUserBmi');
+    Route::get('/get-user-bmi/{bmiId}', [GymUserController::class, 'getUserBmi']);
+    Route::post('/update-user-bmi', [UserBmiController::class, 'updateUserBmi'])->name('updateUserBmi');
+    Route::get('/deleteBmi/{uuid}', [UserBmiController::class, 'deleteBmi'])->name('deleteBmi');
+
 
 
 

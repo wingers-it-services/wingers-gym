@@ -25,12 +25,12 @@ class userBmi extends Model
     {
         try {
             // dd($createBmiArray);
-            $this->create([
+            return $this->create([
                 'gym_id' => $gymId,
                 'user_id' => $userId,
                 'height' => $createBmiArray['height'],
                 'weight' => $createBmiArray['weight'],
-                'bmi'=> $createBmiArray['bmi']
+                'bmi' => $createBmiArray['bmi'],
             ]);
         } catch (Throwable $th) {
             Log::error("[Bmi][createBmi] error " . $th->getMessage());

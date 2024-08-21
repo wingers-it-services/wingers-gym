@@ -47,12 +47,10 @@
                                         </div>
                                         <div class="form-group position-relative">
                                             <label class="mb-1"><strong>Password</strong></label>
-                                            <input type="password" class="form-control" name="password" placeholder="Password" required>
-                                            <span class="show-pass eye">
-
+                                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                                            <span class="show-pass eye" onclick="togglePasswordVisibility()">
                                                 <i class="fa fa-eye-slash"></i>
                                                 <i class="fa fa-eye"></i>
-
                                             </span>
                                         </div>
                                         <div class="row d-flex justify-content-between mt-4 mb-2">
@@ -88,15 +86,30 @@
     Scripts
 ***********************************-->
     <!-- Required vendors -->
-    {{-- Custom sweetAlert --}}
-    @include('CustomSweetAlert');
+
     <!-- <script src="{{asset('vendor/global/global.min.js')}}" type="text/javascript"></script> -->
     <script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/custom.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/deznav-init.js')}}" type="text/javascript"></script>
+    <script>
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById("password");
+            var toggleIcon = document.getElementById("togglePassword");
 
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            }
+        }
+    </script>
 
 
 </body>
-
+{{-- Custom sweetAlert --}}
+@include('CustomSweetAlert');
 </html>

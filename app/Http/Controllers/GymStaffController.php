@@ -55,7 +55,7 @@ class GymStaffController extends Controller
         $gym = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
-        $designations = $this->designation->where('gym_id', $gymId)->get();
+        $designations = $this->designation->where('gym_id', $gymId)->where('status', 1)->get();
         return view('GymOwner.add-gym-staff', compact('designations'));
     }
 
@@ -71,10 +71,7 @@ class GymStaffController extends Controller
                 "joining_date" => 'required',
                 "salary"       => 'required',
                 "designation"  => 'required',
-                "blood_group"  => 'required',
-                'staff_commission'    => 'required|max:100',
-                'gym_commission'      => 'required|max:100'
-
+                "blood_group"  => 'required'
             ]);
 
             $gym = Auth::guard('gym')->user();
@@ -268,5 +265,39 @@ class GymStaffController extends Controller
         $gym = Auth::guard('gym')->user();
         $gymStaffs = $this->gymStaff->where('gym_id', $gym->id)->get();
         return view('GymOwner.staff-details', compact('gymStaffs'));
+    }
+
+    public function addStaffAsset(Request $request)
+    {
+        try {
+            $request->validate([
+                "staff_id"     => 'required',
+                "name"    => 'required',
+                "category"        => 'required',
+                "asset_tag" => 'required',
+                "allocation_date" => 'required',
+                "price"       => 'required',
+                "status"  => 'required',
+                "image"  => 'required',
+            ]);
+
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
+
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $assetPhoto = $request->file('image');
+                $filename = time() . '_' . $assetPhoto->getClientOriginalName();
+                $imagePath = 'gymStaff_asset_images/' . $filename;
+                $assetPhoto->move(public_path('gymStaff_asset_images/'), $filename);
+            }
+
+            $this->gymStaff->addGymStaffAsset($request->all(), $gymId, $imagePath);
+
+            return redirect()->route('listGymStaff')->with('status', 'success')->with('message', 'Gym Staff saved successfully.');
+        } catch (\Throwable $th) {
+            Log::error("[GymStaffController][addGymStaff] error " . $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
+        }
     }
 }

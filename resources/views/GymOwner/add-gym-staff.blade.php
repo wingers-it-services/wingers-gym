@@ -160,12 +160,13 @@
 											<div class="col-lg-4 mb-2" id="staff-commission-field">
 												<div class="form-group">
 													<label class="text-label">Staff Commission (in %) <span class="required">*</span></label>
-													<input type="number" name="staff_commission" id="staff_commission" placeholder="20" class="form-control">
+													<input type="number" name="staff_commission" id="staff_commission" placeholder="20" class="form-control" step="0.01" max="100">
+													<small id="staff-commission-error" style="color: red; display: none;">Staff commission cannot be greater than 100%</small>
 												</div>
 											</div>
 											<div class="col-lg-4 mb-2" id="gym-commission-field">
 												<div class="form-group">
-													<label class="text-label">Gym Commission<span class="required">*</span></label>
+													<label class="text-label">Gym Commission (in %)<span class="required">*</span></label>
 													<input type="number" name="gym_commission" id="gym_commission" placeholder="80" class="form-control" readonly>
 												</div>
 											</div>
@@ -289,15 +290,22 @@
 	document.addEventListener('DOMContentLoaded', function() {
 		const staffCommissionInput = document.getElementById('staff_commission');
 		const gymCommissionInput = document.getElementById('gym_commission');
+		const errorMessage = document.getElementById('staff-commission-error');
 
-		// Add event listener to calculate Gym Commission based on Staff Commission
 		staffCommissionInput.addEventListener('input', function() {
-			const staffCommissionPercentage = parseFloat(staffCommissionInput.value) || 0;
+			let staffCommissionValue = parseFloat(staffCommissionInput.value) || 0;
 
-			// Calculate Gym Commission as the remaining percentage
-			const gymCommissionPercentage = 100 - staffCommissionPercentage;
+			// Check if the value is greater than 100
+			if (staffCommissionValue > 100) {
+				errorMessage.style.display = 'block';
+				gymCommissionInput.value = ''; // Clear gym commission if the input is invalid
+			} else {
+				errorMessage.style.display = 'none';
 
-			gymCommissionInput.value = gymCommissionPercentage.toFixed(2);
+				// Calculate Gym Commission as the remaining percentage
+				const gymCommissionValue = 100 - staffCommissionValue;
+				gymCommissionInput.value = gymCommissionValue;
+			}
 		});
 	});
 </script>

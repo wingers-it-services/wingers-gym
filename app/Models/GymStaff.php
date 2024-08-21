@@ -37,7 +37,7 @@ class GymStaff extends Model
     ];
 
 
-    public function addGymStaff(array $gymStaffArray, int $gymId, ?string $imagePath)
+    public function addGymStaff(array $gymStaffArray, int $gymId, string $imagePath)
     {
         try {
             $this->create([
