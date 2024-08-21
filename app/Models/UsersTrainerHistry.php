@@ -46,7 +46,7 @@ class UsersTrainerHistry extends Model
                 'status'        => $gymTrainer['status']
             ]);
         } catch (Throwable $e) {
-            Log::error("[UserBmiController][createUserBmi] error " . $e->getMessage());
+            Log::error("[UsersTrainerHistry] error " . $e->getMessage());
         }
     }
 }

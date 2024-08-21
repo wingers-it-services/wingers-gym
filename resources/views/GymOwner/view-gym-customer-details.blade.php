@@ -525,12 +525,12 @@
                                                                         <td>{{ $bmi->bmi }}</td>
                                                                         <td class="text-end">
                                                                             <span>
-                                                                                <a href="javascript:void()" class="edit-bmi" data-user-id="{{ $userDetail->id }}" data-bs-toggle="tooltip" data-placement="top" title="Edit">
+                                                                                <a href="javascript:void()" class="edit-bmi" data-bmi-id="{{ $bmi->id }}" data-bs-toggle="tooltip" data-placement="top" title="Edit">
                                                                                     <i class="fa fa-pencil color-muted"></i>
                                                                                 </a>
 
                                                                                 &nbsp; &nbsp;
-                                                                                <a href="javascript:void()" data-bs-toggle="tooltip" data-placement="top" title="Close">
+                                                                                <a href="javascript:void()" onclick="confirmSubscriptionDelete('{{ $bmi->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close">
                                                                                     <i class="fas fa-times color-danger"></i>
                                                                                 </a>
                                                                             </span>
@@ -1147,11 +1147,11 @@
 
         editButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const userId = this.getAttribute('data-user-id');
+                const bmiId = this.getAttribute('data-bmi-id');
 
-                if (userId) {
+                if (bmiId) {
                     // Make an AJAX request to fetch the BMI and body measurement data
-                    fetch(`/get-user-bmi/${userId}`)
+                    fetch(`/get-user-bmi/${bmiId}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
@@ -1164,34 +1164,35 @@
                                 document.getElementById('edit_calculatedBmi').value = bmi.bmi || '';
 
                                 // Populate Body Measurement fields
-                                document.getElementById('edit_chest').value = bodyMeasurement.chest || '';
-                                document.getElementById('edit_triceps').value = bodyMeasurement.triceps || '';
-                                document.getElementById('edit_biceps').value = bodyMeasurement.biceps || '';
-                                document.getElementById('edit_lats').value = bodyMeasurement.lats || '';
-                                document.getElementById('edit_shoulder').value = bodyMeasurement.shoulder || '';
-                                document.getElementById('edit_abs').value = bodyMeasurement.abs || '';
-                                document.getElementById('edit_forearms').value = bodyMeasurement.forearms || '';
-                                document.getElementById('edit_traps').value = bodyMeasurement.traps || '';
-                                document.getElementById('edit_glutes').value = bodyMeasurement.glutes || '';
-                                document.getElementById('edit_quads').value = bodyMeasurement.quads || '';
-                                document.getElementById('edit_hamstring').value = bodyMeasurement.hamstring || '';
-                                document.getElementById('edit_calves').value = bodyMeasurement.calves || '';
+                                document.getElementById('edit_chest').value = bodyMeasurement ? bodyMeasurement.chest || '' : '';
+                                document.getElementById('edit_triceps').value = bodyMeasurement ? bodyMeasurement.triceps || '' : '';
+                                document.getElementById('edit_biceps').value = bodyMeasurement ? bodyMeasurement.biceps || '' : '';
+                                document.getElementById('edit_lats').value = bodyMeasurement ? bodyMeasurement.lats || '' : '';
+                                document.getElementById('edit_shoulder').value = bodyMeasurement ? bodyMeasurement.shoulder || '' : '';
+                                document.getElementById('edit_abs').value = bodyMeasurement ? bodyMeasurement.abs || '' : '';
+                                document.getElementById('edit_forearms').value = bodyMeasurement ? bodyMeasurement.forearms || '' : '';
+                                document.getElementById('edit_traps').value = bodyMeasurement ? bodyMeasurement.traps || '' : '';
+                                document.getElementById('edit_glutes').value = bodyMeasurement ? bodyMeasurement.glutes || '' : '';
+                                document.getElementById('edit_quads').value = bodyMeasurement ? bodyMeasurement.quads || '' : '';
+                                document.getElementById('edit_hamstring').value = bodyMeasurement ? bodyMeasurement.hamstring || '' : '';
+                                document.getElementById('edit_calves').value = bodyMeasurement ? bodyMeasurement.calves || '' : '';
 
                                 // Show the modal
                                 new bootstrap.Modal(document.getElementById('editBmiModal')).show();
                             } else {
-                                console.error('Data not found for the given user.');
+                                console.error(data.message || 'Data not found for the given BMI ID.');
                             }
                         })
                         .catch(error => {
                             console.error('Error fetching data:', error);
                         });
                 } else {
-                    console.error('User ID is missing.');
+                    console.error('BMI ID is missing.');
                 }
             });
         });
     });
+
 
 
 
@@ -1501,6 +1502,23 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = '/deleteSubcriptionHistory/' + uuid;
+            }
+        });
+    }
+
+    
+    function confirmSubscriptionDelete(uuid) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to delete this BMI.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/deleteBmi/' + uuid;
             }
         });
     }

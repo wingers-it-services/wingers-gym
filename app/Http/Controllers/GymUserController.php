@@ -533,10 +533,11 @@ class GymUserController extends Controller
         }
     }
 
-    public function getUserBmi($userId)
+    public function getUserBmi($bmiId)
     {
-        $bmi = $this->bmi->where('user_id', $userId)->first();
-        $bodyMeasurement = $this->userBodyMeasurement->where('user_id', $userId)->first();
+        $bmi = $this->bmi->where('id', $bmiId)->first();
+
+        $bodyMeasurement = $this->userBodyMeasurement->where('bmi_id', $bmiId)->first();
 
         if ($bmi && $bodyMeasurement) {
             return response()->json([
@@ -549,65 +550,7 @@ class GymUserController extends Controller
         }
     }
 
-    public function updateUserBmi(Request $request)
-    {
-        try {
-            // Validate the incoming request data
-            $request->validate([
-                'user_id' => 'required',
-                'height' => 'required|numeric|min:1',
-                'weight' => 'required|numeric|min:1',
-                'bmi' => 'required|numeric|min:0',
-                // Add validation rules for body measurements
-                'chest' => 'nullable|numeric|min:0',
-                'triceps' => 'nullable|numeric|min:0',
-                'biceps' => 'nullable|numeric|min:0',
-                'lats' => 'nullable|numeric|min:0',
-                'shoulder' => 'nullable|numeric|min:0',
-                'abs' => 'nullable|numeric|min:0',
-                'forearms' => 'nullable|numeric|min:0',
-                'traps' => 'nullable|numeric|min:0',
-                'glutes' => 'nullable|numeric|min:0',
-                'quads' => 'nullable|numeric|min:0',
-                'hamstring' => 'nullable|numeric|min:0',
-                'calves' => 'nullable|numeric|min:0',
-            ]);
 
-            // Update or create the BMI record
-            $bmi = $this->bmi->updateOrCreate(
-                ['user_id' => $request->user_id],
-                [
-                    'height' => $request->height,
-                    'weight' => $request->weight,
-                    'bmi' => $request->bmi
-                ]
-            );
-
-            // Update or create the body measurement record
-            $bodyMeasurement = $this->userBodyMeasurement->updateOrCreate(
-                ['user_id' => $request->user_id],
-                [
-                    'chest' => $request->chest,
-                    'triceps' => $request->triceps,
-                    'biceps' => $request->biceps,
-                    'lats' => $request->lats,
-                    'shoulder' => $request->shoulder,
-                    'abs' => $request->abs,
-                    'forearms' => $request->forearms,
-                    'traps' => $request->traps,
-                    'glutes' => $request->glutes,
-                    'quads' => $request->quads,
-                    'hamstring' => $request->hamstring,
-                    'calves' => $request->calves,
-                ]
-            );
-
-            return redirect()->back()->with('status', 'success')->with('message', 'Body Measurement And BMI Updated Successfully');
-        } catch (Throwable $th) {
-            Log::error("[GymUserController][updateUserBmi] error " . $th->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
-        }
-    }
 
     public function updateSubscriptionStatus(Request $request, $user_id)
     {
