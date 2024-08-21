@@ -20,9 +20,12 @@ class GymUserTrainerControllerApi extends Controller
     public function fetchUserTrainer(Request $request)
     {
         try {
+            $request->validate([
+                'gym_id' => 'required',
+            ]);
             $user = auth()->user();
 
-            $trainers = $user->trainer;
+            $trainers = $user->trainer()->where('users_trainer_histries.gym_id', $request->gym_id)->get();
 
             if (!$trainers) {
                 return response()->json([

@@ -106,6 +106,7 @@ class GymStaff extends Model
             Log::error('[GymStaff][updateStaff] Error while updating user detail: ' . $e->getMessage());
         }
     }
+    
     public function designation()
     {
         return $this->belongsTo(Designation::class, 'designation_id');
