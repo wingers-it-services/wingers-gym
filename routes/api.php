@@ -4,6 +4,7 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentControllerApi;
 use App\Http\Controllers\GoalControllerApi;
 use App\Http\Controllers\GymDetailControllerApi;
+use App\Http\Controllers\GymGalleryControllerApi;
 use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\GymUserLoginControllerApi;
 use App\Http\Controllers\GymUserTrainerControllerApi;
@@ -76,6 +77,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/fetch-trainer',[GymUserTrainerControllerApi::class,'fetchUserTrainer']);
 
     Route::post('/fetch-gym-details',[GymDetailControllerApi::class,'fetchGymDetails']);
+
+    Route::post('/fetch-gym-gallery',[GymGalleryControllerApi::class,'fetchGallery']);
 
 });
 

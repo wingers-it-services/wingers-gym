@@ -155,7 +155,12 @@ class GymUserController extends Controller
         $bmis = $this->bmi->with('bodyMeasurement')->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $subscriptionId = $userDetail->subscription_id;
         $userSubscriptions = $this->userSubscriptionHistory->where('gym_id', $gymId)->where('user_id', $userId)->get();
-        $trainers = $this->gymStaff->where('gym_id', $gymId)->where('designation_id', 1)->get();
+        $trainers = $this->gymStaff
+        ->where('gym_id', $gymId)
+        ->whereHas('designation', function ($query) {
+            $query->where('is_assigned_to_member', 1);
+        })
+        ->get();
         $trainersHistories = $this->trainersHistory->where('gym_id', $gymId)->where('user_id', $userId)->get();
 
         return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets',  'trainers', 'bmis', 'trainersHistories'));
