@@ -102,7 +102,7 @@ class GymUserController extends Controller
                 'state'             => 'required',
                 'zip_code'          => 'required',
                 'image'             => 'required',
-                'end_date'          => 'required',
+                'subscription_end_date'          => 'required',
                 'coupon_id'         => 'nullable',
                 'subscription_status'  => 'nullable',
                 'profile_status'       => 'nullable',
@@ -126,8 +126,8 @@ class GymUserController extends Controller
                 'user_id' => $user->id,
                 'subscription_id' => $request->subscription_id,
                 'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
-                'joining_date' => $request->joining_date,
-                'end_date' => $request->end_date,
+                'subscription_start_date' => $request->subscription_start_date,
+                'subscription_end_date' => $request->subscription_end_date,
                 'status' => $user->subscription_status,
                 'amount' => $request->amount, // Ensure this is part of the request or calculate it
                 'coupon_id' => 2,
@@ -137,7 +137,7 @@ class GymUserController extends Controller
             return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Successfully');
         } catch (\Exception $e) {
             Log::error('[GymUserController][addUserByGym] Error adding user: ' . $e->getMessage());
-            return back()->with('status', 'error')->with('message', 'User Not Added');
+            return back()->with('status', 'error')->with('message', 'User Not Added' . $e->getMessage());
         }
     }
 
@@ -196,7 +196,8 @@ class GymUserController extends Controller
                 'zip_code'          => 'required',
                 'image'             => 'nullable',
                 'staff_assign_id'      => 'nullable',
-                'password'             => 'required'
+                'password'             => 'required',
+                'joining_date'          => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -461,15 +462,15 @@ class GymUserController extends Controller
             $validatedData = $request->validate([
                 'user_id' => 'required',
                 'subscription_id' => 'required|exists:gym_subscriptions,id',
-                'joining_date' => 'required|date',
+                'subscription_start_date' => 'required|date',
                 'amount' => 'required|numeric',
-                'end_date' => 'required|date',
+                'subscription_end_date' => 'required|date',
                 'description' => 'required|string',
             ]);
 
             // Fetch user subscription status
             $userSubscription = $this->userSubscriptionHistory->where('user_id', $validatedData['user_id'])
-                ->orderBy('end_date', 'desc')
+                ->orderBy('subscription_end_date', 'desc')
                 ->first();
 
             // Check if user already has an active subscription
@@ -487,8 +488,8 @@ class GymUserController extends Controller
                 'original_transaction_id' => 1,
                 'user_id' => $validatedData['user_id'],
                 'subscription_id' => $subscription->id,
-                'joining_date' => $validatedData['joining_date'],
-                'end_date' => $validatedData['end_date'],
+                'subscription_start_date' => $validatedData['subscription_start_date'],
+                'subscription_end_date' => $validatedData['subscription_end_date'],
                 'amount' => $validatedData['amount'],
                 'status' => 1,
                 'coupon_id' => 2,
@@ -564,7 +565,7 @@ class GymUserController extends Controller
             // Find the latest subscription history entry by user_id
             $subscriptionHistory = $this->userSubscriptionHistory
                 ->where('user_id', $user_id)
-                ->orderBy('end_date', 'desc')
+                ->orderBy('subscription_start_date', 'desc')
                 ->first();
 
             if (!$subscriptionHistory) {

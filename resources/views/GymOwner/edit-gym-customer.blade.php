@@ -82,6 +82,10 @@
 											<label for="phone_no">Phone Number</label>
 											<input type="text" class="form-control" name="phone_no" id="phone_no" value="{{$userDetail->phone_no}}" placeholder="" required>
 										</div>
+										<div class="col-md-6 mb-3">
+											<label for="joining_date">Member Joining Date</label>
+											<input type="date" class="form-control" value="{{$userDetail->joining_date}}" name="joining_date" required>
+										</div>
 									</div>
 									<div class="row">
 										<div class="col-md-6 mb-3">
@@ -129,7 +133,7 @@
 
 										<div class="col-md-8 mb-3">
 											<label for="address">Address</label>
-											<input type="text" class="form-control" id="address" name="address" value="{{$userDetail->address}}" required="">
+											<textarea type="text" class="form-control" id="address" name="address" required="">{{$userDetail->address}}</textarea>
 											<div class="invalid-feedback">
 												Please enter your shipping address.
 											</div>
