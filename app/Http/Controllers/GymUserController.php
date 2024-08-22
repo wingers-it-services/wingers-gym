@@ -565,7 +565,7 @@ class GymUserController extends Controller
             // Find the latest subscription history entry by user_id
             $subscriptionHistory = $this->userSubscriptionHistory
                 ->where('user_id', $user_id)
-                ->orderBy('subscription_start_date', 'desc')
+                ->orderBy('subscription_end_date', 'desc')
                 ->first();
 
             if (!$subscriptionHistory) {
