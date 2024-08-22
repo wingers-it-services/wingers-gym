@@ -99,15 +99,7 @@
                                     </div>
 
                                     <!-- Accessory Form -->
-                                    <div id="accessory-form" class="category-form" style="display:none;">
-                                        <form class="needs-validation" novalidate="">
-                                            <!-- Accessory form fields here -->
-                                            <div class="row">
-                                                <!-- Accessory specific fields -->
-                                            </div>
-                                            <button class="btn btn-primary btn-lg btn-block" type="submit">Add Accessory</button>
-                                        </form>
-                                    </div>
+
 
                                     <!-- Clothing Form -->
                                     <div id="clothing-form" class="category-form" style="display:none;">
@@ -119,9 +111,9 @@
                                             <button class="btn btn-primary btn-lg btn-block" type="submit">Add Clothing</button>
                                         </form>
                                     </div>
-
+<!-- 
                                     <hr class="mb-4">
-                                    <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+                                    <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button> -->
                                 </form>
                             </div>
                         </div>
@@ -129,25 +121,115 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card" id="accessory-card" style="display:none;">
+                    <div class="card-header">
+                        <h4 class="card-title">Add Gym Accessory</h4>
+                    </div>
+                    <div class="card-body">
+                        <form class="needs-validation" novalidate="">
+                            <div class="row">
+                                <!-- Accessory Name -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="accessoryName">Accessory Name</label>
+                                    <input type="text" class="form-control" id="accessoryName" name="name" required="">
+                                    <div class="invalid-feedback">
+                                        Accessory name is required.
+                                    </div>
+                                </div>
+
+                                <!-- Category -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="accessoryCategory">Category</label>
+                                    <input type="text" class="form-control" id="accessoryCategory" name="category" required="">
+                                    <div class="invalid-feedback">
+                                        Category is required.
+                                    </div>
+                                </div>
+
+                                <!-- Brand Name -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="brandName">Brand Name</label>
+                                    <input type="text" class="form-control" id="brandName" name="brand_name" required="">
+                                    <div class="invalid-feedback">
+                                        Brand name is required.
+                                    </div>
+                                </div>
+
+                                <!-- Model Number -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="modelNumber">Model Number</label>
+                                    <input type="text" class="form-control" id="modelNumber" name="model_number" placeholder="Optional">
+                                </div>
+
+                                <!-- Quantity -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="quantity">Quantity</label>
+                                    <input type="number" class="form-control" id="quantity" name="quantity" required="">
+                                    <div class="invalid-feedback">
+                                        Quantity is required.
+                                    </div>
+                                </div>
+
+                                <!-- Price -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="price">Price</label>
+                                    <input type="number" class="form-control" id="price" name="price" required="">
+                                    <div class="invalid-feedback">
+                                        Price is required.
+                                    </div>
+                                </div>
+
+                                <!-- Condition -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="condition">Condition</label>
+                                    <input type="text" class="form-control" id="condition" name="condition" placeholder="Optional">
+                                </div>
+
+                                <!-- Description -->
+                                <div class="col-md-12 mb-3">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3" required=""></textarea>
+                                    <div class="invalid-feedback">
+                                        Description is required.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg btn-block" type="submit">Add Accessory</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+     document.addEventListener('DOMContentLoaded', function () {
         var categorySelect = document.getElementById('category');
-        var forms = document.querySelectorAll('.category-form');
+        var accessoryCard = document.getElementById('accessory-card');
 
         categorySelect.addEventListener('change', function () {
+            // Hide all forms
+            var forms = document.querySelectorAll('.category-form');
             forms.forEach(function(form) {
                 form.style.display = 'none';
             });
 
-            var selectedCategory = categorySelect.value;
-            if (selectedCategory) {
-                document.getElementById(selectedCategory + '-form').style.display = 'block';
+            // Show the selected category form
+            if (categorySelect.value === 'accessory') {
+                accessoryCard.style.display = 'block';
+                // Focus on the first input field of the accessory form
+                document.getElementById('accessoryName').focus();
+            } else {
+                accessoryCard.style.display = 'none';
             }
         });
     });
 </script>
+
 
 @endsection
