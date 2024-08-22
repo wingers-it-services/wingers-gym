@@ -11,13 +11,8 @@ class SupplimentImage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'from',
-        'to',
-        'image',
-        'description',
-        'users',
-        'status'
+        'product_id',
+        'image'
     ];
 
     protected static function boot()
