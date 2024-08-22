@@ -12,9 +12,9 @@ class Equipment extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'gym_id',
         'equipment_name',
         'brand_name',
-        'image',
         'rate',
         'comission',
         'discount',
