@@ -23,7 +23,6 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
-                                        <th class="ps-5 width200">Address</th>
                                         <th>Joined</th>
                                         <th>View</th>
                                         <th>Action</th>
@@ -44,7 +43,6 @@
                                         <td class="py-2">{{ $user->firstname . ' ' . $user->lastname }}</td>
                                         <td class="py-2">{{ $user->email }}</td>
                                         <td class="py-2">{{ $user->phone_no }}</td>
-                                        <td class="py-2">{{ $user->address }}</td>
                                         <td class="py-2">{{ $user->joining_date }}</td>
                                         <td>
                                             <a class="dropdown-item" href="{{ route('showUserProfile', ['uuid' => $user->uuid]) }}">

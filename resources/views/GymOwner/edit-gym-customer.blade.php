@@ -133,7 +133,7 @@
 
 										<div class="col-md-8 mb-3">
 											<label for="address">Address</label>
-											<textarea type="text" class="form-control" id="address" name="address" required="">{{$userDetail->address}}</textarea>
+											<textarea type="text" class="form-control" rows="5" id="address" name="address" required="">{{$userDetail->address}}</textarea>
 											<div class="invalid-feedback">
 												Please enter your shipping address.
 											</div>
