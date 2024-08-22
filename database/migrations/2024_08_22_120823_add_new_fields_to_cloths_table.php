@@ -25,6 +25,7 @@ return new class extends Migration
         Schema::table('cloths', function (Blueprint $table) {
             $table->dropColumn('gym_id'); 
             $table->renameColumn('size', 'string');
+            //
         });
     }
 };
