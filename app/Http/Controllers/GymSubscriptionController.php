@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Gym;
 use App\Models\GymSubscription;
 use App\Models\User;
+use App\Models\UserSubscriptionHistory;
 use App\Traits\SessionTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,32 +34,39 @@ class GymSubscriptionController extends Controller
     {
         $gym = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
-    
+
         // Get the total number of users in the gym
         $totalUsers = $this->user->where('gym_id', $gymId)->count();
-    
-        // Get user counts grouped by subscription_id
-        $usersBySubscription = $this->user->select('subscription_id', DB::raw('count(*) as user_count'))
+
+        // Get the total number of users in the gym with active subscriptions
+        $activeSubscriptionUsers = UserSubscriptionHistory::where('gym_id', $gymId)
+            ->where('status', 1)  // Only consider active user subscriptions
+            ->distinct('user_id')
+            ->count('user_id');
+
+        // Get user counts grouped by subscription_id with active user subscriptions
+        $usersBySubscription = UserSubscriptionHistory::select('subscription_id', DB::raw('count(distinct user_id) as user_count'))
             ->where('gym_id', $gymId)
+            ->where('status', 1)  // Only consider active user subscriptions
             ->groupBy('subscription_id')
             ->get();
-    
-        // Fetch subscriptions ordered by their ID
+
+        // Fetch all subscriptions ordered by their ID
         $subscriptions = $this->gymSubscription->where('gym_id', $gymId)
             ->orderBy('id') // Order by subscription ID
             ->get();
-    
+
         $subscriptionDetails = [];
-    
+
         foreach ($subscriptions as $subscription) {
             $subscriptionId = $subscription->id;
-    
-            // Get user count for the current subscription_id
+
+            // Get user count for the current subscription_id from active user subscriptions
             $userCount = $usersBySubscription->where('subscription_id', $subscriptionId)->first()->user_count ?? 0;
-    
-            // Calculate the percentage of users with this subscription_id
+
+            // Calculate the percentage of users with this subscription_id relative to total users
             $percentage = $totalUsers > 0 ? ($userCount / $totalUsers) * 100 : 0;
-    
+
             // Add the subscription details to the array
             $subscriptionDetails[] = [
                 'subscription' => $subscription,
@@ -66,14 +74,13 @@ class GymSubscriptionController extends Controller
                 'percentage' => number_format($percentage, 2), // Format percentage to 2 decimal places
             ];
         }
-    
+
         Log::info('Total Users: ' . $totalUsers);
+        Log::info('Active Subscription Users: ' . $activeSubscriptionUsers);
         Log::info('Subscription Details: ' . json_encode($subscriptionDetails));
-    
+
         return view('GymOwner.subscription-list', compact('subscriptionDetails', 'totalUsers'));
     }
-    
-
 
     public function viewGymSubscription(Request $request)
     {
