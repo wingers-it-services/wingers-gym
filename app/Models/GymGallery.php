@@ -25,19 +25,19 @@ class GymGallery extends Model
         });
     }
 
-    public function getUploadFileAttribute()
-    {
-        $imagePath = $this->attributes['upload_file'];
-        $defaultImagePath = 'images/profile/17.jpg';
-        $fullImagePath = $imagePath; 
+    // public function getUploadFileAttribute()
+    // {
+    //     $imagePath = $this->attributes['upload_file'];
+    //     $defaultImagePath = 'images/profile/17.jpg';
+    //     $fullImagePath = $imagePath; 
 
-        // Check if the file exists in the public directory
-        if ($imagePath && file_exists(public_path($fullImagePath))) {
-            return asset($fullImagePath);
-        }
+    //     // Check if the file exists in the public directory
+    //     if ($imagePath && file_exists(public_path($fullImagePath))) {
+    //         return asset($fullImagePath);
+    //     }
 
-        return asset($defaultImagePath);
-    }
+    //     return asset($defaultImagePath);
+    // }
 
     public function addGymGallery(int $gymId, string $filePath)
     {
