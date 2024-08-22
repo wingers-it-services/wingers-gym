@@ -21,7 +21,7 @@ class User extends Authenticatable
         'staff_assign_id',
         'profile_status',
         'subscription_status',
-        'end_date',
+        'subscription_end_date',
         'coupon_id',
         'gym_id',
         'firstname',
@@ -46,7 +46,8 @@ class User extends Authenticatable
         'weight',
         'days',
         'trainer_id',
-        'user_type'
+        'user_type',
+        'subscription_start_date'
     ];
 
     protected static function boot()

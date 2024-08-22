@@ -82,6 +82,10 @@
 											<label for="phone_no">Phone Number</label>
 											<input type="text" class="form-control" name="phone_no" id="phone_no" placeholder="" required>
 										</div>
+										<div class="col-md-6 mb-3">
+											<label for="joining_date">Member Joining Date</label>
+											<input type="date" class="form-control" id="" name="joining_date" required>
+										</div>
 									</div>
 									<div class="row">
 										<div class="col-md-6 mb-3">
@@ -109,7 +113,6 @@
 									</div>
 
 									<div class="row">
-
 										<div class="col-md-4 mb-3">
 											<label for="blood_group">Member Blood Group</label>
 											<select class="me-sm-2 form-control default-select" id="blood_group" name="blood_group">
@@ -127,9 +130,9 @@
 
 										<div class="col-md-8 mb-3">
 											<label for="address">Address</label>
-											<input type="text" class="form-control" id="address" name="address" required="">
+											<textarea type="text" class="form-control" id="address" name="address" required=""></textarea>
 											<div class="invalid-feedback">
-												Please enter your shipping address.
+												Please enter your member address.
 											</div>
 										</div>
 									</div>
@@ -176,7 +179,7 @@
 
 											<div class="col-md-12 mb-3">
 												<label for="joining_date">Member Joining Date</label>
-												<input type="date" class="form-control" id="joining_date" name="joining_date" required>
+												<input type="date" class="form-control" id="joining_date" name="subscription_start_date" required>
 											</div>
 
 											<li class="list-group-item d-flex justify-content-between lh-condensed">
@@ -189,7 +192,7 @@
 											<li class="list-group-item d-flex justify-content-between lh-condensed">
 												<div>
 													<small class="text-muted">Subscription End Date</small>
-													<input type="hidden" id="end_date" name="end_date">
+													<input type="hidden" id="end_date" name="subscription_end_date">
 												</div>
 												<span class="text-muted" id="subscription_end_date"></span>
 											</li>

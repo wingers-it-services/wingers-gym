@@ -61,8 +61,6 @@
                                                     <img src="{{ asset($userDetail->image) }}" width="100" class="img-fluid rounded-circle" alt="">
                                                 </div>
                                                 <h3 class="mt-3 mb-1 text-white">{{ $userDetail->firstname }} {{ $userDetail->lastname }} </h3>
-                                                <p class="text-white mb-0">Email: {{ $userDetail->email }} Phone: {{ $userDetail->phone_no }}</p>
-                                                <p class="text-white mb-0">Gender: {{ $userDetail->gender }} Password: {{ $userDetail->password }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -70,7 +68,17 @@
                                     <div class="col-xl-6 col-lg-12 col-sm-12">
                                         <div class="card overflow-hidden">
                                             <ul class="list-group list-group-flush">
+                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Email</span> <strong class="text-muted">{{ $userDetail->email }}</strong></li>
+                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Phone</span> <strong class="text-muted">{{ $userDetail->phone_no  }}</strong></li>
+                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Gender</span> <strong class="text-muted">{{ $userDetail->gender }}</strong></li>
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Member Subscription</span> <strong class="text-muted">{{ $userDetail->subscription->subscription_name }} </strong></li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12 col-sm-12">
+                                        <div class="card overflow-hidden">
+                                            <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between">
                                                     <span class="mb-0">Staff Assigned</span>
                                                     @if($userDetail->staff)
@@ -78,24 +86,26 @@
                                                     @endif
                                                 </li>
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Member Blood Group</span> <strong class="text-muted">{{ $userDetail->blood_group}} </strong></li>
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Joining Date</span> <strong class="text-muted">{{ $userDetail->joining_date }}</strong></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-12 col-sm-12">
-                                        <div class="card overflow-hidden">
-                                            <ul class="list-group list-group-flush">
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Address</span> <strong class="text-muted">{{ $userDetail->address }} </strong></li>
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Country</span> <strong class="text-muted">{{ $userDetail->country }}</strong></li>
                                                 <li class="list-group-item d-flex justify-content-between"><span class="mb-0">State</span> <strong class="text-muted">{{ $userDetail->state }}</strong></li>
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Zip</span> <strong class="text-muted">{{ $userDetail->zip_code }}</strong></li>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-12 col-sm-12">
                                         <div class="card overflow-hidden">
                                             <ul class="list-group list-group-flush">
-                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">End Date</span> <strong class="text-muted">{{ $userDetail->end_date }} </strong></li>
+
+                                                <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Zip</span> <strong class="text-muted">{{ $userDetail->zip_code }}</strong></li>
+                                                <li class="list-group-item">
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                                            <span class="mb-0">Address</span>
+                                                        </div>
+                                                        <div class="col">
+                                                            <strong class="text-muted">{{ $userDetail->address }}</strong>
+                                                        </div>
+                                                    </div>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -168,7 +178,7 @@
                                                                 <!-- Joining Date -->
                                                                 <div class="mb-3">
                                                                     <label for="joining_date" class="form-label">Member Joining Date</label>
-                                                                    <input type="date" class="form-control" id="joining_date" name="joining_date" required>
+                                                                    <input type="date" class="form-control" id="joining_date" name="subscription_start_date" required>
                                                                 </div>
                                                                 <!-- Amount and End Date -->
                                                                 <ul class="list-group mb-3">
@@ -182,7 +192,7 @@
                                                                     <li class="list-group-item d-flex justify-content-between lh-condensed">
                                                                         <div>
                                                                             <small class="text-muted">Subscription End Date</small>
-                                                                            <input type="hidden" id="end_date" name="end_date">
+                                                                            <input type="hidden" id="end_date" name="subscription_end_date">
                                                                         </div>
                                                                         <span class="text-muted" id="subscription_end_date"></span>
                                                                     </li>
@@ -234,17 +244,16 @@
                                                                         <td>{{$subscription->subscription->subscription_name}}</td>
                                                                         <td>{{$subscription->subscription->amount}}</td>
                                                                         <td>{{$subscription->subscription->validity}} Months</td>
-                                                                        <td>{{ \Carbon\Carbon::parse($subscription->joining_date)->format('M d, Y') }}</td>
-                                                                        <td>{{ \Carbon\Carbon::parse($subscription->end_date)->format('M d, Y') }}</td>
+                                                                        <td>{{ \Carbon\Carbon::parse($subscription->subscription_start_date)->format('M d, Y') }}</td>
+                                                                        <td>{{ \Carbon\Carbon::parse($subscription->subscription_end_date)->format('M d, Y') }}</td>
                                                                         <td>
 
                                                                             <form action="/update-subscription-status/{{$userDetail->id}}" method="POST">
                                                                                 @csrf
                                                                                 @method('POST')
-                                                                                <select name="status" onchange="this.form.submit()" class="form-select">
+                                                                                <select name="status" onchange="this.form.submit()" class="form-select" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'disabled' : '' }}>
                                                                                     <option value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'selected' : '' }}>Active</option>
                                                                                     <option value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'selected' : '' }}>Inactive</option>
-                                                                                    <!-- <option value="{{ \App\Enums\GymSubscriptionStatusEnum::EXPIRE }}" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::EXPIRE ? 'selected' : '' }}>Expired</option> -->
                                                                                 </select>
                                                                             </form>
 
@@ -630,7 +639,7 @@
                                                                                     @csrf
                                                                                     @method('POST')
                                                                                     <input type="hidden" name="trainer_id" value="{{ $trainer->id }}"> <!-- Hidden field for trainer_id -->
-                                                                                    <select name="status" onchange="this.form.submit()" class="form-select">
+                                                                                    <select name="status" onchange="this.form.submit()" class="form-select" {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::INACTIVE ? 'disabled' : '' }}>
                                                                                         <option value="{{ \App\Enums\TrainerAssignToUserStatus::ACTIVE }}" {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::ACTIVE ? 'selected' : '' }}>Active</option>
                                                                                         <option value="{{ \App\Enums\TrainerAssignToUserStatus::INACTIVE }}" {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::INACTIVE ? 'selected' : '' }}>Inactive</option>
                                                                                     </select>
@@ -1506,7 +1515,7 @@
         });
     }
 
-    
+
     function confirmSubscriptionDelete(uuid) {
         Swal.fire({
             title: 'Are you sure?',
