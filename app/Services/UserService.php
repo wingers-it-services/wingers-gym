@@ -42,7 +42,9 @@ class UserService
             'gym_id',
             'password',
             'user_type',
-            'phone_no'
+            'phone_no',
+            'subscription_start_date',
+            'subscription_end_date'
         ];
 
         $userData = [];

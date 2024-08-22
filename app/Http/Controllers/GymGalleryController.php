@@ -20,7 +20,7 @@ class GymGalleryController extends Controller
     {
         $status = null;
         $message = null;
-        $gymGalleryFiles=$this->gymGallery->get();
+        $gymGalleryFiles=$this->gymGallery->all();
         return view('GymOwner.gym-gallery', compact('status', 'message','gymGalleryFiles'));
     }
 

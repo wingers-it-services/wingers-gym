@@ -102,7 +102,8 @@ class GymUserController extends Controller
                 'state'             => 'required',
                 'zip_code'          => 'required',
                 'image'             => 'required',
-                'subscription_end_date'          => 'required',
+                'subscription_end_date'     => 'required',
+                'subscription_start_date'   =>      'required',
                 'coupon_id'         => 'nullable',
                 'subscription_status'  => 'nullable',
                 'profile_status'       => 'nullable',
@@ -156,11 +157,11 @@ class GymUserController extends Controller
         $subscriptionId = $userDetail->subscription_id;
         $userSubscriptions = $this->userSubscriptionHistory->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $trainers = $this->gymStaff
-        ->where('gym_id', $gymId)
-        ->whereHas('designation', function ($query) {
-            $query->where('is_assigned_to_member', 1);
-        })
-        ->get();
+            ->where('gym_id', $gymId)
+            ->whereHas('designation', function ($query) {
+                $query->where('is_assigned_to_member', 1);
+            })
+            ->get();
         $trainersHistories = $this->trainersHistory->where('gym_id', $gymId)->where('user_id', $userId)->get();
 
         return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets',  'trainers', 'bmis', 'trainersHistories'));
