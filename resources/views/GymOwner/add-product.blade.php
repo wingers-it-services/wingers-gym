@@ -19,12 +19,15 @@
                                 <form class="needs-validation" novalidate="">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label for="productImage">Product Image</label>
-                                            <input type="file" class="form-control" id="productImage" required="">
+                                            <label for="productImage">Product Images</label>
+                                            <input type="file" class="form-control" id="productImage" name="productImages[]" multiple required onchange="previewImages()">
                                             <div class="invalid-feedback">
-                                                Product image is required.
+                                                At least one product image is required.
                                             </div>
+                                            <div id="imagePreview" class="mt-3"></div>
                                         </div>
+
+
                                         <div class="col-md-6 mb-3">
                                             <label for="productName">Product Name</label>
                                             <input type="text" class="form-control" id="productName" required="">
@@ -696,6 +699,25 @@
             }
         });
     });
+
+    function previewImages() {
+        const preview = document.getElementById('imagePreview');
+        preview.innerHTML = ''; // Clear any existing previews
+
+        const files = document.getElementById('productImage').files;
+        for (const file of files) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                img.classList.add('img-thumbnail', 'mr-2');
+                img.style.width = '100px';
+                img.style.height = '100px';
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 </script>
 
 
