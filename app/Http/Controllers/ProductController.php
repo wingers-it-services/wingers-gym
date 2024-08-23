@@ -2,21 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProductCategoryEnum;
 use App\Models\Accessory;
 use App\Models\Cloth;
+use App\Models\Equipment;
+use App\Models\Suppliment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
 {
+    protected $suppliment;
+    protected $equipment;
     protected $accessory;
     protected $cloth;
 
     public function __construct(
+        Suppliment $suppliment,
+        Equipment $equipment,
         Accessory $accessory,
-        Cloth $cloth
+        Cloth $cloth,
     ) {
+        $this->suppliment = $suppliment;
+        $this->equipment = $equipment;
         $this->accessory = $accessory;
         $this->cloth = $cloth;
     }
@@ -92,9 +101,9 @@ class ProductController extends Controller
         try {
             $category = $request->input('category');
 
-            if ($category === 'cloth') {
+            if ($category == ProductCategoryEnum::CLOTHS) {
                 return $this->addCloth($request);
-            } elseif ($category === 'accessory') {
+            } elseif ($category == ProductCategoryEnum::ACCESSORIES) {
                 return $this->addAccessory($request);
             } else {
                 return redirect()->back()->with('status', 'error')->with('message', 'Invalid category selected');
