@@ -175,11 +175,17 @@ class GymUserControllerApi extends Controller
 
             $response = $this->user->createUserProfile($userDetail, $imagePath);
 
+                $user = $response['user'];
+                $token = $user->createToken('MyAppToken')->accessToken;
+               
+    
             return response()->json([
-                'status'  => $response['status'],
-                'message' => $response['message'],
-                'user'    => $response['user'] ?? null
+                'status'       => $response['status'],
+                'message'      => $response['message'],
+                'user'         => $user ?? null,
+                'access_token' => $token ?? null
             ], $response['status']);
+    
         } catch (Throwable $e) {
             Log::error("[GymUserControllerApi][registerGymUser] Error in registration: " . $e->getMessage());
             return $this->errorResponse('Error while registering', $e->getMessage(), 500);
