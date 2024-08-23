@@ -13,6 +13,7 @@ use App\Http\Controllers\UserBmiController;
 use App\Traits\SessionTrait;
 use App\Http\Controllers\GymDesignationController;
 use App\Http\Controllers\GymGalleryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WorkoutController;
 use App\Http\Middleware\EnsureGymTokenIsValid;
 use Illuminate\Support\Facades\Route;
@@ -259,3 +260,7 @@ Route::get('/rooms', [AdminController::class, 'showRooms']);
 Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
+
+
+Route::get('/add-product', [ProductController::class, 'addProduct']);
+
