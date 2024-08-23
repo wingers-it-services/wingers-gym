@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
@@ -11,6 +12,7 @@ use Ramsey\Uuid\Uuid;
 class Accessory extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'gym_id',

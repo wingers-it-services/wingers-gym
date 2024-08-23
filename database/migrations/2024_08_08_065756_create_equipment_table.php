@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('equipment', function (Blueprint $table) {
             $table->id();
             $table->uuid()->index();
+            $table->bigInteger('gym_id')->index();
             $table->string('equipment_name');
             $table->string('brand_name');
-            $table->longText('image');
             $table->float('rate');
             $table->float('comission');
             $table->float('discount');

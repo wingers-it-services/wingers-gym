@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid()->index();
             $table->bigInteger('product_id')->index();
             $table->longText('image');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
