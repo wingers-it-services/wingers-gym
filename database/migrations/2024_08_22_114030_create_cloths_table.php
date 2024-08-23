@@ -14,14 +14,16 @@ return new class extends Migration
         Schema::create('cloths', function (Blueprint $table) {
             $table->id();
             $table->uuid()->index();
+            $table->bigInteger('gym_id')->index();
             $table->string('name');
             $table->string('category');
-            $table->string('string');
+            $table->string('size');
             $table->string('brand_name');
             $table->integer('quantity')->default(0);
             $table->double('price');
             $table->longText('material');
             $table->longText('description');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

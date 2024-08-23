@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('accessories', function (Blueprint $table) {
             $table->id();
             $table->uuid()->index();
+            $table->bigInteger('gym_id')->index();
             $table->string('name');
             $table->string('category');
             $table->string('brand_name');
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->double('price');
             $table->string('condition')->nullable();
             $table->longText('description');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
