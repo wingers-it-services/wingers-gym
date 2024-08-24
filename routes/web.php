@@ -105,6 +105,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/staff-details', [GymStaffController::class, 'staffDetails']);
     Route::post('/add-staff-asset', [GymStaffController::class, 'addStaffAsset']);
     Route::get('/gym-staff-assets/{staffId}', [GymStaffController::class, 'getStaffAssets']);
+    Route::post('/add-staff-leave', [GymStaffController::class, 'addStaffLeave']);
+
 
     /* markGymStaffAttendance */
     Route::post('/mark-gym-staff-attendance', [GymStaffController::class, 'markGymStaffAttendance'])->name('markGymStaffAttendance');

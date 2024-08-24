@@ -7,6 +7,7 @@ use App\Models\GymStaff;
 use App\Models\Designation;
 use App\Models\GymStaffAseet;
 use App\Models\GymStaffAttendance;
+use App\Models\GymStaffLeave;
 use App\Traits\SessionTrait;
 use Carbon\Carbon;
 use Exception;
@@ -22,6 +23,7 @@ class GymStaffController extends Controller
     protected $designation;
     protected $gymStaffAttendance;
     protected $staffAsset;
+    protected $staffLeave;
 
 
     public function __construct(
@@ -30,12 +32,14 @@ class GymStaffController extends Controller
         Designation $designation,
         GymStaffAttendance $gymStaffAttendance,
         GymStaffAseet $staffAsset,
+        GymStaffLeave $staffLeave
     ) {
         $this->gymStaff = $gymStaff;
         $this->gymStaffAttendance = $gymStaffAttendance;
         $this->gym = $gym;
         $this->designation = $designation;
         $this->staffAsset = $staffAsset;
+        $this->staffLeave = $staffLeave;
     }
 
     public function addStaffAttendence()
@@ -307,7 +311,31 @@ class GymStaffController extends Controller
 
     public function getStaffAssets($staffId)
     {
-        $assets = $this->staffAsset->where('staff_id', $staffId)->get();
+        $gym = Auth::guard('gym')->user();
+        $assets = $this->staffAsset->where('gym_id', $gym->id)->where('staff_id', $staffId)->get();
         return response()->json($assets);
+    }
+
+    public function addStaffLeave(Request $request)
+    {
+        try {
+            $request->validate([
+                "staff_id"     => 'required',
+                "leave_type"    => 'required',
+                "start_date"        => 'required',
+                "end_date" => 'required',
+                "reason" => 'nullable'
+            ]);
+
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
+
+            $this->staffLeave->addGymStaffLeave($request->all(), $gymId);
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Staff Leave added successfully.');
+        } catch (\Throwable $th) {
+            Log::error("[GymStaffController][addStaffLeave] error " . $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
+        }
     }
 }
