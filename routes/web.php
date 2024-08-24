@@ -227,7 +227,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/autocomplete-workout', [GymUserController::class, 'autocompleteWorkout'])->name('autocomplete-workout');
     Route::get('/fetch-workout-details', [GymUserController::class, 'fetchWorkoutDetails'])->name('fetch-workout-details');
 
-    
+
     Route::get('/fetch-gym-profile', [GymDetailController::class, 'fetchGymProfile'])->name('fetchGymProfile');
 
     Route::get('/gym-profile', [GymDetailController::class, 'GymProfileView']);
@@ -236,6 +236,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     Route::get('/gym-gallery', [GymGalleryController::class, 'gymGalleryView']);
 
+
+    Route::post('/add-products', [ProductController::class, 'addProduct'])->name('addProduct');
 });
 
 Route::get('/packages', [AdminController::class, 'showPackages']);
@@ -260,7 +262,3 @@ Route::get('/rooms', [AdminController::class, 'showRooms']);
 Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
-
-
-Route::get('/add-product', [ProductController::class, 'addProduct']);
-

@@ -54,7 +54,7 @@ class Accessory extends Model
                 $imagePath = 'accessory_images/' . $filename;
                 $image->move(public_path('accessory_images/'), $filename);
     
-                ClothImage::create([
+                AccessoryImage::create([
                     'product_id' => $accessory->id,
                     'image'      => $imagePath, 
                 ]);
