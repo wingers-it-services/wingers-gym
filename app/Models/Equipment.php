@@ -34,8 +34,9 @@ class Equipment extends Model
         'colour',
         'tension_level',
         'material',
-        'special_feautre',
-        'size'
+        'special_feautres',
+        'size',
+        'category'
     ];
 
     protected static function boot()
@@ -52,14 +53,27 @@ class Equipment extends Model
             $gym = Auth::guard('gym')->user();
             $equipment = $this->create([
                 'gym_id'       => $gym->id,
-                'name'         => $equipmentDetail['name'],
-                'category'     => $equipmentDetail['category'],
-                'size'         => $equipmentDetail['size'],
+                'equipment_name'         => $equipmentDetail['name'],
                 'brand_name'   => $equipmentDetail['brand_name'],
-                'quantity'     => $equipmentDetail['quantity'],
-                'price'        => $equipmentDetail['price'],
-                'material'     => $equipmentDetail['material'],
+                'rate'        => $equipmentDetail['price'],
+                'comission'        => $equipmentDetail['equipment_comission'],
+                'discount'        => $equipmentDetail['equipment_discount'],
+                'gst'        => $equipmentDetail['equipment_gst'],
+                'amount'        => $equipmentDetail['amount']??00,
+                'company_name'        => $equipmentDetail['equipment_company_name'],
+                'company_contact'        => $equipmentDetail['equipment_company_contact'],
+                'company_address'        => $equipmentDetail['equipment_company_address'],
+                'company_website'        => $equipmentDetail['equipment_company_website'],
                 'description'  => $equipmentDetail['description'],
+                'warrenty'  => $equipmentDetail['equipment_warrenty'],
+                'warrenty_details'  => $equipmentDetail['equipment_warrenty_details'],
+                'item_weight'  => $equipmentDetail['item_weight'],
+                'colour'  => $equipmentDetail['colour'],
+                'tension_level'  => $equipmentDetail['tension_level'],
+                'special_feautres'  => $equipmentDetail['special_feautre'],
+                'size'  => $equipmentDetail['equipment_size'],
+                'material'  => $equipmentDetail['equipment_material'],
+                'category'     => $equipmentDetail['category'],
             ]);
 
             foreach ($images as $image) {

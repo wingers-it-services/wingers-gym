@@ -56,7 +56,7 @@
                                             <label for="quantity">Quantity</label>
                                             <input type="number" class="form-control" id="quantity" name="quantity" required="">
                                             <div class="invalid-feedback">
-                                                Please enter your address.
+                                                Please enter your quantity.
                                             </div>
                                         </div>
 
@@ -140,35 +140,27 @@
                     <div class="card-body">
                         <!-- Equipment form fields here -->
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="accessoriesName">Equiment Name</label>
-                                <input type="text" class="form-control" id="equimentName" name="equipment_name" required="">
-                                <div class="invalid-feedback">
-                                    Equiment name is required.
-                                </div>
-                            </div>
-
                             <!-- Brand Name -->
 
                             <div class="col-md-6 mb-3">
-                                <label for="comission">Commision (In %)</label>
-                                <input type="number" class="form-control" id="comission" name="comission" step="0.01" required="">
+                                <label for="equipment_comission">Commision (In %)</label>
+                                <input type="number" class="form-control" id="equipment_comission" name="equipment_comission" step="0.01" required="">
                                 <div class="invalid-feedback">
                                     Commision is required.
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="discount">Discount (In %)</label>
-                                <input type="number" class="form-control" id="discount" name="discount" step="0.01" required="">
+                                <label for="equipment_discount">Discount (In %)</label>
+                                <input type="number" class="form-control" id="equipment_discount" name="equipment_discount" step="0.01" required="">
                                 <div class="invalid-feedback">
                                     Discount is required.
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="gst">GST</label>
-                                <input type="number" class="form-control" id="gst" name="gst" step="0.01" required="">
+                                <label for="equipment_gst">GST</label>
+                                <input type="number" class="form-control" id="equipment_gst" name="equipment_gst" step="0.01" required="">
                                 <div class="invalid-feedback">
                                     GST is required.
                                 </div>
@@ -177,50 +169,52 @@
 
                             <!-- Model Number -->
                             <div class="col-md-6 mb-3">
-                                <label for="company_name">Compant Name</label>
-                                <input type="text" class="form-control" id="company_name" name="company_name">
+                                <label for="equipment_company_name">Compant Name</label>
+                                <input type="text" class="form-control" id="equipment_company_name" name="equipment_company_name">
                                 <div class="invalid-feedback">
                                     Compant Name is required.
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="company_contact">Company Contact</label>
-                                <input type="text" class="form-control" id="company_contact" name="company_contact" required="">
+                                <label for="equipment_company_contact">Company Contact</label>
+                                <input type="text" class="form-control" id="equipment_company_contact" name="equipment_company_contact" required="">
                                 <div class="invalid-feedback">
                                     Company Contact is required.
                                 </div>
                             </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label for="company_contact">Company Address</label>
-                                <textarea class="form-control" id="company_contact" rows="5" name="company_contact" required=""></textarea>
-                                <div class="invalid-feedback">
-                                    Company Address is required.
-                                </div>
-                            </div>
+
 
 
                             <div class="col-md-6 mb-3">
-                                <label for="company_website">Company Website</label>
-                                <input type="text" class="form-control" id="company_website" name="company_website" required="">
+                                <label for="equipment_company_website">Company Website</label>
+                                <input type="text" class="form-control" id="equipment_company_website" name="equipment_company_website" required="">
                                 <div class="invalid-feedback">
                                     Company Website is required.
                                 </div>
                             </div>
 
+                            <div class="col-md-6 mb-3">
+                                <label for="equipment_company_address">Company Address</label>
+                                <textarea class="form-control" id="equipment_company_address" rows="5" name="equipment_company_address" required=""></textarea>
+                                <div class="invalid-feedback">
+                                    Company Address is required.
+                                </div>
+                            </div>
+
                             <!-- Quantity -->
                             <div class="col-md-6 mb-3">
-                                <label for="warrenty">Warrenty</label>
-                                <input type="number" class="form-control" id="warrenty" name="warrenty" placeholder="In Years" required="">
+                                <label for="equipment_warrenty">Warrenty</label>
+                                <input type="number" class="form-control" id="equipment_warrenty" name="equipment_warrenty" placeholder="In Years" required="">
                                 <div class="invalid-feedback">
                                     Warrenty is required.
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="warrenty_details">Warrenty Details</label>
-                                <textarea type="text" class="form-control" id="warrenty_details" name="warrenty_details"></textarea>
+                                <label for="equipment_warrenty_details">Warrenty Details</label>
+                                <textarea type="text" class="form-control" id="equipment_warrenty_details" name="equipment_warrenty_details"></textarea>
                                 <div class="invalid-feedback">
                                     Warrenty Details is required.
                                 </div>
@@ -235,8 +229,8 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="size">Size</label>
-                                <input type="text" class="form-control" id="size" name="size" required="">
+                                <label for="equipment_size">Size</label>
+                                <input type="text" class="form-control" id="equipment_size" name="equipment_size" required="">
                                 <div class="invalid-feedback">
                                     Item Weight is required.
                                 </div>
@@ -259,8 +253,8 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="material">Material</label>
-                                <input type="text" class="form-control" id="material" name="material" required="">
+                                <label for="equipment_material">Material</label>
+                                <input type="text" class="form-control" id="equipment_material" name="equipment_material" required="">
                                 <div class="invalid-feedback">
                                     Material is required.
                                 </div>
@@ -290,13 +284,6 @@
                     <div class="card-body">
                         <!-- Equipment form fields here -->
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="supplimentName">Suppliment Name</label>
-                                <input type="text" class="form-control" id="supplimentName" name="suppliments_name" required="">
-                                <div class="invalid-feedback">
-                                    Equiment name is required.
-                                </div>
-                            </div>
 
                             <!-- Brand Name -->
 
@@ -346,27 +333,29 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label for="company_contact">Company Address</label>
-                                <textarea class="form-control" id="company_contact" rows="5" name="company_contact" required=""></textarea>
-                                <div class="invalid-feedback">
-                                    Company Address is required.
-                                </div>
-                            </div>
+
 
 
                             <div class="col-md-6 mb-3">
-                                <label for="company_website">Company Website</label>
-                                <input type="text" class="form-control" id="company_website" name="company_website" required="">
+                                <label for="suppliment_company_website">Company Website</label>
+                                <input type="text" class="form-control" id="suppliment_company_website" name="suppliment_company_website" required="">
                                 <div class="invalid-feedback">
                                     Company Website is required.
                                 </div>
                             </div>
 
+                            <div class="col-md-6 mb-3">
+                                <label for="company_address">Company Address</label>
+                                <textarea class="form-control" id="company_address" rows="5" name="company_address" required=""></textarea>
+                                <div class="invalid-feedback">
+                                    Company Address is required.
+                                </div>
+                            </div>
+
                             <!-- Quantity -->
                             <div class="col-md-6 mb-3">
-                                <label for="warrenty">Warrenty</label>
-                                <input type="number" class="form-control" id="warrenty" name="warrenty" placeholder="In Years" required="">
+                                <label for="supliment_warrenty">Warrenty</label>
+                                <input type="number" class="form-control" id="supliment_warrenty" name="supliment_warrenty" placeholder="In Years" required="">
                                 <div class="invalid-feedback">
                                     Warrenty is required.
                                 </div>
@@ -374,7 +363,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="warrenty_details">Warrenty Details</label>
-                                <textarea type="text" class="form-control" id="warrenty_details" name="warrenty_details"></textarea>
+                                <textarea type="text" class="form-control" id="supliment_warrenty_details" name="supliment_warrenty_details"></textarea>
                                 <div class="invalid-feedback">
                                     Warrenty Details is required.
                                 </div>
@@ -398,7 +387,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="size">Size</label>
-                                <input type="text" class="form-control" id="size" name="size" required="">
+                                <input type="text" class="form-control" id="supliment_size" name="supliment_size" required="">
                                 <div class="invalid-feedback">
                                     Item Weight is required.
                                 </div>
@@ -417,14 +406,6 @@
                                 <input type="text" class="form-control" id="age_range" name="age_range" required="">
                                 <div class="invalid-feedback">
                                     Tension Level is required.
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="net_quantity">Net Quantity</label>
-                                <input type="number" class="form-control" id="net_quantity" name="net_quantity" required="">
-                                <div class="invalid-feedback">
-                                    Material is required.
                                 </div>
                             </div>
 
