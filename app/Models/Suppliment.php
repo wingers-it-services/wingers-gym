@@ -39,7 +39,8 @@ class Suppliment extends Model
         'diet_type',
         'product_benefits',
         'item_dimensions',
-        'special_ingredients'
+        'special_ingredients',
+        'category'
     ];
 
     protected static function boot()
@@ -56,14 +57,31 @@ class Suppliment extends Model
             $gym = Auth::guard('gym')->user();
             $suppliment = $this->create([
                 'gym_id'       => $gym->id,
-                'name'         => $supplimentDetail['name'],
-                'category'     => $supplimentDetail['category'],
-                'size'         => $supplimentDetail['size'],
+                'suppliments_name'         => $supplimentDetail['name'],
                 'brand_name'   => $supplimentDetail['brand_name'],
-                'quantity'     => $supplimentDetail['quantity'],
-                'price'        => $supplimentDetail['price'],
-                'material'     => $supplimentDetail['material'],
+                'rate'        => $supplimentDetail['price'],
+                'comission'        => $supplimentDetail['comission'],
+                'discount'        => $supplimentDetail['discount'],
+                'gst'        => $supplimentDetail['gst'],
+                'amount'        => $supplimentDetail['amount']??00,
+                'company_name'        => $supplimentDetail['company_name'],
+                'company_contact'        => $supplimentDetail['company_contact'],
+                'company_address'        => $supplimentDetail['company_address'],
+                'company_website'        => $supplimentDetail['suppliment_company_website'],
                 'description'  => $supplimentDetail['description'],
+                'warrenty'  => $supplimentDetail['supliment_warrenty'],
+                'warrenty_details'  => $supplimentDetail['supliment_warrenty_details'],
+                'item_form'  => $supplimentDetail['item_form'],
+                'manufacturer'  => $supplimentDetail['manufacturer'],
+                'flavour'  => $supplimentDetail['flavour'],
+                'age_range'  => $supplimentDetail['age_range'],
+                'size'  => $supplimentDetail['supliment_size'],
+                'net_quantity'  => $supplimentDetail['quantity'],
+                'diet_type'  => $supplimentDetail['diet_type'],
+                'product_benefits'  => $supplimentDetail['product_benefits'],
+                'item_dimensions'  => $supplimentDetail['item_dimensions'],
+                'special_ingredients'  => $supplimentDetail['special_ingredients'],
+             'category'     => $supplimentDetail['category'],
             ]);
 
             foreach ($images as $image) {

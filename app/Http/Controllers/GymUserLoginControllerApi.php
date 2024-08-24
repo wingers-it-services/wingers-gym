@@ -102,9 +102,10 @@ class GymUserLoginControllerApi extends Controller
             $request->validate([
                 'email_or_phone' => 'required|string',
                 'password'       => 'required|string',
+                'user_type'      => 'required'
             ]);
 
-            $credentials = $request->only('email_or_phone', 'password','user_type');
+            $credentials = $request->only('email_or_phone', 'password', 'user_type');
 
             // Determine if the input is an email or a phone number
             if (filter_var($credentials['email_or_phone'], FILTER_VALIDATE_EMAIL)) {
@@ -130,7 +131,8 @@ class GymUserLoginControllerApi extends Controller
                     'message' => 'Invalid password, please try again.',
                 ], 401);
             }
-
+            // dd($user);
+            dd($credentials['user_type'], $user->user_type);
             if ($credentials['user_type'] !== $user->user_type) {
                 return response()->json([
                     'status'  => 403,
@@ -201,7 +203,7 @@ class GymUserLoginControllerApi extends Controller
                         'message'      => 'Login successfully',
                     ]);
                 }
-                
+
                 return response()->json([
                     'status'       => 403,
                     'user'         => $user,
@@ -215,7 +217,6 @@ class GymUserLoginControllerApi extends Controller
                 'user'     => $user,
                 'message'  => 'User does not exist.'
             ], 422);
-
         } catch (\Exception $e) {
             Log::error('[GymUserLoginControllerApi][loginWithEmail] Error during login: ' . $e->getMessage());
             return response()->json([
