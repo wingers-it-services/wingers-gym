@@ -194,7 +194,7 @@
 												<form action="/add-staff-asset" method="POST" enctype="multipart/form-data" enctype="multipart/form-data">
 													@csrf
 													<div class="modal-body">
-														<input type="hidden" class="form-control" id="staffId" name="staff_id">
+														<input type="hidden" class="form-control staffId" id="staffId" name="staff_id">
 														<div class="mb-3">
 															<label for="assetName" class="form-label">Asset Name</label>
 															<input type="text" class="form-control" id="assetName" name="name" required>
@@ -285,9 +285,10 @@
 													<h5 class="modal-title" id="addNewLeaveLabel">Add New Leave</h5>
 													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 												</div>
-												<form action="/add-leave" method="POST">
+												<form action="/add-staff-leave" method="POST">
 													@csrf
 													<div class="modal-body">
+														<input type="hidden" class="form-control staffId" id="staffId" name="staff_id">
 														<div class="mb-3">
 															<div class="form-group">
 																<label for="leave_type" class="form-label">Leave Type</label>
@@ -441,7 +442,12 @@
 		var staffJoiningDate = input.getAttribute("data-employee-joining-date");
 		var staffAddress = input.getAttribute("data-employee-address");
 
-		document.getElementById('staffId').value = staffId;
+		var staffIdFields = document.querySelectorAll('.staffId');
+
+		// Loop through each element and set the value
+		staffIdFields.forEach(function(field) {
+			field.value = staffId;
+		});
 
 		// Fetch the attendance chart or any other data
 		fetchAttendanceChart(gymId, staffId);
