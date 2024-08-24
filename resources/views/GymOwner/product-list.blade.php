@@ -9,7 +9,7 @@
                 <li class="breadcrumb-item active"><a href="javascript:void(0)">Product List</a></li>
             </ol>
         </div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+        <nav class="navbar navbar-expand-lg navbar-light bg-primary" style="border-radius: 20px;">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -17,24 +17,25 @@
                 <b>
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link category-link" href="#" data-category="all">All</a>
+                            <a class="nav-link category-link" href="#" data-category="all" style="border-radius: 50px; padding: 10px 20px;">All</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link category-link" href="#" data-category="equipment">Equipments</a>
+                            <a class="nav-link category-link" href="#" data-category="equipment" style="border-radius: 50px; padding: 10px 20px;">Equipments</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link category-link" href="#" data-category="clothing">Clothing</a>
+                            <a class="nav-link category-link" href="#" data-category="clothing" style="border-radius: 50px; padding: 10px 20px;">Clothing</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link category-link" href="#" data-category="supplements">Supplements</a>
+                            <a class="nav-link category-link" href="#" data-category="supplements" style="border-radius: 50px; padding: 10px 20px;">Supplements</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link category-link" href="#" data-category="accessories">Accessories</a>
+                            <a class="nav-link category-link" href="#" data-category="accessories" style="border-radius: 50px; padding: 10px 20px;">Accessories</a>
                         </li>
                     </ul>
                 </b>
             </div>
         </nav>
+
         <br>
         <div class="row product-list">
             <!-- Products will be dynamically loaded here -->
@@ -86,9 +87,15 @@
                 brand: "Om",
                 description: "Comfortable and stylish sports t-shirt for workouts..."
             }],
-            accessories: [
-                // Product data
-            ]
+            accessories: [{
+                image: "https://m.media-amazon.com/images/I/71RHvfnRdlL.SS700.jpg",
+                name: "Boldfit",
+                price: "$157.00",
+                availability: "In stock",
+                code: "438387060",
+                brand: "boldfit",
+                description: "BoldfitBoldfit Nylon Wood Wrist Supporter for Gym Wrist Band for Men Gym Wrist Support, for Pain Relief Hand Band for Men Gym Accessories for Men Wrist Wrap for Gym Equipment Wrist Brace Women Red,One Size"
+            }]
         };
 
         function renderProducts(category) {
