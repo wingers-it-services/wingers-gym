@@ -1,7 +1,40 @@
 @extends('GymOwner.master')
 @section('title','Dashboard')
 @section('content')
+<style>
+    .image-container {
+        position: relative;
+        display: inline-block;
+        margin-right: 10px;
+    }
 
+    .image-container img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+
+    .remove-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        text-align: center;
+        line-height: 24px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .remove-btn:hover {
+        background: rgba(0, 0, 0, 0.8);
+    }
+</style>
 <div class="content-body">
     <div class="container-fluid">
         <div class="page-titles">
@@ -21,7 +54,7 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="productImage">Product Images</label>
-                                            <input type="file" class="form-control" id="productImage" name="images[]" multiple required onchange="previewImages()">
+                                            <input type="file" class="form-control" id="productImage" name="images[]" multiple required onchange="handleFiles(this.files)">
                                             <div class="invalid-feedback">
                                                 At least one product image is required.
                                             </div>
@@ -64,13 +97,13 @@
                                             <label for="price">Price <span class="text-muted"></span></label>
                                             <input type="number" class="form-control" id="price" name="price" step="0.01" required="">
                                             <div class="invalid-feedback">
-                                                Price is required.
+                                                Price is required.http://127.0.0.1:8000/dashboard
                                             </div>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="designation">Descrtiption</label>
-                                            <textarea type="text" class="form-control" name="description" id="description" placeholder="Descrtiption"></textarea>
+                                            <textarea type="text" class="form-control" rows="5" name="description" id="description" placeholder="Descrtiption"></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
@@ -83,7 +116,6 @@
                                             <option value="{{ \App\Enums\ProductCategoryEnum::CLOTHS }}">Clothing</option>
                                         </select>
                                     </div>
-                                    <!-- Equipment Form -->
                             </div>
                         </div>
                     </div>
@@ -98,35 +130,14 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <!-- Accessory Name -->
-
-
-                            <!-- Category -->
-
-
-                            <!-- Brand Name -->
-
-
-                            <!-- Model Number -->
                             <div class="col-md-6 mb-3">
                                 <label for="modelNumber">Model Number</label>
                                 <input type="text" class="form-control" id="modelNumber" name="model_number" placeholder="Optional">
                             </div>
-
-                            <!-- Quantity -->
-
-
-                            <!-- Price -->
-
-
-                            <!-- Condition -->
                             <div class="col-md-6 mb-3">
                                 <label for="condition">Condition</label>
                                 <input type="text" class="form-control" id="condition" name="condition" placeholder="Optional">
                             </div>
-
-                            <!-- Description -->
-
                         </div>
                     </div>
                 </div>
@@ -454,13 +465,6 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <!-- Accessory Name -->
-
-                            <!-- Category -->
-
-
-                            <!-- Brand Name -->
-
                             <div class="col-md-6 mb-3">
                                 <label for="size">Size</label>
                                 <input type="text" class="form-control" id="size" name="size" required="">
@@ -468,15 +472,6 @@
                                     Size is required.
                                 </div>
                             </div>
-
-
-                            <!-- Quantity -->
-
-
-                            <!-- Price -->
-
-
-                            <!-- Condition -->
                             <div class="col-md-6 mb-3">
                                 <label for="material">Material</label>
                                 <textarea type="text" class="form-control" id="material" name="material" row="3"></textarea>
@@ -484,9 +479,6 @@
                                     Material is required.
                                 </div>
                             </div>
-
-                            <!-- Description -->
-
                         </div>
                     </div>
                 </div>
@@ -512,61 +504,108 @@
             forms.forEach(function(form) {
                 form.style.display = 'none';
             });
+            http: //127.0.0.1:8000/gym-customers
 
-            // Show the selected category form
-            if (categorySelect.value === 'accessories') {
-                accessoryCard.style.display = 'block';
-                // Focus on the first input field of the accessory form
-                document.getElementById('accessoryName').focus();
-            } else {
-                accessoryCard.style.display = 'none';
-            }
+                // Show the selected category form
+                if (categorySelect.value === '{{ \App\Enums\ProductCategoryEnum::ACCESSORIES }}') {
+                    accessoryCard.style.display = 'block';
+                    // Focus on the first input field of the accessory form
+                    document.getElementById('modelNumber').focus();
+                } else {
+                    accessoryCard.style.display = 'none';
+                }
 
-            if (categorySelect.value === 'equipments') {
+            if (categorySelect.value === '{{ \App\Enums\ProductCategoryEnum::EQUIPMENTS }}') {
                 equimentCard.style.display = 'block';
                 // Focus on the first input field of the accessory form
-                document.getElementById('equimentName').focus();
+                document.getElementById('equipment_comission').focus();
             } else {
                 equimentCard.style.display = 'none';
             }
 
-            if (categorySelect.value === 'suppliments') {
+            if (categorySelect.value === '{{ \App\Enums\ProductCategoryEnum::SUPPLIMENTS }}') {
                 supplimentCard.style.display = 'block';
                 // Focus on the first input field of the accessory form
-                document.getElementById('supplimentName').focus();
+                document.getElementById('comission').focus();
             } else {
                 supplimentCard.style.display = 'none';
             }
 
-            if (categorySelect.value === 'cloths') {
+            if (categorySelect.value === '{{ \App\Enums\ProductCategoryEnum::CLOTHS }}') {
                 clothCard.style.display = 'block';
                 // Focus on the first input field of the accessory form
-                document.getElementById('clothName').focus();
+                document.getElementById('size').focus();
             } else {
                 clothCard.style.display = 'none';
             }
         });
     });
 
+    let selectedFiles = [];
+
+    function handleFiles(files) {
+        // Convert FileList to array and add to the selectedFiles array
+        selectedFiles = selectedFiles.concat(Array.from(files));
+        previewImages();
+    }
+
     function previewImages() {
         const preview = document.getElementById('imagePreview');
-        preview.innerHTML = ''; // Clear any existing previews
+        preview.innerHTML = ''; // Clear the preview area
 
-        const files = document.getElementById('productImage').files;
-        for (const file of files) {
+        selectedFiles.forEach((file, index) => {
             const reader = new FileReader();
             reader.onload = function(event) {
+                // Create a container for the image and remove button
+                const container = document.createElement('div');
+                container.classList.add('image-container');
+
+                // Create the image element
                 const img = document.createElement('img');
                 img.src = event.target.result;
-                img.classList.add('img-thumbnail', 'mr-2');
-                img.style.width = '100px';
-                img.style.height = '100px';
-                preview.appendChild(img);
+                img.classList.add('img-thumbnail');
+
+                // Create the remove button
+                const removeBtn = document.createElement('span');
+                removeBtn.innerHTML = '&times;';
+                removeBtn.classList.add('remove-btn');
+                removeBtn.onclick = function() {
+                    removeImage(index);
+                };
+
+                // Append image and remove button to the container
+                container.appendChild(img);
+                container.appendChild(removeBtn);
+
+                // Append the container to the preview area
+                preview.appendChild(container);
             };
             reader.readAsDataURL(file);
-        }
+        });
+
+        updateInputField();
+    }
+
+    function removeImage(index) {
+        // Remove the selected image from the array
+        selectedFiles.splice(index, 1);
+        previewImages();
+    }
+
+    function updateInputField() {
+        // Create a new DataTransfer object
+        const dataTransfer = new DataTransfer();
+
+        // Append all remaining files in selectedFiles to the DataTransfer object
+        selectedFiles.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+
+        // Update the input field's files with the new FileList
+        document.getElementById('productImage').files = dataTransfer.files;
     }
 </script>
+
 
 
 @include('CustomSweetAlert');
