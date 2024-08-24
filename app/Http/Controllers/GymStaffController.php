@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Gym;
 use App\Models\GymStaff;
 use App\Models\Designation;
+use App\Models\GymStaffAseet;
 use App\Models\GymStaffAttendance;
 use App\Traits\SessionTrait;
 use Carbon\Carbon;
@@ -20,18 +21,21 @@ class GymStaffController extends Controller
     protected $gym;
     protected $designation;
     protected $gymStaffAttendance;
+    protected $staffAsset;
 
 
     public function __construct(
         GymStaff $gymStaff,
         Gym $gym,
         Designation $designation,
-        GymStaffAttendance $gymStaffAttendance
+        GymStaffAttendance $gymStaffAttendance,
+        GymStaffAseet $staffAsset,
     ) {
         $this->gymStaff = $gymStaff;
         $this->gymStaffAttendance = $gymStaffAttendance;
         $this->gym = $gym;
         $this->designation = $designation;
+        $this->staffAsset = $staffAsset;
     }
 
     public function addStaffAttendence()
@@ -292,12 +296,18 @@ class GymStaffController extends Controller
                 $assetPhoto->move(public_path('gymStaff_asset_images/'), $filename);
             }
 
-            $this->gymStaff->addGymStaffAsset($request->all(), $gymId, $imagePath);
+            $this->staffAsset->addGymStaffAsset($request->all(), $gymId, $imagePath);
 
-            return redirect()->route('listGymStaff')->with('status', 'success')->with('message', 'Gym Staff saved successfully.');
+            return redirect()->back()->with('status', 'success')->with('message', 'Staff Asset added successfully.');
         } catch (\Throwable $th) {
             Log::error("[GymStaffController][addGymStaff] error " . $th->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
         }
+    }
+
+    public function getStaffAssets($staffId)
+    {
+        $assets = $this->staffAsset->where('staff_id', $staffId)->get();
+        return response()->json($assets);
     }
 }

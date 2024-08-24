@@ -191,16 +191,17 @@
 													<h5 class="modal-title" id="addNewAssetsLabel">Add New Asset</h5>
 													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 												</div>
-												<form action="" method="POST" enctype="multipart/form-data">
+												<form action="/add-staff-asset" method="POST" enctype="multipart/form-data" enctype="multipart/form-data">
 													@csrf
 													<div class="modal-body">
+														<input type="hidden" class="form-control" id="staffId" name="staff_id">
 														<div class="mb-3">
 															<label for="assetName" class="form-label">Asset Name</label>
-															<input type="text" class="form-control" id="assetName" name="asset_name" required>
+															<input type="text" class="form-control" id="assetName" name="name" required>
 														</div>
 														<div class="mb-3">
 															<label for="assetCategory" class="form-label">Asset Category</label>
-															<input type="text" class="form-control" id="assetCategory" name="asset_category" required>
+															<input type="text" class="form-control" id="assetCategory" name="category" required>
 														</div>
 														<div class="mb-3">
 															<label for="assetTag" class="form-label">Asset Tag</label>
@@ -208,7 +209,7 @@
 														</div>
 														<div class="mb-3">
 															<label for="dateOfAllocation" class="form-label">Date Of Allocation</label>
-															<input type="date" class="form-control" id="dateOfAllocation" name="date_of_allocation" required>
+															<input type="date" class="form-control" id="dateOfAllocation" name="allocation_date" required>
 														</div>
 														<div class="mb-3">
 															<label for="price" class="form-label">Price</label>
@@ -218,19 +219,15 @@
 															<label for="status" class="form-label">Status</label>
 															<select class="form-control" id="status" name="status" required>
 																<option value="">Select Status</option>
-																<option value="In Use">Allocated</option>
-																<option value="Under Repair">Under Repair</option>
-																<option value="Retired">Retired</option>
+																<option value="{{ \App\Enums\GymStaffAssetStatusEnum::ALLOCATED }}">Allocated</option>
+																<option value="{{ \App\Enums\GymStaffAssetStatusEnum::UNDER_REPAIR }}">Under Repair</option>
+																<option value="{{ \App\Enums\GymStaffAssetStatusEnum::RETIRED }}">Retired</option>
 															</select>
 														</div>
 														<div class="mb-3">
 															<label for="assetImage" class="form-label">Asset Image</label>
-															<input type="file" class="form-control" id="assetImage" name="asset_image">
+															<input type="file" class="form-control" id="assetImage" name="image">
 														</div>
-														<!-- <div class="mb-3">
-															<label for="comments" class="form-label">Comments/Notes</label>
-															<textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
-														</div> -->
 													</div>
 													<div class="modal-footer">
 														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -255,7 +252,7 @@
 												</div>
 												<div class="card-body">
 													<div class="table-responsive recentOrderTable">
-														<table class="table verticle-middle table-responsive-md">
+														<table id="assetTable" class="table verticle-middle table-responsive-md">
 															<thead>
 																<tr>
 																	<th scope="col">Asset No.</th>
@@ -270,37 +267,11 @@
 																</tr>
 															</thead>
 															<tbody>
-																<tr>
-																	<td>12</td>
-																	<td>Mr. Bobby</td>
-																	<td>Electronics</td>
-																	<td>A-12</td>
-																	<td>01 August 2020</td>
-																	<td>$5000</td>
-																	<td><span class="badge badge-rounded badge-primary">In Use</span></td>
-																	<td><img src="" alt=""></td>
-																	<td>
-																		<div class="dropdown custom-dropdown mb-0">
-																			<div class="btn sharp btn-primary tp-btn" data-bs-toggle="dropdown">
-																				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1">
-																					<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-																						<rect x="0" y="0" width="24" height="24" />
-																						<circle fill="#000000" cx="12" cy="5" r="2" />
-																						<circle fill="#000000" cx="12" cy="12" r="2" />
-																						<circle fill="#000000" cx="12" cy="19" r="2" />
-																					</g>
-																				</svg>
-																			</div>
-																			<div class="dropdown-menu dropdown-menu-end">
-																				<a class="dropdown-item" href="javascript:void(0);">Details</a>
-																				<a class="dropdown-item text-danger" href="javascript:void(0);">Cancel</a>
-																			</div>
-																		</div>
-																	</td>
-																</tr>
+																<!-- Asset rows will be dynamically injected here -->
 															</tbody>
 														</table>
 													</div>
+
 												</div>
 											</div>
 										</div>
@@ -470,6 +441,8 @@
 		var staffJoiningDate = input.getAttribute("data-employee-joining-date");
 		var staffAddress = input.getAttribute("data-employee-address");
 
+		document.getElementById('staffId').value = staffId;
+
 		// Fetch the attendance chart or any other data
 		fetchAttendanceChart(gymId, staffId);
 
@@ -495,7 +468,67 @@
 		var profileTab = document.querySelector('.nav-link[href="#profile"]');
 		var tabInstance = new bootstrap.Tab(profileTab);
 		tabInstance.show();
+
+		// Fetch asset data for the selected staff member
+		fetchAssetData(staffId);
 	}
+
+	function fetchAssetData(staffId) {
+		// Make an AJAX request to fetch the asset data
+		fetch(`/gym-staff-assets/` + staffId)
+			.then(response => response.json())
+			.then(data => {
+				// Assuming 'data' contains the asset information
+				displayAssetData(data);
+			})
+			.catch(error => {
+				console.error('Error fetching asset data:', error);
+			});
+	}
+
+	function displayAssetData(assets) {
+		var assetTableBody = document.querySelector('#assetTable tbody');
+
+		// Clear any existing asset rows
+		assetTableBody.innerHTML = '';
+
+		// Loop through each asset and create table rows
+		assets.forEach(asset => {
+			var row = document.createElement('tr');
+
+			row.innerHTML = `
+            <td>${asset.id}</td>
+            <td>${asset.name}</td>
+            <td>${asset.category}</td>
+            <td>${asset.asset_tag}</td>
+            <td>${asset.allocation_date}</td>
+            <td>${asset.price}</td>
+            <td><span class="badge badge-rounded badge-primary">${asset.status}</span></td>
+            <td><img src="${asset.image}" alt="" style="height: 50px;"></td>
+            <td>
+                <div class="dropdown custom-dropdown mb-0">
+                    <div class="btn sharp btn-primary tp-btn" data-bs-toggle="dropdown">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24" />
+                                <circle fill="#000000" cx="12" cy="5" r="2" />
+                                <circle fill="#000000" cx="12" cy="12" r="2" />
+                                <circle fill="#000000" cx="12" cy="19" r="2" />
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="javascript:void(0);">Details</a>
+                        <a class="dropdown-item text-danger" href="javascript:void(0);">Cancel</a>
+                    </div>
+                </div>
+            </td>
+        `;
+
+			assetTableBody.appendChild(row);
+		});
+	}
+
 
 
 
@@ -721,5 +754,5 @@
 <script src="{{asset('js/plugins-init/staff-attendance-overview-chart.js')}}" type="text/javascript"></script>
 
 
-
+@include('CustomSweetAlert');
 @endsection

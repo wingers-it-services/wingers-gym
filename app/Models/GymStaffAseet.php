@@ -5,6 +5,8 @@ namespace App\Models;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Uuid;
+
 
 class GymStaffAseet extends Model
 {
@@ -13,7 +15,7 @@ class GymStaffAseet extends Model
         'staff_id',
         'name',
         'category',
-        'tag',
+        'asset_tag',
         'allocation_date',
         'price',
         'status',
@@ -37,5 +39,13 @@ class GymStaffAseet extends Model
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->uuid = Uuid::uuid4()->toString();
+        });
     }
 }
