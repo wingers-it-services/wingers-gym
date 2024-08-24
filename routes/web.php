@@ -13,6 +13,7 @@ use App\Http\Controllers\UserBmiController;
 use App\Traits\SessionTrait;
 use App\Http\Controllers\GymDesignationController;
 use App\Http\Controllers\GymGalleryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WorkoutController;
 use App\Http\Middleware\EnsureGymTokenIsValid;
 use Illuminate\Support\Facades\Route;
@@ -226,7 +227,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/autocomplete-workout', [GymUserController::class, 'autocompleteWorkout'])->name('autocomplete-workout');
     Route::get('/fetch-workout-details', [GymUserController::class, 'fetchWorkoutDetails'])->name('fetch-workout-details');
 
-    
+
     Route::get('/fetch-gym-profile', [GymDetailController::class, 'fetchGymProfile'])->name('fetchGymProfile');
 
     Route::get('/gym-profile', [GymDetailController::class, 'GymProfileView']);
@@ -235,6 +236,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     Route::get('/gym-gallery', [GymGalleryController::class, 'gymGalleryView']);
 
+
+    Route::post('/add-products', [ProductController::class, 'addProduct'])->name('addProduct');
 });
 
 Route::get('/packages', [AdminController::class, 'showPackages']);

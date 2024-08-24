@@ -990,7 +990,7 @@
 				</a>
 			</div>
 			<div class="copyright">
-				<p><strong>Fito Fitness Admin Dashboard</strong> © 2023 All Rights Reserved</p>
+				<p> © 2023 All Rights Reserved</p>
 				<p>Made with <span class="heart"></span> by Wingers IT Services Pvt. Ltd</p>
 			</div>
 		</div>

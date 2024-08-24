@@ -56,7 +56,7 @@ class ProductController extends Controller
             return redirect()->back()->with('status', 'success')->with('message', 'Cloth added successfully');
         } catch (ValidationException $e) {
             Log::error('[ProductController][addCloth] Error adding cloth: ' . $e->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', 'Validation Error' . $e->errors());
+            return redirect()->back()->with('status', 'error')->with('message', 'Validation Error' . json_encode($e->errors()));
         } catch (\Throwable $e) {
             Log::error('[ProductController][addCloth] Error adding cloth: ' . $e->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'Internal Server Error' . $e->getMessage());
@@ -65,6 +65,7 @@ class ProductController extends Controller
 
     public function addAccessory(Request $request)
     {
+        // dd($request->all());
         try {
             // Validate the incoming request
             $request->validate([
@@ -84,21 +85,25 @@ class ProductController extends Controller
             $accessoryDetails = $request->all();
             $images = $request->file('images');
 
-            $cloth = $this->cloth->addClothsDetails($accessoryDetails, $images);
+            $cloth = $this->accessory->addAccessoryDetails($accessoryDetails, $images);
 
             return redirect()->back()->with('status', 'success')->with('message', 'Accessory added successfully');
         } catch (ValidationException $e) {
-            Log::error('[ProductController][addAccessory] Error accessory cloth: ' . $e->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', 'Validation Error' . $e->errors());
+            Log::error('[ProductController][addAccessory] Error accessory : ' . $e->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Validation Error' . json_encode($e->errors()));
         } catch (\Throwable $e) {
-            Log::error('[ProductController][addAccessory] Error accessory cloth: ' . $e->getMessage());
+            Log::error('[ProductController][addAccessory] Error accessory : ' . $e->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'Internal Server Error' . $e->getMessage());
         }
     }
 
     public function addProduct(Request $request)
     {
+        // dd($request->category);
         try {
+            $request->validate([
+                'category'      => 'required|string'
+            ]);
             $category = $request->input('category');
 
             if ($category == ProductCategoryEnum::CLOTHS) {
@@ -110,7 +115,7 @@ class ProductController extends Controller
             }
         } catch (ValidationException $e) {
             Log::error('[ProductController][addProduct] Validation error: ' . $e->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', 'Validation Error ' . $e->errors());
+            return redirect()->back()->with('status', 'error')->with('message', 'Validation Error ' .json_encode($e->errors()));
         } catch (\Throwable $e) {
             Log::error('[ProductController][addProduct] Error: ' . $e->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'Internal Server Error ' . $e->getMessage());

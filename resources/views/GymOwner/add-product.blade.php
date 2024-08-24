@@ -16,11 +16,12 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <h4 class="mb-3">Add Product</h4>
-                                <form class="needs-validation" novalidate="">
+                                <form method="post" action="{{route('addProduct')}}" enctype="multipart/form-data" class="needs-validation" novalidate="">
+                                    @csrf
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="productImage">Product Images</label>
-                                            <input type="file" class="form-control" id="productImage" name="productImages[]" multiple required onchange="previewImages()">
+                                            <input type="file" class="form-control" id="productImage" name="images[]" multiple required onchange="previewImages()">
                                             <div class="invalid-feedback">
                                                 At least one product image is required.
                                             </div>
@@ -30,7 +31,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="productName">Product Name</label>
-                                            <input type="text" class="form-control" id="productName" required="">
+                                            <input type="text" name="name" class="form-control" id="productName" required="">
                                             <div class="invalid-feedback">
                                                 Product name is required.
                                             </div>
@@ -49,11 +50,11 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="brand">Brand</label>
-                                            <input type="text" class="form-control" id="brand" placeholder="Brand">
+                                            <input type="text" class="form-control" name="brand_name" id="brand" placeholder="Brand">
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="quantity">Quantity</label>
-                                            <input type="number" class="form-control" id="quantity" required="">
+                                            <input type="number" class="form-control" id="quantity" name="quantity" required="">
                                             <div class="invalid-feedback">
                                                 Please enter your address.
                                             </div>
@@ -61,26 +62,28 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="price">Price <span class="text-muted"></span></label>
-                                            <input type="number" class="form-control" id="price" placeholder="Price">
+                                            <input type="number" class="form-control" id="price" name="price" step="0.01" required="">
+                                            <div class="invalid-feedback">
+                                                Price is required.
+                                            </div>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="designation">Descrtiption</label>
-                                            <textarea type="text" class="form-control" id="designation" placeholder="Descrtiption"></textarea>
+                                            <textarea type="text" class="form-control" name="description" id="description" placeholder="Descrtiption"></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="category">Select Category</label>
-                                        <select class="form-control" id="category" required>
+                                        <select name="category" class="form-control" id="category" required>
                                             <option value="">Choose...</option>
-                                            <option value="equipment">Equipment</option>
-                                            <option value="supplement">Supplement</option>
-                                            <option value="accessory">Accessory</option>
-                                            <option value="clothing">Clothing</option>
+                                            <option value="{{ \App\Enums\ProductCategoryEnum::EQUIPMENTS }}">Equipment</option>
+                                            <option value="{{ \App\Enums\ProductCategoryEnum::SUPPLIMENTS }}">Supplement</option>
+                                            <option value="{{ \App\Enums\ProductCategoryEnum::ACCESSORIES }}">Accessory</option>
+                                            <option value="{{ \App\Enums\ProductCategoryEnum::CLOTHS }}">Clothing</option>
                                         </select>
                                     </div>
                                     <!-- Equipment Form -->
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -94,75 +97,37 @@
                         <h4 class="card-title">Add Gym Accessory</h4>
                     </div>
                     <div class="card-body">
-                        <form class="needs-validation" novalidate="">
-                            <div class="row">
-                                <!-- Accessory Name -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="accessoryName">Accessory Name</label>
-                                    <input type="text" class="form-control" id="accessoryName" name="name" required="">
-                                    <div class="invalid-feedback">
-                                        Accessory name is required.
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <!-- Accessory Name -->
 
-                                <!-- Category -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="accessoryCategory">Category</label>
-                                    <input type="text" class="form-control" id="accessoryCategory" name="category" required="">
-                                    <div class="invalid-feedback">
-                                        Category is required.
-                                    </div>
-                                </div>
 
-                                <!-- Brand Name -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="brandName">Brand Name</label>
-                                    <input type="text" class="form-control" id="brandName" name="brand_name" required="">
-                                    <div class="invalid-feedback">
-                                        Brand name is required.
-                                    </div>
-                                </div>
+                            <!-- Category -->
 
-                                <!-- Model Number -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="modelNumber">Model Number</label>
-                                    <input type="text" class="form-control" id="modelNumber" name="model_number" placeholder="Optional">
-                                </div>
 
-                                <!-- Quantity -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="quantity">Quantity</label>
-                                    <input type="number" class="form-control" id="quantity" name="quantity" required="">
-                                    <div class="invalid-feedback">
-                                        Quantity is required.
-                                    </div>
-                                </div>
+                            <!-- Brand Name -->
 
-                                <!-- Price -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="price">Price</label>
-                                    <input type="number" class="form-control" id="price" name="price" required="">
-                                    <div class="invalid-feedback">
-                                        Price is required.
-                                    </div>
-                                </div>
 
-                                <!-- Condition -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="condition">Condition</label>
-                                    <input type="text" class="form-control" id="condition" name="condition" placeholder="Optional">
-                                </div>
-
-                                <!-- Description -->
-                                <div class="col-md-12 mb-3">
-                                    <label for="description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3" required=""></textarea>
-                                    <div class="invalid-feedback">
-                                        Description is required.
-                                    </div>
-                                </div>
+                            <!-- Model Number -->
+                            <div class="col-md-6 mb-3">
+                                <label for="modelNumber">Model Number</label>
+                                <input type="text" class="form-control" id="modelNumber" name="model_number" placeholder="Optional">
                             </div>
-                        </form>
+
+                            <!-- Quantity -->
+
+
+                            <!-- Price -->
+
+
+                            <!-- Condition -->
+                            <div class="col-md-6 mb-3">
+                                <label for="condition">Condition</label>
+                                <input type="text" class="form-control" id="condition" name="condition" placeholder="Optional">
+                            </div>
+
+                            <!-- Description -->
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -173,178 +138,146 @@
                         <h4 class="card-title">Add Gym Equiments</h4>
                     </div>
                     <div class="card-body">
-                        <form class="needs-validation" novalidate="">
-                            <!-- Equipment form fields here -->
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="accessoryName">Equiment Name</label>
-                                    <input type="text" class="form-control" id="equimentName" name="equipment_name" required="">
-                                    <div class="invalid-feedback">
-                                        Equiment name is required.
-                                    </div>
-                                </div>
-
-                                <!-- Brand Name -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="brandName">Brand Name</label>
-                                    <input type="text" class="form-control" id="brandName" name="brand_name" required="">
-                                    <div class="invalid-feedback">
-                                        Brand name is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="rate">Rate</label>
-                                    <input type="number" class="form-control" id="rate" name="rate" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        Price is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="comission">Commision (In %)</label>
-                                    <input type="number" class="form-control" id="comission" name="comission" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        Commision is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="discount">Discount (In %)</label>
-                                    <input type="number" class="form-control" id="discount" name="discount" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        Discount is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="gst">GST</label>
-                                    <input type="number" class="form-control" id="gst" name="gst" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        GST is required.
-                                    </div>
-                                </div>
-
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="amount">Amount</label>
-                                    <input type="number" class="form-control" id="amount" name="amount" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        Price is required.
-                                    </div>
-                                </div>
-
-
-                                <!-- Model Number -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="company_name">Compant Name</label>
-                                    <input type="text" class="form-control" id="company_name" name="company_name">
-                                    <div class="invalid-feedback">
-                                        Compant Name is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="company_contact">Company Contact</label>
-                                    <input type="text" class="form-control" id="company_contact" name="company_contact" required="">
-                                    <div class="invalid-feedback">
-                                        Company Contact is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="company_contact">Company Address</label>
-                                    <textarea class="form-control" id="company_contact" rows="5" name="company_contact" required=""></textarea>
-                                    <div class="invalid-feedback">
-                                        Company Address is required.
-                                    </div>
-                                </div>
-
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="company_website">Company Website</label>
-                                    <input type="text" class="form-control" id="company_website" name="company_website" required="">
-                                    <div class="invalid-feedback">
-                                        Company Website is required.
-                                    </div>
-                                </div>
-
-                                <!-- Quantity -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="warrenty">Warrenty</label>
-                                    <input type="number" class="form-control" id="warrenty" name="warrenty" placeholder="In Years" required="">
-                                    <div class="invalid-feedback">
-                                        Warrenty is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="warrenty_details">Warrenty Details</label>
-                                    <textarea type="text" class="form-control" id="warrenty_details" name="warrenty_details"></textarea>
-                                    <div class="invalid-feedback">
-                                        Warrenty Details is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="item_weight">Item Weight</label>
-                                    <input type="number" class="form-control" id="item_weight" name="item_weight" placeholder="In Kg" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        Item Weight is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="size">Size</label>
-                                    <input type="text" class="form-control" id="size" name="size" required="">
-                                    <div class="invalid-feedback">
-                                        Item Weight is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="colour">Colour</label>
-                                    <input type="text" class="form-control" id="colour" name="colour" required="">
-                                    <div class="invalid-feedback">
-                                        Company Website is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="tension_level">Tension Level</label>
-                                    <input type="text" class="form-control" id="tension_level" name="tension_level" required="">
-                                    <div class="invalid-feedback">
-                                        Tension Level is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="material">Material</label>
-                                    <input type="text" class="form-control" id="material" name="material" required="">
-                                    <div class="invalid-feedback">
-                                        Material is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="special_feautre">Special Feature</label>
-                                    <textarea type="text" class="form-control" id="special_feautre" name="special_feautre"></textarea>
-                                    <div class="invalid-feedback">
-                                        Special Feature is required.
-                                    </div>
-                                </div>
-
-
-                                <!-- Description -->
-                                <div class="col-md-12 mb-3">
-                                    <label for="description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3" required=""></textarea>
-                                    <div class="invalid-feedback">
-                                        Description is required.
-                                    </div>
+                        <!-- Equipment form fields here -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="accessoriesName">Equiment Name</label>
+                                <input type="text" class="form-control" id="equimentName" name="equipment_name" required="">
+                                <div class="invalid-feedback">
+                                    Equiment name is required.
                                 </div>
                             </div>
-                        </form>
+
+                            <!-- Brand Name -->
+
+                            <div class="col-md-6 mb-3">
+                                <label for="comission">Commision (In %)</label>
+                                <input type="number" class="form-control" id="comission" name="comission" step="0.01" required="">
+                                <div class="invalid-feedback">
+                                    Commision is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="discount">Discount (In %)</label>
+                                <input type="number" class="form-control" id="discount" name="discount" step="0.01" required="">
+                                <div class="invalid-feedback">
+                                    Discount is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="gst">GST</label>
+                                <input type="number" class="form-control" id="gst" name="gst" step="0.01" required="">
+                                <div class="invalid-feedback">
+                                    GST is required.
+                                </div>
+                            </div>
+
+
+                            <!-- Model Number -->
+                            <div class="col-md-6 mb-3">
+                                <label for="company_name">Compant Name</label>
+                                <input type="text" class="form-control" id="company_name" name="company_name">
+                                <div class="invalid-feedback">
+                                    Compant Name is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="company_contact">Company Contact</label>
+                                <input type="text" class="form-control" id="company_contact" name="company_contact" required="">
+                                <div class="invalid-feedback">
+                                    Company Contact is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="company_contact">Company Address</label>
+                                <textarea class="form-control" id="company_contact" rows="5" name="company_contact" required=""></textarea>
+                                <div class="invalid-feedback">
+                                    Company Address is required.
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+                                <label for="company_website">Company Website</label>
+                                <input type="text" class="form-control" id="company_website" name="company_website" required="">
+                                <div class="invalid-feedback">
+                                    Company Website is required.
+                                </div>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div class="col-md-6 mb-3">
+                                <label for="warrenty">Warrenty</label>
+                                <input type="number" class="form-control" id="warrenty" name="warrenty" placeholder="In Years" required="">
+                                <div class="invalid-feedback">
+                                    Warrenty is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="warrenty_details">Warrenty Details</label>
+                                <textarea type="text" class="form-control" id="warrenty_details" name="warrenty_details"></textarea>
+                                <div class="invalid-feedback">
+                                    Warrenty Details is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="item_weight">Item Weight</label>
+                                <input type="number" class="form-control" id="item_weight" name="item_weight" placeholder="In Kg" step="0.01" required="">
+                                <div class="invalid-feedback">
+                                    Item Weight is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="size">Size</label>
+                                <input type="text" class="form-control" id="size" name="size" required="">
+                                <div class="invalid-feedback">
+                                    Item Weight is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="colour">Colour</label>
+                                <input type="text" class="form-control" id="colour" name="colour" required="">
+                                <div class="invalid-feedback">
+                                    Company Website is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="tension_level">Tension Level</label>
+                                <input type="text" class="form-control" id="tension_level" name="tension_level" required="">
+                                <div class="invalid-feedback">
+                                    Tension Level is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="material">Material</label>
+                                <input type="text" class="form-control" id="material" name="material" required="">
+                                <div class="invalid-feedback">
+                                    Material is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="special_feautre">Special Feature</label>
+                                <textarea type="text" class="form-control" id="special_feautre" name="special_feautre"></textarea>
+                                <div class="invalid-feedback">
+                                    Special Feature is required.
+                                </div>
+                            </div>
+
+
+                            <!-- Description -->
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -355,208 +288,180 @@
                         <h4 class="card-title">Add Gym Suppliments</h4>
                     </div>
                     <div class="card-body">
-                        <form class="needs-validation" novalidate="">
-                            <!-- Equipment form fields here -->
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="supplimentName">Suppliment Name</label>
-                                    <input type="text" class="form-control" id="supplimentName" name="suppliments_name" required="">
-                                    <div class="invalid-feedback">
-                                        Equiment name is required.
-                                    </div>
-                                </div>
-
-                                <!-- Brand Name -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="brandName">Brand Name</label>
-                                    <input type="text" class="form-control" id="brandName" name="brand_name" required="">
-                                    <div class="invalid-feedback">
-                                        Brand name is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="rate">Rate</label>
-                                    <input type="number" class="form-control" id="rate" name="rate" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        Price is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="comission">Commision (In %)</label>
-                                    <input type="number" class="form-control" id="comission" name="comission" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        Commision is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="discount">Discount (In %)</label>
-                                    <input type="number" class="form-control" id="discount" name="discount" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        Discount is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="gst">GST</label>
-                                    <input type="number" class="form-control" id="gst" name="gst" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        GST is required.
-                                    </div>
-                                </div>
-
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="amount">Amount</label>
-                                    <input type="number" class="form-control" id="amount" name="amount" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        Price is required.
-                                    </div>
-                                </div>
-
-
-                                <!-- Model Number -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="company_name">Compant Name</label>
-                                    <input type="text" class="form-control" id="company_name" name="company_name">
-                                    <div class="invalid-feedback">
-                                        Compant Name is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="company_contact">Company Contact</label>
-                                    <input type="text" class="form-control" id="company_contact" name="company_contact" required="">
-                                    <div class="invalid-feedback">
-                                        Company Contact is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="company_contact">Company Address</label>
-                                    <textarea class="form-control" id="company_contact" rows="5" name="company_contact" required=""></textarea>
-                                    <div class="invalid-feedback">
-                                        Company Address is required.
-                                    </div>
-                                </div>
-
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="company_website">Company Website</label>
-                                    <input type="text" class="form-control" id="company_website" name="company_website" required="">
-                                    <div class="invalid-feedback">
-                                        Company Website is required.
-                                    </div>
-                                </div>
-
-                                <!-- Quantity -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="warrenty">Warrenty</label>
-                                    <input type="number" class="form-control" id="warrenty" name="warrenty" placeholder="In Years" required="">
-                                    <div class="invalid-feedback">
-                                        Warrenty is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="warrenty_details">Warrenty Details</label>
-                                    <textarea type="text" class="form-control" id="warrenty_details" name="warrenty_details"></textarea>
-                                    <div class="invalid-feedback">
-                                        Warrenty Details is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="item_form">Item Form</label>
-                                    <input type="number" class="form-control" id="item_form" name="item_form" step="0.01" required="">
-                                    <div class="invalid-feedback">
-                                        Item Weight is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="size">Manufacturer</label>
-                                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" required="">
-                                    <div class="invalid-feedback">
-                                        Manufacturer is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="size">Size</label>
-                                    <input type="text" class="form-control" id="size" name="size" required="">
-                                    <div class="invalid-feedback">
-                                        Item Weight is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="flavour">Flavour</label>
-                                    <input type="text" class="form-control" id="flavour" name="flavour" required="">
-                                    <div class="invalid-feedback">
-                                        Flavour is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="age_range">Age Range</label>
-                                    <input type="text" class="form-control" id="age_range" name="age_range" required="">
-                                    <div class="invalid-feedback">
-                                        Tension Level is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="net_quantity">Net Quantity</label>
-                                    <input type="number" class="form-control" id="net_quantity" name="net_quantity" required="">
-                                    <div class="invalid-feedback">
-                                        Material is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="diet_type">Diet Type</label>
-                                    <input type="text" class="form-control" id="diet_type" name="diet_type">
-                                    <div class="invalid-feedback">
-                                        Diet Type is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="product_benefits">Product Benefits</label>
-                                    <textarea class="form-control" id="product_benefits" rows="5" name="product_benefits" required=""></textarea>
-                                    <div class="invalid-feedback">
-                                        Product Benefits is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="diet_type">Item Dimensions</label>
-                                    <input type="text" class="form-control" id="item_dimensions" name="item_dimensions">
-                                    <div class="invalid-feedback">
-                                        Item Dimensions is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="diet_type">Special Ingredients</label>
-                                    <input type="text" class="form-control" id="special_ingredients" name="special_ingredients">
-                                    <div class="invalid-feedback">
-                                        Special Ingredients is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12 mb-3">
-                                    <label for="description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3" required=""></textarea>
-                                    <div class="invalid-feedback">
-                                        Description is required.
-                                    </div>
+                        <!-- Equipment form fields here -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="supplimentName">Suppliment Name</label>
+                                <input type="text" class="form-control" id="supplimentName" name="suppliments_name" required="">
+                                <div class="invalid-feedback">
+                                    Equiment name is required.
                                 </div>
                             </div>
-                        </form>
+
+                            <!-- Brand Name -->
+
+
+
+
+                            <div class="col-md-6 mb-3">
+                                <label for="comission">Commision (In %)</label>
+                                <input type="number" class="form-control" id="comission" name="comission" step="0.01" required="">
+                                <div class="invalid-feedback">
+                                    Commision is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="discount">Discount (In %)</label>
+                                <input type="number" class="form-control" id="discount" name="discount" step="0.01" required="">
+                                <div class="invalid-feedback">
+                                    Discount is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="gst">GST</label>
+                                <input type="number" class="form-control" id="gst" name="gst" step="0.01" required="">
+                                <div class="invalid-feedback">
+                                    GST is required.
+                                </div>
+                            </div>
+
+
+
+                            <!-- Model Number -->
+                            <div class="col-md-6 mb-3">
+                                <label for="company_name">Compant Name</label>
+                                <input type="text" class="form-control" id="company_name" name="company_name">
+                                <div class="invalid-feedback">
+                                    Compant Name is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="company_contact">Company Contact</label>
+                                <input type="text" class="form-control" id="company_contact" name="company_contact" required="">
+                                <div class="invalid-feedback">
+                                    Company Contact is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="company_contact">Company Address</label>
+                                <textarea class="form-control" id="company_contact" rows="5" name="company_contact" required=""></textarea>
+                                <div class="invalid-feedback">
+                                    Company Address is required.
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+                                <label for="company_website">Company Website</label>
+                                <input type="text" class="form-control" id="company_website" name="company_website" required="">
+                                <div class="invalid-feedback">
+                                    Company Website is required.
+                                </div>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div class="col-md-6 mb-3">
+                                <label for="warrenty">Warrenty</label>
+                                <input type="number" class="form-control" id="warrenty" name="warrenty" placeholder="In Years" required="">
+                                <div class="invalid-feedback">
+                                    Warrenty is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="warrenty_details">Warrenty Details</label>
+                                <textarea type="text" class="form-control" id="warrenty_details" name="warrenty_details"></textarea>
+                                <div class="invalid-feedback">
+                                    Warrenty Details is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="item_form">Item Form</label>
+                                <input type="number" class="form-control" id="item_form" name="item_form" step="0.01" required="">
+                                <div class="invalid-feedback">
+                                    Item Weight is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="size">Manufacturer</label>
+                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" required="">
+                                <div class="invalid-feedback">
+                                    Manufacturer is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="size">Size</label>
+                                <input type="text" class="form-control" id="size" name="size" required="">
+                                <div class="invalid-feedback">
+                                    Item Weight is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="flavour">Flavour</label>
+                                <input type="text" class="form-control" id="flavour" name="flavour" required="">
+                                <div class="invalid-feedback">
+                                    Flavour is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="age_range">Age Range</label>
+                                <input type="text" class="form-control" id="age_range" name="age_range" required="">
+                                <div class="invalid-feedback">
+                                    Tension Level is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="net_quantity">Net Quantity</label>
+                                <input type="number" class="form-control" id="net_quantity" name="net_quantity" required="">
+                                <div class="invalid-feedback">
+                                    Material is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="diet_type">Diet Type</label>
+                                <input type="text" class="form-control" id="diet_type" name="diet_type">
+                                <div class="invalid-feedback">
+                                    Diet Type is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="product_benefits">Product Benefits</label>
+                                <textarea class="form-control" id="product_benefits" rows="5" name="product_benefits" required=""></textarea>
+                                <div class="invalid-feedback">
+                                    Product Benefits is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="diet_type">Item Dimensions</label>
+                                <input type="text" class="form-control" id="item_dimensions" name="item_dimensions">
+                                <div class="invalid-feedback">
+                                    Item Dimensions is required.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="diet_type">Special Ingredients</label>
+                                <input type="text" class="form-control" id="special_ingredients" name="special_ingredients">
+                                <div class="invalid-feedback">
+                                    Special Ingredients is required.
+                                </div>
+                            </div>
+
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -567,85 +472,47 @@
                         <h4 class="card-title">Add Gym Cloths</h4>
                     </div>
                     <div class="card-body">
-                        <form class="needs-validation" novalidate="">
-                            <div class="row">
-                                <!-- Accessory Name -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="clothName">Cloth Name</label>
-                                    <input type="text" class="form-control" id="clothName" name="name" required="">
-                                    <div class="invalid-feedback">
-                                        Cloth name is required.
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <!-- Accessory Name -->
 
-                                <!-- Category -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="accessoryCategory">Category</label>
-                                    <input type="text" class="form-control" id="accessoryCategory" name="category" required="">
-                                    <div class="invalid-feedback">
-                                        Category is required.
-                                    </div>
-                                </div>
-
-                                <!-- Brand Name -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="brandName">Brand Name</label>
-                                    <input type="text" class="form-control" id="brandName" name="brand_name" required="">
-                                    <div class="invalid-feedback">
-                                        Brand name is required.
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="size">Size</label>
-                                    <input type="text" class="form-control" id="size" name="size" required="">
-                                    <div class="invalid-feedback">
-                                        Size is required.
-                                    </div>
-                                </div>
+                            <!-- Category -->
 
 
-                                <!-- Quantity -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="quantity">Quantity</label>
-                                    <input type="number" class="form-control" id="quantity" name="quantity" required="">
-                                    <div class="invalid-feedback">
-                                        Quantity is required.
-                                    </div>
-                                </div>
+                            <!-- Brand Name -->
 
-                                <!-- Price -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="price">Price</label>
-                                    <input type="number" class="form-control" id="price" name="price" required="">
-                                    <div class="invalid-feedback">
-                                        Price is required.
-                                    </div>
-                                </div>
-
-                                <!-- Condition -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="material">Material</label>
-                                    <textarea type="text" class="form-control" id="material" name="material" row="3"></textarea>
-                                    <div class="invalid-feedback">
-                                        Material is required.
-                                    </div>
-                                </div>
-
-                                <!-- Description -->
-                                <div class="col-md-12 mb-3">
-                                    <label for="description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3" required=""></textarea>
-                                    <div class="invalid-feedback">
-                                        Description is required.
-                                    </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="size">Size</label>
+                                <input type="text" class="form-control" id="size" name="size" required="">
+                                <div class="invalid-feedback">
+                                    Size is required.
                                 </div>
                             </div>
-                        </form>
+
+
+                            <!-- Quantity -->
+
+
+                            <!-- Price -->
+
+
+                            <!-- Condition -->
+                            <div class="col-md-6 mb-3">
+                                <label for="material">Material</label>
+                                <textarea type="text" class="form-control" id="material" name="material" row="3"></textarea>
+                                <div class="invalid-feedback">
+                                    Material is required.
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+
+                        </div>
                     </div>
                 </div>
             </div>
             <button class="btn btn-primary btn-lg btn-block" type="submit">Add Product</button>
+
+            </form>
         </div>
     </div>
 </div>
@@ -666,7 +533,7 @@
             });
 
             // Show the selected category form
-            if (categorySelect.value === 'accessory') {
+            if (categorySelect.value === 'accessories') {
                 accessoryCard.style.display = 'block';
                 // Focus on the first input field of the accessory form
                 document.getElementById('accessoryName').focus();
@@ -674,7 +541,7 @@
                 accessoryCard.style.display = 'none';
             }
 
-            if (categorySelect.value === 'equipment') {
+            if (categorySelect.value === 'equipments') {
                 equimentCard.style.display = 'block';
                 // Focus on the first input field of the accessory form
                 document.getElementById('equimentName').focus();
@@ -682,7 +549,7 @@
                 equimentCard.style.display = 'none';
             }
 
-            if (categorySelect.value === 'supplement') {
+            if (categorySelect.value === 'suppliments') {
                 supplimentCard.style.display = 'block';
                 // Focus on the first input field of the accessory form
                 document.getElementById('supplimentName').focus();
@@ -690,7 +557,7 @@
                 supplimentCard.style.display = 'none';
             }
 
-            if (categorySelect.value === 'clothing') {
+            if (categorySelect.value === 'cloths') {
                 clothCard.style.display = 'block';
                 // Focus on the first input field of the accessory form
                 document.getElementById('clothName').focus();
@@ -721,4 +588,5 @@
 </script>
 
 
+@include('CustomSweetAlert');
 @endsection
