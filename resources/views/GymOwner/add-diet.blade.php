@@ -33,7 +33,7 @@
                                                 Diet name is required.
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3 mb-3">
                                             <label for="calories">Calories</label>
                                             <input type="number" class="form-control" id="calories" name="calories"
                                                 required="">
@@ -41,7 +41,7 @@
                                                 Calories image is required.
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3 mb-3">
                                             <label for="protein">Protein</label>
                                             <input type="number" class="form-control" id="protein" name="protein"
                                                 required="">
@@ -49,7 +49,7 @@
                                                 Protein name is required.
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3 mb-3">
                                             <label for="carbs">Carbs</label>
                                             <input type="number" class="form-control" id="carbs" name="carbs"
                                                 required="">
@@ -57,7 +57,7 @@
                                                 Carbs image is required.
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3 mb-3">
                                             <label for="fats">Fats</label>
                                             <input type="number" class="form-control" id="fats" name="fats" required="">
                                             <div class="invalid-feedback">
