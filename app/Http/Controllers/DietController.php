@@ -47,7 +47,11 @@ class DietController extends Controller
                 'alternative_diet' => 'nullable',
                 'min_age' => 'required',
                 'max_age' => 'required',
-                'goal' => 'required'
+                'goal' => 'required',
+                'calories' => 'nullable',
+                'protein' => 'required',
+                'carbs' => 'required',
+                'fats' => 'required'
             ]);
 
             $imagePath = null;
