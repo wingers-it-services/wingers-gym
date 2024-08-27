@@ -35,7 +35,8 @@
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="calories">Calories</label>
-                                            <input type="number" class="form-control" id="calories" name="calories" required="">
+                                            <input type="number" class="form-control" id="calories" name="calories"
+                                                required="">
                                             <div class="invalid-feedback">
                                                 Calories image is required.
                                             </div>
@@ -206,6 +207,36 @@
                         <input type="text" class="form-control" id="edit_name" name="name" required>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="edit_calories">Calories</label>
+                                <input type="number" class="form-control" id="edit_calories" name="calories" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="edit_protein">Protein</label>
+                                <input type="number" class="form-control" id="edit_protein" name="protein" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="edit_carbs">Carbs</label>
+                                <input type="number" class="form-control" id="edit_carbs" name="carbs" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="edit_fats">Fats</label>
+                                <input type="number" class="form-control" id="edit_fats" name="fats" required>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="edit_gender">Gender</label>
                         <select class="form-control" id="edit_gender" name="gender" required>
@@ -213,18 +244,6 @@
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                         </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit_diet">Diet Description</label>
-                        <textarea type="text" class="form-control" id="edit_diet" rows="4" name="diet"
-                            required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit_alternative_diet">Alternative Diet</label>
-                        <textarea type="text" class="form-control" rows="4" id="edit_alternative_diet"
-                            name="alternative_diet"></textarea>
                     </div>
 
                     <div class="form-group">
@@ -240,6 +259,18 @@
                     <div class="form-group">
                         <label for="edit_goal">Goal</label>
                         <input type="text" class="form-control" id="edit_goal" name="goal" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_diet">Diet Description</label>
+                        <textarea type="text" class="form-control" id="edit_diet" rows="4" name="diet"
+                            required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_alternative_diet">Alternative Diet</label>
+                        <textarea type="text" class="form-control" rows="4" id="edit_alternative_diet"
+                            name="alternative_diet"></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Update Diet</button>
@@ -295,7 +326,10 @@
                     document.getElementById('edit_min_age').value = diet.min_age;
                     document.getElementById('edit_max_age').value = diet.max_age;
                     document.getElementById('edit_goal').value = diet.goal;
-
+                    document.getElementById('edit_calories').value = diet.calories;
+                    document.getElementById('edit_protein').value = diet.protein;
+                    document.getElementById('edit_carbs').value = diet.carbs;
+                    document.getElementById('edit_fats').value = diet.fats;
                     new bootstrap.Modal(document.getElementById('editDietModal')).show();
                 });
             });
@@ -326,10 +360,15 @@
                     const details = `
                     <strong>Diet Name:</strong> ${workout.name}<br>
                     <strong>Goal:</strong> ${workout.goal}<br>
+                    <strong>Calories:</strong> ${workout.calories}<br>
+                    <strong>Protein:</strong> ${workout.protein}<br>
+                    <strong>Carbs:</strong> ${workout.carbs}<br>
+                    <strong>Fats:</strong> ${workout.fats}<br>
+                    <strong>Gender:</strong> ${workout.gender}<br>
+                    <strong>Min-Max Age:</strong> ${workout.min_age}-${workout.max_age}<br>
                     <strong>Diet Description:</strong> ${workout.diet}<br>
                     <strong>Alternative Description:</strong> ${workout.alternative_diet}<br>
-                    <strong>Gender:</strong> ${workout.gender}<br>
-                    <strong>Min-Max Age:</strong> ${workout.min_age}-${workout.max_age}
+
                 `;
                     document.getElementById('modalDetails').innerHTML = details;
 

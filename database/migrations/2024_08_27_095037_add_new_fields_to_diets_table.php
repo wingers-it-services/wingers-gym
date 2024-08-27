@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('diets', function (Blueprint $table) {
-            $table->integer('calories');
-            $table->integer('protein');
-            $table->integer('carbs');
-            $table->integer('fats');
+            $table->integer('calories')->after('added_by');
+            $table->integer('protein')->after('added_by');
+            $table->integer('carbs')->after('added_by');
+            $table->integer('fats')->after('added_by');
+
         });
     }
 
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->dropColumn('protein'); 
             $table->dropColumn('carbs'); 
             $table->dropColumn('fats'); 
+
         });
     }
 };

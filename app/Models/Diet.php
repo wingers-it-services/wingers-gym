@@ -20,8 +20,8 @@ class Diet extends Model
         'alternative_diet',
         'min_age',
         'max_age',
-        'goal',
         'added_by',
+        'goal',
         'calories',
         'protein',
         'carbs',
@@ -45,10 +45,11 @@ class Diet extends Model
                 'calories'         => $dietArray['calories'],
                 'protein'          => $dietArray['protein'],
                 'carbs'            => $dietArray['carbs'],
-                'fats'             => $dietArray['fats']
+                'fats'             => $dietArray['fats'],
+                'added_by'      =>    1
             ]);
         } catch (\Throwable $e) {
-            Log::error('[Workout][addWorkout] Error adding workout: ' . $e->getMessage());
+            Log::error('[Diet][addDiet] Error adding diet: ' . $e->getMessage());
         }
     }
 
