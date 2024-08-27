@@ -179,7 +179,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/add-diet', [DietController::class, 'viewDiet'])->name('add-diet');
     Route::post('/add-gym-diet', [DietController::class, 'addDiet'])->name('add-gym-diet');
     Route::post('/update-gym-diet', [DietController::class, 'updateDiet'])->name('update-gym-diet');
-    Route::get('/delete-diet/{uuid}', [WorkoutController::class, 'deleteDiet'])->name('delete-diet');
+    Route::get('/delete-diet/{uuid}', [DietController::class, 'deleteDiet'])->name('delete-diet');
 
     Route::get('/add-workout', [WorkoutController::class, 'viewWorkout'])->name('add-workout');
     Route::post('/add-gym-workout', [WorkoutController::class, 'addWorkout'])->name('add-gym-workout');

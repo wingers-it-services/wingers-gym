@@ -1,7 +1,18 @@
 @extends('GymOwner.master')
 @section('title', 'Dashboard')
 @section('content')
+<style>
+    .data-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 5fr);
+        gap: 10px;
+        /* Adjust the gap between items */
+    }
 
+    .item {
+        /* Additional styling for each item if needed */
+    }
+</style>
 <div class="content-body">
     <div class="container-fluid">
         <div class="page-titles">
@@ -33,7 +44,7 @@
                                                 Diet name is required.
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3 mb-3">
                                             <label for="calories">Calories</label>
                                             <input type="number" class="form-control" id="calories" name="calories"
                                                 required="">
@@ -41,7 +52,7 @@
                                                 Calories image is required.
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3 mb-3">
                                             <label for="protein">Protein</label>
                                             <input type="number" class="form-control" id="protein" name="protein"
                                                 required="">
@@ -49,7 +60,7 @@
                                                 Protein name is required.
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3 mb-3">
                                             <label for="carbs">Carbs</label>
                                             <input type="number" class="form-control" id="carbs" name="carbs"
                                                 required="">
@@ -57,7 +68,7 @@
                                                 Carbs image is required.
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3 mb-3">
                                             <label for="fats">Fats</label>
                                             <input type="number" class="form-control" id="fats" name="fats" required="">
                                             <div class="invalid-feedback">
@@ -65,7 +76,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3 mb-3">
                                             <label for="gender">Gender</label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="gender"
@@ -78,7 +89,13 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3 mb-3">
+                                            <label for="goal">Goal </label>
+                                            <input type="text" class="form-control" id="goal" name="goal"
+                                                placeholder="">
+                                        </div>
+
+                                        <div class="col-md-3 mb-3">
                                             <label for="min_age">Min Age </label>
                                             <input type="number" class="form-control" id="min_age" name="min_age"
                                                 placeholder="">
@@ -87,20 +104,13 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3 mb-3">
                                             <label for="max_age">Max Age </label>
                                             <input type="number" class="form-control" id="max_age" name="max_age"
                                                 placeholder="">
                                             <div class="invalid-feedback">
                                                 Max Age is required.
                                             </div>
-                                        </div>
-
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="goal">Goal </label>
-                                            <input type="text" class="form-control" id="goal" name="goal"
-                                                placeholder="">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
@@ -358,14 +368,17 @@
 
                     // Set workout details
                     const details = `
-                    <strong>Diet Name:</strong> ${workout.name}<br>
-                    <strong>Goal:</strong> ${workout.goal}<br>
-                    <strong>Calories:</strong> ${workout.calories}<br>
-                    <strong>Protein:</strong> ${workout.protein}<br>
-                    <strong>Carbs:</strong> ${workout.carbs}<br>
-                    <strong>Fats:</strong> ${workout.fats}<br>
-                    <strong>Gender:</strong> ${workout.gender}<br>
-                    <strong>Min-Max Age:</strong> ${workout.min_age}-${workout.max_age}<br>
+                   <div class="data-grid">
+                    <div class="item"><strong>Diet Name:</strong> ${workout.name}</div>
+                    <div class="item"><strong>Goal:</strong> ${workout.goal}</div>
+                    <div class="item"><strong>Calories:</strong> ${workout.calories}</div>
+                    <div class="item"><strong>Protein:</strong> ${workout.protein}</div>
+                    <div class="item"><strong>Carbs:</strong> ${workout.carbs}</div>
+    <div class="item"><strong>Fats:</strong> ${workout.fats}</div>
+    <div class="item"><strong>Gender:</strong> ${workout.gender}</div>
+    <div class="item"><strong>Min-Max Age:</strong> ${workout.min_age}-${workout.max_age}</div>
+</div>
+
                     <strong>Diet Description:</strong> ${workout.diet}<br>
                     <strong>Alternative Description:</strong> ${workout.alternative_diet}<br>
 
