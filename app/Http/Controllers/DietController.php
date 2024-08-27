@@ -47,7 +47,11 @@ class DietController extends Controller
                 'alternative_diet' => 'nullable',
                 'min_age' => 'required',
                 'max_age' => 'required',
-                'goal' => 'required'
+                'goal' => 'required',
+                'calories' => 'nullable',
+                'protein' => 'required',
+                'carbs' => 'required',
+                'fats' => 'required'
             ]);
 
             $imagePath = null;
@@ -58,7 +62,6 @@ class DietController extends Controller
                 $userImage->move(public_path('diet_images/'), $filename);
             }
 
-            // Assuming you have a method addCoupon in your GymCoupon model
             $this->diet->addDiet($validatedData, $imagePath, $gymId);
 
             return redirect()->back()->with('status', 'success')->with('message', 'Diet added successfully.');
@@ -81,6 +84,10 @@ class DietController extends Controller
                 'min_age' => 'required|integer',
                 'max_age' => 'required|integer',
                 'goal' => 'required',
+                'calories' => 'nullable',
+                'protein' => 'required',
+                'carbs' => 'required',
+                'fats' => 'required'
             ]);
 
             $diet = $this->diet->findOrFail($request->diet_id);
@@ -109,6 +116,10 @@ class DietController extends Controller
                 'max_age' => $validatedData['max_age'],
                 'goal' => $validatedData['goal'],
                 'image' => $imagePath,
+                'calories' => $validatedData['calories'],
+                'protein' => $validatedData['protein'],
+                'carbs' => $validatedData['carbs'],
+                'fats' => $validatedData['fats'],
             ]);
 
             return redirect()->back()->with('status', 'success')->with('message', 'Diet updated successfully.');

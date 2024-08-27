@@ -56,7 +56,7 @@ class UserService
             }
         }
 
-        $userData['subscription_status'] = GymSubscriptionStatusEnum::INACTIVE;
+        $userData['subscription_status'] = GymSubscriptionStatusEnum::ACTIVE;
         $userData['profile_status'] = GymUserAccountStatusEnum::USER_INJURY_DETAIL;
         $userData['user_type'] = UserTypeEnum::GYMUSER;
 

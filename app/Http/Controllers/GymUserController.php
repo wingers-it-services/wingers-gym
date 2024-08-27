@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Designation;
+use App\Models\Diet;
 use App\Models\GymStaff;
 use App\Models\userBmi;
 use App\Models\Gym;
@@ -90,26 +91,26 @@ class GymUserController extends Controller
     {
         try {
             $validateData = $request->validate([
-                'firstname'         => 'required',
-                'lastname'          => 'required',
-                'email'             => 'required|unique:gym_users,email',
-                'gender'            => 'required',
-                'subscription_id'   => 'required',
-                'blood_group'       => 'nullable',
-                'joining_date'      => 'required|date',
-                'address'           => 'required',
-                'country'           => 'required',
-                'state'             => 'required',
-                'zip_code'          => 'required',
-                'image'             => 'required',
-                'subscription_end_date'     => 'required',
-                'subscription_start_date'   =>      'required',
-                'coupon_id'         => 'nullable',
-                'subscription_status'  => 'nullable',
-                'profile_status'       => 'nullable',
-                'staff_assign_id'      => 'nullable',
-                'password'             => 'required',
-                'phone_no'              => 'required'
+                'firstname' => 'required',
+                'lastname' => 'required',
+                'email' => 'required|unique:gym_users,email',
+                'gender' => 'required',
+                'subscription_id' => 'required',
+                'blood_group' => 'nullable',
+                'joining_date' => 'required|date',
+                'address' => 'required',
+                'country' => 'required',
+                'state' => 'required',
+                'zip_code' => 'required',
+                'image' => 'required',
+                'subscription_end_date' => 'required',
+                'subscription_start_date' => 'required',
+                'coupon_id' => 'nullable',
+                'subscription_status' => 'nullable',
+                'profile_status' => 'nullable',
+                'staff_assign_id' => 'nullable',
+                'password' => 'required',
+                'phone_no' => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -164,7 +165,7 @@ class GymUserController extends Controller
             ->get();
         $trainersHistories = $this->trainersHistory->where('gym_id', $gymId)->where('user_id', $userId)->get();
 
-        return view('GymOwner.view-gym-customer-details', compact('userDetail',  'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets',  'trainers', 'bmis', 'trainersHistories'));
+        return view('GymOwner.view-gym-customer-details', compact('userDetail', 'designations', 'gymSubscriptions', 'userSubscriptions', 'workouts', 'diets', 'trainers', 'bmis', 'trainersHistories'));
     }
 
     public function viewUpdateUser(Request $request, $uuid)
@@ -188,17 +189,17 @@ class GymUserController extends Controller
             $user = $this->user->where('uuid', $uuid)->first();
 
             $request->validate([
-                'email'             => 'required',
-                'gender'            => 'required',
-                'blood_group'       => 'nullable',
-                'address'           => 'required',
-                'country'           => 'required',
-                'state'             => 'required',
-                'zip_code'          => 'required',
-                'image'             => 'nullable',
-                'staff_assign_id'      => 'nullable',
-                'password'             => 'required',
-                'joining_date'          => 'required'
+                'email' => 'required',
+                'gender' => 'required',
+                'blood_group' => 'nullable',
+                'address' => 'required',
+                'country' => 'required',
+                'state' => 'required',
+                'zip_code' => 'required',
+                'image' => 'nullable',
+                'staff_assign_id' => 'nullable',
+                'password' => 'required',
+                'joining_date' => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -549,6 +550,40 @@ class GymUserController extends Controller
             ]);
         } else {
             return response()->json(['success' => false]);
+        }
+    }
+
+    public function autocompleteDiet(Request $request)
+    {
+        $gymUser = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
+        $query = $request->get('query');
+        $workouts = Diet::where('name', 'LIKE', "%{$query}%")->where('gym_id', $gymId)->pluck('name');
+
+        return response()->json($workouts);
+    }
+
+    public function fetchDietDetails(Request $request)
+    {
+        $mealName = $request->input('meal_name');
+        $diet = Diet::where('name', $mealName)->first();
+
+        if ($diet) {
+            return response()->json([
+                'image' => asset($diet->image),
+                'calories' => $diet->calories,
+                'protein' => $diet->protein,
+                'carbs' => $diet->carbs,
+                'fats' => $diet->fats,
+                'diet' => $diet->diet,
+                'alternative_diet' => $diet->alternative_diet,
+                'min_age' => $diet->min_age,
+                'max_age' => $diet->max_age,
+                'goal' => $diet->goal,
+                'gender' => $diet->gender
+            ]);
+        } else {
+            return response()->json(null);
         }
     }
 

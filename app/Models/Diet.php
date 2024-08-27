@@ -20,27 +20,36 @@ class Diet extends Model
         'alternative_diet',
         'min_age',
         'max_age',
+        'added_by',
         'goal',
-        'added_by'
+        'calories',
+        'protein',
+        'carbs',
+        'fats'
     ];
 
 
-    public function addDiet(array $workoutArray, $imagePath, $gymId) 
+    public function addDiet(array $dietArray, $imagePath, $gymId) 
     {
         try {
             return $this->create([
                 'gym_id'           => $gymId,
-                'name'             => $workoutArray['name'],
-                'diet'             => $workoutArray['diet'],
-                'gender'           => $workoutArray['gender'],
+                'name'             => $dietArray['name'],
+                'diet'             => $dietArray['diet'],
+                'gender'           => $dietArray['gender'],
                 'image'            => $imagePath,
-                'alternative_diet' => $workoutArray['alternative_diet'],
-                'min_age'          => $workoutArray['min_age'],
-                'max_age'          => $workoutArray['max_age'],
-                'goal'             => $workoutArray['goal']
+                'alternative_diet' => $dietArray['alternative_diet'],
+                'min_age'          => $dietArray['min_age'],
+                'max_age'          => $dietArray['max_age'],
+                'goal'             => $dietArray['goal'],
+                'calories'         => $dietArray['calories'],
+                'protein'          => $dietArray['protein'],
+                'carbs'            => $dietArray['carbs'],
+                'fats'             => $dietArray['fats'],
+                'added_by'      =>    1
             ]);
         } catch (\Throwable $e) {
-            Log::error('[Workout][addWorkout] Error adding workout: ' . $e->getMessage());
+            Log::error('[Diet][addDiet] Error adding diet: ' . $e->getMessage());
         }
     }
 

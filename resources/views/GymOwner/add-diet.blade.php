@@ -1,5 +1,5 @@
 @extends('GymOwner.master')
-@section('title','Dashboard')
+@section('title', 'Dashboard')
 @section('content')
 
 <div class="content-body">
@@ -33,12 +33,43 @@
                                                 Diet name is required.
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="calories">Calories</label>
+                                            <input type="number" class="form-control" id="calories" name="calories"
+                                                required="">
+                                            <div class="invalid-feedback">
+                                                Calories image is required.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="protein">Protein</label>
+                                            <input type="number" class="form-control" id="protein" name="protein"
+                                                required="">
+                                            <div class="invalid-feedback">
+                                                Protein name is required.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="carbs">Carbs</label>
+                                            <input type="number" class="form-control" id="carbs" name="carbs"
+                                                required="">
+                                            <div class="invalid-feedback">
+                                                Carbs image is required.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="fats">Fats</label>
+                                            <input type="number" class="form-control" id="fats" name="fats" required="">
+                                            <div class="invalid-feedback">
+                                                Fats name is required.
+                                            </div>
+                                        </div>
+
                                         <div class="col-md-6 mb-3">
                                             <label for="gender">Gender</label>
                                             <div class="input-group">
-                                                <select class="me-sm-2 form-control default-select" id="gender" name="gender">
+                                                <select class="me-sm-2 form-control default-select" id="gender"
+                                                    name="gender">
                                                     <option value="">Choose...</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
@@ -49,34 +80,39 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="min_age">Min Age </label>
-                                            <input type="number" class="form-control" id="min_age" name="min_age" placeholder="">
+                                            <input type="number" class="form-control" id="min_age" name="min_age"
+                                                placeholder="">
                                             <div class="invalid-feedback">
-                                               Min Age is required.
+                                                Min Age is required.
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="max_age">Max Age </label>
-                                            <input type="number" class="form-control" id="max_age" name="max_age" placeholder="">
+                                            <input type="number" class="form-control" id="max_age" name="max_age"
+                                                placeholder="">
                                             <div class="invalid-feedback">
                                                 Max Age is required.
-                                             </div>
+                                            </div>
                                         </div>
 
 
                                         <div class="col-md-6 mb-3">
                                             <label for="goal">Goal </label>
-                                            <input type="text" class="form-control" id="goal" name="goal" placeholder="">
+                                            <input type="text" class="form-control" id="goal" name="goal"
+                                                placeholder="">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="diet">Diet Description</label>
-                                            <textarea type="text" class="form-control" id="diet" name="diet" rows="5" placeholder=""></textarea>
+                                            <textarea type="text" class="form-control" id="diet" name="diet" rows="5"
+                                                placeholder=""></textarea>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="alternative_diet">Alternative Diet </label>
-                                            <textarea type="text" class="form-control" id="alternative_diet" name="alternative_diet" rows="5" placeholder=""></textarea>
+                                            <textarea type="text" class="form-control" id="alternative_diet"
+                                                name="alternative_diet" rows="5" placeholder=""></textarea>
                                         </div>
                                         <hr class="mb-4">
                                         <button class="btn btn-primary btn-lg btn-block" type="submit">Add Diet</button>
@@ -108,24 +144,32 @@
                         </thead>
                         <tbody>
                             @foreach ($diets as $subscription)
-                            <tr>
-                                <td>
-                                    <img width="80" src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}" loading="lazy" alt="Profile Image">
-                                </td>
-                                <td>{{$subscription->name }}</td>
-                                <td>{{$subscription->gender }}</td>
-                                <td>{{$subscription->goal }}</td>
-                                <td>{{$subscription->min_age }} - {{ $subscription->max_age }}</td>
-                                <td class="text-end">
-                                    <a class="dropdown-item view-workout" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#d" data-workout="{{ json_encode($subscription) }}">
-                                        <i class="fa fa-eye color-muted"></i>
-                                    </a>
-                                </td>
-                                <td class="text-end">
-                                    <span><a href="javascript:void(0);" class="me-4 edit-book-button" data-bs-toggle="modal" data-bs-target="#editSuscription" data-book='@json($subscription)'><i class="fa fa-pencil color-muted"></i> </a>
-                                        <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <img width="80"
+                                            src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
+                                            loading="lazy" alt="Profile Image">
+                                    </td>
+                                    <td>{{$subscription->name }}</td>
+                                    <td>{{$subscription->gender }}</td>
+                                    <td>{{$subscription->goal }}</td>
+                                    <td>{{$subscription->min_age }} - {{ $subscription->max_age }}</td>
+                                    <td class="text-end">
+                                        <a class="dropdown-item view-workout" href="javascript:void(0);"
+                                            data-bs-toggle="modal" data-bs-target="#d"
+                                            data-workout="{{ json_encode($subscription) }}">
+                                            <i class="fa fa-eye color-muted"></i>
+                                        </a>
+                                    </td>
+                                    <td class="text-end">
+                                        <span><a href="javascript:void(0);" class="me-4 edit-book-button"
+                                                data-bs-toggle="modal" data-bs-target="#editSuscription"
+                                                data-book='@json($subscription)'><i class="fa fa-pencil color-muted"></i>
+                                            </a>
+                                            <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
+                                                data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -135,7 +179,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel" aria-hidden="true">
+<div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -162,6 +207,36 @@
                         <input type="text" class="form-control" id="edit_name" name="name" required>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="edit_calories">Calories</label>
+                                <input type="number" class="form-control" id="edit_calories" name="calories" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="edit_protein">Protein</label>
+                                <input type="number" class="form-control" id="edit_protein" name="protein" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="edit_carbs">Carbs</label>
+                                <input type="number" class="form-control" id="edit_carbs" name="carbs" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="edit_fats">Fats</label>
+                                <input type="number" class="form-control" id="edit_fats" name="fats" required>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="edit_gender">Gender</label>
                         <select class="form-control" id="edit_gender" name="gender" required>
@@ -169,16 +244,6 @@
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                         </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit_diet">Diet Description</label>
-                        <textarea type="text" class="form-control" id="edit_diet" rows="4" name="diet" required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit_alternative_diet">Alternative Diet</label>
-                        <textarea type="text" class="form-control" rows="4" id="edit_alternative_diet" name="alternative_diet"></textarea>
                     </div>
 
                     <div class="form-group">
@@ -194,6 +259,18 @@
                     <div class="form-group">
                         <label for="edit_goal">Goal</label>
                         <input type="text" class="form-control" id="edit_goal" name="goal" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_diet">Diet Description</label>
+                        <textarea type="text" class="form-control" id="edit_diet" rows="4" name="diet"
+                            required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_alternative_diet">Alternative Diet</label>
+                        <textarea type="text" class="form-control" rows="4" id="edit_alternative_diet"
+                            name="alternative_diet"></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Update Diet</button>
@@ -227,7 +304,7 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Function to initialize event listeners for edit and view buttons
         function initializeEventListeners() {
             // Edit Diet Modal
@@ -237,7 +314,7 @@
             const editGenderSelect = document.getElementById('edit_gender');
 
             editButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const diet = JSON.parse(this.getAttribute('data-book'));
 
                     document.getElementById('edit_diet_id').value = diet.id;
@@ -249,18 +326,21 @@
                     document.getElementById('edit_min_age').value = diet.min_age;
                     document.getElementById('edit_max_age').value = diet.max_age;
                     document.getElementById('edit_goal').value = diet.goal;
-
+                    document.getElementById('edit_calories').value = diet.calories;
+                    document.getElementById('edit_protein').value = diet.protein;
+                    document.getElementById('edit_carbs').value = diet.carbs;
+                    document.getElementById('edit_fats').value = diet.fats;
                     new bootstrap.Modal(document.getElementById('editDietModal')).show();
                 });
             });
 
             // Show a preview of the new image when selected
             if (editImageInput) {
-                editImageInput.addEventListener('change', function(event) {
+                editImageInput.addEventListener('change', function (event) {
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = function(e) {
+                        reader.onload = function (e) {
                             currentImage.src = e.target.result;
                         }
                         reader.readAsDataURL(file);
@@ -270,7 +350,7 @@
 
             // View Workout Modal
             document.querySelectorAll('.view-workout').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     // Set the image src
@@ -280,10 +360,15 @@
                     const details = `
                     <strong>Diet Name:</strong> ${workout.name}<br>
                     <strong>Goal:</strong> ${workout.goal}<br>
+                    <strong>Calories:</strong> ${workout.calories}<br>
+                    <strong>Protein:</strong> ${workout.protein}<br>
+                    <strong>Carbs:</strong> ${workout.carbs}<br>
+                    <strong>Fats:</strong> ${workout.fats}<br>
+                    <strong>Gender:</strong> ${workout.gender}<br>
+                    <strong>Min-Max Age:</strong> ${workout.min_age}-${workout.max_age}<br>
                     <strong>Diet Description:</strong> ${workout.diet}<br>
                     <strong>Alternative Description:</strong> ${workout.alternative_diet}<br>
-                    <strong>Gender:</strong> ${workout.gender}<br>
-                    <strong>Min-Max Age:</strong> ${workout.min_age}-${workout.max_age}
+
                 `;
                     document.getElementById('modalDetails').innerHTML = details;
 
@@ -297,7 +382,7 @@
         initializeEventListeners();
 
         // Reinitialize event listeners after DataTable redraw (or similar events)
-        $('#example3').on('draw.dt', function() {
+        $('#example3').on('draw.dt', function () {
             initializeEventListeners(); // Reattach event listeners
         });
     });

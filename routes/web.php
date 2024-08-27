@@ -230,6 +230,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/autocomplete-workout', [GymUserController::class, 'autocompleteWorkout'])->name('autocomplete-workout');
     Route::get('/fetch-workout-details', [GymUserController::class, 'fetchWorkoutDetails'])->name('fetch-workout-details');
 
+    Route::get('/autocomplete-diet', [GymUserController::class, 'autocompleteDiet'])->name('autocomplete-diet');
+    Route::get('/fetch-diet-details', [GymUserController::class, 'fetchDietDetails'])->name('fetch-diet-details');
 
     Route::get('/fetch-gym-profile', [GymDetailController::class, 'fetchGymProfile'])->name('fetchGymProfile');
 
