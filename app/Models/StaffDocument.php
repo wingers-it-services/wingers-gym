@@ -12,7 +12,13 @@ class StaffDocument extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['staff_id', 'aadhaar_card'];
+    protected $fillable = [
+        'staff_id',
+        'aadhaar_card',
+        'pan_card',
+        'cancel_cheque',
+        'other'
+    ];
 
     public function gymStaff()
     {
