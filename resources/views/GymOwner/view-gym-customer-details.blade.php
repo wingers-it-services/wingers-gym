@@ -284,6 +284,7 @@
                                                     <form autocomplete="off" method="POST" action="/add-user-workout">
                                                         @csrf
                                                         <input type="text" id="user_id" name="user_id" value="{{$userDetail->id}}" class="form-control" hidden>
+                                                        <input type="text" id="workout_id" name="workout_id" class="form-control" >
 
                                                         <div class="form-group">
                                                             <label>Exercise Name</label>
