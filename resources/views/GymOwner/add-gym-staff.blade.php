@@ -184,11 +184,11 @@
 											<div class="col-lg-3 col-sm-6 col-6">
 												<div class="form-group">
 													<label for="mailclient11" class="mailclinet mailclinet-gmail">
-														<input type="radio" name="emailclient" id="mailclient11">
+														<input type="file" name="aadhaar_card" id="mailclient11" hidden>
 														<span class="mail-icon">
 															<i class="mdi mdi-google-plus" aria-hidden="true"></i>
 														</span>
-														<span class="mail-text">I'm using Gmail</span>
+														<span class="mail-text">Upload AAdhar Card</span>
 													</label>
 												</div>
 											</div>
