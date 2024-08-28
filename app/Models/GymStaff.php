@@ -41,24 +41,24 @@ class GymStaff extends Model
     {
         try {
             $this->create([
-                'name' => $gymStaffArray['full_name'],
-                'gender' => $gymStaffArray['gender'],
-                'blood_group' => $gymStaffArray['blood_group'],
-                'employee_id' => $gymStaffArray['staff_id'],
-                'email' => $gymStaffArray['email'],
-                'number' => $gymStaffArray['phone_number'],
-                'designation_id' => $gymStaffArray['designation'],
-                'joining_date' => $gymStaffArray['joining_date'],
-                'address' => $gymStaffArray['address'],
-                'salary' => $gymStaffArray['salary'],
-                'experience' => $gymStaffArray['experience'],
-                'dob' => $gymStaffArray['dob'],
-                'whatsapp_no' => $gymStaffArray['whatsapp_no'],
-                'fees' => $gymStaffArray['fees'],
+                'name'             => $gymStaffArray['full_name'],
+                'gender'           => $gymStaffArray['gender'],
+                'blood_group'      => $gymStaffArray['blood_group'],
+                'employee_id'      => $gymStaffArray['staff_id'],
+                'email'            => $gymStaffArray['email'],
+                'number'           => $gymStaffArray['phone_number'],
+                'designation_id'   => $gymStaffArray['designation'],
+                'joining_date'     => $gymStaffArray['joining_date'],
+                'address'          => $gymStaffArray['address'],
+                'salary'           => $gymStaffArray['salary'],
+                'experience'       => $gymStaffArray['experience'],
+                'dob'              => $gymStaffArray['dob'],
+                'whatsapp_no'      => $gymStaffArray['whatsapp_no'],
+                'fees'             => $gymStaffArray['fees'],
                 'staff_commission' => $gymStaffArray['staff_commission'],
-                'gym_commission' => $gymStaffArray['gym_commission'],
-                'image' => $imagePath,
-                'gym_id' => $gymId
+                'gym_commission'   => $gymStaffArray['gym_commission'],
+                'image'            => $imagePath,
+                'gym_id'           => $gymId
             ]);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -69,43 +69,58 @@ class GymStaff extends Model
     {
         $uuid = $updateStaff['uuid'];
         $staffDetail = GymStaff::where('uuid', $uuid)->first();
-
-        // Check if the user exists
+    
         if (!$staffDetail) {
             return redirect()->back()->with('error', 'User not found');
         }
+    
         try {
-            $staffDetail->update([
-                'name' => $updateStaff['full_name'],
-                'gender' => $updateStaff['gender'],
-                'blood_group' => $updateStaff['blood_group'],
-                'employee_id' => $updateStaff['employee_id'],
-                'email' => $updateStaff['email'],
-                'number' => $updateStaff['phone_number'],
-                'designation_id' => $updateStaff['designation'],
-                'joining_date' => $updateStaff['joining_date'],
-                'address' => $updateStaff['address'],
-                'salary' => $updateStaff['salary'],
-                'experience' => $updateStaff['experience'],
-                'dob' => $updateStaff['dob'],
-                'whatsapp_no' => $updateStaff['whatsapp_no'],
-                'fees' => $updateStaff['fees'],
-                'staff_commission' => $updateStaff['staff_commission'],
-                'gym_commission' => $updateStaff['gym_commission'],
-            ]);
-
-            if (isset($imagePath)) {
-                $staffDetail->update([
-                    'image' => $imagePath
-                ]);
+            // Retrieve the designation
+            $designation = Designation::where('id', $updateStaff['designation'])->first();
+    
+            if (!$designation) {
+                return redirect()->back()->with('error', 'Designation not found');
             }
-
-
+    
+            // Check if the designation is commission-based
+            if (!$designation->is_commission_based) {
+                $updateStaff['fees'] = 0;
+                $updateStaff['staff_commission'] = 0;
+                $updateStaff['gym_commission'] = 0;
+            }
+    
+            // Update the staff details
+            $staffDetail->update([
+                'name'             => $updateStaff['full_name'],
+                'gender'           => $updateStaff['gender'],
+                'blood_group'      => $updateStaff['blood_group'],
+                'employee_id'      => $updateStaff['employee_id'],
+                'email'            => $updateStaff['email'],
+                'number'           => $updateStaff['phone_number'],
+                'designation_id'   => $updateStaff['designation'],
+                'joining_date'     => $updateStaff['joining_date'],
+                'address'          => $updateStaff['address'],
+                'salary'           => $updateStaff['salary'],
+                'experience'       => $updateStaff['experience'],
+                'dob'              => $updateStaff['dob'],
+                'whatsapp_no'      => $updateStaff['whatsapp_no'],
+                'fees'             => $updateStaff['fees'],
+                'staff_commission' => $updateStaff['staff_commission'],
+                'gym_commission'   => $updateStaff['gym_commission'],
+            ]);
+    
+            // Update image if provided
+            if (isset($imagePath)) {
+                $staffDetail->update(['image' => $imagePath]);
+            }
+    
             return $staffDetail->save();
         } catch (\Throwable $e) {
             Log::error('[GymStaff][updateStaff] Error while updating user detail: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while updating the staff details.');
         }
     }
+    
     
     public function designation()
     {

@@ -150,7 +150,7 @@
                                             <select class="me-sm-2 form-control default-select" id="designation" name="designation">
                                                 <option selected>Choose...</option>
                                                 @foreach ($designations as $designation)
-                                                <option value="{{ $designation->id }}" {{ $staffDetail->designation_id == $designation->id ? 'selected' : '' }}>
+                                                <option value="{{ $designation->id }}" data-is-commission-based="{{ $designation->is_commission_based }}" {{ $staffDetail->designation_id == $designation->id ? 'selected' : '' }} >
                                                     {{ $designation->designation_name }}
                                                 </option>
                                                 @endforeach
@@ -260,6 +260,35 @@
             }
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+		const designationSelect = document.getElementById('designation');
+		const feesField = document.getElementById('fees-field');
+		const staffCommissionField = document.getElementById('staff-commission-field');
+		const gymCommissionField = document.getElementById('gym-commission-field');
+
+		// Function to toggle fields based on commission-based value
+		function toggleFields() {
+			const selectedOption = designationSelect.options[designationSelect.selectedIndex];
+			const isCommissionBased = selectedOption ? selectedOption.getAttribute('data-is-commission-based') === '1' : false;
+
+			if (isCommissionBased) {
+				feesField.style.display = 'block';
+				staffCommissionField.style.display = 'block';
+				gymCommissionField.style.display = 'block';
+			} else {
+				feesField.style.display = 'none';
+				staffCommissionField.style.display = 'none';
+				gymCommissionField.style.display = 'none';
+			}
+		}
+
+		// Initialize visibility based on the initially selected option
+		toggleFields();
+
+		// Add event listener to handle changes
+		designationSelect.addEventListener('change', toggleFields);
+	});
 </script>
 @include('CustomSweetAlert');
 @endsection

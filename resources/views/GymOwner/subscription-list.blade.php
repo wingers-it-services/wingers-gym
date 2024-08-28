@@ -113,7 +113,7 @@
                                                 <th scope="col">Amount</th>
                                                 <th scope="col">Validity</th>
                                                 <th scope="col">Start Date</th>
-                                                <th scope="col">Label</th>
+                                                <th scope="col">Purchased By Members</th>
                                                 <th scope="col" class="text-end">Action</th>
                                             </tr>
                                         </thead>

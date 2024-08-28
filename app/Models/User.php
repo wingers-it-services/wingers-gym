@@ -298,7 +298,14 @@ class User extends Authenticatable
 
     public function trainer()
     {
-        return $this->hasOneThrough(GymStaff::class,UsersTrainerHistry::class,'user_id', 'id','id','trainer_id');
+        return $this->hasOneThrough(GymStaff::class, UsersTrainerHistry::class, 'user_id', 'id', 'id', 'trainer_id');
     }
-    
+
+    public function activeTrainers()
+    {
+        return $this->hasMany(UsersTrainerHistry::class)
+            ->where('status', 1)
+            ->with('trainer')
+            ->latest('created_at');
+    }
 }

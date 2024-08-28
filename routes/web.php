@@ -73,6 +73,10 @@ Route::get('/register', function () {
 /* registerGym */
 Route::post('/register', [GymDetailController::class, 'registerGym'])->name('registerGym');
 
+
+
+Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
+
 Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     /* dashboard */
@@ -142,7 +146,6 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/gymCouponView', [GymCouponController::class, 'viewGymCoupon'])->name('viewGymCoupon');
     Route::post('/updateGymCoupon', [GymCouponController::class, 'updateGymCoupon'])->name('updateGymCoupon');
 
-    Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
     Route::post('/updateGym', [GymDetailController::class, 'updateGym'])->name('updateGym');
 
 
