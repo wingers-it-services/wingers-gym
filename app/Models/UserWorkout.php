@@ -13,20 +13,34 @@ class UserWorkout extends Model
     use SoftDeletes;
     use SessionTrait;
 
-    protected $fillable = ['user_id', 'workout_id','exercise_name', 'sets', 'reps', 'weight', 'workout_des', 'gym_id'];
+    protected $fillable = [
+        'user_id',
+        'workout_id',
+        'exercise_name',
+        'sets',
+        'reps',
+        'weight',
+        'workout_des',
+        'gym_id'
+    ];
+
+    public function workoutDetails()
+    {
+        return $this->belongsTo(Workout::class, 'workout_id');
+    }
 
     public function addWorkout(array $addWorkout, $gym_id)
     {
         try {
             return $this->create([
-                'gym_id' => $gym_id,
-                'user_id' => $addWorkout['user_id'],
-                'workout_id' => $addWorkout['workout_id'],
+                'gym_id'        => $gym_id,
+                'user_id'       => $addWorkout['user_id'],
+                'workout_id'    => $addWorkout['workout_id'],
                 'exercise_name' => $addWorkout['exercise_name'],
-                'sets' => $addWorkout['sets'],
-                'reps' => $addWorkout['reps'],
-                'weight' => $addWorkout['weight'],
-                'workout_des' => $addWorkout['workout_des'],
+                'sets'          => $addWorkout['sets'],
+                'reps'          => $addWorkout['reps'],
+                'weight'        => $addWorkout['weight'],
+                'workout_des'   => $addWorkout['workout_des'],
             ]);
         } catch (\Throwable $e) {
             Log::error('[UserWorkout][addWorkout] Error adding gym detail: ' . $e->getMessage());
