@@ -91,8 +91,33 @@
 
                                         <div class="col-md-3 mb-3">
                                             <label for="goal">Goal </label>
-                                            <input type="text" class="form-control" id="goal" name="goal"
-                                                placeholder="">
+                                                <div class="input-group">
+                                                <select class="me-sm-2 form-control default-select" id="goal"
+                                                    name="goal">
+                                                    <option value="">Choose...</option>
+                                                    <option value="Weight Gain">Weight Gain</option>
+                                                    <option value="Fit">Fit</option>
+                                                    <option value="Weight Loss">Weight Loss</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="goal">Meal Type </label>
+                                                <div class="input-group">
+                                                <select class="me-sm-2 form-control default-select" id="meal_type"
+                                                    name="meal_type">
+                                                    <option value="">Choose...</option>
+                                                    <option value="Weight Gain">Vegetarian</option>
+                                                    <option value="Fit">Non-Vegetarian </option>
+                                                    <option value="Weight Loss">Lacto-vegetarian</option>
+                                                    <option value="Fit">Ovo-vegetarian </option>
+                                                    <option value="Weight Loss">Vegan</option>
+                                                    <option value="Fit">Pescatarian </option>
+                                                    <option value="Weight Loss">Beegan</option>
+                                                    <option value="Fit">Flexitarian </option>
+                                                </select>
+                                            </div>
                                         </div>
 
                                         <div class="col-md-3 mb-3">
