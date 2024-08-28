@@ -25,7 +25,7 @@
 									<div class="items" id="staff-cards" data-gym-id='{{$gymStaff->gym_id}}' data-employee-id='{{$gymStaff->id}}' data-employee-name='{{$gymStaff->name}}'
 										data-employee-email='{{$gymStaff->email}}'
 										data-employee-phone-number='{{$gymStaff->number}}'
-										data-employee-designation='{{$gymStaff->designation->designation_name}}'
+										data-employee-designation='{{ $gymStaff->designation->designation_name ?? '----' }}'
 										data-employee-salary='{{$gymStaff->salary}}'
 										data-employee-blood-group='{{$gymStaff->blood_group}}'
 										data-employee-joining-date='{{$gymStaff->joining_date}}'
