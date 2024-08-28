@@ -41,7 +41,7 @@ class GymStaff extends Model
     {
         $imagePath = $this->attributes['image'];
         $defaultImagePath = 'images/profile/17.jpg';
-        $fullImagePath = $imagePath; 
+        $fullImagePath = $imagePath;
 
         // Check if the file exists in the public directory
         if ($imagePath && file_exists(public_path($fullImagePath))) {
@@ -51,52 +51,77 @@ class GymStaff extends Model
         return asset($defaultImagePath);
     }
 
-    public function aadhaarCard()
-    {
-        return $this->hasOne(StaffDocument::class, 'staff_id');
-    }
+   
 
 
     public function addGymStaff(array $gymStaffArray, int $gymId, string $imagePath)
-    {
-        DB::beginTransaction();
-        try {
-            $gymStaff =  $this->create([
-                'name'             => $gymStaffArray['full_name'],
-                'gender'           => $gymStaffArray['gender'],
-                'blood_group'      => $gymStaffArray['blood_group'],
-                'employee_id'      => $gymStaffArray['staff_id'],
-                'email'            => $gymStaffArray['email'],
-                'number'           => $gymStaffArray['phone_number'],
-                'designation_id'   => $gymStaffArray['designation'],
-                'joining_date'     => $gymStaffArray['joining_date'],
-                'address'          => $gymStaffArray['address'],
-                'salary'           => $gymStaffArray['salary'],
-                'experience'       => $gymStaffArray['experience'],
-                'dob'              => $gymStaffArray['dob'],
-                'whatsapp_no'      => $gymStaffArray['whatsapp_no'],
-                'fees'             => $gymStaffArray['fees'] ?? 0,
-                'staff_commission' => $gymStaffArray['staff_commission'] ?? 0,
-                'gym_commission'   => $gymStaffArray['gym_commission'] ?? 0,
-                'image'            => $imagePath,
-                'gym_id'           => $gymId
-            ]);
+{
+    DB::beginTransaction();
+    try {
+        // Create gym staff record
+        $gymStaff = $this->create([
+            'name'             => $gymStaffArray['full_name'],
+            'gender'           => $gymStaffArray['gender'],
+            'blood_group'      => $gymStaffArray['blood_group'],
+            'employee_id'      => $gymStaffArray['staff_id'],
+            'email'            => $gymStaffArray['email'],
+            'number'           => $gymStaffArray['phone_number'],
+            'designation_id'   => $gymStaffArray['designation'],
+            'joining_date'     => $gymStaffArray['joining_date'],
+            'address'          => $gymStaffArray['address'],
+            'salary'           => $gymStaffArray['salary'],
+            'experience'       => $gymStaffArray['experience'],
+            'dob'              => $gymStaffArray['dob'],
+            'whatsapp_no'      => $gymStaffArray['whatsapp_no'],
+            'fees'             => $gymStaffArray['fees'] ?? 0,
+            'staff_commission' => $gymStaffArray['staff_commission'] ?? 0,
+            'gym_commission'   => $gymStaffArray['gym_commission'] ?? 0,
+            'image'            => $imagePath,
+            'gym_id'           => $gymId
+        ]);
 
-            if (isset($gymStaffArray['aadhaar_card'])) {
-                $image = $gymStaffArray['aadhaar_card'];
-                $filename = time() . '_' . $image->getClientOriginalName();
-                $adharCardPath = 'staff_adharcard/' . $filename;
-                $image->move(public_path('staff_adharcard/'), $filename);
-                $gymStaff->aadhaarCard()->create([
-                    'aadhaar_card' => $adharCardPath,
-                ]);
-            }
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw new Exception($e->getMessage());
+        // Handle document uploads
+        $documentData = [];
+
+        if (isset($gymStaffArray['aadhaar_card'])) {
+            $documentData['aadhaar_card'] = $this->uploadDocument($gymStaffArray['aadhaar_card'], 'staff_adharcard');
         }
+
+        if (isset($gymStaffArray['pan_card'])) {
+            $documentData['pan_card'] = $this->uploadDocument($gymStaffArray['pan_card'], 'staff_pan_card');
+        }
+
+        if (isset($gymStaffArray['cancel_cheque'])) {
+            $documentData['cancel_cheque'] = $this->uploadDocument($gymStaffArray['cancel_cheque'], 'staff_cancel_cheque');
+        }
+
+        if (isset($gymStaffArray['other'])) {
+            $documentData['other'] = $this->uploadDocument($gymStaffArray['other'], 'staff_other_documents');
+        }
+
+        if (!empty($documentData)) {
+            $gymStaff->document()->create($documentData);
+        }
+
+        DB::commit();
+    } catch (Exception $e) {
+        DB::rollBack();
+        throw new Exception($e->getMessage());
     }
+}
+
+public function document()
+{
+    return $this->hasOne(StaffDocument::class, 'staff_id');
+}
+
+private function uploadDocument($document, $folder)
+{
+    $filename = time() . '_' . $document->getClientOriginalName();
+    $path = $folder . '/' . $filename;
+    $document->move(public_path($folder), $filename);
+    return $path;
+}
 
     public function updateStaff(array $updateStaff, $imagePath)
     {
