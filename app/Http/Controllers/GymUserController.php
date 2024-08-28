@@ -513,7 +513,9 @@ class GymUserController extends Controller
         $gymUser = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
         $query = $request->get('query');
-        $workouts = Workout::where('name', 'LIKE', "%{$query}%")->where('added_by', $gymId)->pluck('name');
+        $workouts = Workout::where('name', 'LIKE', "%{$query}%")
+            ->where('added_by', $gymId)
+            ->get(['id', 'name']);
 
         return response()->json($workouts);
     }
