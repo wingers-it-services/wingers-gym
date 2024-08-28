@@ -11,7 +11,7 @@ class UserDiet extends Model
 {
     
 
-    protected $fillable = ['user_id', 'meal_name', 'calories', 'protein', 'carbs','fats', 'notes', 'gym_id'];
+    protected $fillable = ['user_id', 'meal_name', 'calories', 'protein', 'carbs','fats', 'gym_id', 'diet_id', 'goal', 'meal_type', 'diet_description', 'alternative_diet_description', 'is_completed'];
 
     public function addUserDiet(array $addDiet, $gym_id)
     {
@@ -24,7 +24,11 @@ class UserDiet extends Model
                 'protein'   => $addDiet['protein'],
                 'carbs'     => $addDiet['carbs'],
                 'fats'      => $addDiet['fats'],
-                'notes'     => $addDiet['notes'],
+                'diet_id' => $addDiet['diet_id'],
+                'goal'  => $addDiet['goal'],
+                'meal_type'   => $addDiet['meal_type'],
+                'diet_description'     => $addDiet['diet_description'],
+                'alternative_diet_description'      => $addDiet['alternative_diet_description']
             ]);
         } catch (\Throwable $e) {
             Log::error('[UserDiet][addUserDiet] Error adding gym detail: ' . $e->getMessage());

@@ -238,6 +238,7 @@ class GymUserController extends Controller
                 "reps" => 'required|integer|min:1',
                 "weight" => 'required|numeric|min:0',
                 "workout_des" => 'required',
+                "workout_id"    => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -263,7 +264,11 @@ class GymUserController extends Controller
                 "protein" => 'required|integer|min:0',
                 "carbs" => 'required|numeric|min:0',
                 "fats" => 'required|numeric|min:0',
-                "notes" => 'required',
+                "diet_id"   => 'required',
+                "goal"       => 'required',
+                "meal_type"      => 'required',
+                "diet_description"       => 'required',
+                "alternative_diet_description"       => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -512,15 +517,15 @@ class GymUserController extends Controller
         $gymUser = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
         $query = $request->get('query');
-    
+
         // Fetch both name and id
         $workouts = Workout::where('name', 'LIKE', "%{$query}%")
             ->where('added_by', $gymId)
             ->get(['id', 'name']);
-    
+
         return response()->json($workouts);
     }
-    
+
 
     public function fetchWorkoutDetails(Request $request)
     {
@@ -569,20 +574,28 @@ class GymUserController extends Controller
 
     public function fetchDietDetails(Request $request)
     {
+        $goal = $request->input('goal');
+        $gender = $request->input('gender');
+        $mealType = $request->input('meal_type');
         $mealName = $request->input('meal_name');
-        $diet = Diet::where('name', $mealName)->first();
+
+        // Query to match the diet based on the provided filters
+        $diet = Diet::where('goal', $goal)
+            ->where('gender', $gender)
+            ->where('meal_type', $mealType)
+            ->where('name', $mealName)
+            ->first();
 
         if ($diet) {
             return response()->json([
                 'image' => asset($diet->image),
+                'id'     => $diet->id,
                 'calories' => $diet->calories,
                 'protein' => $diet->protein,
                 'carbs' => $diet->carbs,
                 'fats' => $diet->fats,
                 'diet' => $diet->diet,
                 'alternative_diet' => $diet->alternative_diet,
-                'min_age' => $diet->min_age,
-                'max_age' => $diet->max_age,
                 'goal' => $diet->goal,
                 'gender' => $diet->gender
             ]);
@@ -590,6 +603,7 @@ class GymUserController extends Controller
             return response()->json(null);
         }
     }
+
 
 
 
