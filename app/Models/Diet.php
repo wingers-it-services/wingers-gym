@@ -25,11 +25,12 @@ class Diet extends Model
         'calories',
         'protein',
         'carbs',
-        'fats'
+        'fats',
+        'meal_type'
     ];
 
 
-    public function addDiet(array $dietArray, $imagePath, $gymId) 
+    public function addDiet(array $dietArray, $imagePath, $gymId)
     {
         try {
             return $this->create([
@@ -46,6 +47,7 @@ class Diet extends Model
                 'protein'          => $dietArray['protein'],
                 'carbs'            => $dietArray['carbs'],
                 'fats'             => $dietArray['fats'],
+                'meal_type'        => $dietArray['meal_type'],
                 'added_by'      =>    1
             ]);
         } catch (\Throwable $e) {

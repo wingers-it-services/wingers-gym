@@ -51,7 +51,8 @@ class DietController extends Controller
                 'calories' => 'nullable',
                 'protein' => 'required',
                 'carbs' => 'required',
-                'fats' => 'required'
+                'fats' => 'required',
+                'meal_type' => 'required'
             ]);
 
             $imagePath = null;
@@ -87,7 +88,8 @@ class DietController extends Controller
                 'calories' => 'nullable',
                 'protein' => 'required',
                 'carbs' => 'required',
-                'fats' => 'required'
+                'fats' => 'required',
+                'meal_type' => 'required'
             ]);
 
             $diet = $this->diet->findOrFail($request->diet_id);
@@ -120,12 +122,14 @@ class DietController extends Controller
                 'protein' => $validatedData['protein'],
                 'carbs' => $validatedData['carbs'],
                 'fats' => $validatedData['fats'],
+                'meal_type' => $validatedData['meal_type'],
+
             ]);
 
             return redirect()->back()->with('status', 'success')->with('message', 'Diet updated successfully.');
         } catch (Exception $e) {
             Log::error('[DietController][updateDiet] Error updating diet ' . $e->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', 'Error while updating diet.');
+            return redirect()->back()->with('status', 'error')->with('message', 'Error while updating diet.' . $e->getMessage());
         }
     }
 

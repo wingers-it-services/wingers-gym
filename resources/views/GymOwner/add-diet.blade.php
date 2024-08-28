@@ -91,8 +91,33 @@
 
                                         <div class="col-md-3 mb-3">
                                             <label for="goal">Goal </label>
-                                            <input type="text" class="form-control" id="goal" name="goal"
-                                                placeholder="">
+                                            <div class="input-group">
+                                                <select class="me-sm-2 form-control default-select" id="goal"
+                                                    name="goal">
+                                                    <option value="">Choose...</option>
+                                                    <option value="Weight Gain">Weight Gain</option>
+                                                    <option value="Fit">Fit</option>
+                                                    <option value="Weight Loss">Weight Loss</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="meal_type">Meal Type </label>
+                                            <div class="input-group">
+                                                <select class="me-sm-2 form-control default-select" id="meal_type"
+                                                    name="meal_type">
+                                                    <option value="">Choose...</option>
+                                                    <option value="Vegetarian">Vegetarian</option>
+                                                    <option value="Non-Vegetarian">Non-Vegetarian </option>
+                                                    <option value="Lacto-vegetarian">Lacto-vegetarian</option>
+                                                    <option value="Ovo-vegetarian">Ovo-vegetarian </option>
+                                                    <option value="Vegan">Vegan</option>
+                                                    <option value="Pescatarian">Pescatarian </option>
+                                                    <option value="Beegan">Beegan</option>
+                                                    <option value="Flexitarian">Flexitarian </option>
+                                                </select>
+                                            </div>
                                         </div>
 
                                         <div class="col-md-3 mb-3">
@@ -154,32 +179,32 @@
                         </thead>
                         <tbody>
                             @foreach ($diets as $subscription)
-                                <tr>
-                                    <td>
-                                        <img width="80"
-                                            src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
-                                            loading="lazy" alt="Profile Image">
-                                    </td>
-                                    <td>{{$subscription->name }}</td>
-                                    <td>{{$subscription->gender }}</td>
-                                    <td>{{$subscription->goal }}</td>
-                                    <td>{{$subscription->min_age }} - {{ $subscription->max_age }}</td>
-                                    <td class="text-end">
-                                        <a class="dropdown-item view-workout" href="javascript:void(0);"
-                                            data-bs-toggle="modal" data-bs-target="#d"
-                                            data-workout="{{ json_encode($subscription) }}">
-                                            <i class="fa fa-eye color-muted"></i>
+                            <tr>
+                                <td>
+                                    <img width="80"
+                                        src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
+                                        loading="lazy" alt="Profile Image">
+                                </td>
+                                <td>{{$subscription->name }}</td>
+                                <td>{{$subscription->gender }}</td>
+                                <td>{{$subscription->goal }}</td>
+                                <td>{{$subscription->min_age }} - {{ $subscription->max_age }}</td>
+                                <td class="text-end">
+                                    <a class="dropdown-item view-workout" href="javascript:void(0);"
+                                        data-bs-toggle="modal" data-bs-target="#d"
+                                        data-workout="{{ json_encode($subscription) }}">
+                                        <i class="fa fa-eye color-muted"></i>
+                                    </a>
+                                </td>
+                                <td class="text-end">
+                                    <span><a href="javascript:void(0);" class="me-4 edit-book-button"
+                                            data-bs-toggle="modal" data-bs-target="#editSuscription"
+                                            data-book='@json($subscription)'><i class="fa fa-pencil color-muted"></i>
                                         </a>
-                                    </td>
-                                    <td class="text-end">
-                                        <span><a href="javascript:void(0);" class="me-4 edit-book-button"
-                                                data-bs-toggle="modal" data-bs-target="#editSuscription"
-                                                data-book='@json($subscription)'><i class="fa fa-pencil color-muted"></i>
-                                            </a>
-                                            <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
-                                                data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
-                                    </td>
-                                </tr>
+                                        <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
+                                            data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
+                                </td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -257,6 +282,21 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="edit_meal">Meal Type</label>
+                        <select class="form-control" id="edit_meal" name="meal_type" required>
+                            <option value="">Choose...</option>
+                            <option value="Vegetarian">Vegetarian</option>
+                            <option value="Non-Vegetarian">Non-Vegetarian </option>
+                            <option value="Lacto-vegetarian">Lacto-vegetarian</option>
+                            <option value="Ovo-vegetarian">Ovo-vegetarian </option>
+                            <option value="Vegan">Vegan</option>
+                            <option value="Pescatarian">Pescatarian </option>
+                            <option value="Beegan">Beegan</option>
+                            <option value="Flexitarian">Flexitarian </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label for="edit_min_age">Min Age</label>
                         <input type="number" class="form-control" id="edit_min_age" name="min_age" required>
                     </div>
@@ -295,7 +335,7 @@
     <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Workout Details</h5>
+                <h5 class="modal-title">Diet Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -314,7 +354,7 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Function to initialize event listeners for edit and view buttons
         function initializeEventListeners() {
             // Edit Diet Modal
@@ -322,15 +362,18 @@
             const editImageInput = document.getElementById('edit_image');
             const currentImage = document.getElementById('current_image');
             const editGenderSelect = document.getElementById('edit_gender');
+            const editMealTypeSelect = document.getElementById('edit_meal');
+
 
             editButtons.forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     const diet = JSON.parse(this.getAttribute('data-book'));
 
                     document.getElementById('edit_diet_id').value = diet.id;
                     document.getElementById('edit_name').value = diet.name;
                     currentImage.src = diet.image; // Set the src of the image element
                     editGenderSelect.value = diet.gender;
+                    editMealTypeSelect.value = diet.meal_type;
                     document.getElementById('edit_diet').value = diet.diet;
                     document.getElementById('edit_alternative_diet').value = diet.alternative_diet;
                     document.getElementById('edit_min_age').value = diet.min_age;
@@ -346,11 +389,11 @@
 
             // Show a preview of the new image when selected
             if (editImageInput) {
-                editImageInput.addEventListener('change', function (event) {
+                editImageInput.addEventListener('change', function(event) {
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = function (e) {
+                        reader.onload = function(e) {
                             currentImage.src = e.target.result;
                         }
                         reader.readAsDataURL(file);
@@ -360,7 +403,7 @@
 
             // View Workout Modal
             document.querySelectorAll('.view-workout').forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     // Set the image src
@@ -374,11 +417,12 @@
                     <div class="item"><strong>Calories:</strong> ${workout.calories}</div>
                     <div class="item"><strong>Protein:</strong> ${workout.protein}</div>
                     <div class="item"><strong>Carbs:</strong> ${workout.carbs}</div>
-    <div class="item"><strong>Fats:</strong> ${workout.fats}</div>
-    <div class="item"><strong>Gender:</strong> ${workout.gender}</div>
-    <div class="item"><strong>Min-Max Age:</strong> ${workout.min_age}-${workout.max_age}</div>
-</div>
-
+                    <div class="item"><strong>Fats:</strong> ${workout.fats}</div>
+                    <div class="item"><strong>Gender:</strong> ${workout.gender}</div>
+                    <div class="item"><strong>Min-Max Age:</strong> ${workout.min_age}-${workout.max_age}</div>
+                    </div>
+                    <br>
+                    <strong>Meal Type:</strong> ${workout.meal_type}<br>
                     <strong>Diet Description:</strong> ${workout.diet}<br>
                     <strong>Alternative Description:</strong> ${workout.alternative_diet}<br>
 
@@ -395,7 +439,7 @@
         initializeEventListeners();
 
         // Reinitialize event listeners after DataTable redraw (or similar events)
-        $('#example3').on('draw.dt', function () {
+        $('#example3').on('draw.dt', function() {
             initializeEventListeners(); // Reattach event listeners
         });
     });
