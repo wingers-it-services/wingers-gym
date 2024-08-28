@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('staff_documents', function (Blueprint $table) {
-            $table->longText('pan_card')->after('aadhaar_card');
-            $table->longText('cancel_cheque')->after('aadhaar_card');
-            $table->longText('other')->after('aadhaar_card');
+            $table->longText('pan_card')->nullable()->after('aadhaar_card');
+            $table->longText('cancel_cheque')->nullable()->after('aadhaar_card');
+            $table->longText('other')->nullable()->after('aadhaar_card');
         });
     }
 
