@@ -37,6 +37,20 @@ class GymStaff extends Model
 
     ];
 
+    public function getImageAttribute()
+    {
+        $imagePath = $this->attributes['image'];
+        $defaultImagePath = 'images/profile/17.jpg';
+        $fullImagePath = $imagePath; 
+
+        // Check if the file exists in the public directory
+        if ($imagePath && file_exists(public_path($fullImagePath))) {
+            return asset($fullImagePath);
+        }
+
+        return asset($defaultImagePath);
+    }
+
     public function aadhaarCard()
     {
         return $this->hasOne(StaffDocument::class, 'staff_id');

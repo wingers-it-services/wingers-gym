@@ -94,9 +94,7 @@
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between">
                                                     <span class="mb-0">Staff Assigned</span>
-                                                    @if($userDetail->staff)
-                                                        <strong class="text-muted">{{ $userDetail->staff->name }}</strong>
-                                                    @endif
+                                                        <strong class="text-muted">{{ $userDetail->activeTrainers->first()->trainer->name ?? 'No active trainer' }}</strong>
                                                 </li>
                                                 <li class="list-group-item d-flex justify-content-between"><span
                                                         class="mb-0">Member Blood Group</span> <strong
@@ -357,6 +355,7 @@
                                                         <input type="text" id="user_id" name="user_id"
                                                             value="{{$userDetail->id}}" class="form-control" hidden>
 
+                                                            <input id="workoutIdInput" type="hidden" name="workout_id">
                                                         <div class="form-group">
                                                             <label>Exercise Name</label>
                                                             <input id="workoutInput" class="form-control" type="text"
@@ -1519,93 +1518,100 @@
 
 
     document.addEventListener("DOMContentLoaded", function () {
-        autocomplete(document.getElementById('workoutInput'));
+    autocomplete(document.getElementById('workoutInput'));
+});
+
+function autocomplete(inp) {
+    var currentFocus;
+
+    inp.addEventListener("input", function (e) {
+        var a, b, i, val = this.value;
+        closeAllLists();
+        if (!val) {
+            return false;
+        }
+        currentFocus = -1;
+
+        $.ajax({
+            url: "{{ url('/autocomplete-workout') }}",
+            type: "GET",
+            data: {
+                query: val
+            },
+            dataType: 'json',
+            success: function (data) {
+                var a = document.createElement("DIV");
+                a.setAttribute("id", inp.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                inp.parentNode.appendChild(a);
+
+                data.forEach(item => {
+                    var b = document.createElement("DIV");
+                    // Display matched part in bold
+                    b.innerHTML = "<strong>" + item.name.substr(0, val.length) + "</strong>";
+                    b.innerHTML += item.name.substr(val.length);
+                    // Hidden input for workout id
+                    b.innerHTML += "<input type='hidden' value='" + item.name + "' data-id='" + item.id + "'>";
+
+                    b.addEventListener("click", function (e) {
+                        // Set the selected name in the input
+                        inp.value = this.getElementsByTagName("input")[0].value;
+                        // Set the workout id in the hidden field
+                        document.getElementById('workoutIdInput').value = this.getElementsByTagName("input")[0].getAttribute('data-id');
+                        fetchWorkoutDetails(inp.value);
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                });
+            }
+        });
     });
 
-    function autocomplete(inp) {
-        var currentFocus;
-
-        inp.addEventListener("input", function (e) {
-            var a, b, i, val = this.value;
-            closeAllLists();
-            if (!val) {
-                return false;
-            }
-            currentFocus = -1;
-
-            $.ajax({
-                url: "{{ url('/autocomplete-workout') }}",
-                type: "GET",
-                data: {
-                    query: val
-                },
-                dataType: 'json',
-                success: function (data) {
-                    var a = document.createElement("DIV");
-                    a.setAttribute("id", inp.id + "autocomplete-list");
-                    a.setAttribute("class", "autocomplete-items");
-                    inp.parentNode.appendChild(a);
-
-                    data.forEach(item => {
-                        var b = document.createElement("DIV");
-                        b.innerHTML = "<strong>" + item.substr(0, val.length) + "</strong>";
-                        b.innerHTML += item.substr(val.length);
-                        b.innerHTML += "<input type='hidden' value='" + item + "'>";
-                        b.addEventListener("click", function (e) {
-                            inp.value = this.getElementsByTagName("input")[0].value;
-                            fetchWorkoutDetails(inp.value);
-                            closeAllLists();
-                        });
-                        a.appendChild(b);
-                    });
-                }
-            });
-        });
-
-        inp.addEventListener("keydown", function (e) {
-            var x = document.getElementById(this.id + "autocomplete-list");
-            if (x) x = x.getElementsByTagName("div");
-            if (e.keyCode == 40) {
-                currentFocus++;
-                addActive(x);
-            } else if (e.keyCode == 38) {
-                currentFocus--;
-                addActive(x);
-            } else if (e.keyCode == 13) {
-                e.preventDefault();
-                if (currentFocus > -1) {
-                    if (x) x[currentFocus].click();
-                }
-            }
-        });
-
-        function addActive(x) {
-            if (!x) return false;
-            removeActive(x);
-            if (currentFocus >= x.length) currentFocus = 0;
-            if (currentFocus < 0) currentFocus = (x.length - 1);
-            x[currentFocus].classList.add("autocomplete-active");
-        }
-
-        function removeActive(x) {
-            for (var i = 0; i < x.length; i++) {
-                x[i].classList.remove("autocomplete-active");
+    inp.addEventListener("keydown", function (e) {
+        var x = document.getElementById(this.id + "autocomplete-list");
+        if (x) x = x.getElementsByTagName("div");
+        if (e.keyCode == 40) {
+            currentFocus++;
+            addActive(x);
+        } else if (e.keyCode == 38) {
+            currentFocus--;
+            addActive(x);
+        } else if (e.keyCode == 13) {
+            e.preventDefault();
+            if (currentFocus > -1) {
+                if (x) x[currentFocus].click();
             }
         }
+    });
 
-        function closeAllLists(elmnt) {
-            var x = document.getElementsByClassName("autocomplete-items");
-            for (var i = 0; i < x.length; i++) {
-                if (elmnt != x[i] && elmnt != inp) {
-                    x[i].parentNode.removeChild(x[i]);
-                }
-            }
-        }
-
-        document.addEventListener("click", function (e) {
-            closeAllLists(e.target);
-        });
+    function addActive(x) {
+        if (!x) return false;
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        x[currentFocus].classList.add("autocomplete-active");
     }
+
+    function removeActive(x) {
+        for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+        }
+    }
+
+    function closeAllLists(elmnt) {
+        var x = document.getElementsByClassName("autocomplete-items");
+        for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+                x[i].parentNode.removeChild(x[i]);
+            }
+        }
+    }
+
+    document.addEventListener("click", function (e) {
+        closeAllLists(e.target);
+    });
+}
+
 
 
     function fetchWorkoutDetails(exerciseName) {
@@ -1663,10 +1669,10 @@
 
     //For Diet Name auto search
     document.addEventListener("DOMContentLoaded", function () {
-        autocomplete(document.getElementById('dietInput'));
+        dietautocomplete(document.getElementById('dietInput'));
     });
 
-    function autocomplete(inp) {
+    function dietautocomplete(inp) {
         var currentFocus;
 
         inp.addEventListener("input", function (e) {

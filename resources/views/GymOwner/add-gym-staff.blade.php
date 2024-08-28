@@ -185,10 +185,10 @@
 												<div class="form-group">
 													<label for="mailclient11" class="mailclinet mailclinet-gmail">
 														<input type="file" name="aadhaar_card" id="mailclient11" hidden>
-														<span class="mail-icon">
+														<!-- <span class="mail-icon">
 															<i class="mdi mdi-google-plus" aria-hidden="true"></i>
-														</span>
-														<span class="mail-text">Upload AAdhar Card</span>
+														</span> -->
+														<span class="mail-text">Upload <br>Aadhar Card</span>
 													</label>
 												</div>
 											</div>

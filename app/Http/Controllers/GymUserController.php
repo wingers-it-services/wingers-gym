@@ -507,18 +507,20 @@ class GymUserController extends Controller
         }
     }
 
-
     public function autocompleteWorkout(Request $request)
     {
         $gymUser = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
         $query = $request->get('query');
+    
+        // Fetch both name and id
         $workouts = Workout::where('name', 'LIKE', "%{$query}%")
             ->where('added_by', $gymId)
             ->get(['id', 'name']);
-
+    
         return response()->json($workouts);
     }
+    
 
     public function fetchWorkoutDetails(Request $request)
     {
