@@ -29,14 +29,14 @@ class UserWorkoutControllerApi extends Controller
     {
         try {
             $user = auth()->user();
-            $workouts = $this->userWorkout->where('user_id',$user->id)->get();
+            $workouts = $this->userWorkout->where('user_id',$user->id)->with('workoutDetails')->get();
 
             if ($workouts->isEmpty()) {
                 return response()->json([
                     'status'   => 422,
                     'workouts' => $workouts,
                     'message'  => 'There is no workouts'
-                ], 200);
+                ], 422);
             }
 
             return response()->json([
