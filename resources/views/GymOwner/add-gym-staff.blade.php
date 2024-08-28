@@ -195,33 +195,33 @@
 											<div class="col-lg-3 col-sm-6 col-6">
 												<div class="form-group">
 													<label for="mailclient12" class="mailclinet mailclinet-office">
-														<input type="radio" name="emailclient" id="mailclient12">
-														<span class="mail-icon">
+														<input type="file" name="pan_card" id="mailclient12" hidden>
+														<!-- <span class="mail-icon">
 															<i class="mdi mdi-office" aria-hidden="true"></i>
-														</span>
-														<span class="mail-text">I'm using Office</span>
+														</span> -->
+														<span class="mail-text">Upload <br>Pan Card</span>
 													</label>
 												</div>
 											</div>
 											<div class="col-lg-3 col-sm-6 col-6">
 												<div class="form-group">
 													<label for="mailclient13" class="mailclinet mailclinet-drive">
-														<input type="radio" name="emailclient" id="mailclient13">
-														<span class="mail-icon">
+														<input type="file" name="cancel_cheque" id="mailclient13" hidden>
+														<!-- <span class="mail-icon">
 															<i class="mdi mdi-google-drive" aria-hidden="true"></i>
-														</span>
-														<span class="mail-text">I'm using Drive</span>
+														</span> -->
+														<span class="mail-text">Upload <br>Cancel Cheque</span>
 													</label>
 												</div>
 											</div>
 											<div class="col-lg-3 col-sm-6 col-6">
 												<div class="form-group">
 													<label for="mailclient14" class="mailclinet mailclinet-another">
-														<input type="radio" name="emailclient" id="mailclient14">
-														<span class="mail-icon">
+														<input type="file" name="other" id="mailclient14" hidden>
+														<!-- <span class="mail-icon">
 															<i class="fas fa-question-circle" aria-hidden="true"></i>
-														</span>
-														<span class="mail-text">Another Service</span>
+														</span> -->
+														<span class="mail-text">Upload <br>Other Document</span>
 													</label>
 												</div>
 											</div>
