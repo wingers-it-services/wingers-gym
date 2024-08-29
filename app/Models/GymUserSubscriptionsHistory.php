@@ -12,9 +12,10 @@ class GymUserSubscriptionsHistory extends Model
      *
      * @var string
      */
-    protected $table = 'gym_user_subscriptions_history';
+    protected $table = 'gym_user_subscriptions_historys';
 
     protected $fillable = [
+        'gym_id',
         'user_id',
         'uuid',
         'subscription_id',
