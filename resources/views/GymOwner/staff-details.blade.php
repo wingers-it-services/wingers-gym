@@ -218,6 +218,7 @@
 										<div class="dropdown mt-sm-0 mt-3">
 											<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addDoc" class="btn btn-outline-primary rounded">Add Document</a>
 										</div>
+										
 									</div>
 									<div class="pt-4">
 										<form action="" method="post" enctype="multipart/form-data">
@@ -615,7 +616,7 @@
 
 	function markStaffAttendance(input) {
 		var gymId = parseInt(input.getAttribute("data-gym-id"));
-		var employeeId = input.getAttribute("data-employee-id");
+		var employeeId = document.getElementById("staffId").value;
 		var attendanceStatus = input.getAttribute("data-attendance-status");
 
 		// Send an AJAX request to update the user's status
