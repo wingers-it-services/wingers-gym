@@ -16,6 +16,7 @@ class UserWorkout extends Model
     protected $fillable = [
         'user_id',
         'workout_id',
+        'day',
         'exercise_name',
         'sets',
         'reps',
@@ -36,6 +37,7 @@ class UserWorkout extends Model
                 'gym_id'        => $gym_id,
                 'user_id'       => $addWorkout['user_id'],
                 'workout_id'    => $addWorkout['workout_id'],
+                'day'           => $addWorkout['day'],
                 'exercise_name' => $addWorkout['exercise_name'],
                 'sets'          => $addWorkout['sets'],
                 'reps'          => $addWorkout['reps'],
@@ -46,6 +48,7 @@ class UserWorkout extends Model
             Log::error('[UserWorkout][addWorkout] Error adding gym detail: ' . $e->getMessage());
         }
     }
+    
     public function user()
     {
         return $this->belongsTo(User::class);
