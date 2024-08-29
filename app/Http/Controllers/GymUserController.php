@@ -232,12 +232,13 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "user_id" => 'required',
+                "user_id"       => 'required',
                 "exercise_name" => 'required',
-                "sets" => 'required|integer|min:1',
-                "reps" => 'required|integer|min:1',
-                "weight" => 'required|numeric|min:0',
-                "workout_des" => 'required',
+                "day"           => 'required',
+                "sets"          => 'required|integer|min:1',
+                "reps"          => 'required|integer|min:1',
+                "weight"        => 'required|numeric|min:0',
+                "workout_des"   => 'required',
                 "workout_id"    => 'required'
             ]);
 
@@ -289,13 +290,14 @@ class GymUserController extends Controller
         try {
             // Validate the incoming request data
             $validatedData = $request->validate([
-                'user_id' => 'required',
-                'workout_id' => 'required',
+                'user_id'       => 'required',
+                'workout_id'    => 'required',
+                'day'           => 'required',
                 'exercise_name' => 'required',
-                'sets' => 'required|integer|min:1',
-                'reps' => 'required|integer|min:1',
-                'weight' => 'required|numeric|min:0',
-                'workout_des' => 'required',
+                'sets'          => 'required|integer|min:1',
+                'reps'          => 'required|integer|min:1',
+                'weight'        => 'required|numeric|min:0',
+                'workout_des'   => 'required',
             ]);
 
             $workout = $this->workout->findOrFail($request->workout_id);
