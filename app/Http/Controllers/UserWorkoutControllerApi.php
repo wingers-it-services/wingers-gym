@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CurrentDayWorkout;
 use App\Models\UserWorkout;
 use App\Traits\errorResponseTrait;
 use Illuminate\Http\Request;
@@ -31,6 +32,37 @@ class UserWorkoutControllerApi extends Controller
             $user = auth()->user();
             $workouts = $this->userWorkout->where('user_id',$user->id)->with('workoutDetails')->get();
 
+            if ($workouts->isEmpty()) {
+                return response()->json([
+                    'status'   => 422,
+                    'workouts' => $workouts,
+                    'message'  => 'There is no workouts'
+                ], 422);
+            }
+
+            return response()->json([
+                'status'    => 200,
+                'workouts'  => $workouts,
+                'message'   => 'User workouts Fetch Successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('[UserWorkoutControllerApi][fetchUserWorkout]Error fetching workouts details: ' . $e->getMessage());
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Error fetching workouts details: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function fetchCurrentDayWorkout()
+    {
+        try {
+            $user = auth()->user();
+            $workouts = CurrentDayWorkout::get();
+            foreach ($workouts as $workout) {
+                $workout->details = json_decode($workout->details, true);
+            }
+            
             if ($workouts->isEmpty()) {
                 return response()->json([
                     'status'   => 422,
