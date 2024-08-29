@@ -258,17 +258,18 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "user_id" => 'required',
-                "meal_name" => 'required',
-                "calories" => 'required|integer|min:0',
-                "protein" => 'required|integer|min:0',
-                "carbs" => 'required|numeric|min:0',
-                "fats" => 'required|numeric|min:0',
-                "diet_id"   => 'required',
-                "goal"       => 'required',
-                "meal_type"      => 'required',
-                "diet_description"       => 'required',
-                "alternative_diet_description"       => 'required'
+                "user_id"                       => 'required',
+                "meal_name"                     => 'required',
+                "calories"                      => 'required|integer|min:0',
+                "protein"                       => 'required|integer|min:0',
+                "carbs"                         => 'required|numeric|min:0',
+                "fats"                          => 'required|numeric|min:0',
+                "diet_id"                       => 'required',
+                "goal"                          => 'required',
+                "meal_type"                     => 'required',
+                "diet_description"              => 'required',
+                "alternative_diet_description"  => 'required',
+                "day"                           => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
