@@ -874,11 +874,7 @@
                                                                                             Inactive</option>
                                                                                     </select>
                                                                                 </form>
-
                                                                             </td>
-                                                                            <!-- <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
-                                                                                                                                </a><a href="javascript:void()" onclick="confirmTrainerDelete('{{ $trainer->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
-                                                                                                                        </td> -->
                                                                         </tr>
                                                                         @endforeach
                                                                     </tbody>
