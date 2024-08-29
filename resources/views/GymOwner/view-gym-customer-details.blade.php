@@ -1784,60 +1784,76 @@
 
     function fetchDietDetails() {
         var goal = document.getElementById('goal').value;
-        // var gender = document.getElementById('gender').value;
         var mealType = document.getElementById('meal_type').value;
         var mealName = document.getElementById('dietInput').value;
 
-        // Hide diet details initially when fetching new data
+        // Always hide diet details initially when the meal name changes
         $('#dietDetails').slideUp();
 
-        $.ajax({
-            url: "{{ url('/fetch-diet-details') }}",
-            type: "GET",
-            data: {
-                goal: goal,
-                // gender: gender,
-                meal_type: mealType,
-                meal_name: mealName
-            },
-            dataType: 'json',
-            success: function(data) {
-                if (data) {
-                    // Update the fields with fetched data
-                    $("#dietImage").attr("src", data.image).show();
-                    $("input[name='diet_id']").val(data.id);
-                    $("input[name='calories']").val(data.calories);
-                    $("input[name='protein']").val(data.protein);
-                    $("input[name='carbs']").val(data.carbs);
-                    $("input[name='fats']").val(data.fats);
-                    $("textarea[name='diet_description']").val(data.diet);
-                    $("textarea[name='alternative_diet_description']").val(data.alternative_diet);
+        // Only proceed with the AJAX request if the meal name is not empty
+        if (mealName.trim() !== '') {
+            $.ajax({
+                url: "{{ url('/fetch-diet-details') }}",
+                type: "GET",
+                data: {
+                    goal: goal,
+                    meal_type: mealType,
+                    meal_name: mealName
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data && data.id) { // Check if valid data with an ID is returned
+                        // Update the image and show it if available
+                        if (data.image) {
+                            $("#dietImage").attr("src", data.image).show();
+                        } else {
+                            $("#dietImage").hide();
+                        }
 
-                    // Show the hidden diet details section after fetching data
-                    $('#dietDetails').slideDown();
-                } else {
-                    console.error('No matching diet found');
-                    $('#dietDetails').slideUp(); // Hide details if no data is found
+                        // Update the fields with fetched data
+                        $("input[name='diet_id']").val(data.id);
+                        $("input[name='calories']").val(data.calories);
+                        $("input[name='protein']").val(data.protein);
+                        $("input[name='carbs']").val(data.carbs);
+                        $("input[name='fats']").val(data.fats);
+                        $("textarea[name='diet_description']").val(data.diet);
+                        $("textarea[name='alternative_diet_description']").val(data.alternative_diet);
+
+                        // Show the diet details only if valid data is found
+                        $('#dietDetails').slideDown();
+                    } else {
+                        console.error('No matching diet found');
+                        $('#dietDetails').slideUp(); // Keep hidden if no data is found
+                    }
+                },
+                error: function() {
+                    console.error('Error fetching diet details');
+                    $('#dietDetails').slideUp(); // Hide details on error
                 }
-            },
-            error: function() {
-                console.error('Error fetching diet details');
-                $('#dietDetails').slideUp(); // Hide details on error
-            }
-        });
+            });
+        } else {
+            console.log('Meal name is empty, no request made');
+            $('#dietDetails').slideUp(); // Hide if meal name is empty
+        }
     }
 
     // Attach event listener to the Meal Name input's blur event to trigger fetching details
     document.getElementById('dietInput').addEventListener('blur', function() {
         if (this.value.trim() !== '') {
             fetchDietDetails();
+        } else {
+            $('#dietDetails').slideUp(); // Hide if meal name is empty
         }
     });
 
-    // Hide diet details when the meal name input changes
+    // Attach event listener to the Meal Name input's change event to hide diet details when meal name is changed
     document.getElementById('dietInput').addEventListener('input', function() {
-        $('#dietDetails').slideUp(); // Immediately hide details on input change
+        $('#dietDetails').slideUp(); // Hide diet details immediately when meal name changes
     });
+
+
+
+
 
 
 
