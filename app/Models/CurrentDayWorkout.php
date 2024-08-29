@@ -14,6 +14,7 @@ class CurrentDayWorkout extends Model
 
     protected $fillable = [
         'workout_id',
+        'user_workout_id',
         'gym_id',
         'user_id',
         'details'
