@@ -356,11 +356,31 @@
                                                             value="{{$userDetail->id}}" class="form-control" hidden>
 
                                                         <input id="workoutIdInput" type="hidden" name="workout_id">
-                                                        <div class="form-group">
+                                                        <!-- <div class="form-group">
                                                             <label>Exercise Name</label>
                                                             <input id="workoutInput" class="form-control" type="text"
                                                                 name="exercise_name" placeholder="Workout Name"
                                                                 required>
+                                                        </div> -->
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label>Day</label>
+                                                                <select class="form-control" id="day" name="day" required>
+                                                                    <option value="">Choose Day</option>
+                                                                    <option value="monday">Monday</option>
+                                                                    <option value="tuesday">Tuesday</option>
+                                                                    <option value="wednesday">Wednesday</option>
+                                                                    <option value="thursday">Thursday</option>
+                                                                    <option value="friday">Friday</option>
+                                                                    <option value="saturday">Saturday</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Exercise Name</label>
+                                                                <input id="workoutInput" class="form-control" type="text"
+                                                                    name="exercise_name" placeholder="Workout Name"
+                                                                    required>
+                                                            </div>
                                                         </div>
 
                                                         <!-- Workout Details Section -->
@@ -507,6 +527,18 @@
                                                         <div class="form-group">
                                                             <div class="row">
                                                                 <div class="col-md-6">
+                                                                    <label>Day</label>
+                                                                    <select class="form-control" id="day" name="day" required>
+                                                                        <option value="">Choose Day</option>
+                                                                        <option value="monday">Monday</option>
+                                                                        <option value="tuesday">Tuesday</option>
+                                                                        <option value="wednesday">Wednesday</option>
+                                                                        <option value="thursday">Thursday</option>
+                                                                        <option value="friday">Friday</option>
+                                                                        <option value="saturday">Saturday</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-6">
                                                                     <label>Goal</label>
                                                                     <select class="form-control" id="goal" name="goal" required>
                                                                         <option value="">Choose Goal</option>
@@ -515,10 +547,10 @@
                                                                         <option value="Weight Loss">Weight Loss</option>
                                                                     </select>
                                                                 </div>
-                                                                <!-- <div class="col-md-6">
-                                                                    <label>Gender</label>
-                                                                    <input type="text" class="form-control" value="{{$userDetail->gender}}" id="gender" name="gender">
-                                                                </div> -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="row">
                                                                 <div class="col-md-6">
                                                                     <label>Meal Type</label>
                                                                     <select class="form-control" id="meal_type" name="meal_type" required>
@@ -533,12 +565,7 @@
                                                                         <option value="Flexitarian">Flexitarian </option>
                                                                     </select>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <div class="row">
-
-                                                                <div class="col-md-12">
+                                                                <div class="col-md-6">
                                                                     <label>Meal Name</label>
                                                                     <input type="text" id="dietInput" name="meal_name" class="form-control" autocomplete="off" required>
                                                                 </div>
@@ -884,6 +911,18 @@
                             @csrf
                             <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
                             <input type="hidden" id="edit_workout_id" name="workout_id">
+                            <div class="form-group">
+                                <label>Day</label>
+                                <select class="form-control" id="edit_day" name="day" required>
+                                    <option value="">Choose Day</option>
+                                    <option value="monday">Monday</option>
+                                    <option value="tuesday">Tuesday</option>
+                                    <option value="wednesday">Wednesday</option>
+                                    <option value="thursday">Thursday</option>
+                                    <option value="friday">Friday</option>
+                                    <option value="saturday">Saturday</option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label>Exercise Name</label>
                                 <input type="text" id="edit_exercise_name" name="exercise_name" class="form-control"
@@ -1326,6 +1365,7 @@
 
                 document.getElementById('edit_workout_id').value = workout.id;
                 document.getElementById('edit_exercise_name').value = workout.exercise_name;
+                document.getElementById('edit_day').value = workout.day;
                 document.getElementById('edit_sets').value = workout.sets;
                 document.getElementById('edit_reps').value = workout.reps;
                 document.getElementById('edit_weight').value = workout.weight;
