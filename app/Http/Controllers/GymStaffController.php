@@ -8,6 +8,7 @@ use App\Models\Designation;
 use App\Models\GymStaffAseet;
 use App\Models\GymStaffAttendance;
 use App\Models\GymStaffLeave;
+use App\Models\StaffDocument;
 use App\Traits\SessionTrait;
 use Carbon\Carbon;
 use Exception;
@@ -24,6 +25,7 @@ class GymStaffController extends Controller
     protected $gymStaffAttendance;
     protected $staffAsset;
     protected $staffLeave;
+    protected $staffDocument;
 
 
     public function __construct(
@@ -32,7 +34,8 @@ class GymStaffController extends Controller
         Designation $designation,
         GymStaffAttendance $gymStaffAttendance,
         GymStaffAseet $staffAsset,
-        GymStaffLeave $staffLeave
+        GymStaffLeave $staffLeave,
+        StaffDocument $staffDocument
     ) {
         $this->gymStaff = $gymStaff;
         $this->gymStaffAttendance = $gymStaffAttendance;
@@ -40,6 +43,7 @@ class GymStaffController extends Controller
         $this->designation = $designation;
         $this->staffAsset = $staffAsset;
         $this->staffLeave = $staffLeave;
+        $this->staffDocument = $staffDocument;
     }
 
     public function addStaffAttendence()
@@ -234,7 +238,6 @@ class GymStaffController extends Controller
             $imagePath = $staff->image; // Default to existing image path
 
             if ($request->hasFile('image')) {
-                Log::info('[shdfhhf][sjdhhfw]jhwhowiow');
                 if ($staff->image) {
                     $existingImagePath = public_path($staff->image);
                     if (file_exists($existingImagePath)) {
@@ -336,6 +339,24 @@ class GymStaffController extends Controller
         } catch (\Throwable $th) {
             Log::error("[GymStaffController][addStaffLeave] error " . $th->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
+        }
+    }
+
+    public function addStaffDocuments(Request $request)
+    {
+        try {
+            $request->validate([
+                'aadhaar_card'  => 'required|mimes:jpeg,png,jpg,pdf',
+                'pan_card'      => 'required|mimes:jpeg,png,jpg,pdf',
+                'cancel_cheque' => 'required|mimes:jpeg,png,jpg,pdf',
+                'other'         => 'required|mimes:jpeg,png,jpg,pdf',
+            ]);
+            
+            $this->staffDocument->createOrUpdateDocument($request->all());
+            return redirect()->back()->with('status', 'success')->with('message', 'Staff document added successfully.');
+        } catch (Exception $e) {
+            Log::error('[GymStaffController][addStaffDocuments] Error adding document ' . $e->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'error while adding document.');
         }
     }
 }

@@ -174,12 +174,87 @@
 								</div>
 
 								<div class="tab-pane fade" id="contact">
+									<div class="modal fade" id="addDoc" tabindex="-1" aria-labelledby="addNewDocLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="addNewDocsLabel">Add Document</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<form action="{{route('addStaffDocuments')}}" method="POST" enctype="multipart/form-data" enctype="multipart/form-data">
+													@csrf
+													<div class="modal-body">
+														<input type="hidden" class="form-control staffId" id="staffId" name="staff_id">
+														<div class="mb-3">
+															<label for="assetCategory" class="form-label">Aadhar Card</label>
+															<input type="file" name="aadhaar_card">
+														</div>
+														<div class="mb-3">
+															<label for="assetTag" class="form-label">Pan Card</label>
+															<input type="file" name="pan_card">
+														</div>
+														<div class="mb-3">
+															<label for="dateOfAllocation" class="form-label">Cancel Cheque</label>
+															<input type="file" name="cancel_cheque">
+														</div>
+														<div class="mb-3">
+															<label for="price" class="form-label">Other</label>
+															<input type="file" name="other">
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+														<button type="submit" class="btn btn-primary">Save Document</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+									<div class="card-header d-sm-flex d-block pb-0 border-0">
+										<div class="me-auto pe-3">
+											<h4 class="text-black fs-20"> Documents </h4>
+										</div>
+
+										<div class="dropdown mt-sm-0 mt-3">
+											<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addDoc" class="btn btn-outline-primary rounded">Add Document</a>
+										</div>
+									</div>
 									<div class="pt-4">
-										<h4>This is contact title</h4>
-										<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
-										</p>
-										<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
-										</p>
+										<form action="" method="post" enctype="multipart/form-data">
+											@csrf
+											<div class="table-responsive docTable">
+												<table id="documentTable" class="table verticle-middle table-responsive-md">
+													<thead>
+														<tr>
+															<th scope="col">Aadhar Card</th>
+															<th scope="col">Pan Card</th>
+															<th scope="col">Cancel Cheque</th>
+															<th scope="col">Other</th>
+															<th scope="col">Submit</th>
+														</tr>
+													</thead>
+
+													<tbody>
+														<td>
+															<input type="file" name="aadhaar_card">
+														</td>
+														<td>
+															<input type="file" name="pan_card">
+														</td>
+														<td>
+															<input type="file" name="cancel_cheque">
+														</td>
+														<td>
+															<input type="file" name="other">
+														</td>
+														<td>
+															<button type="submit">Add Document</button>
+														</td>
+													</tbody>
+												</table>
+											</div>
+											<input type="number" name="staff_id" hidden>
+										</form>
 									</div>
 								</div>
 								<div class="tab-pane fade" id="assets">
