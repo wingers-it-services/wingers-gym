@@ -65,7 +65,7 @@ class GymUserLoginControllerApi extends Controller
                     'message' => 'Invalid password, please try again.',
                 ], 401);
             }
-            if ($credentials['user_type'] !== $user->user_type) {
+            if ($credentials['user_type'] != $user->user_type) {
                 return response()->json([
                     'status'  => 403,
                     'message' => 'You are not a valid user for this login.',
@@ -129,7 +129,7 @@ class GymUserLoginControllerApi extends Controller
             // If user is found, proceed with further checks
             if ($user) {
                 // Check if the user_type matches
-                if ($user->user_type !== $request->user_type) {
+                if ($user->user_type != $request->user_type) {
                     return response()->json([
                         'status'   => 403,
                         'message'  => 'Invalid user type for this login.',

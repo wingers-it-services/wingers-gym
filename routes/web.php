@@ -246,6 +246,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
 
     Route::post('/add-products', [ProductController::class, 'addProduct'])->name('addProduct');
+
+    Route::post('/add-staff-documents',[GymStaffController::class,'addStaffDocuments'])->name('addStaffDocuments');
 });
 
 Route::get('/packages', [AdminController::class, 'showPackages']);
