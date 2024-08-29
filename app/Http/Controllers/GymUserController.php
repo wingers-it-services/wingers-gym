@@ -575,13 +575,12 @@ class GymUserController extends Controller
     public function fetchDietDetails(Request $request)
     {
         $goal = $request->input('goal');
-        $gender = $request->input('gender');
+        // $gender = $request->input('gender');
         $mealType = $request->input('meal_type');
         $mealName = $request->input('meal_name');
 
         // Query to match the diet based on the provided filters
         $diet = Diet::where('goal', $goal)
-            ->where('gender', $gender)
             ->where('meal_type', $mealType)
             ->where('name', $mealName)
             ->first();
@@ -596,8 +595,8 @@ class GymUserController extends Controller
                 'fats' => $diet->fats,
                 'diet' => $diet->diet,
                 'alternative_diet' => $diet->alternative_diet,
-                'goal' => $diet->goal,
-                'gender' => $diet->gender
+                'goal' => $diet->goal
+                // 'gender' => $diet->gender
             ]);
         } else {
             return response()->json(null);

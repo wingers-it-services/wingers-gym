@@ -515,14 +515,10 @@
                                                                         <option value="Weight Loss">Weight Loss</option>
                                                                     </select>
                                                                 </div>
-                                                                <div class="col-md-6">
+                                                                <!-- <div class="col-md-6">
                                                                     <label>Gender</label>
                                                                     <input type="text" class="form-control" value="{{$userDetail->gender}}" id="gender" name="gender">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <div class="row">
+                                                                </div> -->
                                                                 <div class="col-md-6">
                                                                     <label>Meal Type</label>
                                                                     <select class="form-control" id="meal_type" name="meal_type" required>
@@ -537,58 +533,53 @@
                                                                         <option value="Flexitarian">Flexitarian </option>
                                                                     </select>
                                                                 </div>
-                                                                <div class="col-md-6">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="row">
+
+                                                                <div class="col-md-12">
                                                                     <label>Meal Name</label>
                                                                     <input type="text" id="dietInput" name="meal_name" class="form-control" autocomplete="off" required>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group text-center">
-                                                            <img id="dietImage" src="" alt="Diet Image"
-                                                                style="display:none; max-width: 50%; height: auto;">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <div class="row">
-                                                                <div class="col-md-3">
-                                                                    <label>Calories</label>
-                                                                    <input type="number" name="calories" min="0"
-                                                                        max="1000" class="form-control" required>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label>Protein</label>
-                                                                    <input type="number" name="protein"
-                                                                        class="form-control" min="0" required />
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label>Carbs</label>
-                                                                    <input type="number" name="carbs"
-                                                                        class="form-control" required>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label>Fats</label>
-                                                                    <input type="number" name="fats"
-                                                                        class="form-control" required>
+                                                        <div id="dietDetails" style="display: none;">
+                                                            <div class="form-group text-center">
+                                                                <img id="dietImage" alt="Diet Image" style="display: none; max-width: 50%; height: auto;">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-3">
+                                                                        <label>Calories</label>
+                                                                        <input type="number" name="calories" min="0" max="1000" class="form-control" required>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label>Protein</label>
+                                                                        <input type="number" name="protein" class="form-control" min="0" required />
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label>Carbs</label>
+                                                                        <input type="number" name="carbs" class="form-control" required>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label>Fats</label>
+                                                                        <input type="number" name="fats" class="form-control" required>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <label>Diet Description</label>
-                                                                    <textarea type="text" rows="5"
-                                                                        name="diet_description" class="form-control"
-                                                                        required></textarea>
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <label>Diet Description</label>
+                                                                        <textarea type="text" rows="5" name="diet_description" class="form-control" required></textarea>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label>Alternative Diet Description</label>
+                                                                        <textarea type="text" rows="5" name="alternative_diet_description" class="form-control" required></textarea>
+                                                                    </div>
                                                                 </div>
-
-                                                                <div class="col-md-6">
-                                                                    <label>Alternative Diet Description</label>
-                                                                    <textarea type="text" rows="5"
-                                                                        name="alternative_diet_description"
-                                                                        class="form-control" required></textarea>
-                                                                </div>
-
                                                             </div>
-
                                                         </div>
                                                         <button class="btn btn-primary">Submit</button>
                                                     </form>
@@ -1792,55 +1783,78 @@
     }
 
     function fetchDietDetails() {
-        // Get the selected values from the form
         var goal = document.getElementById('goal').value;
-        var gender = document.getElementById('gender').value;
         var mealType = document.getElementById('meal_type').value;
         var mealName = document.getElementById('dietInput').value;
 
-        $.ajax({
-            url: "{{ url('/fetch-diet-details') }}",
-            type: "GET",
-            data: {
-                goal: goal,
-                gender: gender,
-                meal_type: mealType,
-                meal_name: mealName
-            },
-            dataType: 'json',
-            success: function(data) {
-                if (data) {
-                    // Update the image
-                    if (data.image) {
-                        $("#dietImage").attr("src", data.image).show();
-                    } else {
-                        $("#dietImage").hide();
-                    }
+        // Always hide diet details initially when the meal name changes
+        $('#dietDetails').slideUp();
 
-                    // Update the rest of the form fields with the fetched data
-                    $("input[name='diet_id']").val(data.id);
-                    $("input[name='calories']").val(data.calories);
-                    $("input[name='protein']").val(data.protein);
-                    $("input[name='carbs']").val(data.carbs);
-                    $("input[name='fats']").val(data.fats);
-                    $("textarea[name='diet_description']").val(data.diet);
-                    $("textarea[name='alternative_diet_description']").val(data.alternative_diet);
-                } else {
-                    console.error('No matching diet found');
+        // Only proceed with the AJAX request if the meal name is not empty
+        if (mealName.trim() !== '') {
+            $.ajax({
+                url: "{{ url('/fetch-diet-details') }}",
+                type: "GET",
+                data: {
+                    goal: goal,
+                    meal_type: mealType,
+                    meal_name: mealName
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data && data.id) { // Check if valid data with an ID is returned
+                        // Update the image and show it if available
+                        if (data.image) {
+                            $("#dietImage").attr("src", data.image).show();
+                        } else {
+                            $("#dietImage").hide();
+                        }
+
+                        // Update the fields with fetched data
+                        $("input[name='diet_id']").val(data.id);
+                        $("input[name='calories']").val(data.calories);
+                        $("input[name='protein']").val(data.protein);
+                        $("input[name='carbs']").val(data.carbs);
+                        $("input[name='fats']").val(data.fats);
+                        $("textarea[name='diet_description']").val(data.diet);
+                        $("textarea[name='alternative_diet_description']").val(data.alternative_diet);
+
+                        // Show the diet details only if valid data is found
+                        $('#dietDetails').slideDown();
+                    } else {
+                        console.error('No matching diet found');
+                        $('#dietDetails').slideUp(); // Keep hidden if no data is found
+                    }
+                },
+                error: function() {
+                    console.error('Error fetching diet details');
+                    $('#dietDetails').slideUp(); // Hide details on error
                 }
-            },
-            error: function() {
-                console.error('Error fetching diet details');
-            }
-        });
+            });
+        } else {
+            console.log('Meal name is empty, no request made');
+            $('#dietDetails').slideUp(); // Hide if meal name is empty
+        }
     }
 
-    // Attach event listener to the Meal Name input to trigger autocomplete and fetching details
-    document.getElementById('dietInput').addEventListener('input', function() {
-        // Implement the autocomplete as needed
-        // After selecting the diet, call the fetchDietDetails function
-        fetchDietDetails();
+    // Attach event listener to the Meal Name input's blur event to trigger fetching details
+    document.getElementById('dietInput').addEventListener('blur', function() {
+        if (this.value.trim() !== '') {
+            fetchDietDetails();
+        } else {
+            $('#dietDetails').slideUp(); // Hide if meal name is empty
+        }
     });
+
+    // Attach event listener to the Meal Name input's change event to hide diet details when meal name is changed
+    document.getElementById('dietInput').addEventListener('input', function() {
+        $('#dietDetails').slideUp(); // Hide diet details immediately when meal name changes
+    });
+
+
+
+
+
 
 
 
