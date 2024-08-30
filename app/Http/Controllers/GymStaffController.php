@@ -342,6 +342,13 @@ class GymStaffController extends Controller
         }
     }
 
+    public function getStaffLeaves($staffId)
+    {
+        $gym = Auth::guard('gym')->user();
+        $leaves = $this->staffLeave->where('gym_id', $gym->id)->where('staff_id', $staffId)->get();
+        return response()->json($leaves);
+    }
+
     public function addStaffDocuments(Request $request)
     {
         try {

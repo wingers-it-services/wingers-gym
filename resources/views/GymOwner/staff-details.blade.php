@@ -218,7 +218,7 @@
 										<div class="dropdown mt-sm-0 mt-3">
 											<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addDoc" class="btn btn-outline-primary rounded">Add Document</a>
 										</div>
-										
+
 									</div>
 									<div class="pt-4">
 										<form action="" method="post" enctype="multipart/form-data">
@@ -388,15 +388,6 @@
 															<label for="reason" class="form-label">Reason for Leave</label>
 															<textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
 														</div>
-														<!-- <div class="mb-3">
-															<label for="status" class="form-label">Status</label>
-															<select class="form-select" id="status" name="status" required>
-																<option value="">Select Status</option>
-																<option value="Pending">Pending</option>
-																<option value="Approved">Approved</option>
-																<option value="Rejected">Rejected</option>
-															</select>
-														</div> -->
 													</div>
 													<div class="modal-footer">
 														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -420,48 +411,16 @@
 												</div>
 												<div class="card-body">
 													<div class="table-responsive recentOrderTable">
-														<table class="table verticle-middle table-responsive-md">
+														<table id="leaveTable" class="table verticle-middle table-responsive-md">
 															<thead>
 																<tr>
 																	<th scope="col">Leave Type</th>
 																	<th scope="col">From</th>
 																	<th scope="col">To</th>
-																	<!-- <th scope="col">Asset Tag</th>
-																	<th scope="col">Date Of Allocation</th>
-																	<th scope="col">Price</th>
-																	<th scope="col">Status</th> -->
-																	<!-- <th scope="col">Image</th> -->
 																	<th scope="col">Action</th>
 																</tr>
 															</thead>
 															<tbody>
-																<tr>
-																	<td>Sick Leave</td>
-																	<td>01 August 2020</td>
-																	<td>01 August 2020</td>
-																	<!-- <td>01 August 2020</td>
-																	<td>$5000</td>
-																	<td><span class="badge badge-rounded badge-primary">Checkin</span></td>-->
-																	<!-- <td>$120</td>  -->
-																	<td>
-																		<div class="dropdown custom-dropdown mb-0">
-																			<div class="btn sharp btn-primary tp-btn" data-bs-toggle="dropdown">
-																				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1">
-																					<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-																						<rect x="0" y="0" width="24" height="24" />
-																						<circle fill="#000000" cx="12" cy="5" r="2" />
-																						<circle fill="#000000" cx="12" cy="12" r="2" />
-																						<circle fill="#000000" cx="12" cy="19" r="2" />
-																					</g>
-																				</svg>
-																			</div>
-																			<div class="dropdown-menu dropdown-menu-end">
-																				<a class="dropdown-item" href="javascript:void(0);">Details</a>
-																				<a class="dropdown-item text-danger" href="javascript:void(0);">Cancel</a>
-																			</div>
-																		</div>
-																	</td>
-																</tr>
 															</tbody>
 														</table>
 													</div>
@@ -553,6 +512,7 @@
 
 		// Fetch asset data for the selected staff member
 		fetchAssetData(staffId);
+		fetchLeaveData(staffId);
 	}
 
 	function fetchAssetData(staffId) {
@@ -570,7 +530,11 @@
 
 	function displayAssetData(assets) {
 		var assetTableBody = document.querySelector('#assetTable tbody');
-
+		const statusTextMap = {
+			0: 'Allocated',
+			1: 'Under Repair',
+			2: 'Retired'
+		};
 		// Clear any existing asset rows
 		assetTableBody.innerHTML = '';
 
@@ -585,7 +549,7 @@
             <td>${asset.asset_tag}</td>
             <td>${asset.allocation_date}</td>
             <td>${asset.price}</td>
-            <td><span class="badge badge-rounded badge-primary">${asset.status}</span></td>
+        <td><span class="badge badge-rounded badge-primary">${statusTextMap[asset.status] || 'Unknown'}</span></td>
             <td><img src="${asset.image}" alt="" style="height: 50px;"></td>
             <td>
                 <div class="dropdown custom-dropdown mb-0">
@@ -608,6 +572,57 @@
         `;
 
 			assetTableBody.appendChild(row);
+		});
+	}
+
+	function fetchLeaveData(staffId) {
+		// Make an AJAX request to fetch the asset data
+		fetch(`/gym-staff-leaves/` + staffId)
+			.then(response => response.json())
+			.then(data => {
+				// Assuming 'data' contains the asset information
+				displayLeaveData(data);
+			})
+			.catch(error => {
+				console.error('Error fetching leave data:', error);
+			});
+	}
+
+	function displayLeaveData(leaves) {
+		var leaveTableBody = document.querySelector('#leaveTable tbody');
+
+		// Clear any existing asset rows
+		leaveTableBody.innerHTML = '';
+
+		// Loop through each asset and create table rows
+		leaves.forEach(leave => {
+			var row = document.createElement('tr');
+
+			row.innerHTML = `
+            <td>${leave.leave_type}</td>
+            <td>${leave.start_date}</td>
+            <td>${leave.end_date}</td>
+            <td>
+                <div class="dropdown custom-dropdown mb-0">
+                    <div class="btn sharp btn-primary tp-btn" data-bs-toggle="dropdown">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24" />
+                                <circle fill="#000000" cx="12" cy="5" r="2" />
+                                <circle fill="#000000" cx="12" cy="12" r="2" />
+                                <circle fill="#000000" cx="12" cy="19" r="2" />
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="javascript:void(0);">Details</a>
+                        <a class="dropdown-item text-danger" href="javascript:void(0);">Cancel</a>
+                    </div>
+                </div>
+            </td>
+        `;
+
+			leaveTableBody.appendChild(row);
 		});
 	}
 

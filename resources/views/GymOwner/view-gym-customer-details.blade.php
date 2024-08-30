@@ -462,6 +462,7 @@
                                                                 class="table table-bordered table-striped verticle-middle table-responsive-sm">
                                                                 <thead>
                                                                     <tr>
+                                                                        <th scope="col">Day</th>
                                                                         <th scope="col">Excerise Name</th>
                                                                         <th scope="col">Sets</th>
                                                                         <th scope="col">Reps</th>
@@ -474,6 +475,7 @@
                                                                 <tbody>
                                                                     @foreach ($workouts as $workout)
                                                                     <tr>
+                                                                        <td>{{$workout->day}}</td>
                                                                         <td>{{$workout->exercise_name}}</td>
                                                                         <td>{{$workout->sets}} sets</td>
                                                                         <td>{{$workout->reps}} Reps</td>
@@ -641,6 +643,7 @@
                                                                 class="table table-bordered table-striped verticle-middle table-responsive-sm">
                                                                 <thead>
                                                                     <tr>
+                                                                        <th scope="col">Day</th>
                                                                         <th scope="col">Meal Name</th>
                                                                         <th scope="col">Calories</th>
                                                                         <th scope="col">Protein</th>
@@ -653,6 +656,7 @@
                                                                 <tbody>
                                                                     @foreach($diets as $diet)
                                                                     <tr>
+                                                                        <td>{{$diet->day}}</td>
                                                                         <td>{{$diet->meal_name}}</td>
                                                                         <td>{{$diet->calories}} gm</td>
                                                                         <td>{{$diet->protein}} gm</td>
@@ -896,7 +900,7 @@
 
         <div class="modal fade" id="editWorkoutModal" tabindex="-1" role="dialog"
             aria-labelledby="editWorkoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Edit Workout</h5>
@@ -908,35 +912,43 @@
                             <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
                             <input type="hidden" id="edit_workout_id" name="workout_id">
                             <div class="form-group">
-                                <label>Day</label>
-                                <select class="form-control" id="edit_day" name="day" required>
-                                    <option value="">Choose Day</option>
-                                    <option value="monday">Monday</option>
-                                    <option value="tuesday">Tuesday</option>
-                                    <option value="wednesday">Wednesday</option>
-                                    <option value="thursday">Thursday</option>
-                                    <option value="friday">Friday</option>
-                                    <option value="saturday">Saturday</option>
-                                </select>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Day</label>
+                                        <select class="form-control" id="edit_day" name="day" required>
+                                            <option value="">Choose Day</option>
+                                            <option value="monday">Monday</option>
+                                            <option value="tuesday">Tuesday</option>
+                                            <option value="wednesday">Wednesday</option>
+                                            <option value="thursday">Thursday</option>
+                                            <option value="friday">Friday</option>
+                                            <option value="saturday">Saturday</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Exercise Name</label>
+                                        <input type="text" id="edit_exercise_name" name="exercise_name" class="form-control"
+                                            required>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label>Exercise Name</label>
-                                <input type="text" id="edit_exercise_name" name="exercise_name" class="form-control"
-                                    required>
-                            </div>
-                            <div class="form-group">
-                                <label>Sets</label>
-                                <input type="number" id="edit_sets" name="sets" min="0" max="1000" class="form-control"
-                                    required>
-                            </div>
-                            <div class="form-group">
-                                <label>Reps</label>
-                                <input type="number" id="edit_reps" name="reps" class="form-control" min="0" required />
-                            </div>
-                            <div class="form-group">
-                                <label>Weight</label>
-                                <input type="number" id="edit_weight" name="weight" placeholder="Enter Weight in Kg"
-                                    class="form-control" required>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Sets</label>
+                                        <input type="number" id="edit_sets" name="sets" min="0" max="1000" class="form-control"
+                                            required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Reps</label>
+                                        <input type="number" id="edit_reps" name="reps" class="form-control" min="0" required />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Weight</label>
+                                        <input type="number" id="edit_weight" name="weight" placeholder="Enter Weight in Kg"
+                                            class="form-control" required>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
@@ -952,7 +964,7 @@
 
         <div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Edit Diet</h5>
@@ -964,31 +976,51 @@
                             <input type="hidden" id="edit_diet_id" name="diet_id">
                             <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
                             <div class="form-group">
-                                <label>Goal</label>
-                                <select class="form-control" id="goal" name="goal" required>
-                                    <option value="">Choose Goal</option>
-                                    <option value="Weight Gain">Weight Gain</option>
-                                    <option value="Fit">Fit</option>
-                                    <option value="Weight Loss">Weight Loss</option>
-                                </select>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Day</label>
+                                        <select class="form-control" id="edit_diet_day" name="day" required>
+                                            <option value="">Choose Day</option>
+                                            <option value="monday">Monday</option>
+                                            <option value="tuesday">Tuesday</option>
+                                            <option value="wednesday">Wednesday</option>
+                                            <option value="thursday">Thursday</option>
+                                            <option value="friday">Friday</option>
+                                            <option value="saturday">Saturday</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Goal</label>
+                                        <select class="form-control" id="edit_goal" name="goal" required>
+                                            <option value="">Choose Goal</option>
+                                            <option value="Weight Gain">Weight Gain</option>
+                                            <option value="Fit">Fit</option>
+                                            <option value="Weight Loss">Weight Loss</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label>Meal Type</label>
-                                <select class="form-control" id="meal_type" name="meal_type" required>
-                                    <option value="">Choose Meal Type</option>
-                                    <option value="Vegetarian">Vegetarian</option>
-                                    <option value="Non-Vegetarian">Non-Vegetarian </option>
-                                    <option value="Lacto-vegetarian">Lacto-vegetarian</option>
-                                    <option value="Ovo-vegetarian">Ovo-vegetarian </option>
-                                    <option value="Vegan">Vegan</option>
-                                    <option value="Pescatarian">Pescatarian </option>
-                                    <option value="Beegan">Beegan</option>
-                                    <option value="Flexitarian">Flexitarian </option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Meal Name</label>
-                                <input type="text" id="edit_meal_name" name="meal_name" class="form-control" required>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Meal Type</label>
+                                        <select class="form-control" id="edit_meal_type" name="meal_type" required>
+                                            <option value="">Choose Meal Type</option>
+                                            <option value="Vegetarian">Vegetarian</option>
+                                            <option value="Non-Vegetarian">Non-Vegetarian </option>
+                                            <option value="Lacto-vegetarian">Lacto-vegetarian</option>
+                                            <option value="Ovo-vegetarian">Ovo-vegetarian </option>
+                                            <option value="Vegan">Vegan</option>
+                                            <option value="Pescatarian">Pescatarian </option>
+                                            <option value="Beegan">Beegan</option>
+                                            <option value="Flexitarian">Flexitarian </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Meal Name</label>
+                                        <input type="text" id="edit_meal_name" name="meal_name" class="form-control" required>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <div class="row">
@@ -1017,9 +1049,18 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Description</label>
-                                <textarea type="text" id="diet_edit_notes" rows="10" name="notes" class="form-control"
-                                    required></textarea>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Diet Description</label>
+                                        <textarea type="text" id="edit_diet_discription" name="diet_description" rows="5" class="form-control"
+                                            required></textarea>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Alternative Diet Description</label>
+                                        <textarea type="text" id="edit_alternative_diet_description" name="alternative_diet_description" rows="5" class="form-control"
+                                            required></textarea>
+                                    </div>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Update</button>
                         </form>
@@ -1385,7 +1426,11 @@
                 document.getElementById('edit_protein').value = diet.protein;
                 document.getElementById('edit_carbs').value = diet.carbs;
                 document.getElementById('edit_fats').value = diet.fats;
-                document.getElementById('diet_edit_notes').value = diet.notes;
+                document.getElementById('edit_goal').value = diet.goal;
+                document.getElementById('edit_meal_type').value = diet.meal_type;
+                document.getElementById('edit_diet_day').value = diet.day;
+                document.getElementById('edit_diet_discription').value = diet.diet_description;
+                document.getElementById('edit_alternative_diet_description').value = diet.alternative_diet_description;
 
                 new bootstrap.Modal(document.getElementById('editDietModal')).show();
             });
@@ -1403,7 +1448,7 @@
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = '/delete-workout/' + uuid;
+                window.location.href = '/delete-user-workout/' + uuid;
             }
         });
     }
@@ -1411,7 +1456,7 @@
     function confirmDietDelete(uuid) {
         Swal.fire({
             title: 'Are you sure?',
-            text: 'Are you sure you want to delete this workout?',
+            text: 'Are you sure you want to delete this diet?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -1419,7 +1464,7 @@
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = '/delete-diet/' + uuid;
+                window.location.href = '/delete-user-diet/' + uuid;
             }
         });
     }
