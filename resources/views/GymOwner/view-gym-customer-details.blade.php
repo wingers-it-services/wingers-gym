@@ -10,16 +10,21 @@
         /* Add space between icon and text */
     }
 
-    /* Style the autocomplete container */
+    /* Container for autocomplete items */
     .autocomplete-items {
         position: absolute;
         border: 1px solid #ddd;
         border-top: none;
         z-index: 99;
         background-color: #fff;
-        max-height: 100px;
+        max-height: 150px;
+        /* Allows more space for items */
         overflow-y: auto;
+        /* Enables scrolling if content exceeds max-height */
         width: 100%;
+        /* Ensures dropdown matches the input width */
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        /* Adds slight shadow for better visibility */
     }
 
     /* Style each item in the autocomplete dropdown */
@@ -33,6 +38,7 @@
     /* Style the active item in the autocomplete dropdown */
     .autocomplete-active {
         background-color: #007bff;
+        /* Matches the primary color */
         color: #fff;
     }
 </style>
@@ -94,7 +100,8 @@
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between">
                                                     <span class="mb-0">Staff Assigned</span>
-                                                    <strong class="text-muted">{{ $userDetail->activeTrainers->first()->trainer->name ?? 'No active trainer' }}</strong>
+                                                    <strong
+                                                        class="text-muted">{{ $userDetail->activeTrainers->first()->trainer->name ?? 'No active trainer' }}</strong>
                                                 </li>
                                                 <li class="list-group-item d-flex justify-content-between"><span
                                                         class="mb-0">Member Blood Group</span> <strong
@@ -196,12 +203,12 @@
                                                                             data-amount="" data-validity="">-- Select
                                                                             Subscription --</option>
                                                                         @foreach ($gymSubscriptions as $subscription)
-                                                                        <option value="{{ $subscription->id }}"
-                                                                            data-description="{{ $subscription->description }}"
-                                                                            data-amount="{{ $subscription->amount }}"
-                                                                            data-validity="{{ $subscription->validity }}">
-                                                                            {{ $subscription->subscription_name }}
-                                                                        </option>
+                                                                            <option value="{{ $subscription->id }}"
+                                                                                data-description="{{ $subscription->description }}"
+                                                                                data-amount="{{ $subscription->amount }}"
+                                                                                data-validity="{{ $subscription->validity }}">
+                                                                                {{ $subscription->subscription_name }}
+                                                                            </option>
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
@@ -293,42 +300,42 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     @foreach($userSubscriptions as $subscription)
-                                                                    <tr>
-                                                                        <td>{{$subscription->subscription->subscription_name}}
-                                                                        </td>
-                                                                        <td>{{$subscription->subscription->amount}}</td>
-                                                                        <td>{{$subscription->subscription->validity}}
-                                                                            Months</td>
-                                                                        <td>{{ \Carbon\Carbon::parse($subscription->subscription_start_date)->format('M d, Y') }}
-                                                                        </td>
-                                                                        <td>{{ \Carbon\Carbon::parse($subscription->subscription_end_date)->format('M d, Y') }}
-                                                                        </td>
-                                                                        <td>
+                                                                        <tr>
+                                                                            <td>{{$subscription->subscription->subscription_name}}
+                                                                            </td>
+                                                                            <td>{{$subscription->subscription->amount}}</td>
+                                                                            <td>{{$subscription->subscription->validity}}
+                                                                                Months</td>
+                                                                            <td>{{ \Carbon\Carbon::parse($subscription->subscription_start_date)->format('M d, Y') }}
+                                                                            </td>
+                                                                            <td>{{ \Carbon\Carbon::parse($subscription->subscription_end_date)->format('M d, Y') }}
+                                                                            </td>
+                                                                            <td>
 
-                                                                            <form
-                                                                                action="/update-subscription-status/{{$userDetail->id}}"
-                                                                                method="POST">
-                                                                                @csrf
-                                                                                @method('POST')
-                                                                                <select name="status"
-                                                                                    onchange="this.form.submit()"
-                                                                                    class="form-select" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'disabled' : '' }}>
-                                                                                    <option
-                                                                                        value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}"
-                                                                                        {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'selected' : '' }}>Active
-                                                                                    </option>
-                                                                                    <option
-                                                                                        value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}"
-                                                                                        {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'selected' : '' }}>Inactive
-                                                                                    </option>
-                                                                                </select>
-                                                                            </form>
+                                                                                <form
+                                                                                    action="/update-subscription-status/{{$userDetail->id}}"
+                                                                                    method="POST">
+                                                                                    @csrf
+                                                                                    @method('POST')
+                                                                                    <select name="status"
+                                                                                        onchange="this.form.submit()"
+                                                                                        class="form-select" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'disabled' : '' }}>
+                                                                                        <option
+                                                                                            value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}"
+                                                                                            {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'selected' : '' }}>Active
+                                                                                        </option>
+                                                                                        <option
+                                                                                            value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}"
+                                                                                            {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'selected' : '' }}>Inactive
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </form>
 
-                                                                        </td>
-                                                                        <!-- <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
-                                                                                                                            </a><a href="javascript:void()" onclick="confirmSubscriptionDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
-                                                                                                                    </td> -->
-                                                                    </tr>
+                                                                            </td>
+                                                                            <!-- <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
+                                                                                                                                    </a><a href="javascript:void()" onclick="confirmSubscriptionDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
+                                                                                                                            </td> -->
+                                                                        </tr>
                                                                     @endforeach
                                                                 </tbody>
                                                             </table>
@@ -365,7 +372,8 @@
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <label>Day</label>
-                                                                <select class="form-control" id="day" name="day" required>
+                                                                <select class="form-control" id="day" name="day"
+                                                                    required>
                                                                     <option value="">Choose Day</option>
                                                                     <option value="monday">Monday</option>
                                                                     <option value="tuesday">Tuesday</option>
@@ -377,9 +385,9 @@
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label>Exercise Name</label>
-                                                                <input id="workoutInput" class="form-control" type="text"
-                                                                    name="exercise_name" placeholder="Workout Name"
-                                                                    required>
+                                                                <input id="workoutInput" class="form-control"	
+                                                                    type="text" name="exercise_name"
+                                                                    placeholder="Workout Name" required>
                                                             </div>
                                                         </div>
 
@@ -474,31 +482,31 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     @foreach ($workouts as $workout)
-                                                                    <tr>
-                                                                        <td>{{$workout->day}}</td>
-                                                                        <td>{{$workout->exercise_name}}</td>
-                                                                        <td>{{$workout->sets}} sets</td>
-                                                                        <td>{{$workout->reps}} Reps</td>
+                                                                        <tr>
+                                                                            <td>{{$workout->day}}</td>
+                                                                            <td>{{$workout->exercise_name}}</td>
+                                                                            <td>{{$workout->sets}} sets</td>
+                                                                            <td>{{$workout->reps}} Reps</td>
 
-                                                                        <td>{{$workout->weight}} kg</td>
-                                                                        </td>
-                                                                        <td class="text-end"><span> <a
-                                                                                    href="javascript:void(0);"
-                                                                                    class="me-4 edit-workout"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-placement="top" title="Edit"
-                                                                                    data-workout="{{ json_encode($workout) }}">
-                                                                                    <i
-                                                                                        class="fa fa-pencil color-muted"></i>
-                                                                                </a><a
-                                                                                    onclick="confirmDelete('{{ $workout->uuid }}')"
-                                                                                    href="javascript:void()"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-placement="top"
-                                                                                    title="Close"><i
-                                                                                        class="fas fa-times color-danger"></i></a></span>
-                                                                        </td>
-                                                                    </tr>
+                                                                            <td>{{$workout->weight}} kg</td>
+                                                                            </td>
+                                                                            <td class="text-end"><span> <a
+                                                                                        href="javascript:void(0);"
+                                                                                        class="me-4 edit-workout"
+                                                                                        data-bs-toggle="tooltip"
+                                                                                        data-placement="top" title="Edit"
+                                                                                        data-workout="{{ json_encode($workout) }}">
+                                                                                        <i
+                                                                                            class="fa fa-pencil color-muted"></i>
+                                                                                    </a><a
+                                                                                        onclick="confirmDelete('{{ $workout->uuid }}')"
+                                                                                        href="javascript:void()"
+                                                                                        data-bs-toggle="tooltip"
+                                                                                        data-placement="top"
+                                                                                        title="Close"><i
+                                                                                            class="fas fa-times color-danger"></i></a></span>
+                                                                            </td>
+                                                                        </tr>
                                                                     @endforeach
                                                                 </tbody>
                                                             </table>
@@ -530,7 +538,8 @@
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <label>Day</label>
-                                                                    <select class="form-control" id="day" name="day" required>
+                                                                    <select class="form-control" id="day" name="day"
+                                                                        required>
                                                                         <option value="">Choose Day</option>
                                                                         <option value="monday">Monday</option>
                                                                         <option value="tuesday">Tuesday</option>
@@ -542,7 +551,8 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label>Goal</label>
-                                                                    <select class="form-control" id="goal" name="goal" required>
+                                                                    <select class="form-control" id="goal" name="goal"
+                                                                        required>
                                                                         <option value="">Choose Goal</option>
                                                                         <option value="Weight Gain">Weight Gain</option>
                                                                         <option value="Fit">Fit</option>
@@ -555,45 +565,58 @@
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <label>Meal Type</label>
-                                                                    <select class="form-control" id="meal_type" name="meal_type" required>
+                                                                    <select class="form-control" id="meal_type"
+                                                                        name="meal_type" required>
                                                                         <option value="">Choose Meal Type</option>
                                                                         <option value="Vegetarian">Vegetarian</option>
-                                                                        <option value="Non-Vegetarian">Non-Vegetarian </option>
-                                                                        <option value="Lacto-vegetarian">Lacto-vegetarian</option>
-                                                                        <option value="Ovo-vegetarian">Ovo-vegetarian </option>
+                                                                        <option value="Non-Vegetarian">Non-Vegetarian
+                                                                        </option>
+                                                                        <option value="Lacto-vegetarian">
+                                                                            Lacto-vegetarian</option>
+                                                                        <option value="Ovo-vegetarian">Ovo-vegetarian
+                                                                        </option>
                                                                         <option value="Vegan">Vegan</option>
-                                                                        <option value="Pescatarian">Pescatarian </option>
+                                                                        <option value="Pescatarian">Pescatarian
+                                                                        </option>
                                                                         <option value="Beegan">Beegan</option>
-                                                                        <option value="Flexitarian">Flexitarian </option>
+                                                                        <option value="Flexitarian">Flexitarian
+                                                                        </option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label>Meal Name</label>
-                                                                    <input type="text" id="dietInput" name="meal_name" class="form-control" autocomplete="off" required>
+                                                                    <input type="text" id="dietInput" name="meal_name"
+                                                                        class="form-control" autocomplete="off"
+                                                                        required>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div id="dietDetails" style="display: none;">
                                                             <div class="form-group text-center">
-                                                                <img id="dietImage" alt="Diet Image" style="display: none; max-width: 50%; height: auto;">
+                                                                <img id="dietImage" alt="Diet Image"
+                                                                    style="display: none; max-width: 50%; height: auto;">
                                                             </div>
                                                             <div class="form-group">
                                                                 <div class="row">
                                                                     <div class="col-md-3">
                                                                         <label>Calories</label>
-                                                                        <input type="number" name="calories" min="0" max="1000" class="form-control" required>
+                                                                        <input type="number" name="calories" min="0"
+                                                                            max="1000" class="form-control" required>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <label>Protein</label>
-                                                                        <input type="number" name="protein" class="form-control" min="0" required />
+                                                                        <input type="number" name="protein"
+                                                                            class="form-control" min="0" required />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <label>Carbs</label>
-                                                                        <input type="number" name="carbs" class="form-control" required>
+                                                                        <input type="number" name="carbs"
+                                                                            class="form-control" required>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <label>Fats</label>
-                                                                        <input type="number" name="fats" class="form-control" required>
+                                                                        <input type="number" name="fats"
+                                                                            class="form-control" required>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -601,11 +624,15 @@
                                                                 <div class="row">
                                                                     <div class="col-md-6">
                                                                         <label>Diet Description</label>
-                                                                        <textarea type="text" rows="5" name="diet_description" class="form-control" required></textarea>
+                                                                        <textarea type="text" rows="5"
+                                                                            name="diet_description" class="form-control"
+                                                                            required></textarea>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label>Alternative Diet Description</label>
-                                                                        <textarea type="text" rows="5" name="alternative_diet_description" class="form-control" required></textarea>
+                                                                        <textarea type="text" rows="5"
+                                                                            name="alternative_diet_description"
+                                                                            class="form-control" required></textarea>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -655,31 +682,31 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     @foreach($diets as $diet)
-                                                                    <tr>
-                                                                        <td>{{$diet->day}}</td>
-                                                                        <td>{{$diet->meal_name}}</td>
-                                                                        <td>{{$diet->calories}} gm</td>
-                                                                        <td>{{$diet->protein}} gm</td>
+                                                                        <tr>
+                                                                            <td>{{$diet->day}}</td>
+                                                                            <td>{{$diet->meal_name}}</td>
+                                                                            <td>{{$diet->calories}} gm</td>
+                                                                            <td>{{$diet->protein}} gm</td>
 
-                                                                        <td>{{$diet->carbs}} gm</td>
-                                                                        <td>{{$diet->fats}} gm</td>
-                                                                        </td>
-                                                                        <td class="text-end"><span> <a
-                                                                                    href="javascript:void(0);"
-                                                                                    class="me-4 edit-diet"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-placement="top" title="Edit"
-                                                                                    data-diet="{{ json_encode($diet) }}">
-                                                                                    <i
-                                                                                        class="fa fa-pencil color-muted"></i>
-                                                                                </a><a href="javascript:void()"
-                                                                                    onclick="confirmDietDelete('{{ $diet->uuid }}')"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-placement="top"
-                                                                                    title="Close"><i
-                                                                                        class="fas fa-times color-danger"></i></a></span>
-                                                                        </td>
-                                                                    </tr>
+                                                                            <td>{{$diet->carbs}} gm</td>
+                                                                            <td>{{$diet->fats}} gm</td>
+                                                                            </td>
+                                                                            <td class="text-end"><span> <a
+                                                                                        href="javascript:void(0);"
+                                                                                        class="me-4 edit-diet"
+                                                                                        data-bs-toggle="tooltip"
+                                                                                        data-placement="top" title="Edit"
+                                                                                        data-diet="{{ json_encode($diet) }}">
+                                                                                        <i
+                                                                                            class="fa fa-pencil color-muted"></i>
+                                                                                    </a><a href="javascript:void()"
+                                                                                        onclick="confirmDietDelete('{{ $diet->uuid }}')"
+                                                                                        data-bs-toggle="tooltip"
+                                                                                        data-placement="top"
+                                                                                        title="Close"><i
+                                                                                            class="fas fa-times color-danger"></i></a></span>
+                                                                            </td>
+                                                                        </tr>
                                                                     @endforeach
                                                                 </tbody>
                                                             </table>
@@ -725,32 +752,32 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     @foreach ($bmis as $bmi)
-                                                                    <tr>
-                                                                        <td>{{ $bmi->height }}</td>
-                                                                        <td>{{ $bmi->weight }}</td>
-                                                                        <td>{{ $bmi->bmi }}</td>
-                                                                        <td class="text-end">
-                                                                            <span>
-                                                                                <a href="javascript:void()"
-                                                                                    class="edit-bmi"
-                                                                                    data-bmi-id="{{ $bmi->id }}"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-placement="top" title="Edit">
-                                                                                    <i
-                                                                                        class="fa fa-pencil color-muted"></i>
-                                                                                </a>
+                                                                        <tr>
+                                                                            <td>{{ $bmi->height }}</td>
+                                                                            <td>{{ $bmi->weight }}</td>
+                                                                            <td>{{ $bmi->bmi }}</td>
+                                                                            <td class="text-end">
+                                                                                <span>
+                                                                                    <a href="javascript:void()"
+                                                                                        class="edit-bmi"
+                                                                                        data-bmi-id="{{ $bmi->id }}"
+                                                                                        data-bs-toggle="tooltip"
+                                                                                        data-placement="top" title="Edit">
+                                                                                        <i
+                                                                                            class="fa fa-pencil color-muted"></i>
+                                                                                    </a>
 
-                                                                                &nbsp; &nbsp;
-                                                                                <a href="javascript:void()"
-                                                                                    onclick="confirmSubscriptionDelete('{{ $bmi->uuid }}')"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-placement="top" title="Close">
-                                                                                    <i
-                                                                                        class="fas fa-times color-danger"></i>
-                                                                                </a>
-                                                                            </span>
-                                                                        </td>
-                                                                    </tr>
+                                                                                    &nbsp; &nbsp;
+                                                                                    <a href="javascript:void()"
+                                                                                        onclick="confirmSubscriptionDelete('{{ $bmi->uuid }}')"
+                                                                                        data-bs-toggle="tooltip"
+                                                                                        data-placement="top" title="Close">
+                                                                                        <i
+                                                                                            class="fas fa-times color-danger"></i>
+                                                                                    </a>
+                                                                                </span>
+                                                                            </td>
+                                                                        </tr>
                                                                     @endforeach
 
                                                                 </tbody>
@@ -787,9 +814,9 @@
                                                                         id="trainer" name="trainer_id">
                                                                         <option value="0">Select</option>
                                                                         @foreach ($trainers as $trainer)
-                                                                        <option value="{{$trainer->id}}">
-                                                                            {{$trainer->name}}
-                                                                        </option>
+                                                                            <option value="{{$trainer->id}}">
+                                                                                {{$trainer->name}}
+                                                                            </option>
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
@@ -853,33 +880,33 @@
                                                                     </thead>
                                                                     <tbody>
                                                                         @foreach($trainersHistories as $trainer)
-                                                                        <tr>
-                                                                            <td>{{$trainer->trainer->name}}</td>
-                                                                            <td>
-                                                                                <form
-                                                                                    action="/update-trainer-status/{{$userDetail->id}}"
-                                                                                    method="POST">
-                                                                                    @csrf
-                                                                                    @method('POST')
-                                                                                    <input type="hidden"
-                                                                                        name="trainer_id"
-                                                                                        value="{{ $trainer->id }}">
-                                                                                    <!-- Hidden field for trainer_id -->
-                                                                                    <select name="status"
-                                                                                        onchange="this.form.submit()"
-                                                                                        class="form-select" {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::INACTIVE ? 'disabled' : '' }}>
-                                                                                        <option
-                                                                                            value="{{ \App\Enums\TrainerAssignToUserStatus::ACTIVE }}"
-                                                                                            {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::ACTIVE ? 'selected' : '' }}>Active
-                                                                                        </option>
-                                                                                        <option
-                                                                                            value="{{ \App\Enums\TrainerAssignToUserStatus::INACTIVE }}"
-                                                                                            {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::INACTIVE ? 'selected' : '' }}>
-                                                                                            Inactive</option>
-                                                                                    </select>
-                                                                                </form>
-                                                                            </td>
-                                                                        </tr>
+                                                                            <tr>
+                                                                                <td>{{$trainer->trainer->name}}</td>
+                                                                                <td>
+                                                                                    <form
+                                                                                        action="/update-trainer-status/{{$userDetail->id}}"
+                                                                                        method="POST">
+                                                                                        @csrf
+                                                                                        @method('POST')
+                                                                                        <input type="hidden"
+                                                                                            name="trainer_id"
+                                                                                            value="{{ $trainer->id }}">
+                                                                                        <!-- Hidden field for trainer_id -->
+                                                                                        <select name="status"
+                                                                                            onchange="this.form.submit()"
+                                                                                            class="form-select" {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::INACTIVE ? 'disabled' : '' }}>
+                                                                                            <option
+                                                                                                value="{{ \App\Enums\TrainerAssignToUserStatus::ACTIVE }}"
+                                                                                                {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::ACTIVE ? 'selected' : '' }}>Active
+                                                                                            </option>
+                                                                                            <option
+                                                                                                value="{{ \App\Enums\TrainerAssignToUserStatus::INACTIVE }}"
+                                                                                                {{ $trainer->status == \App\Enums\TrainerAssignToUserStatus::INACTIVE ? 'selected' : '' }}>
+                                                                                                Inactive</option>
+                                                                                        </select>
+                                                                                    </form>
+                                                                                </td>
+                                                                            </tr>
                                                                         @endforeach
                                                                     </tbody>
                                                                 </table>
@@ -927,8 +954,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label>Exercise Name</label>
-                                        <input type="text" id="edit_exercise_name" name="exercise_name" class="form-control"
-                                            required>
+                                        <input type="text" id="edit_exercise_name" name="exercise_name"
+                                            class="form-control" required>
                                     </div>
                                 </div>
                             </div>
@@ -936,17 +963,18 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label>Sets</label>
-                                        <input type="number" id="edit_sets" name="sets" min="0" max="1000" class="form-control"
-                                            required>
+                                        <input type="number" id="edit_sets" name="sets" min="0" max="1000"
+                                            class="form-control" required>
                                     </div>
                                     <div class="col-md-4">
                                         <label>Reps</label>
-                                        <input type="number" id="edit_reps" name="reps" class="form-control" min="0" required />
+                                        <input type="number" id="edit_reps" name="reps" class="form-control" min="0"
+                                            required />
                                     </div>
                                     <div class="col-md-4">
                                         <label>Weight</label>
-                                        <input type="number" id="edit_weight" name="weight" placeholder="Enter Weight in Kg"
-                                            class="form-control" required>
+                                        <input type="number" id="edit_weight" name="weight"
+                                            placeholder="Enter Weight in Kg" class="form-control" required>
                                     </div>
                                 </div>
                             </div>
@@ -1018,7 +1046,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label>Meal Name</label>
-                                        <input type="text" id="edit_meal_name" name="meal_name" class="form-control" required>
+                                        <input type="text" id="edit_meal_name" name="meal_name" class="form-control"
+                                            required>
                                     </div>
                                 </div>
                             </div>
@@ -1031,8 +1060,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label>Protein</label>
-                                        <input type="number" id="edit_protein" name="protein" class="form-control" min="0"
-                                            required />
+                                        <input type="number" id="edit_protein" name="protein" class="form-control"
+                                            min="0" required />
                                     </div>
                                 </div>
                             </div>
@@ -1052,12 +1081,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Diet Description</label>
-                                        <textarea type="text" id="edit_diet_discription" name="diet_description" rows="5" class="form-control"
-                                            required></textarea>
+                                        <textarea type="text" id="edit_diet_discription" name="diet_description"
+                                            rows="5" class="form-control" required></textarea>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Alternative Diet Description</label>
-                                        <textarea type="text" id="edit_alternative_diet_description" name="alternative_diet_description" rows="5" class="form-control"
+                                        <textarea type="text" id="edit_alternative_diet_description"
+                                            name="alternative_diet_description" rows="5" class="form-control"
                                             required></textarea>
                                     </div>
                                 </div>
@@ -1393,11 +1423,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const editButtons = document.querySelectorAll('.edit-workout');
 
         editButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const workout = JSON.parse(this.dataset.workout);
 
                 document.getElementById('edit_workout_id').value = workout.id;
@@ -1413,11 +1443,11 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const editButtons = document.querySelectorAll('.edit-diet');
 
         editButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const diet = JSON.parse(this.getAttribute('data-diet'));
 
                 document.getElementById('edit_diet_id').value = diet.id;
@@ -1469,7 +1499,7 @@
         });
     }
 
-    document.getElementById('subscription_id').addEventListener('change', function() {
+    document.getElementById('subscription_id').addEventListener('change', function () {
         const selectedOption = this.options[this.selectedIndex];
         const amount = selectedOption.getAttribute('data-amount');
         const description = selectedOption.getAttribute('data-description');
@@ -1490,7 +1520,7 @@
         }
     });
 
-    document.getElementById('joining_date').addEventListener('change', function() {
+    document.getElementById('joining_date').addEventListener('change', function () {
         const selectedOption = document.getElementById('subscription_id').options[document.getElementById('subscription_id').selectedIndex];
         const validity = selectedOption.getAttribute('data-validity');
 
@@ -1518,11 +1548,11 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const editButtons = document.querySelectorAll('.edit-bmi');
 
         editButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const bmiId = this.getAttribute('data-bmi-id');
 
                 if (bmiId) {
@@ -1620,104 +1650,98 @@
         }
     }
 
+    document.addEventListener("DOMContentLoaded", function () {
+        const workoutInput = document.getElementById('workoutInput');
 
+        // Trigger the dropdown on input click
+        workoutInput.addEventListener("focus", function () {
+            fetchWorkouts(this.value);
+        });
 
+        // Trigger the dropdown on input typing
+        workoutInput.addEventListener("input", function () {
+            fetchWorkouts(this.value);
+        });
 
-    document.addEventListener("DOMContentLoaded", function() {
-        autocomplete(document.getElementById('workoutInput'));
-    });
-
-    function autocomplete(inp) {
-        var currentFocus;
-
-        inp.addEventListener("input", function(e) {
-            var a, b, i, val = this.value;
+        function fetchWorkouts(query) {
+            var currentFocus;
             closeAllLists();
-            if (!val) {
-                return false;
-            }
-            currentFocus = -1;
 
             $.ajax({
                 url: "{{ url('/autocomplete-workout') }}",
                 type: "GET",
                 data: {
-                    query: val
+                    query: query
                 },
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     var a = document.createElement("DIV");
-                    a.setAttribute("id", inp.id + "autocomplete-list");
+                    a.setAttribute("id", workoutInput.id + "autocomplete-list");
                     a.setAttribute("class", "autocomplete-items");
-                    inp.parentNode.appendChild(a);
+                    workoutInput.parentNode.appendChild(a);
 
                     data.forEach(item => {
                         var b = document.createElement("DIV");
-                        // Display matched part in bold
-                        b.innerHTML = "<strong>" + item.name.substr(0, val.length) + "</strong>";
-                        b.innerHTML += item.name.substr(val.length);
-                        // Hidden input for workout id
+                        b.innerHTML = "<strong>" + item.name.substr(0, query.length) + "</strong>";
+                        b.innerHTML += item.name.substr(query.length);
                         b.innerHTML += "<input type='hidden' value='" + item.name + "' data-id='" + item.id + "'>";
 
-                        b.addEventListener("click", function(e) {
-                            // Set the selected name in the input
-                            inp.value = this.getElementsByTagName("input")[0].value;
-                            // Set the workout id in the hidden field
+                        b.addEventListener("click", function (e) {
+                            workoutInput.value = this.getElementsByTagName("input")[0].value;
                             document.getElementById('workoutIdInput').value = this.getElementsByTagName("input")[0].getAttribute('data-id');
-                            fetchWorkoutDetails(inp.value);
+                            fetchWorkoutDetails(workoutInput.value);
                             closeAllLists();
                         });
                         a.appendChild(b);
                     });
                 }
             });
-        });
 
-        inp.addEventListener("keydown", function(e) {
-            var x = document.getElementById(this.id + "autocomplete-list");
-            if (x) x = x.getElementsByTagName("div");
-            if (e.keyCode == 40) {
-                currentFocus++;
-                addActive(x);
-            } else if (e.keyCode == 38) {
-                currentFocus--;
-                addActive(x);
-            } else if (e.keyCode == 13) {
-                e.preventDefault();
-                if (currentFocus > -1) {
-                    if (x) x[currentFocus].click();
+            workoutInput.addEventListener("keydown", function (e) {
+                var x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    currentFocus++;
+                    addActive(x);
+                } else if (e.keyCode == 38) {
+                    currentFocus--;
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                        if (x) x[currentFocus].click();
+                    }
+                }
+            });
+
+            function addActive(x) {
+                if (!x) return false;
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                x[currentFocus].classList.add("autocomplete-active");
+            }
+
+            function removeActive(x) {
+                for (var i = 0; i < x.length; i++) {
+                    x[i].classList.remove("autocomplete-active");
                 }
             }
-        });
 
-        function addActive(x) {
-            if (!x) return false;
-            removeActive(x);
-            if (currentFocus >= x.length) currentFocus = 0;
-            if (currentFocus < 0) currentFocus = (x.length - 1);
-            x[currentFocus].classList.add("autocomplete-active");
-        }
-
-        function removeActive(x) {
-            for (var i = 0; i < x.length; i++) {
-                x[i].classList.remove("autocomplete-active");
-            }
-        }
-
-        function closeAllLists(elmnt) {
-            var x = document.getElementsByClassName("autocomplete-items");
-            for (var i = 0; i < x.length; i++) {
-                if (elmnt != x[i] && elmnt != inp) {
-                    x[i].parentNode.removeChild(x[i]);
+            function closeAllLists(elmnt) {
+                var x = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < x.length; i++) {
+                    if (elmnt != x[i] && elmnt != workoutInput) {
+                        x[i].parentNode.removeChild(x[i]);
+                    }
                 }
             }
+
+            document.addEventListener("click", function (e) {
+                closeAllLists(e.target);
+            });
         }
-
-        document.addEventListener("click", function(e) {
-            closeAllLists(e.target);
-        });
-    }
-
+    });
 
 
     function fetchWorkoutDetails(exerciseName) {
@@ -1728,7 +1752,7 @@
                 exercise_name: exerciseName
             },
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 if (data) {
                     // Update the image
                     if (data.image) {
@@ -1767,21 +1791,21 @@
                     }
                 }
             },
-            error: function() {
+            error: function () {
                 console.error('Error fetching workout details');
             }
         });
     }
 
     //For Diet Name auto search
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         dietautocomplete(document.getElementById('dietInput'));
     });
 
     function dietautocomplete(inp) {
         var currentFocus;
 
-        inp.addEventListener("input", function(e) {
+        inp.addEventListener("input", function (e) {
             var a, b, i, val = this.value;
             closeAllLists();
             if (!val) {
@@ -1796,7 +1820,7 @@
                     query: val
                 },
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     var a = document.createElement("DIV");
                     a.setAttribute("id", inp.id + "autocomplete-list");
                     a.setAttribute("class", "autocomplete-items");
@@ -1807,7 +1831,7 @@
                         b.innerHTML = "<strong>" + item.substr(0, val.length) + "</strong>";
                         b.innerHTML += item.substr(val.length);
                         b.innerHTML += "<input type='hidden' value='" + item + "'>";
-                        b.addEventListener("click", function(e) {
+                        b.addEventListener("click", function (e) {
                             inp.value = this.getElementsByTagName("input")[0].value;
                             fetchDietDetails(inp.value);
                             closeAllLists();
@@ -1818,7 +1842,7 @@
             });
         });
 
-        inp.addEventListener("keydown", function(e) {
+        inp.addEventListener("keydown", function (e) {
             var x = document.getElementById(this.id + "autocomplete-list");
             if (x) x = x.getElementsByTagName("div");
             if (e.keyCode == 40) {
@@ -1858,7 +1882,7 @@
             }
         }
 
-        document.addEventListener("click", function(e) {
+        document.addEventListener("click", function (e) {
             closeAllLists(e.target);
         });
     }
@@ -1882,7 +1906,7 @@
                     meal_name: mealName
                 },
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     if (data && data.id) { // Check if valid data with an ID is returned
                         // Update the image and show it if available
                         if (data.image) {
@@ -1907,7 +1931,7 @@
                         $('#dietDetails').slideUp(); // Keep hidden if no data is found
                     }
                 },
-                error: function() {
+                error: function () {
                     console.error('Error fetching diet details');
                     $('#dietDetails').slideUp(); // Hide details on error
                 }
@@ -1919,7 +1943,7 @@
     }
 
     // Attach event listener to the Meal Name input's blur event to trigger fetching details
-    document.getElementById('dietInput').addEventListener('blur', function() {
+    document.getElementById('dietInput').addEventListener('blur', function () {
         if (this.value.trim() !== '') {
             fetchDietDetails();
         } else {
@@ -1928,17 +1952,9 @@
     });
 
     // Attach event listener to the Meal Name input's change event to hide diet details when meal name is changed
-    document.getElementById('dietInput').addEventListener('input', function() {
+    document.getElementById('dietInput').addEventListener('input', function () {
         $('#dietDetails').slideUp(); // Hide diet details immediately when meal name changes
     });
-
-
-
-
-
-
-
-
 
     function confirmTrainerDelete(uuid) {
         Swal.fire({
