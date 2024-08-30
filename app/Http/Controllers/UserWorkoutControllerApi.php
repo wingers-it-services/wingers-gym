@@ -29,8 +29,13 @@ class UserWorkoutControllerApi extends Controller
     public function fetchUserWorkout()
     {
         try {
-            $user = auth()->user();
-            $workouts = $this->userWorkout->where('user_id',$user->id)->with('workoutDetails')->get();
+            $user = auth()->user(); 
+             $currentDay = strtolower(now()->format('l')); // Get the current day of the week in lowercase (e.g., 'monday')
+dd($currentDay);
+            $workouts = $this->userWorkout->where('user_id', $user->id)
+                                          ->where('day', $currentDay)
+                                          ->with('workoutDetails')
+                                          ->get();
 
             if ($workouts->isEmpty()) {
                 return response()->json([

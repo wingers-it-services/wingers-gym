@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdvertisementControllerApi;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentControllerApi;
 use App\Http\Controllers\GoalControllerApi;
@@ -55,6 +56,8 @@ Route::post('/profile-part-four-updated', [GymUserControllerApi::class, 'profile
 Route::post('/add-user-injuries', [GymUserControllerApi::class, 'addUserInjuries']);
 
 Route::get('/fetch-current-day-workout',[UserWorkoutControllerApi::class,'fetchCurrentDayWorkout']);
+
+Route::get('/fetch-advertisement',[AdvertisementControllerApi::class,'fetchAdvertisement']);
 
 Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
 
