@@ -273,42 +273,53 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="edit_gender">Gender</label>
-                        <select class="form-control" id="edit_gender" name="gender" required>
-                            <option value="">Choose...</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="edit_gender">Gender</label>
+                                <select class="form-control" id="edit_gender" name="gender" required>
+                                    <option value="">Choose...</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit_meal">Meal Type</label>
+                                <select class="form-control" id="edit_meal" name="meal_type" required>
+                                    <option value="">Choose...</option>
+                                    <option value="Vegetarian">Vegetarian</option>
+                                    <option value="Non-Vegetarian">Non-Vegetarian </option>
+                                    <option value="Lacto-vegetarian">Lacto-vegetarian</option>
+                                    <option value="Ovo-vegetarian">Ovo-vegetarian </option>
+                                    <option value="Vegan">Vegan</option>
+                                    <option value="Pescatarian">Pescatarian </option>
+                                    <option value="Beegan">Beegan</option>
+                                    <option value="Flexitarian">Flexitarian </option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="edit_meal">Meal Type</label>
-                        <select class="form-control" id="edit_meal" name="meal_type" required>
-                            <option value="">Choose...</option>
-                            <option value="Vegetarian">Vegetarian</option>
-                            <option value="Non-Vegetarian">Non-Vegetarian </option>
-                            <option value="Lacto-vegetarian">Lacto-vegetarian</option>
-                            <option value="Ovo-vegetarian">Ovo-vegetarian </option>
-                            <option value="Vegan">Vegan</option>
-                            <option value="Pescatarian">Pescatarian </option>
-                            <option value="Beegan">Beegan</option>
-                            <option value="Flexitarian">Flexitarian </option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit_min_age">Min Age</label>
-                        <input type="number" class="form-control" id="edit_min_age" name="min_age" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit_max_age">Max Age</label>
-                        <input type="number" class="form-control" id="edit_max_age" name="max_age" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="edit_min_age">Min Age</label>
+                                <input type="number" class="form-control" id="edit_min_age" name="min_age" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit_max_age">Max Age</label>
+                                <input type="number" class="form-control" id="edit_max_age" name="max_age" required>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="edit_goal">Goal</label>
-                        <input type="text" class="form-control" id="edit_goal" name="goal" required>
+                        <select class="form-control" id="edit_goal" name="goal" required>
+                            <option value="">Choose Goal</option>
+                            <option value="Weight Gain">Weight Gain</option>
+                            <option value="Fit">Fit</option>
+                            <option value="Weight Loss">Weight Loss</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -448,7 +459,7 @@
     function confirmDelete(uuid) {
         Swal.fire({
             title: 'Are you sure?',
-            text: 'Are you sure you want to delete this workout?',
+            text: 'Are you sure you want to delete this diet?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

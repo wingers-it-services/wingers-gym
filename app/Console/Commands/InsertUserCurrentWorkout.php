@@ -20,7 +20,7 @@ class InsertUserCurrentWorkout extends Command
      *
      * @var string
      */
-    protected $description = 'User Current Workout Succesfully Added!';
+    protected $description = 'User Current Workouts Day Wise Added in curren_day_workouts table';
 
     /**
      * Execute the console command.

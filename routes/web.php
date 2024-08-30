@@ -110,6 +110,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::post('/add-staff-asset', [GymStaffController::class, 'addStaffAsset']);
     Route::get('/gym-staff-assets/{staffId}', [GymStaffController::class, 'getStaffAssets']);
     Route::post('/add-staff-leave', [GymStaffController::class, 'addStaffLeave']);
+    Route::get('/gym-staff-leaves/{staffId}', [GymStaffController::class, 'getStaffLeaves']);
 
 
     /* markGymStaffAttendance */
@@ -136,8 +137,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::post('/update-user-workout', [GymUserController::class, 'updateUserWorkout'])->name('update-user-workout');
     Route::post('/add-user-diet', [GymUserController::class, 'addUserDiet'])->name('add-user-diet');
     Route::post('/update-user-diet', [GymUserController::class, 'updateUserDiet'])->name('update-user-diet');
-    Route::get('/delete-workout/{uuid}', [GymUserController::class, 'deleteWorkout'])->name('delete-workout');
-    Route::get('/delete-diet/{uuid}', [GymUserController::class, 'deleteDiet'])->name('delete-diet');
+    Route::get('/delete-user-workout/{uuid}', [GymUserController::class, 'deleteUserWorkout'])->name('delete-user-workout');
+    Route::get('/delete-user-diet/{uuid}', [GymUserController::class, 'deleteUserDiet'])->name('delete-user-diet');
     Route::post('/check-subscription/{userId}', [GymUserController::class, 'checkSubscription'])->name('check-subscription');
     Route::post('/update-user-subscription/{userId}', [GymUserController::class, 'updateSubscription'])->name('update-user-subscription');
 

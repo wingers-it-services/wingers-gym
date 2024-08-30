@@ -315,14 +315,18 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'diet_id' => 'required',
-                'user_id' => 'required',
-                'meal_name' => 'required',
-                "calories" => 'required|integer|min:0',
-                "protein" => 'required|integer|min:0',
-                "carbs" => 'required|numeric|min:0',
-                "fats" => 'required|numeric|min:0',
-                "notes" => 'nullable|string',
+                'diet_id'                       => 'required',
+                'user_id'                       => 'required',
+                'meal_name'                     => 'required',
+                "calories"                      => 'required|integer|min:0',
+                "protein"                       => 'required|integer|min:0',
+                "carbs"                         => 'required|numeric|min:0',
+                "fats"                          => 'required|numeric|min:0',
+                "goal"                          => 'required',
+                "meal_type"                     => 'required',
+                "diet_description"              => 'required',
+                "alternative_diet_description"  => 'required',
+                "day"                           => 'required'
             ]);
 
             // Find the workout by ID
@@ -337,7 +341,7 @@ class GymUserController extends Controller
         }
     }
 
-    public function deleteWorkout($uuid)
+    public function deleteUserWorkout($uuid)
     {
         $workout = $this->workout->where('uuid', $uuid)->firstOrFail();
 
@@ -345,7 +349,7 @@ class GymUserController extends Controller
         return redirect()->back()->with('status', 'success')->with('message', 'Workout deleted successfully!');
     }
 
-    public function deleteDiet($uuid)
+    public function deleteUserDiet($uuid)
     {
         $diet = $this->diet->where('uuid', $uuid)->firstOrFail();
 

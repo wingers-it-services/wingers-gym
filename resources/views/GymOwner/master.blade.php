@@ -895,7 +895,7 @@
 					</a>
 				</li>
 
-				<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
+				<li><a class="has-arrow ai-icon" href="/gym-staff" aria-expanded="false">
 						<i class="fa fa-address-card-o" aria-hidden="true"></i>
 						<span class="nav-text">Gym Staff</span>
 					</a>

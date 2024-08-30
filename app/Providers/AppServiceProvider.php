@@ -20,7 +20,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(Schedule $schedule)
     {
         $schedule->command('emails:send');
+        //For Workout
         $schedule->command('user:workout')->dailyAt('00:01');
+        //For Diet
+        $schedule->command('user:diets')->dailyAt('00:01');
+
     }
 
 
