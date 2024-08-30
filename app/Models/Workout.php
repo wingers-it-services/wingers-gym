@@ -22,6 +22,11 @@ class Workout extends Model
         'added_by'
     ];
 
+    public function currentDayWorkouts()
+    {
+        return $this->hasMany(CurrentDayWorkout::class, 'workout_id');
+    }
+
     public function addWorkout(array $workoutArray, $imagePath, $addedBy)
     {
         try {

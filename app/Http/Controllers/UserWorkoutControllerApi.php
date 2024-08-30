@@ -12,30 +12,48 @@ class UserWorkoutControllerApi extends Controller
 {
     use errorResponseTrait;
     protected $userWorkout;
+    protected $currentDayWorkout;
 
     public function __construct(
         UserWorkout $userWorkout,
+        CurrentDayWorkout $currentDayWorkout
     ) {
         $this->userWorkout = $userWorkout;
+        $this->currentDayWorkout = $currentDayWorkout;
     }
 
-  /**
-   * The function fetches a user's workouts and returns a JSON response with the workout details or an
-   * error message if there is an issue.
-   * 
-   * @return The `fetchUserWorkout` function returns a JSON response with status, workouts data, and a
-   * message.
-   */
-    public function fetchUserWorkout()
+    /**
+     * The function fetches a user's workouts and returns a JSON response with the workout details or an
+     * error message if there is an issue.
+     * 
+     * @return The `fetchUserWorkout` function returns a JSON response with status, workouts data, and a
+     * message.
+     */
+    public function fetchUserWorkout(Request $request)
     {
         try {
-            $user = auth()->user(); 
-             $currentDay = strtolower(now()->format('l')); // Get the current day of the week in lowercase (e.g., 'monday')
-dd($currentDay);
+            $request->validate([
+                'gym_id'   => 'required',
+                'gym_id.*' => 'exists:gyms,id'
+            ]);
+
+            $user = auth()->user();
+            $currentDay = strtolower(now()->format('l'));
+
             $workouts = $this->userWorkout->where('user_id', $user->id)
-                                          ->where('day', $currentDay)
-                                          ->with('workoutDetails')
-                                          ->get();
+                ->where('day', $currentDay)
+                ->where('gym_id', $request->gym_id)
+                ->with('workoutDetails:id,id,category,image')
+                ->get();
+
+            foreach ($workouts as $workout) {
+                if ($workout->workoutDetails) {
+                    $workout->category = $workout->workoutDetails->category;
+                    $workout->image = $workout->workoutDetails->image;
+                }
+
+                unset($workout->workoutDetails);
+            }
 
             if ($workouts->isEmpty()) {
                 return response()->json([
@@ -59,26 +77,31 @@ dd($currentDay);
         }
     }
 
-    public function fetchCurrentDayWorkout()
+    public function fetchCurrentDayWorkout(Request $request)
     {
         try {
+            $request->validate([
+                'user_workout_id'   => 'required',
+                'user_workout_id.*' => 'exists:user_workouts,id'
+            ]);
             $user = auth()->user();
-            $workouts = CurrentDayWorkout::get();
-            foreach ($workouts as $workout) {
-                $workout->details = json_decode($workout->details, true);
-            }
-            
-            if ($workouts->isEmpty()) {
-                return response()->json([
-                    'status'   => 422,
-                    'workouts' => $workouts,
-                    'message'  => 'There is no workouts'
-                ], 422);
-            }
+            $workout = CurrentDayWorkout::where('user_workout_id', $request->user_workout_id)->with('workoutDetails')->first();
+
+            // foreach ($workouts as $workout) {
+            $workout->details = json_decode($workout->details, true);
+            // }
+
+            // if ($workouts->isEmpty()) {
+            //     return response()->json([
+            //         'status'   => 422,
+            //         'workouts' => $workouts,
+            //         'message'  => 'There is no workouts'
+            //     ], 422);
+            // }
 
             return response()->json([
                 'status'    => 200,
-                'workouts'  => $workouts,
+                'workouts'  => $workout,
                 'message'   => 'User workouts Fetch Successfully'
             ], 200);
         } catch (\Exception $e) {
@@ -86,6 +109,50 @@ dd($currentDay);
             return response()->json([
                 'status'  => 500,
                 'message' => 'Error fetching workouts details: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateCurrentWorkout(Request $request)
+    {
+        try {
+            // Validate incoming request
+           $request->validate([
+                'current_day_workout_id' => 'required|exists:current_day_workouts,id',
+                'details'         => 'required|string',
+            ]);
+
+            // Prepare the data to be passed to the model method
+            $updateCurrentDayDetails = [
+                'details' => $request->details,
+            ];
+
+            // Call the updateCurrentWorkout method
+            $result = $this->currentDayWorkout->updateCurrentWorkout($request->all());
+            $updatedWorkout = $this->currentDayWorkout->find($request->current_day_workout_id);
+
+            // Handle the response based on the result
+            if ($result) {
+                return response()->json([
+                    'status'  => 200,
+                    'workout' => $updatedWorkout,
+                    'message' => 'Workout details updated successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'status'  => 500,
+                    'workout' => $updatedWorkout,
+                    'message' => 'Failed to update workout details'
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Log the error for debugging purposes
+            Log::error('[UserWorkoutController][updateWorkout] Error updating workout details: ' . $e->getMessage());
+
+            // Return a response indicating the error
+            return response()->json([
+                'status'  => 500,
+                'message' => 'An error occurred while updating workout details. Please try again later.'.$e->getMessage()
             ], 500);
         }
     }

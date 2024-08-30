@@ -376,5 +376,36 @@ class GymUserControllerApi extends Controller
             ], 500);
         }
     }
+
+    public function updateGymUserProfile(Request $request)
+    {
+        try {
+            // Validate the incoming request data
+            $validatedData = $request->validate([
+                'firstname' => 'nullable|string',
+                'lastname'  => 'nullable|string',
+                'email'     => 'nullable|email|unique:users,email,',
+                'gender'    => 'nullable|string',
+                'phone_no'  => 'nullable|string|unique:users,phone_no,',
+                'password'  => 'nullable|string|min:6',
+                'dob'       => 'nullable|date',
+                'height'    => 'nullable|numeric',
+                'weight'    => 'nullable|numeric',
+                'days'      => 'nullable|string',
+            ]);
+
+            $result = $this->user->updateUser($validatedData);
+
+            // Return the response
+            return response()->json($result, $result['status']);
+
+        } catch (\Throwable $e) {
+            Log::error('[UserControllerApi][updateProfile] Error while updating user profile: ' . $e->getMessage());
+            return response()->json([
+                'status'  => 500,
+                'message' => 'An error occurred while updating the profile'
+            ], 500);
+        }
+    }
     
 }
