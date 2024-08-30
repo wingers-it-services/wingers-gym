@@ -55,37 +55,41 @@ Route::post('/profile-part-four-updated', [GymUserControllerApi::class, 'profile
 
 Route::post('/add-user-injuries', [GymUserControllerApi::class, 'addUserInjuries']);
 
-Route::get('/fetch-current-day-workout',[UserWorkoutControllerApi::class,'fetchCurrentDayWorkout']);
 
-Route::get('/fetch-advertisement',[AdvertisementControllerApi::class,'fetchAdvertisement']);
+Route::get('/fetch-advertisement', [AdvertisementControllerApi::class, 'fetchAdvertisement']);
 
 Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
 
 Route::middleware('auth:api')->group(function () {
 
+    Route::post('/update-daily-workout-status',[UserWorkoutControllerApi::class,'updateCurrentWorkout']);
+
+    Route::post('/update-gym-profile', [GymUserControllerApi::class, 'updateGymUserProfile']);
+
+    Route::post('/fetch-users-current-workout-details', [UserWorkoutControllerApi::class, 'fetchCurrentDayWorkout']);
+
     Route::post('/fetch-subscription', [UserSubscriptionControllerApi::class, 'fetchSubscription']);
 
     Route::post('/fetch-subscription-histry', [UserSubscriptionControllerApi::class, 'fetchSubscriptionHistry']);
 
-    Route::get('/fetch-user-diets', [UserDietControllerApi::class, 'fetchUserDiet']);
+    Route::post('/fetch-user-diets', [UserDietControllerApi::class, 'fetchUserDiet']);
 
     Route::post('/fetch-user-workout', [UserWorkoutControllerApi::class, 'fetchUserWorkout']);
-    
+
     Route::get('/fetch-user-gym', [GymUserControllerApi::class, 'fetchUserGym']);
-    
+
     Route::get('/fetch-equipments', [EquipmentControllerApi::class, 'fetchEquipments']);
-    
+
     Route::get('/fetch-suppliments', [SupplimentControllerApi::class, 'fetchSuppliments']);
 
     Route::get('/fetch-reels', [ReelControllerApi::class, 'fetchReels']);
 
-    Route::post('/fetch-trainer',[GymUserTrainerControllerApi::class,'fetchUserTrainer']);
+    Route::post('/fetch-trainer', [GymUserTrainerControllerApi::class, 'fetchUserTrainer']);
 
-    Route::post('/fetch-gym-details',[GymDetailControllerApi::class,'fetchGymDetails']);
+    Route::post('/fetch-gym-details', [GymDetailControllerApi::class, 'fetchGymDetails']);
 
-    Route::post('/fetch-gym-gallery',[GymGalleryControllerApi::class,'fetchGallery']);
-
+    Route::post('/fetch-gym-gallery', [GymGalleryControllerApi::class, 'fetchGallery']);
 });
 
 
-Route::post('/check-email',[HomeUserLoginControllerApi::class,'checkEmail'])->name('checkEmail');
+Route::post('/check-email', [HomeUserLoginControllerApi::class, 'checkEmail'])->name('checkEmail');

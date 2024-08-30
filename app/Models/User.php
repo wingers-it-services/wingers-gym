@@ -107,10 +107,7 @@ class User extends Authenticatable
 
     public function updateUser(array $updateUser, $imagePath)
     {
-
-        // dd($updateUser);
-        $uuid = $updateUser['uuid'];
-        $userProfile = User::where('uuid', $uuid)->first();
+        $userProfile = User::where('id', auth()->user()->id)->first();
 
         // Check if the user exists
         if (!$userProfile) {
@@ -264,6 +261,45 @@ class User extends Authenticatable
             ];
         } catch (Throwable $e) {
             Log::error('[User][profilePartFour] Error while completing user detail: ' . $e->getMessage());
+            return [
+                'status'  => 500,
+                'message' => 'An error occurred while updating the profile'
+            ];
+        }
+    }
+
+    public function updateUserProfile(array $userDetail)
+    {
+        try {
+            $userProfile = User::where('uuid', $userDetail['uuid'])->first();
+
+            // Check if the user exists
+            if (!$userProfile) {
+                return [
+                    'status'  => 404,
+                    'message' => 'User not found'
+                ];
+            }
+
+            $userProfile->update([
+                'firstname'       => $userDetail['firstname'],
+                'lastname'        => $userDetail['lastname'],
+                'email'           => $userDetail['email'],
+                'gender'          => $userDetail['gender'],
+                'phone_no'        => $userDetail['phone_no'],
+                'password'        => $userDetail['password'],
+                'dob'             => $userDetail['dob'],
+                'height'          => $userDetail['height'],
+                'weight'          => $userDetail['weight'],
+                'days'            => $userDetail['days']
+            ]);
+            return [
+                'status'  => 200,
+                'message' => 'Profile updated successfully',
+                'user'    => $userProfile,
+            ];
+        } catch (Throwable $e) {
+            Log::error('[User][updateUserProfile] Error while updating user profile: ' . $e->getMessage());
             return [
                 'status'  => 500,
                 'message' => 'An error occurred while updating the profile'

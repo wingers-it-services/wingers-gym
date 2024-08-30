@@ -25,9 +25,13 @@ class UserDietControllerApi extends Controller
     * @return The `fetchUserDiet` function returns a JSON response with different status codes and
     * messages based on the outcome of fetching user diets.
     */
-    public function fetchUserDiet()
+    public function fetchUserDiet(Request $request)
     {
         try {
+            $request->validate([
+                'gym_id'   => 'required',
+                'gym_id.*' => 'exists:gyms,id'
+            ]);
             $user = auth()->user();
 
             if (!$user) {
@@ -37,7 +41,7 @@ class UserDietControllerApi extends Controller
                 ], 401);
             }
             
-            $diets = $this->userDiet->where('user_id',$user->id)->get();
+            $diets = $this->userDiet->where('user_id',$user->id)->where('gym_id',$request->gym_id)->get();
 
             if ($diets->isEmpty()) {
                 return response()->json([
