@@ -38,7 +38,7 @@ class InsertUserCurrentWorkout extends Command
         } else {
             foreach ($userWorkouts as $userWorkout) {
                 // Generate the initial details array
-                $detailsArray = $this->generateInitialDetails($userWorkout->sets);
+                $detailsArray = $this->generateInitialDetails($userWorkout->sets, $userWorkout->reps, $userWorkout->weight);
 
                 // Convert the details array to JSON
                 $detailsJson = json_encode($detailsArray);
@@ -63,7 +63,7 @@ class InsertUserCurrentWorkout extends Command
      * @param int $numSets
      * @return array
      */
-    private function generateInitialDetails($numSets)
+    private function generateInitialDetails($numSets, $numReps, $weight)
     {
         $details = [];
 
@@ -72,8 +72,8 @@ class InsertUserCurrentWorkout extends Command
                 [
                     'time' => '00:00',
                     'status' => 'not completed',
-                    'raps' => 0,
-                    'weight' => 0,
+                    'raps' => $numReps,
+                    'weight' => $weight,
                 ]
             ];
         }
