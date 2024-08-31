@@ -71,7 +71,7 @@ class UserDietControllerApi extends Controller
                     'status'   => 422,
                     'diets'    => $diets,
                     'message'  => 'There are no diets'
-                ], 200);
+                ], 422);
             }
 
             return response()->json([

@@ -86,8 +86,8 @@ class UserWorkoutControllerApi extends Controller
             ]);
             $user = auth()->user();
             $workout = $this->currentDayWorkout
-            ->where('user_workout_id', $request->user_workout_id)
-            ->with('workoutDetails')->first();
+                ->where('user_workout_id', $request->user_workout_id)
+                ->with('workoutDetails')->first();
 
             // foreach ($workouts as $workout) {
             $workout->details = json_decode($workout->details, true);
@@ -118,19 +118,22 @@ class UserWorkoutControllerApi extends Controller
     public function updateCurrentWorkout(Request $request)
     {
         try {
-            // Validate incoming request
-           $request->validate([
+            $request->validate([
                 'current_day_workout_id' => 'required|exists:current_day_workouts,id',
-                'details'         => 'required|string',
+                'set'                    => 'required', 
+                'status'                 => 'required|string', 
+                'time'                   => 'required|string',  
             ]);
 
-            // Prepare the data to be passed to the model method
             $updateCurrentDayDetails = [
-                'details' => $request->details,
+                'current_day_workout_id' => $request->current_day_workout_id,
+                'set'                    => $request->set,
+                'status'                 => $request->status,
+                'time'                   => $request->time,
             ];
 
-            // Call the updateCurrentWorkout method
-            $result = $this->currentDayWorkout->updateCurrentWorkout($request->all());
+            // Call the updateCurrentWorkout method in the model
+            $result = $this->currentDayWorkout->updateCurrentWorkout($updateCurrentDayDetails);
             $updatedWorkout = $this->currentDayWorkout->find($request->current_day_workout_id);
 
             // Handle the response based on the result
@@ -148,13 +151,10 @@ class UserWorkoutControllerApi extends Controller
                 ]);
             }
         } catch (\Exception $e) {
-            // Log the error for debugging purposes
-            Log::error('[UserWorkoutController][updateWorkout] Error updating workout details: ' . $e->getMessage());
-
-            // Return a response indicating the error
+            Log::error('[UserWorkoutController][updateCurrentWorkout] Error updating workout details: ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
-                'message' => 'An error occurred while updating workout details. Please try again later.'.$e->getMessage()
+                'message' => 'An error occurred while updating workout details. Please try again later.' . $e->getMessage()
             ], 500);
         }
     }
