@@ -85,7 +85,9 @@ class UserWorkoutControllerApi extends Controller
                 'user_workout_id.*' => 'exists:user_workouts,id'
             ]);
             $user = auth()->user();
-            $workout = CurrentDayWorkout::where('user_workout_id', $request->user_workout_id)->with('workoutDetails')->first();
+            $workout = $this->currentDayWorkout
+            ->where('user_workout_id', $request->user_workout_id)
+            ->with('workoutDetails')->first();
 
             // foreach ($workouts as $workout) {
             $workout->details = json_decode($workout->details, true);

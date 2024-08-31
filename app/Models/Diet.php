@@ -29,6 +29,10 @@ class Diet extends Model
         'meal_type'
     ];
 
+    public function currentDayDiets()
+    {
+        return $this->hasMany(CurrentDayWorkout::class, 'diet_id');
+    }
 
     public function addDiet(array $dietArray, $imagePath, $gymId)
     {
