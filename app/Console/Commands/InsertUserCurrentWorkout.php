@@ -35,26 +35,26 @@ class InsertUserCurrentWorkout extends Command
 
         if ($userWorkouts->isEmpty()) {
             $this->info("No workouts found for {$dayOfWeek}");
-        } else {
-            foreach ($userWorkouts as $userWorkout) {
-                // Generate the initial details array
-                $detailsArray = $this->generateInitialDetails($userWorkout->sets, $userWorkout->reps, $userWorkout->weight);
-
-                // Convert the details array to JSON
-                $detailsJson = json_encode($detailsArray);
-
-
-                // Insert the workout into the CurrentDayWorkout table
-                CurrentDayWorkout::create([
-                    'workout_id' => $userWorkout->workout_id,
-                    'user_workout_id' => $userWorkout->id,
-                    'gym_id' => $userWorkout->gym_id,
-                    'user_id' => $userWorkout->user_id,
-                    'details' => $detailsJson, // Store JSON-encoded details
-                ]);
-            }
-            $this->info("Workouts for {$dayOfWeek} have been successfully added to the CurrentDayWorkout table!");
+            return false;
         }
+
+        foreach ($userWorkouts as $userWorkout) {
+            // Generate the initial details array
+            $detailsArray = $this->generateInitialDetails($userWorkout->sets, $userWorkout->reps, $userWorkout->weight);
+
+            // Convert the details array to JSON
+            $detailsJson = json_encode($detailsArray);
+
+            // Insert the workout into the CurrentDayWorkout table
+            CurrentDayWorkout::create([
+                'workout_id'      => $userWorkout->workout_id,
+                'user_workout_id' => $userWorkout->id,
+                'gym_id'          => $userWorkout->gym_id,
+                'user_id'         => $userWorkout->user_id,
+                'details'         => $detailsJson, // Store JSON-encoded details
+            ]);
+        }
+        $this->info("Workouts for {$dayOfWeek} have been successfully added to the CurrentDayWorkout table!");
     }
 
     /**
@@ -70,14 +70,24 @@ class InsertUserCurrentWorkout extends Command
         for ($i = 1; $i <= $numSets; $i++) {
             $details["set{$i}"] = [
                 [
-                    'time' => '00:00',
+                    'time'   => '00:00',
                     'status' => 'not completed',
-                    'raps' => $numReps,
+                    'raps'   => $numReps,
                     'weight' => $weight,
                 ]
             ];
         }
-
         return $details;
     }
+
+    // private function generateInitialDetails($numSets, $numReps, $weight)
+    // {
+    //     $details = [];
+
+    //     for ($i = 1; $i <= $numSets; $i++) {
+    //         $sets = new SetsDto($weight, 'not completed', $numReps, '00:00');
+    //         $details["set{$i}"] = $sets;
+    //     }
+    //     return $details;
+    // }
 }
