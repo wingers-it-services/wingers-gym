@@ -18,13 +18,13 @@ class UserDietControllerApi extends Controller
         $this->userDiet = $userDiet;
     }
 
-   /**
-    * The function fetches a user's diet information and returns it in a JSON response, handling
-    * authentication, empty results, and error cases.
-    * 
-    * @return The `fetchUserDiet` function returns a JSON response with different status codes and
-    * messages based on the outcome of fetching user diets.
-    */
+    /**
+     * The function fetches a user's diet information and returns it in a JSON response, handling
+     * authentication, empty results, and error cases.
+     * 
+     * @return The `fetchUserDiet` function returns a JSON response with different status codes and
+     * messages based on the outcome of fetching user diets.
+     */
     public function fetchUserDiet(Request $request)
     {
         try {
@@ -33,6 +33,7 @@ class UserDietControllerApi extends Controller
                 'gym_id.*' => 'exists:gyms,id'
             ]);
             $user = auth()->user();
+            $currentDay = strtolower(now()->format('l'));
 
             if (!$user) {
                 return response()->json([
@@ -40,8 +41,19 @@ class UserDietControllerApi extends Controller
                     'message' => 'User not authenticated',
                 ], 401);
             }
-            
-            $diets = $this->userDiet->where('user_id',$user->id)->where('gym_id',$request->gym_id)->get();
+
+            $diets = $this->userDiet
+                ->where('user_id', $user->id)
+                ->where('day', $currentDay)
+                ->where('gym_id', $request->gym_id)
+                ->with('dietsDetails:id,id,image')->get();
+
+                foreach ($diets as $diet) {
+                    if ($diet->dietsDetails) {
+                        $diet->image = $diet->dietsDetails->image;
+                    }
+                    unset($diet->dietsDetails);
+                }
 
             if ($diets->isEmpty()) {
                 return response()->json([

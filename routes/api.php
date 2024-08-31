@@ -64,7 +64,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('/update-daily-workout-status',[UserWorkoutControllerApi::class,'updateCurrentWorkout']);
 
-    Route::post('/update-gym-profile', [GymUserControllerApi::class, 'updateGymUserProfile']);
+    Route::post('/update-gym-user-profile', [GymUserControllerApi::class, 'updateGymUserProfile']);
 
     Route::post('/fetch-users-current-workout-details', [UserWorkoutControllerApi::class, 'fetchCurrentDayWorkout']);
 

@@ -13,6 +13,12 @@ class UserDiet extends Model
 
     protected $fillable = ['user_id', 'day', 'meal_name', 'calories', 'protein', 'carbs', 'fats', 'gym_id', 'diet_id', 'goal', 'meal_type', 'diet_description', 'alternative_diet_description', 'is_completed'];
 
+
+    public function dietsDetails()
+    {
+        return $this->belongsTo(Diet::class, 'diet_id');
+    }
+
     public function addUserDiet(array $addDiet, $gym_id)
     {
         try {
