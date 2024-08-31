@@ -28,7 +28,7 @@
                                     <ul class="list-group mb-3">
                                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                                             <div>
-                                                <img id="selected_image" src="{{ '../' . $staffDetail->image ?? 'https://www.w3schools.com/howto/img_avatar.png' }} " style="border-radius: 50%;width: 200px;height:200px">
+                                                <img id="selected_image" src="{{ $staffDetail->image ?? 'https://www.w3schools.com/howto/img_avatar.png' }} " style="border-radius: 50%;width: 200px;height:200px">
                                             </div>
                                         </li>
 

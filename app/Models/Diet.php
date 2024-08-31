@@ -29,6 +29,20 @@ class Diet extends Model
         'meal_type'
     ];
 
+    public function getImageAttribute()
+    {
+        $imagePath = $this->attributes['image'];
+        $defaultImagePath = 'images/profile/17.jpg';
+        $fullImagePath = $imagePath;
+
+        // Check if the file exists in the public directory
+        if ($imagePath && file_exists(public_path($fullImagePath))) {
+            return asset($fullImagePath);
+        }
+
+        return asset($defaultImagePath);
+    }
+
     public function currentDayDiets()
     {
         return $this->hasMany(CurrentDayWorkout::class, 'diet_id');

@@ -14,7 +14,7 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header" id="cardHeader1">
-                        <h5 class="card-title">How can I Add, Update , Delete Plans?</h5>
+                        <h5 class="card-title">How can I Add, Update , Delete Plans?</h5><i class="fa fa-plus" aria-hidden="true"></i>
                     </div>
                     <div class="card-body" id="cardBody1" style="display: none;">
                         <p class="card-text">
@@ -45,7 +45,7 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header" id="cardHeader2">
-                        <h5 class="card-title">How can I add, update, delete and view add gym workout?</h5>
+                        <h5 class="card-title">How can I add, update, delete and view add gym workout?</h5><i class="fa fa-plus" aria-hidden="true"></i>
                     </div>
                     <div class="card-body" id="cardBody2" style="display: none;">
                         <p class="card-text">
@@ -81,7 +81,7 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header" id="cardHeader3">
-                        <h5 class="card-title">How can I add, update, delete and view add gym diet?</h5>
+                        <h5 class="card-title">How can I add, update, delete and view add gym diet?</h5><i class="fa fa-plus" aria-hidden="true"></i>
                     </div>
                     <div class="card-body" id="cardBody3" style="display: none;">
                         <p class="card-text">
@@ -117,7 +117,7 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header" id="cardHeader4">
-                        <h5 class="card-title">How can I Add GYM Staff?</h5>
+                        <h5 class="card-title">How can I Add , List , Details and Edit GYM Staff?</h5><i class="fa fa-plus" aria-hidden="true"></i>
                     </div>
                     <div class="card-body" id="cardBody4" style="display: none;">
                         <p class="card-text">
@@ -182,6 +182,239 @@
             </div>
 
             <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header" id="cardHeader5">
+                        <h5 class="card-title">How can I Add Designation ?</h5><i class="fa fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <div class="card-body" id="cardBody5" style="display: none;">
+                        <p class="card-text">
+                            To Add Gym staff Designation :
+                        <ol>
+                            <li>1. Click on the "Gym Staff" menu in the menu bar.</li>
+                            <li>2. A dropdown menu will open. Click on the "Designation" sub-menu.</li>
+                            <li>3. Click on Add Designation.</li>
+                            <li>4. Fill in the basic details of the form .</li>
+                            <li>5. Click on the "Submit" button. </li>
+
+                        </ol>
+                        </p>
+                        <p class="card-text">
+                            To Edit Designation :
+                        <ol>
+
+                            <li>1. If you want to Edit the designation Click on three dots on the right side of List.</li>
+                            <li>2. Click on edit and edit the field .</li>
+                            <li>3. Click on Deactivate.The Partcular Designation will be Deactivated .</li>
+                        </ol>
+                        </p>
+                        <p class="card-text">
+                            To Deactivate Designation :
+                        <ol>
+                            <li>1. If you want to Deactivate the designation Click on three dots on the right side of List.</li>
+                            <li>2. Click on Deactivate.</li>
+                            <li>3. The Partcular Designation will be Deactivated .</li>
+
+
+                        </ol>
+                        </p>
+                        <p class="card-text">
+                            To Delete Designation :
+                        <ol>
+                            <li>1. If you want to Delete  the designation Click on three dots on the right side of List.</li>
+                            <li>2. Click on Delete .</li>
+                            <li>3. The Partcular Designation will be Deleted  .</li>
+                        </ol>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header" id="cardHeader6">
+                        <h5 class="card-title">How can I Add Gym Members ?</h5><i class="fa fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <div class="card-body" id="cardBody6" style="display: none;">
+                        <p class="card-text">
+                            To Add Gym Members :
+                        <ol>
+                            <li>1.Click on the "Gym Members" menu in the menu bar.</li>
+                            <li>2. A dropdown menu will open. Click on the "Add Members" sub-menu.</li>
+                            <li>3. Fill  the basic details of the form .</li>
+                            <li>4. Fill in the basic details of the form .</li>
+                            <li>5. Click on the "Add Member" button. </li>
+                        </ol>
+                        </p>
+                        <p class="card-text">
+                            To Member List :
+                        <ol>
+                            <li>1. Click on the "Gym Members" menu in the menu bar.</li>
+                            <li>2. A dropdown menu will open. Click on the "Member List" sub-menu.</li>
+                            <li>3. In Member list all details of the member.</li>
+
+                        </ol>
+                        </p>
+                        <p class="card-text">
+                            To View Member Details :
+                        <ol>
+                            <li>1. If you want to view the Member Details . Click on view icon  .</li>
+                            <li>2. All details of Gym member will be shown.</li>
+                            <li>3. From where the Gym owner will be able to assign the Subscription , Workout , Diet , BMI And Trainners.</li>
+                        </ol>
+                        </p>
+                        <p class="card-text">
+                            To Payment:
+                        <ol>
+                            <li>1. Where all Transaction will show of all Members .</li>
+
+                        </ol>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header" id="cardHeader7">
+                        <h5 class="card-title">GYM Schedule</h5><i class="fa fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <div class="card-body" id="cardBody7" style="display: none;">
+                        <p class="card-text">
+                            GYM Schedule:
+                        <ol>
+                            <li>1. Click on that day, after that a form will open in which what is going to happen on that day in the gym.</li>
+                        </ol>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header" id="cardHeader8">
+                        <h5 class="card-title">Vendor</h5><i class="fa fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <div class="card-body" id="cardBody8" style="display: none;">
+                        <p class="card-text">
+                            Vendor:
+                        <ol>
+                            <li>1. Where all the vendors will be listed .</li>
+                        </ol>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header" id="cardHeader9">
+                        <h5 class="card-title">Shop</h5><i class="fa fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <div class="card-body" id="cardBody9" style="display: none;">
+                        <p class="card-text">
+                            To add Products :
+                        <ol>
+                            <li>1. Click on the "Shop" menu in the menu bar.</li>
+                            <li>2. A dropdown menu will open. Click on the "Add Products" sub-menu.</li>
+                            <li>3. The form will Open.</li>
+                            <li>4. Fill the basic details of your products.</li>
+                            <li>5. After that click on add product.</li>
+                        </ol>
+                        </p>
+                        <p class="card-text">
+                         To list products :
+                        <ol>
+                            <li>1. Click on the "Shop" menu in the menu bar.</li>
+                            <li>2. A dropdown menu will open. Click on the "List Products" sub-menu.</li>
+                            <li>3. Where all the products which you add is listed.</li>
+
+                        </ol>
+                        </p>
+                        <p class="card-text">
+                            To Order  :
+                           <ol>
+                               <li>1. Click on the "Shop" menu in the menu bar.</li>
+                               <li>2. A dropdown menu will open. Click on the "Order" sub-menu.</li>
+                               <li>3. In Order gym owner is able to see all the transactions or all the orders which is done by the members or users .</li>
+
+                           </ol>
+                           </p>
+
+                           <p class="card-text">
+                            To Invoice:
+                           <ol>
+                               <li>1. Click on the "Shop" menu in the menu bar.</li>
+                               <li>2. A dropdown menu will open. Click on the "Invoice" sub-menu.</li>
+                               <li>3. In Invoice gym owner is able to see all the Invoices  .</li>
+
+                           </ol>
+                           </p>
+
+                           <p class="card-text">
+                            To Coupon:
+                           <ol>
+                               <li>1. Click on the "Shop" menu in the menu bar.</li>
+                               <li>2. A dropdown menu will open. Click on the "Coupon" sub-menu.</li>
+                               <li>3. Click on Add Coupon button the form will open  .</li>
+                               <li>4. Fill the form click on add the coupon will added succesfully  .</li>
+                           </ol>
+                           </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header" id="cardHeader9">
+                        <h5 class="card-title">Gallery</h5><i class="fa fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <div class="card-body" id="cardBody9" style="display: none;">
+                        <p class="card-text">
+                            Gallery :
+                        <ol>
+                            <li>1. Click on gallery .</li>
+                            <li>2. There is a button to add the Images and Videos .</li>
+                            <li>3. Click on Submit .</li>
+                            <li>4. All the Images are listed on the Gallery .</li>
+                        </ol>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header" id="cardHeader10">
+                        <h5 class="card-title">Enquiry</h5><i class="fa fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <div class="card-body" id="cardBody10" style="display: none;">
+                        <p class="card-text">
+                            Enquiry :
+                        <ol>
+                            <li>1. Click on Enquiry .</li>
+
+                        </ol>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header" id="cardHeader11">
+                        <h5 class="card-title">GYM Profile</h5><i class="fa fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <div class="card-body" id="cardBody11" style="display: none;">
+                        <p class="card-text">
+                            Gym Profile:
+                        <ol>
+                            <li>1. Where Gym profile will show .</li>
+
+                        </ol>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {{-- <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header" id="cardHeader5">
                         <h5 class="card-title">How can I minimize my navbar?</h5>
@@ -287,7 +520,7 @@
                         </p>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
 
         </div>
@@ -334,15 +567,18 @@
     });
 
     document.getElementById('cardHeader8').addEventListener('click', function() {
-        toggleCardBody('cardBody7');
+        toggleCardBody('cardBody8');
     });
 
     document.getElementById('cardHeader9').addEventListener('click', function() {
-        toggleCardBody('cardBody7');
+        toggleCardBody('cardBody9');
     });
 
     document.getElementById('cardHeader10').addEventListener('click', function() {
-        toggleCardBody('cardBody7');
+        toggleCardBody('cardBody10');
+    });
+    document.getElementById('cardHeader11').addEventListener('click', function() {
+        toggleCardBody('cardBody11');
     });
 </script>
 
