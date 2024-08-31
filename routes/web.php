@@ -129,6 +129,9 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     /* addUserByGym */
     Route::post('/add-user-by-gym', [GymUserController::class, 'addUserByGym'])->name('add-user-by-gym');
 
+    Route::get('/fetch-user-details', [GymUserController::class, 'fetchUserDetails']);
+
+
     /* listGymUser */
     Route::get('/update-gym-user/{uuid}', [GymUserController::class, 'viewUpdateUser'])->name('update-gym-user');
     Route::post('/update-user/{uuid}', [GymUserController::class, 'updateUser'])->name('update-user');

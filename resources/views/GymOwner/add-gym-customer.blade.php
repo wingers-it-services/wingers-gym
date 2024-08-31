@@ -20,6 +20,48 @@
 					<div class="card">
 						<div class="card-body">
 							<div class="row">
+								<div class="col-lg-12 order-lg-1">
+									<div class="row">
+										<div class="col-md-6 mb-3">
+											<label for="email">Email</label>
+											<input type="email" name="email" class="form-control" id="email">
+											<div class="invalid-feedback">
+												Please enter a valid email address for shipping updates.
+											</div>
+										</div>
+
+										<div class="col-md-6 mb-3">
+											<label for="phone_no">Phone Number</label>
+											<input type="text" class="form-control" name="phone_no" id="phone_no" placeholder="" required>
+										</div>
+
+										<div class="col-md-12 mb-12">
+											<input id="continue" type="button" class="btn btn-primary btn-lg btn-block" value="Continue">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="container">
+					<div class="user-cards-wrapper">
+						<div class="user-cards" id="user-cards-container">
+							<!-- User cards will be inserted here -->
+						</div>
+					</div>
+				</div>
+
+
+
+
+
+				<div class="col-xl-12">
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
 								<div class="col-lg-4 order-lg-2 mb-4">
 									<h4 class="d-flex justify-content-between align-items-center mb-3">
 										<span class="text-black">Member Image</span>
@@ -212,7 +254,7 @@
 											<span class="text-black">Subscription Description</span>
 										</h4>
 										<div class="col-md-12 mb-3">
-											<textarea type="text" class="form-control" id="description" name="description" required="" readonly></textarea>
+											<textarea type="text" class="form-control" id="description" rows="16" name="description" required="" readonly></textarea>
 										</div>
 									</div>
 								</div>
@@ -330,6 +372,72 @@
 			document.getElementById('end_date').value = '';
 		}
 	}
+
+	document.addEventListener('DOMContentLoaded', function() {
+		const button = document.getElementById('continue');
+
+		button.addEventListener('click', function() {
+			const email = document.getElementById('email').value;
+			const phone_no = document.getElementById('phone_no').value;
+
+			if (email || phone_no) {
+				fetchUserDetails(email, phone_no);
+			} else {
+				alert('Please enter either email or phone number.');
+			}
+		});
+
+		function fetchUserDetails(email, phone_no) {
+			fetch(`/fetch-user-details?email=${encodeURIComponent(email)}&phone_no=${encodeURIComponent(phone_no)}`)
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						displayUserCards(data.users);
+					} else {
+						alert(data.message || 'User not found.');
+						clearUserCards(); // Clear cards if no user is found
+					}
+				})
+				.catch(error => console.error('Error:', error));
+		}
+
+		function displayUserCards(users) {
+			const container = document.getElementById('user-cards-container');
+			container.innerHTML = ''; // Clear previous cards
+
+			users.forEach(user => {
+				const card = document.createElement('div');
+				card.classList.add('card');
+				card.innerHTML = `
+                <div class="card-body">
+                    <div class="d-sm-flex p-3 border border-light rounded">
+                        <img class="me-4 food-image rounded" src="${user.imageUrl || '#'}" alt="" style="height: 160px;">
+                        <div>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="fs-14 text-primary">${user.firstname} ${user.lastname}</span>
+                            </div>
+                            <ul>
+                                <li class="mb-2"><i class="las la-clock scale5 me-3"></i>
+                                    <span class="fs-14 text-black">${user.email}</span>
+                                </li>
+                                <li class="mb-2"><i class="las la-clock scale5 me-3"></i>
+                                    <span class="fs-14 text-black">${user.phone_no}</span>
+                                </li>
+                                <!-- Add any additional user information here -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+				container.appendChild(card);
+			});
+		}
+
+		function clearUserCards() {
+			const container = document.getElementById('user-cards-container');
+			container.innerHTML = ''; // Clear all cards
+		}
+	});
 </script>
 @include('CustomSweetAlert');
 @endsection

@@ -110,7 +110,7 @@ class GymUserController extends Controller
                 'profile_status' => 'nullable',
                 'staff_assign_id' => 'nullable',
                 'password' => 'required',
-                'phone_no' => 'required'
+                'phone_no' => 'required|unique:gym_users,phone_no'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -700,4 +700,32 @@ class GymUserController extends Controller
             return redirect()->back()->with('status', 'error')->with('message', 'Failed to update trainer status. Please try again.' . $th->getMessage());
         }
     }
+
+    public function fetchUserDetails(Request $request)
+    {
+        $email = $request->query('email');
+        $phone_no = $request->query('phone_no');
+    
+        // Build the query
+        $query = User::query();
+    
+        if ($email) {
+            $query->where('email', $email);
+        }
+    
+        if ($phone_no) {
+            $query->where('phone_no', $phone_no);
+        }
+    
+        // Fetch all users that match the criteria
+        $users = $query->get();
+    
+        if ($users->isNotEmpty()) {
+            return response()->json(['success' => true, 'users' => $users]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'User not found.']);
+        }
+    }
+    
+    
 }
