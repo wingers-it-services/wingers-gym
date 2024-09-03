@@ -22,7 +22,8 @@ class UserWorkout extends Model
         'reps',
         'weight',
         'workout_des',
-        'gym_id'
+        'gym_id',
+        'is_completed'
     ];
 
     public function workoutDetails()

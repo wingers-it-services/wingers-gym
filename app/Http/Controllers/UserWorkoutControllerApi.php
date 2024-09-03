@@ -80,34 +80,58 @@ class UserWorkoutControllerApi extends Controller
     public function fetchCurrentDayWorkout(Request $request)
     {
         try {
+            // Validate request
             $request->validate([
-                'user_workout_id'   => 'required',
-                'user_workout_id.*' => 'exists:user_workouts,id'
+                'user_workout_id'   => 'required|exists:user_workouts,id'
             ]);
+
+            // Get authenticated user
             $user = auth()->user();
+
+            // Fetch the workout with details for the current day
             $workout = $this->currentDayWorkout
                 ->where('user_workout_id', $request->user_workout_id)
-                ->with('workoutDetails')->first();
+                ->with('workoutDetails')
+                ->first();
 
-            // foreach ($workouts as $workout) {
+            // Decode workout details from JSON
             $workout->details = json_decode($workout->details, true);
-            // }
 
-            // if ($workouts->isEmpty()) {
-            //     return response()->json([
-            //         'status'   => 422,
-            //         'workouts' => $workouts,
-            //         'message'  => 'There is no workouts'
-            //     ], 422);
-            // }
+            // Initialize counters
+            $totalCompletedSets = 0;
+            $totalTimeSeconds = 0; // Time in seconds
+            $totalCompletedExercises = 0;
 
+            // Loop through workout details and calculate totals
+            foreach ($workout->details as $sets) {
+                foreach ($sets as $set) {
+                    if ($set['status'] == 'completed') {
+                        $totalCompletedSets++;
+                        $totalCompletedExercises++;
+
+                        // Convert "mm:ss" to seconds
+                        list($minutes, $seconds) = explode(':', $set['time']);
+                        $totalTimeSeconds += $minutes * 60 + $seconds;
+                    }
+                }
+            }
+
+            // Convert total time back to "mm:ss"
+            $totalMinutes = floor($totalTimeSeconds / 60);
+            $totalSeconds = $totalTimeSeconds % 60;
+            $totalTimeTaken = sprintf('%02d:%02d', $totalMinutes, $totalSeconds);
+
+            // Return the response with calculated totals
             return response()->json([
-                'status'    => 200,
-                'workouts'  => $workout,
-                'message'   => 'User workouts Fetch Successfully'
+                'status'                 => 200,
+                'workouts'               => $workout,
+                'total_completed_sets'   => $totalCompletedSets,
+                'total_time_taken'       => $totalTimeTaken,
+                'total_completed_exercises' => $totalCompletedExercises,
+                'message'                => 'User workouts Fetch Successfully'
             ], 200);
         } catch (\Exception $e) {
-            Log::error('[UserWorkoutControllerApi][fetchUserWorkout]Error fetching workouts details: ' . $e->getMessage());
+            Log::error('[UserWorkoutControllerApi][fetchCurrentDayWorkout] Error fetching workouts details: ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
                 'message' => 'Error fetching workouts details: ' . $e->getMessage()
@@ -115,14 +139,15 @@ class UserWorkoutControllerApi extends Controller
         }
     }
 
+
     public function updateCurrentWorkout(Request $request)
     {
         try {
             $request->validate([
                 'current_day_workout_id' => 'required|exists:current_day_workouts,id',
-                'set'                    => 'required', 
-                'status'                 => 'required|string', 
-                'time'                   => 'required|string',  
+                'set'                    => 'required',
+                'status'                 => 'required|string',
+                'time'                   => 'required|string',
             ]);
 
             $updateCurrentDayDetails = [

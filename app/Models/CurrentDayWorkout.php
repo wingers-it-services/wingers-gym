@@ -18,7 +18,8 @@ class CurrentDayWorkout extends Model
         'user_workout_id',
         'gym_id',
         'user_id',
-        'details'
+        'details',
+        'is_completed'
     ];
 
     public function workoutDetails()
@@ -55,6 +56,37 @@ class CurrentDayWorkout extends Model
 
     // }
 
+    // public function updateCurrentWorkout(array $updateCurrentDayDetails)
+    // {
+    //     $currentDayWorkout = $this->where('id', $updateCurrentDayDetails['current_day_workout_id'])->first();
+
+    //     if (!$currentDayWorkout) {
+    //         return false;
+    //     }
+
+    //     try {
+    //         // Decode the existing 'details' JSON field
+    //         $details = json_decode($currentDayWorkout->details, true);
+
+    //         // Update the specified set with new time and status
+    //         if (!isset($details[$updateCurrentDayDetails['set']])) {
+    //             return false; // or handle the error if the set does not exist
+    //         }
+
+    //         $details[$updateCurrentDayDetails['set']][0]['time'] = $updateCurrentDayDetails['time'];
+    //         $details[$updateCurrentDayDetails['set']][0]['status'] = $updateCurrentDayDetails['status'];
+
+    //         // Re-encode the details back to JSON
+    //         $currentDayWorkout->details = json_encode($details);
+
+    //         // Save the updated workout
+    //         return $currentDayWorkout->save();
+    //     } catch (\Throwable $e) {
+    //         Log::error('[CurrentDayWorkout][updateCurrentWorkout] Error while updating workout detail: ' . $e->getMessage());
+    //         return false;
+    //     }
+    // }
+
     public function updateCurrentWorkout(array $updateCurrentDayDetails)
     {
         $currentDayWorkout = $this->where('id', $updateCurrentDayDetails['current_day_workout_id'])->first();
@@ -75,13 +107,30 @@ class CurrentDayWorkout extends Model
             $details[$updateCurrentDayDetails['set']][0]['time'] = $updateCurrentDayDetails['time'];
             $details[$updateCurrentDayDetails['set']][0]['status'] = $updateCurrentDayDetails['status'];
 
-            // Re-encode the details back to JSON
+            // Check if all sets are completed
+            $allCompleted = true;
+            foreach ($details as $set) {
+                if ($set[0]['status'] !== 'completed') {
+                    $allCompleted = false;
+                    break;
+                }
+            }
+
+            // Update the 'details' field in the current workout
             $currentDayWorkout->details = json_encode($details);
 
             // Save the updated workout
-            return $currentDayWorkout->save();
+            $result = $currentDayWorkout->save();
+
+            // If all sets are completed, update the is_complete field in the user_workout table
+            if ($allCompleted) {
+                $this->where('id', $updateCurrentDayDetails['current_day_workout_id'])
+                    ->update(['is_complete' => true]);
+            }
+
+            return $result;
         } catch (\Throwable $e) {
-            Log::error('[Gym][updateCurrentWorkout] Error while updating workout detail: ' . $e->getMessage());
+            Log::error('[CurrentDayWorkout][updateCurrentWorkout] Error while updating workout detail: ' . $e->getMessage());
             return false;
         }
     }
