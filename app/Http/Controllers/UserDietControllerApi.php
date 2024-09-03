@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CurrentDayDiet;
 use App\Models\UserDiet;
 use App\Traits\errorResponseTrait;
 use Illuminate\Http\Request;
@@ -11,19 +12,30 @@ class UserDietControllerApi extends Controller
 {
     use errorResponseTrait;
     protected $userDiet;
+    protected $currentDayDiet;
 
     public function __construct(
         UserDiet $userDiet,
+        CurrentDayDiet $currentDayDiet
     ) {
         $this->userDiet = $userDiet;
+        $this->currentDayDiet = $currentDayDiet;
     }
 
     /**
-     * The function fetches a user's diet information and returns it in a JSON response, handling
-     * authentication, empty results, and error cases.
+     * This PHP function fetches a user's diet details based on the current day and gym ID, calculating
+     * total calories, protein, carbs, and fats consumed.
      * 
-     * @return The `fetchUserDiet` function returns a JSON response with different status codes and
-     * messages based on the outcome of fetching user diets.
+     * @param Request request The `fetchUserDiet` function is responsible for fetching diet details for
+     * a user based on the current day and gym ID provided in the request. Here's a breakdown of the
+     * function:
+     * 
+     * @return The `fetchUserDiet` function returns a JSON response with the following structure:
+     * - If the user is not authenticated, it returns a 401 status with a message 'User not
+     * authenticated'.
+     * - If there are no diets for the user on the current day, it returns a 422 status with a message
+     * 'There are no diets'.
+     * - If the diets are successfully fetched, it returns a
      */
     public function fetchUserDiet(Request $request)
     {
@@ -46,7 +58,7 @@ class UserDietControllerApi extends Controller
                 ->where('user_id', $user->id)
                 ->where('day', $currentDay)
                 ->where('gym_id', $request->gym_id)
-                ->with(['dietsDetails:id,id,image','currentDayDiet:id,user_diet_id,is_completed'])->get();
+                ->with(['dietsDetails:id,id,image', 'currentDayDiet:id,user_diet_id,is_completed'])->get();
 
             $totalCalories = 0;
             $totalProtein = 0;
@@ -59,7 +71,6 @@ class UserDietControllerApi extends Controller
                 }
                 unset($diet->dietsDetails);
 
-                // Summing up the nutritional values
                 $totalCalories += $diet->calories;
                 $totalProtein += $diet->protein;
                 $totalCarbs += $diet->carbs;
@@ -92,36 +103,56 @@ class UserDietControllerApi extends Controller
         }
     }
 
+   /**
+    * This PHP function updates the status of a user's current day diet based on the provided request
+    * data.
+    * 
+    * @param Request request The `updateUserDietStatus` function is responsible for updating the status
+    * of a user's current day diet based on the provided request parameters. Let's break down the
+    * parameters required in the request:
+    * 
+    * @return The `updateUserDietStatus` function returns a JSON response with the status code, diet
+    * information, and a message indicating the result of updating the current day diet status.
+    */
     public function updateUserDietStatus(Request $request)
     {
         try {
             $request->validate([
-                'user_diet_id' => 'required|exists:user_diets,id',
-                'is_completed' => 'required|in:0,1',
+                'current_day_diet_id' => 'required|exists:current_day_diets,id',
+                'is_completed'        => 'required|in:0,1',
             ]);
-            // Call the model method to update the diet status
-            $result = $this->userDiet->updateUserDietStatus($request->all());
-            $userDiet = $this->userDiet->find($request->user_diet_id);
-            // Handle the response
+
+            $currentDayDiet = $this->currentDayDiet->where('id', $request->current_day_diet_id)
+                ->where('user_id', auth()->user()->id)
+                ->first();
+
+            if (!$currentDayDiet) {
+                return response()->json([
+                    'status'  => 404,
+                    'message' => 'Invalid diet or diet not found'
+                ], 404);
+            }
+            $currentDayDiet->is_completed = $request->is_completed;
+            $result = $currentDayDiet->save();
+
             if ($result) {
                 return response()->json([
                     'status'  => 200,
-                    'diet'    => $userDiet,
-                    'message' => 'User diet status updated successfully'
+                    'diet'    => $currentDayDiet,
+                    'message' => 'Current day diet status updated successfully'
                 ]);
             } else {
                 return response()->json([
                     'status'  => 500,
-                    'diet'    => $userDiet,
-                    'message' => 'Failed to update user diet status'
+                    'diet'    => $currentDayDiet,
+                    'message' => 'Failed to update current day diet status'
                 ]);
             }
         } catch (\Exception $e) {
-            Log::error('[UserDietController][updateUserDietStatus] Error updating user diet status: ' . $e->getMessage());
-
+            Log::error('[UserDietController][updateUserDietStatus] Error updating current day diet status: ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
-                'message' => 'An error occurred while updating user diet status. Please try again later.' . $e->getMessage()
+                'message' => 'An error occurred while updating current day diet status. Please try again later. ' . $e->getMessage()
             ], 500);
         }
     }
