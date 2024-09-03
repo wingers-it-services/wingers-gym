@@ -18,7 +18,8 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
-                        <form class="needs-validation" action="{{route('updateStaff')}}" method="POST" enctype="multipart/form-data">
+                        <form class="needs-validation" action="{{route('updateStaff')}}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col-lg-4 order-lg-2 mb-4">
@@ -28,14 +29,17 @@
                                     <ul class="list-group mb-3">
                                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                                             <div>
-                                                <img id="selected_image" src="{{ $staffDetail->image ?? 'https://www.w3schools.com/howto/img_avatar.png' }} " style="border-radius: 50%;width: 200px;height:200px">
+                                                <img id="selected_image"
+                                                    src="{{ $staffDetail->image ?? 'https://www.w3schools.com/howto/img_avatar.png' }} "
+                                                    style="border-radius: 50%;width: 200px;height:200px">
                                             </div>
                                         </li>
 
                                     </ul>
                                     <div class="row">
                                         <div class="input-group">
-                                            <input class="form-control form-control-sm" id="image" name="image" onchange="loadFile(event)" accept="image/*" type="file">
+                                            <input class="form-control form-control-sm" id="image" name="image"
+                                                onchange="loadFile(event)" accept="image/*" type="file">
                                         </div>
                                     </div>
 
@@ -43,7 +47,9 @@
                                         <label for="address">Address</label>
 
                                         <div class="input-group">
-                                            <textarea type="text" class="form-control form-control-sm" rows="10" id="address" name="address" required="">{{ $staffDetail->address }}</textarea>
+                                            <textarea type="text" class="form-control form-control-sm" rows="10"
+                                                id="address" name="address"
+                                                required="">{{ $staffDetail->address }}</textarea>
                                         </div>
                                         <div class="invalid-feedback">
                                             Please enter your shipping address.
@@ -53,11 +59,13 @@
                                 </div>
                                 <div class="col-lg-8 order-lg-1">
                                     <h4 class="mb-3">Staff Details</h4>
-                                    <input type="hidden" class="form-control" id="uuid" name="uuid" placeholder="" value="{{ $staffDetail->uuid }}">
+                                    <input type="hidden" class="form-control" id="uuid" name="uuid" placeholder=""
+                                        value="{{ $staffDetail->uuid }}">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="name">Staff Name</label>
-                                            <input type="text" class="form-control" id="full_name" name="full_name" placeholder="" value="{{ $staffDetail->name }}" required="">
+                                            <input type="text" class="form-control" id="full_name" name="full_name"
+                                                placeholder="" value="{{ $staffDetail->name }}" required="">
                                             <div class="invalid-feedback">
                                                 Valid first name is required.
                                             </div>
@@ -65,7 +73,8 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="employee_id">Staff Emp Id</label>
-                                            <input type="text" class="form-control" id="employee_id" name="employee_id" placeholder="" value="{{ $staffDetail->employee_id }}" required="">
+                                            <input type="text" class="form-control" id="employee_id" name="employee_id"
+                                                placeholder="" value="{{ $staffDetail->employee_id }}" required="">
                                             <div class="invalid-feedback">
                                                 Valid first name is required.
                                             </div>
@@ -75,17 +84,22 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="gender">Gender</label>
-                                            <select class="me-sm-2 form-control default-select" id="gender" name="gender">
+                                            <select class="me-sm-2 form-control default-select" id="gender"
+                                                name="gender">
                                                 <option value="">Choose...</option>
-                                                <option {{ $staffDetail->gender == 'male' ? 'selected' : '' }} value="male">Male</option>
-                                                <option {{ $staffDetail->gender == 'female' ? 'selected' : '' }} value="female">Female</option>
-                                                <option {{ $staffDetail->gender == 'Other' ? 'selected' : '' }} value="Other">Other</option>
+                                                <option {{ $staffDetail->gender == 'male' ? 'selected' : '' }}
+                                                    value="male">Male</option>
+                                                <option {{ $staffDetail->gender == 'female' ? 'selected' : '' }}
+                                                    value="female">Female</option>
+                                                <option {{ $staffDetail->gender == 'Other' ? 'selected' : '' }}
+                                                    value="Other">Other</option>
                                             </select>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="employee_id">Experience in Years</label>
-                                            <input type="text" class="form-control" id="experience" name="experience" placeholder="" value="{{ $staffDetail->experience }}" required="">
+                                            <input type="text" class="form-control" id="experience" name="experience"
+                                                placeholder="" value="{{ $staffDetail->experience }}" required="">
                                             <div class="invalid-feedback">
                                                 Valid experience year is required.
                                             </div>
@@ -95,7 +109,8 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="email">Email <span class="text-muted">(Optional)</span></label>
-                                            <input type="email" class="form-control" id="email" name="email" value="{{ $staffDetail->email }}">
+                                            <input type="email" class="form-control" id="email" name="email"
+                                                value="{{ $staffDetail->email }}">
                                             <div class="invalid-feedback">
                                                 Please enter a valid email address for shipping updates.
                                             </div>
@@ -103,29 +118,37 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="number">Phone Number</label>
-                                            <input type="text" class="form-control" id="number" name="phone_number" placeholder="" value="{{ $staffDetail->number }}" required="">
+                                            <input type="text" class="form-control" id="number" name="phone_number"
+                                                placeholder="" value="{{ $staffDetail->number }}" required="">
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="text-label">Date Of Birth<span class="required">*</span></label>
-                                            <input type="date" name="dob" id="dob" class="form-control" value="{{$staffDetail->dob}}">
+                                            <label class="text-label">Date Of Birth<span
+                                                    class="required">*</span></label>
+                                            <input type="date" name="dob" id="dob" class="form-control"
+                                                value="{{$staffDetail->dob}}">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="text-label">Whatsapp Number<span class="required">*</span></label>
-                                            <input type="text" name="whatsapp_no" id="whatsapp_no" class="form-control" value="{{$staffDetail->whatsapp_no}}" placeholder="(+1)408-657-9007">
+                                            <label class="text-label">Whatsapp Number<span
+                                                    class="required">*</span></label>
+                                            <input type="text" name="whatsapp_no" id="whatsapp_no" class="form-control"
+                                                value="{{$staffDetail->whatsapp_no}}" placeholder="(+1)408-657-9007">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="joining_date">Staff Joining Date</label>
-                                            <input type="text" class="form-control" id="joining_date" name="joining_date" placeholder="" value="{{ $staffDetail->joining_date }}" required="">
+                                            <input type="text" class="form-control" id="joining_date"
+                                                name="joining_date" placeholder=""
+                                                value="{{ $staffDetail->joining_date }}" required="">
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="salary">Staff Salary</label>
-                                            <input type="text" class="form-control" id="salary" name="salary" placeholder="" value="{{ $staffDetail->salary }}" required="">
+                                            <input type="text" class="form-control" id="salary" name="salary"
+                                                placeholder="" value="{{ $staffDetail->salary }}" required="">
                                         </div>
                                     </div>
 
@@ -133,26 +156,38 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="blood_group">Staff Blood Group</label>
-                                            <select class="me-sm-2 form-control default-select" id="blood_group" name="blood_group">
-                                                <option {{ $staffDetail->blood_group == 'A+' ? 'selected' : '' }} value="A+">A+</option>
-                                                <option {{ $staffDetail->blood_group == 'A-' ? 'selected' : '' }} value="A-">A-</option>
-                                                <option {{ $staffDetail->blood_group == 'B+' ? 'selected' : '' }} value="B+">B+</option>
-                                                <option {{ $staffDetail->blood_group == 'B-' ? 'selected' : '' }} value="B-">B-</option>
-                                                <option {{ $staffDetail->blood_group == 'AB+' ? 'selected' : '' }} value="AB+">AB+</option>
-                                                <option {{ $staffDetail->blood_group == 'AB-' ? 'selected' : '' }} value="AB-">AB-</option>
-                                                <option {{ $staffDetail->blood_group == 'O+' ? 'selected' : '' }} value="O+">O+</option>
-                                                <option {{ $staffDetail->blood_group == 'O-' ? 'selected' : '' }} value="O-">O-</option>
+                                            <select class="me-sm-2 form-control default-select" id="blood_group"
+                                                name="blood_group">
+                                                <option {{ $staffDetail->blood_group == 'A+' ? 'selected' : '' }}
+                                                    value="A+">A+</option>
+                                                <option {{ $staffDetail->blood_group == 'A-' ? 'selected' : '' }}
+                                                    value="A-">A-</option>
+                                                <option {{ $staffDetail->blood_group == 'B+' ? 'selected' : '' }}
+                                                    value="B+">B+</option>
+                                                <option {{ $staffDetail->blood_group == 'B-' ? 'selected' : '' }}
+                                                    value="B-">B-</option>
+                                                <option {{ $staffDetail->blood_group == 'AB+' ? 'selected' : '' }}
+                                                    value="AB+">AB+</option>
+                                                <option {{ $staffDetail->blood_group == 'AB-' ? 'selected' : '' }}
+                                                    value="AB-">AB-</option>
+                                                <option {{ $staffDetail->blood_group == 'O+' ? 'selected' : '' }}
+                                                    value="O+">O+</option>
+                                                <option {{ $staffDetail->blood_group == 'O-' ? 'selected' : '' }}
+                                                    value="O-">O-</option>
                                             </select>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="designation_id">Staff Designation</label>
-                                            <select class="me-sm-2 form-control default-select" id="designation" name="designation">
+                                            <select class="me-sm-2 form-control default-select" id="designation"
+                                                name="designation">
                                                 <option selected>Choose...</option>
                                                 @foreach ($designations as $designation)
-                                                <option value="{{ $designation->id }}" data-is-commission-based="{{ $designation->is_commission_based }}" {{ $staffDetail->designation_id == $designation->id ? 'selected' : '' }} >
-                                                    {{ $designation->designation_name }}
-                                                </option>
+                                                    <option value="{{ $designation->id }}"
+                                                        data-is-commission-based="{{ $designation->is_commission_based }}"
+                                                        {{ $staffDetail->designation_id == $designation->id ? 'selected' : '' }}>
+                                                        {{ $designation->designation_name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                             <div class="invalid-feedback">
@@ -162,20 +197,29 @@
                                         <div class="col-lg-4 mb-2" id="fees-field">
                                             <div class="form-group">
                                                 <label class="text-label">Fees<span class="required">*</span></label>
-                                                <input type="number" name="fees" id="fees" placeholder="10000" value="{{$staffDetail->fees}}" class="form-control">
+                                                <input type="number" name="fees" id="fees" placeholder="10000"
+                                                    value="{{$staffDetail->fees}}" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-lg-4 mb-2" id="staff-commission-field">
                                             <div class="form-group">
-                                                <label class="text-label">Staff Commission (in %) <span class="required">*</span></label>
-                                                <input type="number" name="staff_commission" id="staff_commission" value="{{$staffDetail->staff_commission}}" placeholder="20" class="form-control" step="0.01" max=100>
-                                                <small id="staff-commission-error" style="color: red; display: none;">Staff commission cannot be greater than 100%</small>
+                                                <label class="text-label">Staff Commission (in %) <span
+                                                        class="required">*</span></label>
+                                                <input type="number" name="staff_commission" id="staff_commission"
+                                                    value="{{$staffDetail->staff_commission}}" placeholder="20"
+                                                    class="form-control" step="0.01" max=100>
+                                                <small id="staff-commission-error"
+                                                    style="color: red; display: none;">Staff commission cannot be
+                                                    greater than 100%</small>
                                             </div>
                                         </div>
                                         <div class="col-lg-4 mb-2" id="gym-commission-field">
                                             <div class="form-group">
-                                                <label class="text-label">Gym Commission (in %)<span class="required">*</span></label>
-                                                <input type="number" name="gym_commission" id="gym_commission" value="{{$staffDetail->gym_commission}}" placeholder="80" class="form-control" readonly>
+                                                <label class="text-label">Gym Commission (in %)<span
+                                                        class="required">*</span></label>
+                                                <input type="number" name="gym_commission" id="gym_commission"
+                                                    value="{{$staffDetail->gym_commission}}" placeholder="80"
+                                                    class="form-control" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -197,14 +241,14 @@
                     Content body end
                 ***********************************-->
 <script>
-    var loadFile = function(event) {
+    var loadFile = function (event) {
         // var selected_image = document.getElementById('selected_image');
 
         var input = event.target;
         var image = document.getElementById('selected_image');
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 image.src = e.target.result;
             }
             reader.readAsDataURL(input.files[0]);
@@ -219,7 +263,7 @@
         }
 
     };
-    (function() {
+    (function () {
         'use strict'
 
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -227,8 +271,8 @@
 
         // Loop over them and prevent submission
         Array.prototype.slice.call(forms)
-            .forEach(function(form) {
-                form.addEventListener('submit', function(event) {
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
                     if (!form.checkValidity()) {
                         event.preventDefault()
                         event.stopPropagation()
@@ -239,12 +283,15 @@
             })
     })()
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const staffCommissionInput = document.getElementById('staff_commission');
         const gymCommissionInput = document.getElementById('gym_commission');
         const errorMessage = document.getElementById('staff-commission-error');
+        const designationSelect = document.getElementById('designation');
+        const feesInput = document.getElementById('fees');
 
-        staffCommissionInput.addEventListener('input', function() {
+        // Handle Staff Commission Input
+        staffCommissionInput.addEventListener('input', function () {
             let staffCommissionValue = parseFloat(staffCommissionInput.value) || 0;
 
             // Check if the value is greater than 100
@@ -259,36 +306,44 @@
                 gymCommissionInput.value = gymCommissionValue;
             }
         });
+
+        // Handle Designation Change
+        designationSelect.addEventListener('change', function () {
+            // Reset the inputs
+            feesInput.value = '';
+            staffCommissionInput.value = '';
+            gymCommissionInput.value = '';
+            errorMessage.style.display = 'none'; // Hide error message
+        });
     });
+    document.addEventListener('DOMContentLoaded', function () {
+        const designationSelect = document.getElementById('designation');
+        const feesField = document.getElementById('fees-field');
+        const staffCommissionField = document.getElementById('staff-commission-field');
+        const gymCommissionField = document.getElementById('gym-commission-field');
 
-    document.addEventListener('DOMContentLoaded', function() {
-		const designationSelect = document.getElementById('designation');
-		const feesField = document.getElementById('fees-field');
-		const staffCommissionField = document.getElementById('staff-commission-field');
-		const gymCommissionField = document.getElementById('gym-commission-field');
+        // Function to toggle fields based on commission-based value
+        function toggleFields() {
+            const selectedOption = designationSelect.options[designationSelect.selectedIndex];
+            const isCommissionBased = selectedOption ? selectedOption.getAttribute('data-is-commission-based') === '1' : false;
 
-		// Function to toggle fields based on commission-based value
-		function toggleFields() {
-			const selectedOption = designationSelect.options[designationSelect.selectedIndex];
-			const isCommissionBased = selectedOption ? selectedOption.getAttribute('data-is-commission-based') === '1' : false;
+            if (isCommissionBased) {
+                feesField.style.display = 'block';
+                staffCommissionField.style.display = 'block';
+                gymCommissionField.style.display = 'block';
+            } else {
+                feesField.style.display = 'none';
+                staffCommissionField.style.display = 'none';
+                gymCommissionField.style.display = 'none';
+            }
+        }
 
-			if (isCommissionBased) {
-				feesField.style.display = 'block';
-				staffCommissionField.style.display = 'block';
-				gymCommissionField.style.display = 'block';
-			} else {
-				feesField.style.display = 'none';
-				staffCommissionField.style.display = 'none';
-				gymCommissionField.style.display = 'none';
-			}
-		}
+        // Initialize visibility based on the initially selected option
+        toggleFields();
 
-		// Initialize visibility based on the initially selected option
-		toggleFields();
-
-		// Add event listener to handle changes
-		designationSelect.addEventListener('change', toggleFields);
-	});
+        // Add event listener to handle changes
+        designationSelect.addEventListener('change', toggleFields);
+    });
 </script>
 @include('CustomSweetAlert');
 @endsection

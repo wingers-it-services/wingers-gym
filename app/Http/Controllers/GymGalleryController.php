@@ -20,8 +20,8 @@ class GymGalleryController extends Controller
     {
         $status = null;
         $message = null;
-        $gymGalleryFiles=$this->gymGallery->all();
-        return view('GymOwner.gym-gallery', compact('status', 'message','gymGalleryFiles'));
+        $gymGalleryFiles = $this->gymGallery->all();
+        return view('GymOwner.gym-gallery', compact('status', 'message', 'gymGalleryFiles'));
     }
 
     /**
@@ -40,22 +40,38 @@ class GymGalleryController extends Controller
     public function addGymGallery(Request $request)
     {
         try {
+            // Validate the files
             $request->validate([
-                "upload_file" => 'required|mimes:jpeg,jpg,png,gif,mp4,mov,avi'
+                'upload_file.*' => 'required|file|mimes:jpeg,jpg,png,gif,mp4,mov,avi,webp,avif|max:20480', // Adjust max size as needed
             ]);
 
             $gym = Auth::guard('gym')->user();
-            $galleryFile = $request->file('upload_file');
-            $filename = time() . '_' . $galleryFile->getClientOriginalName();
-            $imagePath = 'gymGallery_files/' . $filename;
-            $galleryFile->move(public_path('gymGallery_files/'), $filename);
+            $files = $request->file('upload_file'); // Get the array of files
 
-            $this->gymGallery->addGymGallery($gym->id, $imagePath);
+            // Loop through each file and process
+            foreach ($files as $file) {
+                // Generate a unique filename and move the file
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $filePath = 'gymGallery_files/' . $filename;
+                $file->move(public_path('gymGallery_files/'), $filename);
 
-            return redirect()->back()->with('status', 'success')->with('message', 'File added successfully.');
+                // Save the file information to the database
+                $this->gymGallery->addGymGallery($gym->id, $filePath);
+            }
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Files added successfully.');
         } catch (\Throwable $th) {
+            // Log error and return a response with error message
             Log::error("[GymGalleryController][addGymGallery] error " . $th->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Error while adding files.');
         }
+    }
+
+    public function deleteGallery($itemId)
+    {
+        $galleryItem = $this->gymGallery->findOrFail($itemId);
+        $galleryItem->delete();
+
+        return redirect()->back()->with('status', 'success')->with('message', 'Gallery Item Is Succesfully Deleted!');
     }
 }

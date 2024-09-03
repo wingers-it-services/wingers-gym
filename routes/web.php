@@ -81,7 +81,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     /* dashboard */
     Route::get('/dashboard', [GymDetailController::class, 'showDashboard'])->name('dashboard');
-    Route::get('/logout', [GymDetailController::class, 'logouGymUser'])->name('logout');
+    Route::get('/logout', [GymDetailController::class, 'logoutGym'])->name('logout');
 
     // Route::get('/viewGymInfo', [AdminGymController::class, 'viewGymInfo']);
 
@@ -245,7 +245,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/gym-profile', [GymDetailController::class, 'GymProfileView']);
 
     Route::post('/add-gym-gallery', [GymGalleryController::class, 'addGymGallery'])->name('addGymGallery');
-
+    Route::get('/delete-gallery/{id}', [GymGalleryController::class, 'deleteGallery'])->name('delete-gallery');
     Route::get('/gym-gallery', [GymGalleryController::class, 'gymGalleryView']);
 
 

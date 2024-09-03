@@ -78,10 +78,12 @@ class GymDetailController extends Controller
         }
     }
 
-    public function logouGymUser()
+    public function logoutGym()
     {
         session()->flush();
-        return redirect()->route('login');
+
+        return redirect()->route('login')->with('status', 'success')->with('message', 'Logout successfully');
+
     }
 
     public function registerGym(Request $request)
@@ -95,7 +97,7 @@ class GymDetailController extends Controller
 
             $gymUser = $this->gymService->createGymAccount($request->all());
             if ($gymUser) {
-                return redirect()->route('login')->with('success', 'Gym Registered Succesfully.');
+                return redirect()->route('login')->with('status','success')->with('message', 'Gym Registered Succesfully.');
             }
             return redirect()->route('register')->with('status', 'error')->with('message', 'error in register gym.');
         } catch (Exception $e) {
