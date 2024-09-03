@@ -46,7 +46,7 @@ class UserDietControllerApi extends Controller
                 ->where('user_id', $user->id)
                 ->where('day', $currentDay)
                 ->where('gym_id', $request->gym_id)
-                ->with('dietsDetails:id,id,image')->get();
+                ->with(['dietsDetails:id,id,image','currentDayDiet:id,user_diet_id,is_completed'])->get();
 
             $totalCalories = 0;
             $totalProtein = 0;

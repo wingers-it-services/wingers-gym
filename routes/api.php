@@ -93,8 +93,10 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/fetch-trainer', [GymUserTrainerControllerApi::class, 'fetchUserTrainer']);
 
     Route::post('/fetch-gym-details', [GymDetailControllerApi::class, 'fetchGymDetails']);
-
+    
     Route::post('/fetch-gym-gallery', [GymGalleryControllerApi::class, 'fetchGallery']);
+    
+    Route::post('/fetch-workout-count', [UserWorkoutControllerApi::class, 'fetchTotalCompletedCounts']);
 });
 
 
