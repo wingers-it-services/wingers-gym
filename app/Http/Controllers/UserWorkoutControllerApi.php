@@ -40,10 +40,11 @@ class UserWorkoutControllerApi extends Controller
             $user = auth()->user();
             $currentDay = strtolower(now()->format('l'));
 
+            // Fetch workouts for the current day, gym, and user
             $workouts = $this->userWorkout->where('user_id', $user->id)
                 ->where('day', $currentDay)
                 ->where('gym_id', $request->gym_id)
-                ->with('workoutDetails:id,id,category,image')
+                ->with(['workoutDetails:id,id,category,image', 'currentDayWorkout:id,user_workout_id,is_completed'])
                 ->get();
 
             foreach ($workouts as $workout) {
@@ -52,6 +53,9 @@ class UserWorkoutControllerApi extends Controller
                     $workout->image = $workout->workoutDetails->image;
                 }
 
+                // Include the is_completed field in the response
+                $workout->is_completed = $workout->currentDayWorkout ? $workout->currentDayWorkout->is_completed : false;
+
                 unset($workout->workoutDetails);
             }
 
@@ -59,23 +63,24 @@ class UserWorkoutControllerApi extends Controller
                 return response()->json([
                     'status'   => 422,
                     'workouts' => $workouts,
-                    'message'  => 'There is no workouts'
+                    'message'  => 'There are no workouts'
                 ], 422);
             }
 
             return response()->json([
                 'status'    => 200,
                 'workouts'  => $workouts,
-                'message'   => 'User workouts Fetch Successfully'
+                'message'   => 'User workouts fetched successfully'
             ], 200);
         } catch (\Exception $e) {
-            Log::error('[UserWorkoutControllerApi][fetchUserWorkout]Error fetching workouts details: ' . $e->getMessage());
+            Log::error('[UserWorkoutControllerApi][fetchUserWorkout] Error fetching workout details: ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
-                'message' => 'Error fetching workouts details: ' . $e->getMessage()
+                'message' => 'Error fetching workout details: ' . $e->getMessage()
             ], 500);
         }
     }
+
 
     public function fetchCurrentDayWorkout(Request $request)
     {
@@ -180,6 +185,83 @@ class UserWorkoutControllerApi extends Controller
             return response()->json([
                 'status'  => 500,
                 'message' => 'An error occurred while updating workout details. Please try again later.' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function fetchTotalCompletedCounts(Request $request)
+    {
+        try {
+            $request->validate([
+                'gym_id'   => 'required',
+                'gym_id.*' => 'exists:gyms,id'
+            ]);
+
+            $user = auth()->user();
+            $currentDay = strtolower(now()->format('l'));
+
+            // Fetch all workouts for the current day
+            $workouts = $this->userWorkout->where('user_id', $user->id)
+                ->where('day', $currentDay)
+                ->where('gym_id', $request->gym_id)
+                ->with(['workoutDetails', 'currentDayWorkout'])
+                ->get();
+
+            $totalCompletedWorkouts = 0;
+            $totalCompletedSets = 0;
+            $totalTimeTaken = 0; // Initialize total time taken
+
+            foreach ($workouts as $workout) {
+                // Check if the current workout is completed
+                if ($workout->currentDayWorkout && $workout->currentDayWorkout->is_completed) {
+                    $totalCompletedWorkouts++;
+                }
+
+                // Process the details field to calculate completed sets and total time
+                if ($workout->currentDayWorkout && $workout->currentDayWorkout->details) {
+                    $details = json_decode($workout->currentDayWorkout->details, true);
+
+                    foreach ($details as $set) {
+                        foreach ($set as $setDetails) {
+                            if ($setDetails['status'] === 'completed') {
+                                $totalCompletedSets++;
+
+                                // Calculate total time taken for completed sets
+                                $timeParts = explode(':', $setDetails['time']);
+                                $totalTimeTaken += $timeParts[0] * 60 + $timeParts[1]; // Convert time to minutes
+                            }
+                        }
+                    }
+                }
+
+                if ($workout->workoutDetails) {
+                    $workout->category = $workout->workoutDetails->category;
+                    $workout->image = $workout->workoutDetails->image;
+                }
+
+                unset($workout->workoutDetails);
+            }
+
+            if ($workouts->isEmpty()) {
+                return response()->json([
+                    'status'   => 422,
+                    'workouts' => $workouts,
+                    'message'  => 'There are no workouts'
+                ], 422);
+            }
+
+            return response()->json([
+                'status'                   => 200,
+                'total_completed_workouts' => $totalCompletedWorkouts,
+                'total_completed_sets'     => $totalCompletedSets,
+                'total_time_taken'         => $totalTimeTaken . ' seconds', // Return total time in minutes
+                'message'                  => 'User workouts count fetched successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('[UserWorkoutControllerApi][fetchTotalCompletedCounts] Error fetching workout details: ' . $e->getMessage());
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Error fetching workout details: ' . $e->getMessage()
             ], 500);
         }
     }

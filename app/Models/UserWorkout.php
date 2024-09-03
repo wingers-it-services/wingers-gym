@@ -31,6 +31,11 @@ class UserWorkout extends Model
         return $this->belongsTo(Workout::class, 'workout_id');
     }
 
+    public function currentDayWorkout()
+    {
+        return $this->hasOne(CurrentDayWorkout::class, 'user_workout_id');
+    }
+
     public function addWorkout(array $addWorkout, $gym_id)
     {
         try {

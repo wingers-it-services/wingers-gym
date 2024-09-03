@@ -35,6 +35,11 @@ class UserDiet extends Model
         return $this->belongsTo(Diet::class, 'diet_id');
     }
 
+    public function currentDayDiet()
+    {
+        return $this->hasOne(CurrentDayDiet::class, 'user_diet_id');
+    }
+
     public function addUserDiet(array $addDiet, $gym_id)
     {
         try {

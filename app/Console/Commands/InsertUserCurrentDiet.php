@@ -39,14 +39,14 @@ class InsertUserCurrentDiet extends Command
             foreach ($userDiets as $userDiet) {
                 // Prepare the details array for all meals
                 $detailsArray = [
-                    'meal_name' => $userDiet->meal_name,
-                    'diet_description' => $userDiet->diet_description,
+                    'meal_name'                    => $userDiet->meal_name,
+                    'diet_description'             => $userDiet->diet_description,
                     'alternative_diet_description' => $userDiet->alternative_diet_description,
-                    'carbs' => $userDiet->carbs,
-                    'fats' => $userDiet->fats,
-                    'protein' => $userDiet->protein,
-                    'calories' => $userDiet->calories,
-                    'status'   => 'not completed'
+                    'carbs'                        => $userDiet->carbs,
+                    'fats'                         => $userDiet->fats,
+                    'protein'                      => $userDiet->protein,
+                    'calories'                     => $userDiet->calories,
+                    'status'                       => 'not completed'
                 ];
 
                 // Convert the details array to JSON
@@ -54,14 +54,15 @@ class InsertUserCurrentDiet extends Command
 
                 // Insert the diet into the CurrentDayDiet table
                 CurrentDayDiet::create([
-                    'diet_id' => $userDiet->diet_id,
-                    'user_diet_id' => $userDiet->id,
-                    'gym_id' => $userDiet->gym_id,
-                    'user_id' => $userDiet->user_id,
-                    'details' => $detailsJson, // Store JSON-encoded details
-                    'total_fats' => $userDiet->fats,
-                    'total_carbs' => $userDiet->carbs,
-                    'total_protein' => $userDiet->protein,
+                    'diet_id'        => $userDiet->diet_id,
+                    'user_diet_id'   => $userDiet->id,
+                    'user_diet_id'   => $userDiet->id,
+                    'gym_id'         => $userDiet->gym_id,
+                    'user_id'        => $userDiet->user_id,
+                    'details'        => $detailsJson, 
+                    'total_fats'     => $userDiet->fats,
+                    'total_carbs'    => $userDiet->carbs,
+                    'total_protein'  => $userDiet->protein,
                     'total_calories' => $userDiet->calories
                 ]);
             }
