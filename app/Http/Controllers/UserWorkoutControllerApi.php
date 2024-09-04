@@ -41,21 +41,28 @@ class UserWorkoutControllerApi extends Controller
             $currentDay = strtolower(now()->format('l'));
 
             // Fetch workouts for the current day, gym, and user
-            $workouts = $this->userWorkout->where('user_id', $user->id)
-                ->where('day', $currentDay)
-                ->where('gym_id', $request->gym_id)
-                ->with(['workoutDetails:id,id,category,image', 'currentDayWorkout:id,user_workout_id,is_completed'])
-                ->get();
+            // $workouts = $this->userWorkout->where('user_id', $user->id)
+            //     ->where('day', $currentDay)
+            //     ->where('gym_id', $request->gym_id)
+            //     ->with(['workoutDetails:id,id,category,image', 'currentDayWorkout:id,user_workout_id,is_completed'])
+            //     ->get();
+
+            $workouts = CurrentDayWorkout::whereHas('userWorkout', function ($query) use ($user, $currentDay, $request) {
+                $query->where('user_id', $user->id)
+                      ->where('gym_id', $request->gym_id);
+            })
+            ->with(['userWorkout.workoutDetails:id,id,category,image'])
+            ->get();
+        
 
             foreach ($workouts as $workout) {
                 if ($workout->workoutDetails) {
+                    $workout->exercise_name = $workout->workoutDetails->name;
                     $workout->category = $workout->workoutDetails->category;
                     $workout->image = $workout->workoutDetails->image;
                 }
 
-                // Include the is_completed field in the response
-                $workout->is_completed = $workout->currentDayWorkout ? $workout->currentDayWorkout->is_completed : false;
-
+              
                 unset($workout->workoutDetails);
             }
 

@@ -20,6 +20,11 @@ class CurrentDayDiet extends Model
         'total_calories'
     ];
 
+    public function userDiet()
+    {
+        return $this->belongsTo(UserDiet::class, 'user_diet_id');
+    }
+
     protected static function boot()
     {
         parent::boot();

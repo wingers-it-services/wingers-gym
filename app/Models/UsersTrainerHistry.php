@@ -21,7 +21,6 @@ class UsersTrainerHistry extends Model
         'trainer_id',
         'status'
     ];
-
     
     protected static function boot()
     {

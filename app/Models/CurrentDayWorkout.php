@@ -27,6 +27,11 @@ class CurrentDayWorkout extends Model
         return $this->belongsTo(Workout::class, 'workout_id');
     }
 
+    public function userWorkout()
+    {
+        return $this->belongsTo(UserWorkout::class, 'user_workout_id');
+    }
+
     protected static function boot()
     {
         parent::boot();
