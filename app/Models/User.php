@@ -271,7 +271,8 @@ class User extends Authenticatable
     public function updateUserProfile(array $userDetail)
     {
         try {
-            $userProfile = User::where('uuid', $userDetail['uuid'])->first();
+            $user = auth()->user();
+            $userProfile = User::find($user->id);
 
             // Check if the user exists
             if (!$userProfile) {
@@ -285,14 +286,51 @@ class User extends Authenticatable
                 'firstname'       => $userDetail['firstname'],
                 'lastname'        => $userDetail['lastname'],
                 'email'           => $userDetail['email'],
-                'gender'          => $userDetail['gender'],
                 'phone_no'        => $userDetail['phone_no'],
-                'password'        => $userDetail['password'],
+                'gender'          => $userDetail['gender'],
                 'dob'             => $userDetail['dob'],
                 'height'          => $userDetail['height'],
                 'weight'          => $userDetail['weight'],
                 'days'            => $userDetail['days']
             ]);
+
+            if (isset($userDetail['image'])) {
+                if ($userProfile->image && file_exists(public_path($userProfile->image))) {
+                    unlink(public_path($userProfile->image));
+                }
+
+                $imagePath = 'admin_user_images/';
+                $imageName = time() . '_' . $userDetail['image']->getClientOriginalName();
+                $userDetail['image']->move(public_path($imagePath), $imageName);
+
+                $userProfile->image = $imagePath . $imageName;
+            }
+
+            if (isset($userDetail['injury_ids']) && is_array($userDetail['injury_ids'])) {
+                foreach ($userDetail['injury_ids'] as $injuryId) {
+                    UserInjury::updateOrCreate(
+                        [
+                            'user_id'   => $userProfile->id,
+                            'injury_id' => $injuryId
+                        ]
+                    );
+                }
+            }
+
+            if (!empty($userDetail['goals'])) {
+                foreach ($userDetail['goals'] as $goalId) {
+                    $existingGoal = GoalUser::where('user_id', $userProfile->id)
+                        ->where('goal_id', $goalId)
+                        ->first();
+                    if (!$existingGoal) {
+                        GoalUser::create([
+                            'user_id' => $userProfile->id,
+                            'goal_id' => $goalId
+                        ]);
+                    }
+                }
+            }
+
             return [
                 'status'  => 200,
                 'message' => 'Profile updated successfully',
