@@ -8,7 +8,7 @@
 <div class="content-body ">
 	<div class="container-fluid">
 		<div class="page-titles">
-			<ol class="breadcrumb">
+		<ol class="breadcrumb">
 				<li class="breadcrumb-item active"><a href="javascript:void(0)">Add </a></li>
 				<li class="breadcrumb-item active"><a href="javascript:void(0)">New Member Details</a></li>
 			</ol>
@@ -124,7 +124,7 @@
 											<select class="me-sm-2 form-control default-select" id="staff_assign_id"
 												name="staff_assign_id">
 												@foreach ($gymStaff as $staff)
-													<option value="{{ $staff->id }}">{{ $staff->designation_name}}</option>
+												<option value="{{ $staff->id }}">{{ $staff->designation_name}}</option>
 												@endforeach
 											</select>
 											<div class="invalid-feedback">
@@ -206,12 +206,12 @@
 													<option value="" data-description="" data-amount=""
 														data-validity="">-- Select Subscription --</option>
 													@foreach ($gymSubscriptions as $subscription)
-														<option value="{{ $subscription->id }}"
-															data-description="{{ $subscription->description }}"
-															data-amount="{{ $subscription->amount }}"
-															data-validity="{{ $subscription->validity }}">
-															{{ $subscription->subscription_name }}
-														</option>
+													<option value="{{ $subscription->id }}"
+														data-description="{{ $subscription->description }}"
+														data-amount="{{ $subscription->amount }}"
+														data-validity="{{ $subscription->validity }}">
+														{{ $subscription->subscription_name }}
+													</option>
 													@endforeach
 												</select>
 											</div>
@@ -286,14 +286,14 @@
 			toggleIcon.classList.add('fa-eye-slash');
 		}
 	}
-	var loadFile = function (event) {
+	var loadFile = function(event) {
 		// var selected_image = document.getElementById('selected_image');
 
 		var input = event.target;
 		var image = document.getElementById('selected_image');
 		if (input.files && input.files[0]) {
 			var reader = new FileReader();
-			reader.onload = function (e) {
+			reader.onload = function(e) {
 				image.src = e.target.result;
 			}
 			reader.readAsDataURL(input.files[0]);
@@ -308,7 +308,7 @@
 		}
 
 	};
-	(function () {
+	(function() {
 		'use strict'
 
 		// Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -316,8 +316,8 @@
 
 		// Loop over them and prevent submission
 		Array.prototype.slice.call(forms)
-			.forEach(function (form) {
-				form.addEventListener('submit', function (event) {
+			.forEach(function(form) {
+				form.addEventListener('submit', function(event) {
 					if (!form.checkValidity()) {
 						event.preventDefault()
 						event.stopPropagation()
@@ -328,7 +328,7 @@
 			})
 	})()
 
-	document.getElementById('subscription_id').addEventListener('change', function () {
+	document.getElementById('subscription_id').addEventListener('change', function() {
 		var selectedOption = this.options[this.selectedIndex];
 		var description = selectedOption.getAttribute('data-description');
 		var amount = selectedOption.getAttribute('data-amount');
@@ -345,7 +345,7 @@
 		}
 	});
 
-	document.getElementById('subscription_start_date').addEventListener('change', function () {
+	document.getElementById('subscription_start_date').addEventListener('change', function() {
 		var selectedOption = document.getElementById('subscription_id').options[document.getElementById('subscription_id').selectedIndex];
 		var validity = selectedOption.getAttribute('data-validity');
 
@@ -369,13 +369,13 @@
 		}
 	}
 
-	document.addEventListener('DOMContentLoaded', function () {
+	document.addEventListener('DOMContentLoaded', function() {
 		const button = document.getElementById('continue');
 		const userDetailsFormContainer = document.getElementById('user-details-form');
 		const userCardsContainer = document.getElementById('user-cards-container');
 		const subDetailContainer = document.getElementById('sub-cards-container');
 
-		button.addEventListener('click', function () {
+		button.addEventListener('click', function() {
 			const email = document.getElementById('email').value;
 			const phone_no = document.getElementById('phone_no').value;
 
@@ -427,7 +427,7 @@
             `;
 
 				// Add click event listener to the card
-				card.addEventListener('click', function () {
+				card.addEventListener('click', function() {
 					autofillForm(user);
 					userDetailsFormContainer.style.display = 'block'; // Show form when a card is clicked
 					subDetailContainer.style.display = 'block'; // Show form when a card is clicked
@@ -446,7 +446,9 @@
 
 		function showUserDetailsForm() {
 			// Reset and show the user details form
-			autofillForm({ clear: true }); // Pass an option to clear only certain fields
+			autofillForm({
+				clear: true
+			}); // Pass an option to clear only certain fields
 			userDetailsFormContainer.style.display = 'block'; // Ensure the form is visible
 			subDetailContainer.style.display = 'block'; // Ensure the form is visible
 

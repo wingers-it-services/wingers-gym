@@ -80,15 +80,33 @@ class GymUserController extends Controller
         $gymUser = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
         $users = $this->user->where('gym_id', $gymId)->get();
-        // Iterate over each user and calculate the remaining days
-        foreach ($users as $user) {
-            $start_date = strtotime($user->subscription_start_date);
-            $end_date = strtotime($user->subscription_end_date);
-            $current_date = strtotime(date('Y-m-d'));
 
-            // Calculate the difference in days between the current date and the end date
-            $user->remaining_days = ($end_date - $current_date) / (60 * 60 * 24);
+        // Fetch latest subscription history for each user
+        foreach ($users as $user) {
+            $latestSubscription = UserSubscriptionHistory::where('user_id', $user->id)
+                ->where('gym_id', $gymId)->where('status', '1')
+                ->orderBy('subscription_start_date', 'desc')
+                ->first();
+
+            if ($latestSubscription) {
+                $start_date = strtotime($latestSubscription->subscription_start_date);
+                $end_date = strtotime($latestSubscription->subscription_end_date);
+                $current_date = strtotime(date('Y-m-d'));
+
+                // Calculate the difference in days between the current date and the end date
+                $user->subscription_start_date = $latestSubscription->subscription_start_date;
+                $user->subscription_end_date = $latestSubscription->subscription_end_date;
+                $user->remaining_days = ($end_date - $current_date) / (60 * 60 * 24);
+                $user->subscription_id = $latestSubscription->subscription_id;
+            } else {
+                // Handle the case where no subscription history is found
+                $user->subscription_start_date = "--";
+                $user->subscription_end_date = "--";
+                $user->remaining_days = "--";
+                $user->subscription_id = "--";
+            }
         }
+
         return view('GymOwner.gym-customers-subscriptions', compact('users'));
     }
 
@@ -496,7 +514,7 @@ class GymUserController extends Controller
         try {
             $gymUser = Auth::guard('gym')->user();
             $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
-
+    
             $validatedData = $request->validate([
                 'user_id' => 'required',
                 'subscription_id' => 'required|exists:gym_subscriptions,id',
@@ -505,21 +523,21 @@ class GymUserController extends Controller
                 'subscription_end_date' => 'required|date',
                 'description' => 'required|string',
             ]);
-
-            // Fetch user subscription status
+    
+            // Fetch the latest subscription history for the user
             $userSubscription = $this->userSubscriptionHistory->where('user_id', $validatedData['user_id'])
                 ->orderBy('subscription_end_date', 'desc')
                 ->first();
-
+    
             // Check if user already has an active subscription
-            if ($userSubscription && $userSubscription->status == 1 && $userSubscription->end_date > now()) {
+            if ($userSubscription && $userSubscription->status == 1 && $userSubscription->subscription_end_date > now()) {
                 // If subscription is active, return an error message with SweetAlert
-                return redirect()->back()->with('status', 'error')->with('message', 'User already has an active subscription until ' . $userSubscription->end_date);
+                return redirect()->back()->with('status', 'error')->with('message', 'User is already in an active subscription until ' . $userSubscription->subscription_end_date);
             }
-
+    
             // Fetch subscription details
             $subscription = $this->gymSubscription->find($validatedData['subscription_id']);
-
+    
             // Create user subscription history
             $this->userSubscriptionHistory->create([
                 'gym_id' => $gymId,
@@ -529,19 +547,20 @@ class GymUserController extends Controller
                 'subscription_start_date' => $validatedData['subscription_start_date'],
                 'subscription_end_date' => $validatedData['subscription_end_date'],
                 'amount' => $validatedData['amount'],
-                'status' => 1,
+                'status' => 1, // Mark as active
                 'coupon_id' => 2,
                 'description' => $validatedData['description'],
             ]);
-
+    
             return redirect()->back()
                 ->with('status', 'success')
                 ->with('message', 'Subscription added successfully');
         } catch (Throwable $th) {
             Log::error("[GymUserController][addUserSubscription] error " . $th->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Failed to add subscription. ' . $th->getMessage());
         }
     }
+    
 
     public function autocompleteWorkout(Request $request)
     {
