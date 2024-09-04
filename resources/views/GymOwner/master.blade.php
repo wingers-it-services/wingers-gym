@@ -916,6 +916,8 @@
 					<ul aria-expanded="false">
 						<li><a href="/gym-customers">Members List</a></li>
 						<li><a href="/add-gym-user">Add New Member</a></li>
+						<li><a href="/gym-customers-subscriptions">Subscription Details</a></li>
+						<li><a href="/customers-attendance">Attendance</a></li>
 						<li><a href="/customers-payment">Payment</a></li>
 					</ul>
 				</li>

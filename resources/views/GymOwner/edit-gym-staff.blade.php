@@ -203,7 +203,7 @@
                                         </div>
                                         <div class="col-lg-4 mb-2" id="staff-commission-field">
                                             <div class="form-group">
-                                                <label class="text-label">Staff Commission (in %) <span
+                                                <label class="text-label">Staff Commission (%) <span
                                                         class="required">*</span></label>
                                                 <input type="number" name="staff_commission" id="staff_commission"
                                                     value="{{$staffDetail->staff_commission}}" placeholder="20"
@@ -215,7 +215,7 @@
                                         </div>
                                         <div class="col-lg-4 mb-2" id="gym-commission-field">
                                             <div class="form-group">
-                                                <label class="text-label">Gym Commission (in %)<span
+                                                <label class="text-label">Gym Commission (%)<span
                                                         class="required">*</span></label>
                                                 <input type="number" name="gym_commission" id="gym_commission"
                                                     value="{{$staffDetail->gym_commission}}" placeholder="80"
