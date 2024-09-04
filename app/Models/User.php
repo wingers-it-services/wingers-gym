@@ -107,7 +107,7 @@ class User extends Authenticatable
 
     public function updateUser(array $updateUser, $imagePath)
     {
-        $userProfile = User::where('id', auth()->user()->id)->first();
+        $userProfile = $this->where('id', auth()->user()->id)->first();
 
         // Check if the user exists
         if (!$userProfile) {
@@ -139,7 +139,7 @@ class User extends Authenticatable
     {
         $userId = $gymTrainer['user_id'];
         $trainerId = $gymTrainer['trainer_id'];
-        $userProfile = User::find($userId);
+        $userProfile = $this->find($userId);
 
         // Check if the user exists
         if (!$userProfile) {
@@ -196,7 +196,7 @@ class User extends Authenticatable
 
     public function profilePartFour(array $userDetail)
     {
-        $userProfile = User::where('uuid', $userDetail['uuid'])->first();
+        $userProfile = $this->where('uuid', $userDetail['uuid'])->first();
 
         // Check if the user exists
         if (!$userProfile) {
@@ -272,7 +272,7 @@ class User extends Authenticatable
     {
         try {
             $user = auth()->user();
-            $userProfile = User::find($user->id);
+            $userProfile = $this->find($user->id);
 
             // Check if the user exists
             if (!$userProfile) {

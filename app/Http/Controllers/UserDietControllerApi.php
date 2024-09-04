@@ -54,28 +54,49 @@ class UserDietControllerApi extends Controller
                 ], 401);
             }
 
-            $diets = $this->userDiet
-                ->where('user_id', $user->id)
-                ->where('day', $currentDay)
-                ->where('gym_id', $request->gym_id)
-                ->with(['dietsDetails:id,id,image', 'currentDayDiet:id,user_diet_id,is_completed'])->get();
+            $diets = $this->currentDayDiet
+                ->whereHas('userDiet', function ($query) use ($user, $currentDay, $request) {
+                    $query->where('user_id', $user->id)
+                        ->where('day', $currentDay)
+                        ->where('gym_id', $request->gym_id);
+                })
+                ->with(['userDiet' => function ($query) {
+                    $query->with(['dietsDetails:id,id,image']);
+                }])
+                ->get();
 
             $totalCalories = 0;
             $totalProtein = 0;
             $totalCarbs = 0;
             $totalFats = 0;
 
-            foreach ($diets as $diet) {
-                if ($diet->dietsDetails) {
-                    $diet->image = $diet->dietsDetails->image;
-                }
-                unset($diet->dietsDetails);
+            $diets->transform(function ($diet) use (&$totalCalories, &$totalProtein, &$totalCarbs, &$totalFats) {
+                $dietData = $diet->userDiet;
+                $diet->uuid = $dietData->uuid;
+                $diet->gym_id = $dietData->gym_id;
+                $diet->user_id = $dietData->user_id;
+                $diet->diet_id = $dietData->diet_id;
+                $diet->day = $dietData->day;
+                $diet->meal_name = $dietData->meal_name;
+                $diet->calories = $dietData->calories;
+                $diet->protein = $dietData->protein;
+                $diet->carbs = $dietData->carbs;
+                $diet->fats = $dietData->fats;
+                $diet->alternative_diet_description = $dietData->alternative_diet_description;
+                $diet->diet_description = $dietData->diet_description;
+                $diet->meal_type = $dietData->meal_type;
+                $diet->goal = $dietData->goal;
+                $diet->image = $dietData->dietsDetails->image ?? null;
 
                 $totalCalories += $diet->calories;
                 $totalProtein += $diet->protein;
                 $totalCarbs += $diet->carbs;
                 $totalFats += $diet->fats;
-            }
+
+                unset($diet->userDiet);
+
+                return $diet;
+            });
 
             if ($diets->isEmpty()) {
                 return response()->json([
@@ -103,17 +124,18 @@ class UserDietControllerApi extends Controller
         }
     }
 
-   /**
-    * This PHP function updates the status of a user's current day diet based on the provided request
-    * data.
-    * 
-    * @param Request request The `updateUserDietStatus` function is responsible for updating the status
-    * of a user's current day diet based on the provided request parameters. Let's break down the
-    * parameters required in the request:
-    * 
-    * @return The `updateUserDietStatus` function returns a JSON response with the status code, diet
-    * information, and a message indicating the result of updating the current day diet status.
-    */
+
+    /**
+     * This PHP function updates the status of a user's current day diet based on the provided request
+     * data.
+     * 
+     * @param Request request The `updateUserDietStatus` function is responsible for updating the status
+     * of a user's current day diet based on the provided request parameters. Let's break down the
+     * parameters required in the request:
+     * 
+     * @return The `updateUserDietStatus` function returns a JSON response with the status code, diet
+     * information, and a message indicating the result of updating the current day diet status.
+     */
     public function updateUserDietStatus(Request $request)
     {
         try {
