@@ -144,7 +144,7 @@ class GymUserController extends Controller
 
             // Create the user account
             if ($user) {
-                $user = User::where('email', $validateData['email'])->first(); // Adjust the query as needed  
+                $user = User::where('email', $validateData['email'])->first(); // Adjust the query as needed
             }
 
             // Save to user_subscription_histories
@@ -750,4 +750,6 @@ class GymUserController extends Controller
             return response()->json(['success' => false, 'message' => 'User not found.']);
         }
     }
+
+
 }
