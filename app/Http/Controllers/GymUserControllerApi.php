@@ -382,25 +382,28 @@ class GymUserControllerApi extends Controller
         try {
             // Validate the incoming request data
             $validatedData = $request->validate([
-                'firstname' => 'nullable|string',
-                'lastname'  => 'nullable|string',
-                'email'     => 'nullable|email|unique:users,email,',
-                'gender'    => 'nullable|string',
-                'phone_no'  => 'nullable|string|unique:users,phone_no,',
-                'password'  => 'nullable|string|min:6',
-                'dob'       => 'nullable|date',
-                'height'    => 'nullable|numeric',
-                'weight'    => 'nullable|numeric',
-                'days'      => 'nullable|string',
+                'firstname'    => 'nullable|string',
+                'lastname'     => 'nullable|string',
+                'email'        => 'nullable',
+                'gender'       => 'nullable|string',
+                'phone_no'     => 'nullable',
+                'dob'          => 'nullable|date',
+                'height'       => 'nullable|numeric',
+                'weight'       => 'nullable|numeric',
+                'days'         => 'nullable|string',
+                'goals'        => 'array',
+                'goals.*'      => 'exists:goals,id',
+                'injury_ids'   => 'array',
+                'injury_ids.*' => 'exists:user_injuries,id',
             ]);
 
-            $result = $this->user->updateUser($validatedData);
+            $result = $this->user->updateUserProfile($validatedData);
 
             // Return the response
             return response()->json($result, $result['status']);
 
         } catch (\Throwable $e) {
-            Log::error('[UserControllerApi][updateProfile] Error while updating user profile: ' . $e->getMessage());
+            Log::error('[UserControllerApi][updateGymUserProfile] Error while updating user profile: ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
                 'message' => 'An error occurred while updating the profile'
