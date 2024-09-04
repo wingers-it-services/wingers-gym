@@ -226,8 +226,7 @@
                                                                 </div>
                                                                 <!-- Joining Date -->
                                                                 <div class="mb-3">
-                                                                    <label for="joining_date" class="form-label">Member
-                                                                        Joining Date</label>
+                                                                    <label for="joining_date" class="form-label">Subscripion Start Date</label>
                                                                     <input type="date" class="form-control"
                                                                         id="joining_date" name="subscription_start_date"
                                                                         required>

@@ -417,7 +417,7 @@
 																	<th scope="col">Leave Type</th>
 																	<th scope="col">From</th>
 																	<th scope="col">To</th>
-																	<th scope="col">Action</th>
+																	<th scope="col">Reason</th>
 																</tr>
 															</thead>
 															<tbody>
@@ -602,24 +602,7 @@
             <td>${leave.leave_type}</td>
             <td>${leave.start_date}</td>
             <td>${leave.end_date}</td>
-            <td>
-                <div class="dropdown custom-dropdown mb-0">
-                    <div class="btn sharp btn-primary tp-btn" data-bs-toggle="dropdown">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1">
-                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <rect x="0" y="0" width="24" height="24" />
-                                <circle fill="#000000" cx="12" cy="5" r="2" />
-                                <circle fill="#000000" cx="12" cy="12" r="2" />
-                                <circle fill="#000000" cx="12" cy="19" r="2" />
-                            </g>
-                        </svg>
-                    </div>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" href="javascript:void(0);">Details</a>
-                        <a class="dropdown-item text-danger" href="javascript:void(0);">Cancel</a>
-                    </div>
-                </div>
-            </td>
+			<td>${leave.reason}</td>
         `;
 
 			leaveTableBody.appendChild(row);
