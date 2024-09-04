@@ -75,6 +75,30 @@ class GymUserController extends Controller
         return view('GymOwner.gym-customers', compact('users'));
     }
 
+    public function listGymUserSubscriptions()
+    {
+        $gymUser = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
+        $users = $this->user->where('gym_id', $gymId)->get();
+        // Iterate over each user and calculate the remaining days
+        foreach ($users as $user) {
+            $start_date = strtotime($user->subscription_start_date);
+            $end_date = strtotime($user->subscription_end_date);
+            $current_date = strtotime(date('Y-m-d'));
+
+            // Calculate the difference in days between the current date and the end date
+            $user->remaining_days = ($end_date - $current_date) / (60 * 60 * 24);
+        }
+        return view('GymOwner.gym-customers-subscriptions', compact('users'));
+    }
+
+    public function customersAttendance()
+    {
+        $gym = Auth::guard('gym')->user();
+        $gymStaffs = $this->user->where('gym_id', $gym->id)->get();
+        return view('GymOwner.customers-attendance', compact('gymStaffs'));
+    }
+
     public function addGymUser()
     {
         $gymUser = Auth::guard('gym')->user();
@@ -705,27 +729,25 @@ class GymUserController extends Controller
     {
         $email = $request->query('email');
         $phone_no = $request->query('phone_no');
-    
+
         // Build the query
         $query = User::query();
-    
+
         if ($email) {
             $query->where('email', $email);
         }
-    
+
         if ($phone_no) {
-            $query->where('phone_no', $phone_no);
+            $query->orWhere('phone_no', $phone_no);
         }
-    
+
         // Fetch all users that match the criteria
         $users = $query->get();
-    
+
         if ($users->isNotEmpty()) {
             return response()->json(['success' => true, 'users' => $users]);
         } else {
             return response()->json(['success' => false, 'message' => 'User not found.']);
         }
     }
-    
-    
 }

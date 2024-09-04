@@ -44,6 +44,9 @@ Route::get('/invoice', function () {
 });
 
 Route::get('/gym-customers', [GymUserController::class, 'listGymUser'])->name('gymCustomerList');
+Route::get('/gym-customers-subscriptions', [GymUserController::class, 'listGymUserSubscriptions'])->name('gym-customers-subscriptions');
+Route::get('/customers-attendance', [GymUserController::class, 'customersAttendance']);
+
 Route::get('/customers-payment', function () {
     return view('GymOwner.customers-payment');
 });
