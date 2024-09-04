@@ -33,3 +33,4 @@ class GoalUser extends Model
         return $this->belongsTo(Goal::class);
     }
 }
+
