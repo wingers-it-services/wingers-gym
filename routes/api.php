@@ -1,12 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdvertisementControllerApi;
-use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentControllerApi;
 use App\Http\Controllers\GoalControllerApi;
 use App\Http\Controllers\GymDetailControllerApi;
 use App\Http\Controllers\GymGalleryControllerApi;
-use App\Http\Controllers\GymUserAttendenceControllerApi;
 use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\GymUserLoginControllerApi;
 use App\Http\Controllers\GymUserTrainerControllerApi;
@@ -20,7 +18,6 @@ use App\Http\Controllers\UserInjuryControllerApi;
 use App\Http\Controllers\UserLevelControllerApi;
 use App\Http\Controllers\UserSubscriptionControllerApi;
 use App\Http\Controllers\UserWorkoutControllerApi;
-use App\Models\GymUserAttendence;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/fetch-goal', [GoalControllerApi::class, 'fetchGoal'])->name('fetchGoal');
@@ -64,8 +61,6 @@ Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']
 
 Route::middleware('auth:api')->group(function () {
     
-    Route::post('/gym-user-attendence',[GymUserAttendenceControllerApi::class,'markAttendance']);
-
     Route::post('/update-daily-diet-status',[UserDietControllerApi::class,'updateUserDietStatus']);
 
     Route::post('/update-daily-workout-status',[UserWorkoutControllerApi::class,'updateCurrentWorkout']);
