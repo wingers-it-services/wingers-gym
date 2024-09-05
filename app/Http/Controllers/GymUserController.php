@@ -8,6 +8,7 @@ use App\Models\GymStaff;
 use App\Models\userBmi;
 use App\Models\Gym;
 use App\Models\GymSubscription;
+use App\Models\GymUserAttendence;
 use App\Models\GymUserSubscriptionsHistory;
 use App\Models\User;
 use App\Models\UserBodyMeasurement;
@@ -18,6 +19,7 @@ use App\Models\UserSubscriptionHistory;
 use App\Models\Workout;
 use App\Services\UserService;
 use App\Traits\SessionTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -514,7 +516,7 @@ class GymUserController extends Controller
         try {
             $gymUser = Auth::guard('gym')->user();
             $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
-    
+
             $validatedData = $request->validate([
                 'user_id' => 'required',
                 'subscription_id' => 'required|exists:gym_subscriptions,id',
@@ -523,21 +525,21 @@ class GymUserController extends Controller
                 'subscription_end_date' => 'required|date',
                 'description' => 'required|string',
             ]);
-    
+
             // Fetch the latest subscription history for the user
             $userSubscription = $this->userSubscriptionHistory->where('user_id', $validatedData['user_id'])
                 ->orderBy('subscription_end_date', 'desc')
                 ->first();
-    
+
             // Check if user already has an active subscription
             if ($userSubscription && $userSubscription->status == 1 && $userSubscription->subscription_end_date > now()) {
                 // If subscription is active, return an error message with SweetAlert
                 return redirect()->back()->with('status', 'error')->with('message', 'User is already in an active subscription until ' . $userSubscription->subscription_end_date);
             }
-    
+
             // Fetch subscription details
             $subscription = $this->gymSubscription->find($validatedData['subscription_id']);
-    
+
             // Create user subscription history
             $this->userSubscriptionHistory->create([
                 'gym_id' => $gymId,
@@ -551,7 +553,7 @@ class GymUserController extends Controller
                 'coupon_id' => 2,
                 'description' => $validatedData['description'],
             ]);
-    
+
             return redirect()->back()
                 ->with('status', 'success')
                 ->with('message', 'Subscription added successfully');
@@ -560,7 +562,7 @@ class GymUserController extends Controller
             return redirect()->back()->with('status', 'error')->with('message', 'Failed to add subscription. ' . $th->getMessage());
         }
     }
-    
+
 
     public function autocompleteWorkout(Request $request)
     {
@@ -767,6 +769,109 @@ class GymUserController extends Controller
             return response()->json(['success' => true, 'users' => $users]);
         } else {
             return response()->json(['success' => false, 'message' => 'User not found.']);
+        }
+    }
+
+    public function markGymUserAttendance(Request $request)
+    {
+        try {
+            $request->validate([
+                "gymId"            => 'required',
+                "staffId"          => 'required',
+                "attendanceStatus" => 'required'
+            ]);
+
+            $now = Carbon::now();
+            $year = $now->year;
+            $month = $now->month;
+            $day = $now->day;
+
+            $gym = GymUserAttendence::updateOrCreate(
+                [
+                    'gym_user_id' => $request->staffId,
+                    'gym_id' => $request->gymId,
+                    'month' => $month,
+                    'year' => $year
+                ],
+                [
+                    'day' . $day => $request->attendanceStatus
+                ]
+            );
+
+            return response()->json(['status' => 200, 'data' => $gym], 200);
+        } catch (\Throwable $th) {
+            Log::error("[GymStaffController][markGymUserAttendance] error " . $th->getMessage());
+            return response()->json(['status' => 500], 500);
+        }
+    }
+
+    public function fetchUserAttendanceChart(Request $request)
+    {
+        try {
+            $request->validate([
+                "gymId"   => 'required',
+                "staffId" => 'required'
+            ]);
+
+            $now = Carbon::now();
+            $year = $now->year;
+            $month = $now->month;
+
+            $gym = GymUserAttendence::where([
+                'gym_user_id' => $request->staffId,
+                'gym_id' => $request->gymId,
+                'month' => $month,
+                'year' => $year
+            ])->first();
+
+            if (!$gym) {
+                return response()->json([
+                    'status' => 200,
+                    'data' => [
+                        "Absent"   => 0,
+                        "Halfday"  => 0,
+                        "WeekOff" => 0,
+                        "Present"  => 0,
+                        "Unmarked" => 30
+                    ]
+                ], 200);
+            }
+
+            $gym = $gym->toArray();
+            $data = [
+                "Absent"  => 0,
+                "Halfday" => 0,
+                "WeekOff" => 0,
+                "Present" => 0,
+                "Unmarked" => 0
+            ];
+
+            for ($i = 1; $i <= 31; $i++) {
+                switch ($gym['day' . $i]) {
+                    case 0.5:
+                        $data["Halfday"] += 1;
+                        break;
+                    case 1:
+                        $data["Present"] += 1;
+                        break;
+                    case 2:
+                        $data["WeekOff"] += 1;
+                        break;
+                    case null:
+                        $data["Unmarked"] += 1;
+                        break;
+                    default:
+                        $data["Absent"] += 1;
+                }
+            }
+            return response()->json([
+                'status' => 200,
+                'data'   => $data,
+                'gym'    => $gym
+            ], 200);
+        } catch (\Throwable $th) {
+            Log::error("[GymStaffController][fetchUserAttendanceChart] error " . $th->getMessage());
+            return response()->json(['status' => 500, 'data' => $gym], 500);
         }
     }
 }
