@@ -382,15 +382,15 @@ class GymUserControllerApi extends Controller
         try {
             // Validate the incoming request data
             $validatedData = $request->validate([
-                'firstname'    => 'nullable|string',
-                'lastname'     => 'nullable|string',
-                'email'        => 'nullable',
-                'gender'       => 'nullable|string',
-                'phone_no'     => 'nullable',
-                'dob'          => 'nullable|date',
-                'height'       => 'nullable|numeric',
-                'weight'       => 'nullable|numeric',
-                'days'         => 'nullable|string',
+                'firstname'    => 'required|string',
+                'lastname'     => 'required|string',
+                'email'        => 'required',
+                'gender'       => 'required|string',
+                'phone_no'     => 'required',
+                'dob'          => 'required|date',
+                'height'       => 'required|numeric',
+                'weight'       => 'required|numeric',
+                'days'         => 'required|string',
                 'goals'        => 'array',
                 'goals.*'      => 'exists:goals,id',
                 'injury_ids'   => 'array',
@@ -399,9 +399,7 @@ class GymUserControllerApi extends Controller
 
             $result = $this->user->updateUserProfile($validatedData);
 
-            // Return the response
             return response()->json($result, $result['status']);
-
         } catch (\Throwable $e) {
             Log::error('[UserControllerApi][updateGymUserProfile] Error while updating user profile: ' . $e->getMessage());
             return response()->json([
