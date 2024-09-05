@@ -47,13 +47,15 @@ class UserWorkoutControllerApi extends Controller
             //     ->with(['workoutDetails:id,id,category,image', 'currentDayWorkout:id,user_workout_id,is_completed'])
             //     ->get();
 
-            $workouts = CurrentDayWorkout::whereHas('userWorkout', function ($query) use ($user, $currentDay, $request) {
+            $workouts = $this->currentDayWorkout
+            ->whereHas('userWorkout', function ($query) use ($user, $currentDay, $request) {
                 $query->where('user_id', $user->id)
-                      ->where('gym_id', $request->gym_id);
+                    ->where('day', $currentDay)
+                    ->where('gym_id', $request->gym_id);
             })
-            ->with(['userWorkout.workoutDetails:id,id,category,image'])
-            ->get();
-        
+                ->with(['userWorkout.workoutDetails:id,id,category,image'])
+                ->get();
+
 
             foreach ($workouts as $workout) {
                 if ($workout->workoutDetails) {
@@ -62,7 +64,7 @@ class UserWorkoutControllerApi extends Controller
                     $workout->image = $workout->workoutDetails->image;
                 }
 
-              
+
                 unset($workout->workoutDetails);
             }
 

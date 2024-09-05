@@ -78,7 +78,7 @@ class CurrentDayWorkout extends Model
             // If all sets are completed, update the is_complete field in the user_workout table
             if ($allCompleted) {
                 $this->where('id', $updateCurrentDayDetails['current_day_workout_id'])
-                    ->update(['is_complete' => true]);
+                    ->update(['is_completed' => 1]);
             }
 
             return $result;
