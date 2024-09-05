@@ -42,24 +42,26 @@ class CurrentDayWorkout extends Model
 
     public function updateCurrentWorkout(array $updateCurrentDayDetails)
     {
+        // Fetch the current day's workout record by ID
         $currentDayWorkout = $this->where('id', $updateCurrentDayDetails['current_day_workout_id'])->first();
-
+    
         if (!$currentDayWorkout) {
             return false;
         }
-
+    
         try {
             // Decode the existing 'details' JSON field
             $details = json_decode($currentDayWorkout->details, true);
-
+    
             // Update the specified set with new time and status
             if (!isset($details[$updateCurrentDayDetails['set']])) {
-                return false; // or handle the error if the set does not exist
+                return false; // Handle if the set does not exist
             }
-
+    
+            // Update time and status for the set
             $details[$updateCurrentDayDetails['set']][0]['time'] = $updateCurrentDayDetails['time'];
             $details[$updateCurrentDayDetails['set']][0]['status'] = $updateCurrentDayDetails['status'];
-
+    
             // Check if all sets are completed
             $allCompleted = true;
             foreach ($details as $set) {
@@ -68,23 +70,22 @@ class CurrentDayWorkout extends Model
                     break;
                 }
             }
-
+    
             // Update the 'details' field in the current workout
             $currentDayWorkout->details = json_encode($details);
-
-            // Save the updated workout
+    
+            // Save the updated workout details
             $result = $currentDayWorkout->save();
-
-            // If all sets are completed, update the is_complete field in the user_workout table
-            if ($allCompleted) {
-                $this->where('id', $updateCurrentDayDetails['current_day_workout_id'])
-                    ->update(['is_completed' => 1]);
-            }
-
+    
+            // Update 'is_completed' based on whether all sets are completed
+            $this->where('id', $updateCurrentDayDetails['current_day_workout_id'])
+                ->update(['is_completed' => $allCompleted ? 1 : 0]);
+    
             return $result;
         } catch (\Throwable $e) {
             Log::error('[CurrentDayWorkout][updateCurrentWorkout] Error while updating workout detail: ' . $e->getMessage());
             return false;
         }
     }
+    
 }
