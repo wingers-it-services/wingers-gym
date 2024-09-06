@@ -25,7 +25,11 @@ class GymUserTrainerControllerApi extends Controller
             ]);
             $user = auth()->user();
 
-            $trainers = $user->trainer()->where('users_trainer_histries.gym_id', $request->gym_id)->first();
+            $trainers = $user->trainer()
+            ->where('users_trainer_histries.gym_id', $request->gym_id)
+            ->where('users_trainer_histries.user_id', $user->id)
+            ->where('users_trainer_histries.status', 1)
+            ->first();
 
             if (!$trainers) {
                 return response()->json([
