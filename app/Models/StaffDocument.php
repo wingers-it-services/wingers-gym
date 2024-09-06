@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\GymStaffDocumentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,10 +17,9 @@ class StaffDocument extends Model
     protected $fillable = [
         'staff_id',
         'gym_id',
-        'aadhaar_card',
-        'pan_card',
-        'cancel_cheque',
-        'other'
+        'document_name',
+        'file',
+        'status'
     ];
 
     public function gymStaff()
@@ -33,6 +33,20 @@ class StaffDocument extends Model
         static::creating(function ($model) {
             $model->uuid = Uuid::uuid4()->toString();
         });
+    }
+
+    public function addDocuments(array $staffDocumentDetails, $file)
+    {
+        $gym = Auth::guard('gym')->user();
+     
+        $this->create([
+            'gym_id'         => $gym->id,
+            'staff_id'       => $staffDocumentDetails['staff_id'],
+            'document_name'  => $staffDocumentDetails['document_name'],
+            'file'           => $file,
+            'status'         => GymStaffDocumentStatusEnum::NOTVERIFY,
+        ]);
+
     }
 
     public function createOrUpdateDocument(array $staffDocumentDetails)

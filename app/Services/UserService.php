@@ -44,7 +44,8 @@ class UserService
             'user_type',
             'phone_no',
             'subscription_start_date',
-            'subscription_end_date'
+            'subscription_end_date',
+            'dob'
         ];
 
         $userData = [];
@@ -57,7 +58,7 @@ class UserService
         }
 
         $userData['subscription_status'] = GymSubscriptionStatusEnum::ACTIVE;
-        $userData['profile_status'] = GymUserAccountStatusEnum::USER_INJURY_DETAIL;
+        $userData['profile_status'] = GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED;
         $userData['user_type'] = UserTypeEnum::GYMUSER;
 
         $user = $this->user->updateOrCreate(

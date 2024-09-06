@@ -154,7 +154,8 @@ class GymUserController extends Controller
                 'profile_status' => 'nullable',
                 'staff_assign_id' => 'nullable',
                 'password' => 'required',
-                'phone_no' => 'required|unique:gym_users,phone_no'
+                'phone_no' => 'required|unique:gym_users,phone_no',
+                'dob'       => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();

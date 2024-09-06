@@ -8,7 +8,7 @@
 <div class="content-body ">
 	<div class="container-fluid">
 		<div class="page-titles">
-		<ol class="breadcrumb">
+			<ol class="breadcrumb">
 				<li class="breadcrumb-item active"><a href="javascript:void(0)">Add </a></li>
 				<li class="breadcrumb-item active"><a href="javascript:void(0)">New Member Details</a></li>
 			</ol>
@@ -144,7 +144,7 @@
 									</div>
 
 									<div class="row">
-										<div class="col-md-4 mb-3">
+										<div class="col-md-6 mb-3">
 											<label for="blood_group">Member Blood Group</label>
 											<select class="me-sm-2 form-control default-select" id="blood_group"
 												name="blood_group">
@@ -159,7 +159,15 @@
 											</select>
 										</div>
 
-										<div class="col-md-8 mb-3">
+										<div class="col-md-6 mb-3">
+											<label for="dob">D.O.B</label>
+											<input type="date" class="form-control" id="dob"
+												name="dob" required>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-12 mb-3">
 											<label for="address">Address</label>
 											<textarea type="text" class="form-control" id="address" name="address"
 												required=""></textarea>

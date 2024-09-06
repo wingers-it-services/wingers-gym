@@ -184,24 +184,22 @@
 												<form action="{{route('addStaffDocuments')}}" method="POST" enctype="multipart/form-data" enctype="multipart/form-data">
 													@csrf
 													<div class="modal-body">
+														<!-- Hidden field for staff ID -->
 														<input type="hidden" class="form-control staffId" id="staffId" name="staff_id">
+
 														<div class="mb-3">
-															<label for="assetCategory" class="form-label">Aadhar Card</label>
-															<input type="file" name="aadhaar_card">
+															<label for="document_name" class="form-label">File Name</label>
+															<input type="text" class="form-control" id="document_name" name="document_name">
 														</div>
+
+														<!-- Aadhar Card Upload -->
 														<div class="mb-3">
-															<label for="assetTag" class="form-label">Pan Card</label>
-															<input type="file" name="pan_card">
-														</div>
-														<div class="mb-3">
-															<label for="dateOfAllocation" class="form-label">Cancel Cheque</label>
-															<input type="file" name="cancel_cheque">
-														</div>
-														<div class="mb-3">
-															<label for="price" class="form-label">Other</label>
-															<input type="file" name="other">
+															<label for="file" class="form-label">Choose File</label>
+															<input type="file" class="form-control" id="file" name="file" onchange="previewFile(this, 'aadhaarCardPreview')">
+															<img id="aadhaarCardPreview" class="img-preview mt-2" src="#" alt="Aadhar Card Preview" style="display: none; max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;">
 														</div>
 													</div>
+
 													<div class="modal-footer">
 														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 														<button type="submit" class="btn btn-primary">Save Document</button>
@@ -227,30 +225,13 @@
 												<table id="documentTable" class="table verticle-middle table-responsive-md">
 													<thead>
 														<tr>
-															<th scope="col">Aadhar Card</th>
-															<th scope="col">Pan Card</th>
-															<th scope="col">Cancel Cheque</th>
-															<th scope="col">Other</th>
-															<th scope="col">Submit</th>
-														</tr>
+															<th scope="col">Document Name</th>
+															<th scope="col">File</th>
+															<th scope="col">Status</th>
 													</thead>
 
 													<tbody>
-														<td>
-															<img src="">
-														</td>
-														<td>
-														<img src="">
-														</td>
-														<td>
-														<img src="">
-														</td>
-														<td>
-														<img src="">
-														</td>
-														<td>
-															<button type="submit">Add Document</button>
-														</td>
+
 													</tbody>
 												</table>
 											</div>
@@ -339,7 +320,6 @@
 																	<th scope="col">Price</th>
 																	<th scope="col">Status</th>
 																	<th scope="col">Image</th>
-																	<th scope="col">Action</th>
 																</tr>
 															</thead>
 															<tbody>
@@ -388,6 +368,17 @@
 															<label for="reason" class="form-label">Reason for Leave</label>
 															<textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
 														</div>
+														<div class="mb-3">
+															<div class="form-group">
+																<label for="status" class="form-label">Leave Status</label>
+																<select class="form-control" id="status" name="status" required>
+																	<option value="">Select Leave Status</option>
+																	<option value="{{ \App\Enums\LeaveStatusEnum::ACCEPTED }}">Accepted</option>
+																	<option value="{{ \App\Enums\LeaveStatusEnum::REJECTED }}">Rejected</option>
+																	<option value="{{ \App\Enums\LeaveStatusEnum::PENDING }}">Pending</option>
+																</select>
+															</div>
+														</div>
 													</div>
 													<div class="modal-footer">
 														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -418,6 +409,7 @@
 																	<th scope="col">From</th>
 																	<th scope="col">To</th>
 																	<th scope="col">Reason</th>
+																	<th scope="col">Status</th>
 																</tr>
 															</thead>
 															<tbody>
@@ -513,6 +505,7 @@
 		// Fetch asset data for the selected staff member
 		fetchAssetData(staffId);
 		fetchLeaveData(staffId);
+		fetchDocumentData(staffId);
 	}
 
 	function fetchAssetData(staffId) {
@@ -535,6 +528,12 @@
 			1: 'Under Repair',
 			2: 'Retired'
 		};
+		const statusClassMap = {
+			0: 'badge-primary', // Allocated (Blue)
+			1: 'badge-warning', // Under Repair (Yellow)
+			2: 'badge-secondary' // Retired (Gray)
+		};
+
 		// Clear any existing asset rows
 		assetTableBody.innerHTML = '';
 
@@ -549,31 +548,24 @@
             <td>${asset.asset_tag}</td>
             <td>${asset.allocation_date}</td>
             <td>${asset.price}</td>
-        <td><span class="badge badge-rounded badge-primary">${statusTextMap[asset.status] || 'Unknown'}</span></td>
-            <td><img src="${asset.image}" alt="" style="height: 50px;"></td>
             <td>
-                <div class="dropdown custom-dropdown mb-0">
-                    <div class="btn sharp btn-primary tp-btn" data-bs-toggle="dropdown">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1">
-                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <rect x="0" y="0" width="24" height="24" />
-                                <circle fill="#000000" cx="12" cy="5" r="2" />
-                                <circle fill="#000000" cx="12" cy="12" r="2" />
-                                <circle fill="#000000" cx="12" cy="19" r="2" />
-                            </g>
-                        </svg>
-                    </div>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" href="javascript:void(0);">Details</a>
-                        <a class="dropdown-item text-danger" href="javascript:void(0);">Cancel</a>
-                    </div>
-                </div>
+                <form action="/update-asset-status/${asset.id}" method="GET">
+                    <select name="status" class="form-select" onchange="this.form.submit()" style="min-width: 150px;">
+                        <option value="{{ \App\Enums\GymStaffAssetStatusEnum::ALLOCATED }}" ${asset.status == 0 ? 'selected' : ''}>Allocated</option>
+                        <option value="{{ \App\Enums\GymStaffAssetStatusEnum::UNDER_REPAIR }}" ${asset.status == 1 ? 'selected' : ''}>Under Repair</option>
+                        <option value="{{ \App\Enums\GymStaffAssetStatusEnum::RETIRED }}" ${asset.status == 2 ? 'selected' : ''}>Retired</option>
+                    </select>
+                    <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                </form>
             </td>
+            <td><img src="${asset.image}" alt="" style="height: 50px;"></td>
         `;
 
 			assetTableBody.appendChild(row);
 		});
 	}
+
+
 
 	function fetchLeaveData(staffId) {
 		// Make an AJAX request to fetch the asset data
@@ -590,11 +582,22 @@
 
 	function displayLeaveData(leaves) {
 		var leaveTableBody = document.querySelector('#leaveTable tbody');
+		const statusTextMap = {
+			0: 'Pending',
+			1: 'Rejected',
+			2: 'Accepted'
+		};
 
-		// Clear any existing asset rows
+		const statusClassLeaveMap = {
+			0: 'badge-warning', // Pending (Yellow)
+			1: 'badge-danger', // Rejected (Red)
+			2: 'badge-success' // Accepted (Green)
+		};
+
+		// Clear any existing rows
 		leaveTableBody.innerHTML = '';
 
-		// Loop through each asset and create table rows
+		// Loop through each leave and create table rows
 		leaves.forEach(leave => {
 			var row = document.createElement('tr');
 
@@ -602,10 +605,62 @@
             <td>${leave.leave_type}</td>
             <td>${leave.start_date}</td>
             <td>${leave.end_date}</td>
-			<td>${leave.reason}</td>
+            <td>${leave.reason}</td>
+            <td>
+				<form action="/update-leave-status/${leave.id}" method="GET">
+                    <select name="status" class="form-select" onchange="this.form.submit()" style="width: 120px;">
+                        <option value="{{ \App\Enums\LeaveStatusEnum::ACCEPTED }}" ${leave.status == 2 ? 'selected' : ''} >Accepted</option>
+                        <option value="{{ \App\Enums\LeaveStatusEnum::PENDING }}" ${leave.status == 0 ? 'selected' : ''}>Pending</option>
+                        <option value="{{ \App\Enums\LeaveStatusEnum::REJECTED }}" ${leave.status == 1 ? 'selected' : ''}>Rejected</option>
+                    </select>
+                    <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                </form>
+            </td>
         `;
 
 			leaveTableBody.appendChild(row);
+		});
+	}
+
+	function fetchDocumentData(staffId) {
+		// Make an AJAX request to fetch the asset data
+		fetch(`/gym-staff-documents/` + staffId)
+			.then(response => response.json())
+			.then(data => {
+				// Assuming 'data' contains the asset information
+				displayDocumentData(data);
+			})
+			.catch(error => {
+				console.error('Error fetching document data:', error);
+			});
+	}
+
+	function displayDocumentData(docs) {
+		var documentTableBody = document.querySelector('#documentTable tbody');
+
+		// Clear any existing asset rows
+		documentTableBody.innerHTML = '';
+
+		// Loop through each asset and create table rows
+		docs.forEach(docs => {
+			var row = document.createElement('tr');
+
+			row.innerHTML = `
+            <td>${docs.document_name}</td>
+            <td><a href="${docs.file}" download>Click Here to Download</a></td>
+            <td>
+				<form action="/update-document-status/${docs.id}" method="GET" style="width:60%;">
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="{{ \App\Enums\GymStaffDocumentStatusEnum::VERIFY }}" ${docs.status == 1 ? 'selected' : ''} >Verify</option>
+                        <option value="{{ \App\Enums\GymStaffDocumentStatusEnum::NOTVERIFY }}" ${docs.status == 0 ? 'selected' : ''}>Not Verify</option>
+                      
+                    </select>
+                    <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                </form>
+            </td>
+        `;
+
+			documentTableBody.appendChild(row);
 		});
 	}
 
@@ -826,6 +881,31 @@
 		}
 
 		renderCalendar();
+	}
+
+	function previewFile(input, previewId, iconId) {
+		const file = input.files[0];
+		const previewElement = document.getElementById(previewId);
+		const iconElement = document.getElementById(iconId);
+
+		if (file) {
+			const reader = new FileReader();
+
+			if (file.type.startsWith('image/')) {
+				reader.onload = function(e) {
+					previewElement.src = e.target.result;
+					previewElement.style.display = 'block'; // Show the image preview
+				};
+				reader.readAsDataURL(file);
+			} else if (file.type === 'application/pdf') {
+				previewElement.style.display = 'none'; // Hide the image preview
+			} else {
+				previewElement.style.display = 'none'; // Hide the image preview
+			}
+		} else {
+			previewElement.src = '#';
+			previewElement.style.display = 'none'; // Hide the image preview
+		}
 	}
 </script>
 <!--**********************************

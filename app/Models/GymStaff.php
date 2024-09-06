@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\GymStaffDocumentStatusEnum;
 use App\Traits\SessionTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -86,23 +87,23 @@ class GymStaff extends Model
             ];
 
             if (isset($gymStaffArray['aadhaar_card'])) {
-                $documentData['aadhaar_card'] = $this->uploadDocument($gymStaffArray['aadhaar_card'], 'staff_adharcard');
+                $filePath  = $this->uploadDocument($gymStaffArray['aadhaar_card'], 'staff_adharcard');
+                $this->createStaffDocument('Aadhaar Card', $filePath, $gymId, $gymStaff->id);
             }
 
             if (isset($gymStaffArray['pan_card'])) {
                 $documentData['pan_card'] = $this->uploadDocument($gymStaffArray['pan_card'], 'staff_pan_card');
+                $this->createStaffDocument('Pan Card', $filePath, $gymId, $gymStaff->id);
             }
 
             if (isset($gymStaffArray['cancel_cheque'])) {
                 $documentData['cancel_cheque'] = $this->uploadDocument($gymStaffArray['cancel_cheque'], 'staff_cancel_cheque');
+                $this->createStaffDocument('Cancel Cheque', $filePath, $gymId, $gymStaff->id);
             }
 
             if (isset($gymStaffArray['other'])) {
                 $documentData['other'] = $this->uploadDocument($gymStaffArray['other'], 'staff_other_documents');
-            }
-
-            if (!empty($documentData)) {
-                $gymStaff->document()->create($documentData);
+                $this->createStaffDocument('Other', $filePath, $gymId, $gymStaff->id);
             }
 
             DB::commit();
@@ -115,6 +116,17 @@ class GymStaff extends Model
     public function document()
     {
         return $this->hasOne(StaffDocument::class, 'staff_id');
+    }
+
+    public function createStaffDocument($docName, $filePath, $gymId, $staffId)
+    {
+        StaffDocument::create([
+            'gym_id'         => $gymId,
+            'staff_id'       => $staffId,
+            'document_name'  => $docName,
+            'file'           => $filePath,
+            'status'         => GymStaffDocumentStatusEnum::NOTVERIFY,
+        ]);
     }
 
     private function uploadDocument($document, $folder)
