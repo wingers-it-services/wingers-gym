@@ -81,7 +81,9 @@ class GymStaff extends Model
             ]);
 
             // Handle document uploads
-            $documentData = [];
+            $documentData = [
+                'gym_id' => $gymId 
+            ];
 
             if (isset($gymStaffArray['aadhaar_card'])) {
                 $documentData['aadhaar_card'] = $this->uploadDocument($gymStaffArray['aadhaar_card'], 'staff_adharcard');

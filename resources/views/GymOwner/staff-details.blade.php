@@ -237,16 +237,16 @@
 
 													<tbody>
 														<td>
-															<input type="file" name="aadhaar_card">
+															<img src="">
 														</td>
 														<td>
-															<input type="file" name="pan_card">
+														<img src="">
 														</td>
 														<td>
-															<input type="file" name="cancel_cheque">
+														<img src="">
 														</td>
 														<td>
-															<input type="file" name="other">
+														<img src="">
 														</td>
 														<td>
 															<button type="submit">Add Document</button>

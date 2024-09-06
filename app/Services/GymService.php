@@ -6,6 +6,7 @@ use App\Models\Gym;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class GymService
 {
@@ -36,7 +37,8 @@ class GymService
             'web_link',
             'gym_type',
             'face_link',
-            'insta_link'
+            'insta_link',
+            'qrcode'
         ];
 
         $gymData = [];
@@ -50,7 +52,6 @@ class GymService
                 }
             }
         }
-      
 
         $gym = $this->gym->updateOrCreate(
             ['email' => $enteredGymData['email']],
@@ -60,6 +61,26 @@ class GymService
         if (isset($gymData["image"])) {
             $this->uploadAdminProfilePicture($gym, $enteredGymData["image"]);
         }
+
+        $qrCodeId = $gym->uuid; // Customize this URL as needed
+
+        // Generate the QR code and save it as an SVG file
+        $qrCode = QrCode::size(256)->generate($qrCodeId);
+        $path = 'qrcodes/';
+        $filename = 'qrcode_' . $qrCodeId . '.svg';
+        $imagePath = public_path($path . $filename);
+
+        // Save the QR code file
+        if (!file_exists(public_path($path))) {
+            mkdir(public_path($path), 0777, true); // Ensure the directory exists
+        }
+        file_put_contents($imagePath, $qrCode);
+
+        // Update the gym record with the QR code path
+        $gym->update([
+            'qrcode' => $path . $filename
+        ]);
+
 
         return true;
     }

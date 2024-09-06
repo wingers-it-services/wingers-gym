@@ -30,65 +30,67 @@ class UserWorkoutControllerApi extends Controller
      * message.
      */
     public function fetchUserWorkout(Request $request)
-    {
-        try {
-            $request->validate([
-                'gym_id'   => 'required',
-                'gym_id.*' => 'exists:gyms,id'
-            ]);
+{
+    try {
+        $request->validate([
+            'gym_id'   => 'required',
+            'gym_id.*' => 'exists:gyms,id'
+        ]);
 
-            $user = auth()->user();
-            $currentDay = strtolower(now()->format('l'));
+        $user = auth()->user();
+        $currentDay = strtolower(now()->format('l'));
 
-            // Fetch workouts for the current day, gym, and user
-            // $workouts = $this->userWorkout->where('user_id', $user->id)
-            //     ->where('day', $currentDay)
-            //     ->where('gym_id', $request->gym_id)
-            //     ->with(['workoutDetails:id,id,category,image', 'currentDayWorkout:id,user_workout_id,is_completed'])
-            //     ->get();
-
-            $workouts = $this->currentDayWorkout
+        // Fetch workouts for the current day, gym, and user
+        $workouts = $this->currentDayWorkout
             ->whereHas('userWorkout', function ($query) use ($user, $currentDay, $request) {
                 $query->where('user_id', $user->id)
                     ->where('day', $currentDay)
                     ->where('gym_id', $request->gym_id);
             })
-                ->with(['userWorkout.workoutDetails:id,id,category,image'])
-                ->get();
+            ->with(['userWorkout.workoutDetails:id,id,category,image'])
+            ->get();
 
+        // Initialize the flag to true and then check
+        $allCompleted = 1;
 
-            foreach ($workouts as $workout) {
-                if ($workout->workoutDetails) {
-                    $workout->exercise_name = $workout->workoutDetails->name;
-                    $workout->category = $workout->workoutDetails->category;
-                    $workout->image = $workout->workoutDetails->image;
-                }
-
-
-                unset($workout->workoutDetails);
+        foreach ($workouts as $workout) {
+            if ($workout->workoutDetails) {
+                $workout->exercise_name = $workout->workoutDetails->name;
+                $workout->category = $workout->workoutDetails->category;
+                $workout->image = $workout->workoutDetails->image;
             }
 
-            if ($workouts->isEmpty()) {
-                return response()->json([
-                    'status'   => 422,
-                    'workouts' => $workouts,
-                    'message'  => 'There are no workouts'
-                ], 422);
-            }
+            unset($workout->workoutDetails);
 
-            return response()->json([
-                'status'    => 200,
-                'workouts'  => $workouts,
-                'message'   => 'User workouts fetched successfully'
-            ], 200);
-        } catch (\Exception $e) {
-            Log::error('[UserWorkoutControllerApi][fetchUserWorkout] Error fetching workout details: ' . $e->getMessage());
-            return response()->json([
-                'status'  => 500,
-                'message' => 'Error fetching workout details: ' . $e->getMessage()
-            ], 500);
+            // Check if the current workout is completed
+            if (!$workout->is_completed) {
+                $allCompleted = 0; // If any workout is not completed, set to false
+            }
         }
+
+        if ($workouts->isEmpty()) {
+            return response()->json([
+                'status'   => 422,
+                'workouts' => $workouts,
+                'message'  => 'There are no workouts'
+            ], 422);
+        }
+
+        return response()->json([
+            'status'         => 200,
+            'workouts'       => $workouts,
+            'all_completed'  => $allCompleted ? 1 : 0, // Return 1 if all workouts are completed, 0 otherwise
+            'message'        => 'User workouts fetched successfully'
+        ], 200);
+    } catch (\Exception $e) {
+        Log::error('[UserWorkoutControllerApi][fetchUserWorkout] Error fetching workout details: ' . $e->getMessage());
+        return response()->json([
+            'status'  => 500,
+            'message' => 'Error fetching workout details: ' . $e->getMessage()
+        ], 500);
     }
+}
+
 
 
     public function fetchCurrentDayWorkout(Request $request)
@@ -205,52 +207,55 @@ class UserWorkoutControllerApi extends Controller
                 'gym_id'   => 'required',
                 'gym_id.*' => 'exists:gyms,id'
             ]);
-
+    
             $user = auth()->user();
             $currentDay = strtolower(now()->format('l'));
-
+    
             // Fetch all workouts for the current day
             $workouts = $this->userWorkout->where('user_id', $user->id)
                 ->where('day', $currentDay)
                 ->where('gym_id', $request->gym_id)
                 ->with(['workoutDetails', 'currentDayWorkout'])
                 ->get();
-
+    
             $totalCompletedWorkouts = 0;
             $totalCompletedSets = 0;
             $totalTimeTaken = 0; // Initialize total time taken
-
+            $allCompleted = true; // Assume all are completed initially
+    
             foreach ($workouts as $workout) {
                 // Check if the current workout is completed
                 if ($workout->currentDayWorkout && $workout->currentDayWorkout->is_completed) {
                     $totalCompletedWorkouts++;
+                } else {
+                    $allCompleted = false; // If any workout is not completed, set to false
                 }
-
+    
                 // Process the details field to calculate completed sets and total time
                 if ($workout->currentDayWorkout && $workout->currentDayWorkout->details) {
                     $details = json_decode($workout->currentDayWorkout->details, true);
-
+    
                     foreach ($details as $set) {
                         foreach ($set as $setDetails) {
                             if ($setDetails['status'] === 'completed') {
                                 $totalCompletedSets++;
-
+    
                                 // Calculate total time taken for completed sets
                                 $timeParts = explode(':', $setDetails['time']);
-                                $totalTimeTaken += $timeParts[0] * 60 + $timeParts[1]; // Convert time to minutes
+                                $totalTimeTaken += $timeParts[0] * 60 + $timeParts[1]; // Convert time to seconds
                             }
                         }
                     }
                 }
-
+    
                 if ($workout->workoutDetails) {
                     $workout->category = $workout->workoutDetails->category;
                     $workout->image = $workout->workoutDetails->image;
                 }
-
+    
                 unset($workout->workoutDetails);
             }
-
+    
             if ($workouts->isEmpty()) {
                 return response()->json([
                     'status'   => 422,
@@ -258,12 +263,13 @@ class UserWorkoutControllerApi extends Controller
                     'message'  => 'There are no workouts'
                 ], 422);
             }
-
+    
             return response()->json([
                 'status'                   => 200,
                 'total_completed_workouts' => $totalCompletedWorkouts,
                 'total_completed_sets'     => $totalCompletedSets,
-                'total_time_taken'         => $totalTimeTaken . ' seconds', // Return total time in minutes
+                'total_time_taken'         => $totalTimeTaken . ' seconds', // Return total time in seconds
+                'all_completed'            => $allCompleted ? 1 : 0, // Return 1 if all workouts are completed, 0 otherwise
                 'message'                  => 'User workouts count fetched successfully'
             ], 200);
         } catch (\Exception $e) {
@@ -274,4 +280,5 @@ class UserWorkoutControllerApi extends Controller
             ], 500);
         }
     }
+    
 }

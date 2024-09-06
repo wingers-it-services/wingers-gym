@@ -76,6 +76,18 @@ Route::get('/register', function () {
     return view('GymOwner.register');
 })->name('register');
 
+Route::get('/privacy-policy', function () {
+    return view('GymOwner.privacy-policy');
+});
+
+Route::get('/help-center', function () {
+    return view('GymOwner.help-center');
+});
+
+Route::get('/terms-condition', function () {
+    return view('GymOwner.terms-condition');
+});
+
 /* registerGym */
 Route::post('/register', [GymDetailController::class, 'registerGym'])->name('registerGym');
 

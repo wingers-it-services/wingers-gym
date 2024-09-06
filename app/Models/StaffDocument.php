@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 
 class StaffDocument extends Model
@@ -14,6 +15,7 @@ class StaffDocument extends Model
 
     protected $fillable = [
         'staff_id',
+        'gym_id',
         'aadhaar_card',
         'pan_card',
         'cancel_cheque',
@@ -35,7 +37,7 @@ class StaffDocument extends Model
 
     public function createOrUpdateDocument(array $staffDocumentDetails)
     {
-        // Retrieve the existing document record
+        $gym = Auth::guard('gym')->user();
         $existingDocument = $this->where('staff_id', $staffDocumentDetails['staff_id'])->first();
 
         $aadhaarCardPath = $existingDocument->aadhaar_card ?? null;
@@ -43,11 +45,9 @@ class StaffDocument extends Model
         $cancelChequePath = $existingDocument->cancel_cheque ?? null;
         $otherDocumentPath = $existingDocument->other ?? null;
 
-        // Handle Aadhaar Card upload
         if ($staffDocumentDetails['aadhaar_card']) {
             $aadhaarCard = $staffDocumentDetails['aadhaar_card'];
             if ($aadhaarCardPath) {
-                // Delete the old file
                 unlink(public_path($aadhaarCardPath));
             }
             $filename = time() . '_' . $aadhaarCard->getClientOriginalName();
@@ -55,11 +55,9 @@ class StaffDocument extends Model
             $aadhaarCard->move(public_path('staff_adharcard/'), $filename);
         }
 
-        // Handle PAN Card upload
         if ($staffDocumentDetails['pan_card']) {
             $panCard=$staffDocumentDetails['pan_card'];
             if ($panCardPath) {
-                // Delete the old file
                 unlink(public_path($panCardPath));
             }
             $filename = time() . '_' . $panCard->getClientOriginalName();
@@ -67,11 +65,9 @@ class StaffDocument extends Model
             $panCard->move(public_path('staff_pan_card/'), $filename);
         }
 
-        // Handle Cancel Cheque upload
         if ($staffDocumentDetails['cancel_cheque']) {
             $cancelCheque=$staffDocumentDetails['cancel_cheque'];
             if ($cancelChequePath) {
-                // Delete the old file
                 unlink(public_path($cancelChequePath));
             }
             $filename = time() . '_' . $cancelCheque->getClientOriginalName();
@@ -79,11 +75,9 @@ class StaffDocument extends Model
             $cancelCheque->move(public_path('staff_cancel_cheque/'), $filename);
         }
 
-        // Handle Other Document upload
         if ($staffDocumentDetails['other']) {
             $otherDocument=$staffDocumentDetails['other'];
             if ($otherDocumentPath) {
-                // Delete the old file
                 unlink(public_path($otherDocumentPath));
             }
             $filename = time() . '_' . $otherDocument->getClientOriginalName();
@@ -91,10 +85,10 @@ class StaffDocument extends Model
             $otherDocument->move(public_path('staff_other_documents/'), $filename);
         }
 
-        // Update or create the StaffDocument record
         return $this->updateOrCreate(
             ['staff_id' => $staffDocumentDetails['staff_id']],
             [
+                'gym_id'        => $gym->id,
                 'aadhaar_card'  => $aadhaarCardPath,
                 'pan_card'      => $panCardPath,
                 'cancel_cheque' => $cancelChequePath,

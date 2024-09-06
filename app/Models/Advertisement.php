@@ -17,7 +17,7 @@ class Advertisement extends Model
     public function getBannerAttribute()
     {
         $imagePath = $this->attributes['banner'];
-        $defaultImagePath = 'images/profile/17.jpg';
+        $defaultImagePath = 'advertisement/nobanner.jpg';
         $fullImagePath = $imagePath;
 
         // Check if the file exists in the public directory

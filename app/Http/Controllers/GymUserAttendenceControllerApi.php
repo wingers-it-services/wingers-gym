@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gym;
 use App\Models\GymUserAttendence;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -9,10 +10,14 @@ use Illuminate\Http\Request;
 class GymUserAttendenceControllerApi extends Controller
 {
     protected $gymUserAttendencer;
+    protected $gym;
 
-    public function __construct(GymUserAttendence $gymUserAttendencer)
-    {
+    public function __construct(
+        GymUserAttendence $gymUserAttendencer,
+        Gym $gym
+    ) {
         $this->gymUserAttendencer = $gymUserAttendencer;
+        $this->gym = $gym;
     }
 
     // public function markAttendance(Request $request)
@@ -61,5 +66,43 @@ class GymUserAttendenceControllerApi extends Controller
             ->where('gym_id', $request->gym_id)
             ->where('user_id', $user->id)
             ->get();
+    }
+
+    public function markAttendance(Request $request)
+    {
+        $request->validate([
+            'gym_uuid'      => 'required|exists:gyms,uuid'
+        ]);
+
+
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'status'  => 401,
+                'message' => 'User not authenticated',
+            ], 401);
+        }
+
+        $gymId = $this->gym->where('uuid', $request->gym_uuid)->pluck('id')->first();
+
+
+        $today = Carbon::now();
+        $currentDay = $today->day;
+        $currentMonth = $today->month;
+        $currentYear = $today->year;
+
+        
+
+        $attendance = $this->gymUserAttendencer->firstOrNew([
+            'gym_user_id' => $user->id,
+            'gym_id'      => $gymId,
+            'month'       => $currentMonth,
+            'year'        => $currentYear,
+        ]);
+
+
+        $dayField = 'day' . $currentDay;
+        $attendance->$dayField = $request->status;
     }
 }
