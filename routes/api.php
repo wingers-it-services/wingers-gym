@@ -94,7 +94,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/fetch-workout-count', [UserWorkoutControllerApi::class, 'fetchTotalCompletedCounts']);
 
     Route::get('/fetch-user-detail',[GymUserControllerApi::class,'fetchUserDetails']);
-});
 
+    Route::post('/change-email-or-phone',[GymUserControllerApi::class,'updateEmailOrPhoneNo']);
+});
 
 Route::post('/check-email', [HomeUserLoginControllerApi::class, 'checkEmail'])->name('checkEmail');
