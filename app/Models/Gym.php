@@ -31,7 +31,8 @@ class Gym extends Authenticatable
         'web_link',
         'gym_type',
         'face_link',
-        'insta_link'
+        'insta_link',
+        'qrcode'
     ];
 
     public function getImageAttribute()
