@@ -50,5 +50,4 @@ class ReelControllerApi extends Controller
             ], 500);
         }
     }
-
 }

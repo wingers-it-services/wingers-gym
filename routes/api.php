@@ -92,6 +92,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/fetch-gym-gallery', [GymGalleryControllerApi::class, 'fetchGallery']);
     
     Route::post('/fetch-workout-count', [UserWorkoutControllerApi::class, 'fetchTotalCompletedCounts']);
+
+    Route::get('/fetch-user-detail',[GymUserControllerApi::class,'fetchUserDetails']);
 });
 
 

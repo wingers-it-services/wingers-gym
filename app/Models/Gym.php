@@ -102,4 +102,9 @@ class Gym extends Authenticatable
         return $this->belongsToMany(User::class, 'gym_user_gyms', 'gym_id', 'user_id');
     }
 
+    public function staff()
+    {
+        return $this->hasMany(GymStaff::class, 'gym_id');
+    }
+
 }
