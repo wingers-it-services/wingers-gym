@@ -275,7 +275,8 @@ class GymStaffController extends Controller
     {
         $gym = Auth::guard('gym')->user();
         $gymStaffs = $this->gymStaff->where('gym_id', $gym->id)->get();
-        return view('GymOwner.staff-details', compact('gymStaffs'));
+        $staffDocs = $this->staffDocument->all();
+        return view('GymOwner.staff-details', compact('gymStaffs', 'staffDocs'));
     }
 
     public function addStaffAsset(Request $request)
@@ -319,15 +320,30 @@ class GymStaffController extends Controller
         return response()->json($assets);
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            $asset = $this->staffAsset->findOrFail($id);
+            $asset->status = $request->input('status');
+            $asset->save();
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Asset status updated successfully!');
+        } catch (\Throwable $th) {
+            Log::error("[GymStaffController][updateStatus] error " . $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
+        }
+    }
+
     public function addStaffLeave(Request $request)
     {
         try {
             $request->validate([
                 "staff_id"     => 'required',
-                "leave_type"    => 'required',
-                "start_date"        => 'required',
-                "end_date" => 'required',
-                "reason" => 'nullable'
+                "leave_type"   => 'required',
+                "start_date"   => 'required',
+                "end_date"     => 'required',
+                "reason"       => 'nullable',
+                "status"       => 'required'
             ]);
 
             $gym = Auth::guard('gym')->user();
@@ -349,21 +365,64 @@ class GymStaffController extends Controller
         return response()->json($leaves);
     }
 
+    public function updateLeaveStatus(Request $request, $id)
+    {
+        try {
+            $leave = $this->staffLeave->findOrFail($id);
+            $leave->status = $request->input('status');
+            $leave->save();
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Leave status updated successfully!');
+        } catch (\Throwable $th) {
+            Log::error("[GymStaffController][updateLeaveStatus] error " . $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
+        }
+    }
+
+    public function updateDocumentStatus(Request $request, $id)
+    {
+        try {
+            $doc = $this->staffDocument->findOrFail($id);
+            $doc->status = $request->input('status');
+            $doc->save();
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Document status updated successfully!');
+        } catch (\Throwable $th) {
+            Log::error("[GymStaffController][updateDocumentStatus] error " . $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', $th->getMessage());
+        }
+    }
+
     public function addStaffDocuments(Request $request)
     {
         try {
             $request->validate([
-                'aadhaar_card'  => 'required|mimes:jpeg,png,jpg,pdf',
-                'pan_card'      => 'required|mimes:jpeg,png,jpg,pdf',
-                'cancel_cheque' => 'required|mimes:jpeg,png,jpg,pdf',
-                'other'         => 'required|mimes:jpeg,png,jpg,pdf',
+                'document_name'  => 'required',
+                'file'      => 'required|mimes:jpeg,png,jpg,pdf',
+                'staff_id'  => 'required'
             ]);
-            
-            $this->staffDocument->createOrUpdateDocument($request->all());
+
+            $imagePath = null;
+            if ($request->hasFile('file')) {
+                $assetPhoto = $request->file('file');
+                $filename = time() . '_' . $assetPhoto->getClientOriginalName();
+                $imagePath = 'staff_documents/' . $filename;
+                $assetPhoto->move(public_path('staff_documents/'), $filename);
+            }
+
+
+            $this->staffDocument->addDocuments($request->all(), $imagePath);
             return redirect()->back()->with('status', 'success')->with('message', 'Staff document added successfully.');
         } catch (Exception $e) {
             Log::error('[GymStaffController][addStaffDocuments] Error adding document ' . $e->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'error while adding document.');
         }
+    }
+
+    public function getStaffDocuments($staffId)
+    {
+        $gym = Auth::guard('gym')->user();
+        $documents = $this->staffDocument->where('gym_id', $gym->id)->where('staff_id', $staffId)->get();
+        return response()->json($documents);
     }
 }

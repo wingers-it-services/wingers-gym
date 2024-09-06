@@ -16,7 +16,8 @@ class GymStaffLeave extends Model
         'leave_type',
         'start_date',
         'end_date',
-        'reason'
+        'reason',
+        'status'
     ];
 
     public function addGymStaffLeave(array $staffLeaveArray, int $gymId)
@@ -28,6 +29,7 @@ class GymStaffLeave extends Model
                 'start_date' => $staffLeaveArray['start_date'],
                 'end_date' => $staffLeaveArray['end_date'],
                 'reason' => $staffLeaveArray['reason'],
+                'status' => $staffLeaveArray['status'],
                 'gym_id' => $gymId
             ]);
         } catch (Exception $e) {
