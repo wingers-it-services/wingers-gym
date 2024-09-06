@@ -433,4 +433,41 @@ class GymUserControllerApi extends Controller
             ], 500);
         }
     }
+
+    public function updateEmailOrPhoneNo(Request $request)
+    {
+        try {
+            $user = auth()->user();
+
+            $request->validate([
+                'email'     => 'nullable|email|unique:gym_users,email,' . $user->id,
+                'phone_no'  => 'nullable|digits:10|unique:gym_users,phone_no,' . $user->id,
+            ]);
+
+            // Update email if provided and different from current email
+            if ($request->filled('email') && $request->email !== $user->email) {
+                $user->email = $request->email;
+            }
+
+            // Update phone number if provided and different from current phone number
+            if ($request->filled('phone_no') && $request->phone_no !== $user->phone_no) {
+                $user->phone_no = $request->phone_no;
+            }
+
+            // Save the updated user information
+            $user->save();
+
+            return response()->json([
+                'status'  => 200,
+                'user'    => $user,
+                'message' => 'Email or phone number updated successfully.',
+            ], 200);
+        } catch (\Exception $e) {
+            // Handle exceptions such as validation or database errors
+            return response()->json([
+                'status'  => 500,
+                'message' => 'An error occurred while updating email or phone number: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }
