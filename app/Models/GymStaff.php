@@ -87,23 +87,23 @@ class GymStaff extends Model
             ];
 
             if (isset($gymStaffArray['aadhaar_card'])) {
-                $filePath  = $this->uploadDocument($gymStaffArray['aadhaar_card'], 'staff_adharcard');
-                $this->createStaffDocument('Aadhaar Card', $filePath, $gymId, $gymStaff->id);
+                $filePath1  = $this->uploadDocument($gymStaffArray['aadhaar_card'], 'staff_documents');
+                $this->createStaffDocument('Aadhaar Card', $filePath1, $gymId, $gymStaff->id);
             }
 
             if (isset($gymStaffArray['pan_card'])) {
-                $documentData['pan_card'] = $this->uploadDocument($gymStaffArray['pan_card'], 'staff_pan_card');
-                $this->createStaffDocument('Pan Card', $filePath, $gymId, $gymStaff->id);
+                $filePath2 = $this->uploadDocument($gymStaffArray['pan_card'], 'staff_documents');
+                $this->createStaffDocument('Pan Card', $filePath2, $gymId, $gymStaff->id);
             }
 
             if (isset($gymStaffArray['cancel_cheque'])) {
-                $documentData['cancel_cheque'] = $this->uploadDocument($gymStaffArray['cancel_cheque'], 'staff_cancel_cheque');
-                $this->createStaffDocument('Cancel Cheque', $filePath, $gymId, $gymStaff->id);
+                $filePath3 = $this->uploadDocument($gymStaffArray['cancel_cheque'], 'staff_documents');
+                $this->createStaffDocument('Cancel Cheque', $filePath3, $gymId, $gymStaff->id);
             }
 
             if (isset($gymStaffArray['other'])) {
-                $documentData['other'] = $this->uploadDocument($gymStaffArray['other'], 'staff_other_documents');
-                $this->createStaffDocument('Other', $filePath, $gymId, $gymStaff->id);
+                $filePath4 = $this->uploadDocument($gymStaffArray['other'], 'staff_documents');
+                $this->createStaffDocument('Other', $filePath4, $gymId, $gymStaff->id);
             }
 
             DB::commit();
