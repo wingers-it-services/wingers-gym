@@ -316,20 +316,13 @@
                                                                             </td>
                                                                             <td>
 
-                                                                                <form
-                                                                                    action="/update-subscription-status/{{$userDetail->id}}"
-                                                                                    method="POST">
+                                                                                <form action="/update-subscription-status/{{$userDetail->id}}" method="POST">
                                                                                     @csrf
-                                                                                    @method('POST')
-                                                                                    <select name="status"
-                                                                                        onchange="this.form.submit()"
-                                                                                        class="form-select" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'disabled' : '' }}>
-                                                                                        <option
-                                                                                            value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}"
+                                                                                    <select name="status" onchange="this.form.submit()" class="form-select" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'disabled' : '' }}>
+                                                                                        <option value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}"
                                                                                             {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'selected' : '' }}>Active
                                                                                         </option>
-                                                                                        <option
-                                                                                            value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}"
+                                                                                        <option value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}"
                                                                                             {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'selected' : '' }}>Inactive
                                                                                         </option>
                                                                                     </select>

@@ -1,10 +1,13 @@
 @extends('GymOwner.master')
-@section('title','Dashboard')
+@section('title', 'Dashboard')
 @section('content')
 
 <!--**********************************
             Content body start
 ***********************************-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
+
 <div class="content-body ">
 	<!-- row -->
 	<div class="container-fluid">
@@ -22,33 +25,39 @@
 							<div class="tab-pane fade show active" id="Breakfast" role="tabpanel">
 								<div class="featured-menus owl-carousel">
 									@foreach ($gymStaffs as $gymStaff)
-									<div class="items" id="staff-cards" data-gym-id='{{$gymStaff->gym_id}}' data-employee-id='{{$gymStaff->id}}' data-employee-name='{{$gymStaff->name}}'
-										data-employee-email='{{$gymStaff->email}}'
-										data-employee-phone-number='{{$gymStaff->number}}'
-										data-employee-designation='{{ $gymStaff->designation->designation_name ?? '----' }}'
-										data-employee-salary='{{$gymStaff->salary}}'
-										data-employee-blood-group='{{$gymStaff->blood_group}}'
-										data-employee-joining-date='{{$gymStaff->joining_date}}'
-										data-employee-address='{{$gymStaff->address}}' onclick="showStaffData(this);">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<img class="me-4 food-image rounded" src="{{ $gymStaff->image }}" alt="" style="height: 160px;">
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<span class="fs-14 text-primary">{{ $gymStaff->name  }}</span>
-												</div>
+										<div class="items" id="staff-cards" data-gym-id='{{$gymStaff->gym_id}}'
+											data-employee-id='{{$gymStaff->id}}' data-employee-name='{{$gymStaff->name}}'
+											data-employee-email='{{$gymStaff->email}}'
+											data-employee-phone-number='{{$gymStaff->number}}'
+											data-employee-designation='{{ $gymStaff->designation->designation_name ?? '----' }}'
+											data-employee-salary='{{$gymStaff->salary}}'
+											data-employee-blood-group='{{$gymStaff->blood_group}}'
+											data-employee-joining-date='{{$gymStaff->joining_date}}'
+											data-employee-address='{{$gymStaff->address}}' onclick="showStaffData(this);">
+											<div class="d-sm-flex p-3 border border-light rounded">
+												<img class="me-4 food-image rounded" src="{{ $gymStaff->image }}" alt=""
+													style="height: 160px;">
+												<div>
+													<div class="d-flex align-items-center mb-2">
+														<span class="fs-14 text-primary">{{ $gymStaff->name  }}</span>
+													</div>
 
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i>
-														<span class="fs-14 text-black">#{{ $gymStaff->employee_id }}</span>
-													</li>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i>
-														<span class="fs-14 text-black">{{ $gymStaff->number }}</span>
-													</li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">{{ $gymStaff->name }}</span></li>
-												</ul>
+													<ul>
+														<li class="mb-2"><i class="las la-clock scale5 me-3"></i>
+															<span
+																class="fs-14 text-black">#{{ $gymStaff->employee_id }}</span>
+														</li>
+														<li class="mb-2"><i class="las la-clock scale5 me-3"></i>
+															<span class="fs-14 text-black">{{ $gymStaff->number }}</span>
+														</li>
+														<li><i class="fa fa-star me-3 scale5 text-warning"
+																aria-hidden="true"></i><span
+																class="fs-14 text-black font-w500">{{ $gymStaff->name }}</span>
+														</li>
+													</ul>
+												</div>
 											</div>
 										</div>
-									</div>
 									@endforeach
 								</div>
 							</div>
@@ -95,15 +104,22 @@
 						</div>
 						<div class="dropdown mt-sm-0 mt-3">
 
-							<button type="button" class="btn btn-primary rounded border border-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+							<button type="button" class="btn btn-primary rounded border border-light dropdown-toggle"
+								data-bs-toggle="dropdown" aria-expanded="false">
 								Mark Present Today
 							</button>
 							<div class="dropdown-menu dropdown-menu-end">
-								<a class="dropdown-item" href="javascript:void(0);" data-gym-id='{{$gymStaff->gym_id}}' data-employee-id='{{$gymStaff->id}}' data-attendance-status='1' onclick="markStaffAttendance(this);">Present</a>
+								<a class="dropdown-item" href="javascript:void(0);" data-gym-id='{{$gymStaff->gym_id}}'
+									data-employee-id='{{$gymStaff->id}}' data-attendance-status='1'
+									onclick="markStaffAttendance(this);">Present</a>
 
-								<a class="dropdown-item" href="javascript:void(0);" data-gym-id='{{$gymStaff->gym_id}}' data-employee-id='{{$gymStaff->id}}' data-attendance-status='0' onclick="markStaffAttendance(this);">Absent</a>
+								<a class="dropdown-item" href="javascript:void(0);" data-gym-id='{{$gymStaff->gym_id}}'
+									data-employee-id='{{$gymStaff->id}}' data-attendance-status='0'
+									onclick="markStaffAttendance(this);">Absent</a>
 
-								<a class="dropdown-item" href="javascript:void(0);" data-gym-id='{{$gymStaff->gym_id}}' data-employee-id='{{$gymStaff->id}}' data-attendance-status='.5' onclick="markStaffAttendance(this);">Half Day</a>
+								<a class="dropdown-item" href="javascript:void(0);" data-gym-id='{{$gymStaff->gym_id}}'
+									data-employee-id='{{$gymStaff->id}}' data-attendance-status='.5'
+									onclick="markStaffAttendance(this);">Half Day</a>
 							</div>
 
 						</div>
@@ -125,22 +141,27 @@
 							<ul class="nav nav-tabs" role="tablist">
 
 								<li class="nav-item">
-									<a class="nav-link active" data-bs-toggle="tab" href="#profile"><i class="la la-user me-2"></i> Profile</a>
+									<a class="nav-link active" data-bs-toggle="tab" href="#profile"><i
+											class="la la-user me-2"></i> Profile</a>
 								</li>
 								<!-- <li class="nav-item">
 									<a class="nav-link" data-bs-toggle="tab" href="#home"><i class="la la-home me-2"></i> Expenses</a>
 								</li> -->
 								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#contact"><i class="la la-phone me-2"></i> Documents</a>
+									<a class="nav-link" data-bs-toggle="tab" href="#contact"><i
+											class="la la-phone me-2"></i> Documents</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#assets"><i class="la la-envelope me-2"></i> Assets</a>
+									<a class="nav-link" data-bs-toggle="tab" href="#assets"><i
+											class="la la-envelope me-2"></i> Assets</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#leaves"><i class="la la-envelope me-2"></i> Leaves</a>
+									<a class="nav-link" data-bs-toggle="tab" href="#leaves"><i
+											class="la la-envelope me-2"></i> Leaves</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#slip"><i class="la la-envelope me-2"></i> Salary Slip</a>
+									<a class="nav-link" data-bs-toggle="tab" href="#slip"><i
+											class="la la-envelope me-2"></i> Salary Slip</a>
 								</li>
 							</ul>
 							<div class="tab-content">
@@ -152,20 +173,36 @@
 										<div class="col-xl-6 col-lg-12 col-sm-12">
 											<div class="card overflow-hidden">
 												<ul class="list-group list-group-flush">
-													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Name:</span> <strong class="text-muted" id="profile-name"></strong></li>
-													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Email:</span> <strong class="text-muted" id="profile-email"></strong></li>
-													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Phone Number:</span> <strong class="text-muted" id="profile-phone-number"></strong></li>
-													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Designation:</span> <strong class="text-muted" id="profile-designation"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span
+															class="mb-0">Name:</span> <strong class="text-muted"
+															id="profile-name"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span
+															class="mb-0">Email:</span> <strong class="text-muted"
+															id="profile-email"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span
+															class="mb-0">Phone Number:</span> <strong class="text-muted"
+															id="profile-phone-number"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span
+															class="mb-0">Designation:</span> <strong class="text-muted"
+															id="profile-designation"></strong></li>
 												</ul>
 											</div>
 										</div>
 										<div class="col-xl-6 col-lg-12 col-sm-12">
 											<div class="card overflow-hidden">
 												<ul class="list-group list-group-flush">
-													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Salary:</span> <strong class="text-muted" id="profile-salary"></strong></li>
-													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Blood Group:</span> <strong class="text-muted" id="profile-blood-group"></strong></li>
-													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Joining Date:</span> <strong class="text-muted" id="profile-joining-date"></strong></li>
-													<li class="list-group-item d-flex justify-content-between"><span class="mb-0">Address:</span> <strong class="text-muted" id="profile-address"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span
+															class="mb-0">Salary:</span> <strong class="text-muted"
+															id="profile-salary"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span
+															class="mb-0">Blood Group:</span> <strong class="text-muted"
+															id="profile-blood-group"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span
+															class="mb-0">Joining Date:</span> <strong class="text-muted"
+															id="profile-joining-date"></strong></li>
+													<li class="list-group-item d-flex justify-content-between"><span
+															class="mb-0">Address:</span> <strong class="text-muted"
+															id="profile-address"></strong></li>
 												</ul>
 											</div>
 										</div>
@@ -174,35 +211,47 @@
 								</div>
 
 								<div class="tab-pane fade" id="contact">
-									<div class="modal fade" id="addDoc" tabindex="-1" aria-labelledby="addNewDocLabel" aria-hidden="true">
+									<div class="modal fade" id="addDoc" tabindex="-1" aria-labelledby="addNewDocLabel"
+										aria-hidden="true">
 										<div class="modal-dialog">
 											<div class="modal-content">
 												<div class="modal-header">
 													<h5 class="modal-title" id="addNewDocsLabel">Add Document</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+													<button type="button" class="btn-close" data-bs-dismiss="modal"
+														aria-label="Close"></button>
 												</div>
-												<form action="{{route('addStaffDocuments')}}" method="POST" enctype="multipart/form-data" enctype="multipart/form-data">
+												<form action="{{route('addStaffDocuments')}}" method="POST"
+													enctype="multipart/form-data" enctype="multipart/form-data">
 													@csrf
 													<div class="modal-body">
 														<!-- Hidden field for staff ID -->
-														<input type="hidden" class="form-control staffId" id="staffId" name="staff_id">
+														<input type="hidden" class="form-control staffId" id="staffId"
+															name="staff_id">
 
 														<div class="mb-3">
-															<label for="document_name" class="form-label">File Name</label>
-															<input type="text" class="form-control" id="document_name" name="document_name">
+															<label for="document_name" class="form-label">File
+																Name</label>
+															<input type="text" class="form-control" id="document_name"
+																name="document_name">
 														</div>
 
 														<!-- Aadhar Card Upload -->
 														<div class="mb-3">
 															<label for="file" class="form-label">Choose File</label>
-															<input type="file" class="form-control" id="file" name="file" onchange="previewFile(this, 'aadhaarCardPreview')">
-															<img id="aadhaarCardPreview" class="img-preview mt-2" src="#" alt="Aadhar Card Preview" style="display: none; max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;">
+															<input type="file" class="form-control" id="file"
+																name="file"
+																onchange="previewFile(this, 'aadhaarCardPreview')">
+															<img id="aadhaarCardPreview" class="img-preview mt-2"
+																src="#" alt="Aadhar Card Preview"
+																style="display: none; max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;">
 														</div>
 													</div>
 
 													<div class="modal-footer">
-														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-														<button type="submit" class="btn btn-primary">Save Document</button>
+														<button type="button" class="btn btn-secondary"
+															data-bs-dismiss="modal">Close</button>
+														<button type="submit" class="btn btn-primary">Save
+															Document</button>
 													</div>
 												</form>
 											</div>
@@ -214,7 +263,9 @@
 										</div>
 
 										<div class="dropdown mt-sm-0 mt-3">
-											<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addDoc" class="btn btn-outline-primary rounded">Add Document</a>
+											<a href="javascript:void(0);" data-bs-toggle="modal"
+												data-bs-target="#addDoc" class="btn btn-outline-primary rounded">Add
+												Document</a>
 										</div>
 
 									</div>
@@ -222,11 +273,12 @@
 										<form action="" method="post" enctype="multipart/form-data">
 											@csrf
 											<div class="table-responsive docTable">
-												<table id="documentTable" class="table verticle-middle table-responsive-md">
+												<table id="documentTable"
+													class="table verticle-middle table-responsive-md">
 													<thead>
 														<tr>
 															<th scope="col">Document Name</th>
-															<th scope="col">File</th>
+															<th class="text-center">Download File</th>
 															<th scope="col">Status</th>
 													</thead>
 
@@ -241,54 +293,76 @@
 								</div>
 								<div class="tab-pane fade" id="assets">
 									<!-- Add New Asset Modal -->
-									<div class="modal fade" id="addNewAssets" tabindex="-1" aria-labelledby="addNewAssetsLabel" aria-hidden="true">
+									<div class="modal fade" id="addNewAssets" tabindex="-1"
+										aria-labelledby="addNewAssetsLabel" aria-hidden="true">
 										<div class="modal-dialog">
 											<div class="modal-content">
 												<div class="modal-header">
 													<h5 class="modal-title" id="addNewAssetsLabel">Add New Asset</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+													<button type="button" class="btn-close" data-bs-dismiss="modal"
+														aria-label="Close"></button>
 												</div>
-												<form action="/add-staff-asset" method="POST" enctype="multipart/form-data" enctype="multipart/form-data">
+												<form action="/add-staff-asset" method="POST"
+													enctype="multipart/form-data" enctype="multipart/form-data">
 													@csrf
 													<div class="modal-body">
-														<input type="hidden" class="form-control staffId" id="staffId" name="staff_id">
+														<input type="hidden" class="form-control staffId" id="staffId"
+															name="staff_id">
 														<div class="mb-3">
 															<label for="assetName" class="form-label">Asset Name</label>
-															<input type="text" class="form-control" id="assetName" name="name" required>
+															<input type="text" class="form-control" id="assetName"
+																name="name" required>
 														</div>
 														<div class="mb-3">
-															<label for="assetCategory" class="form-label">Asset Category</label>
-															<input type="text" class="form-control" id="assetCategory" name="category" required>
+															<label for="assetCategory" class="form-label">Asset
+																Category</label>
+															<input type="text" class="form-control" id="assetCategory"
+																name="category" required>
 														</div>
 														<div class="mb-3">
 															<label for="assetTag" class="form-label">Asset Tag</label>
-															<input type="text" class="form-control" id="assetTag" name="asset_tag" required>
+															<input type="text" class="form-control" id="assetTag"
+																name="asset_tag" required>
 														</div>
 														<div class="mb-3">
-															<label for="dateOfAllocation" class="form-label">Date Of Allocation</label>
-															<input type="date" class="form-control" id="dateOfAllocation" name="allocation_date" required>
+															<label for="dateOfAllocation" class="form-label">Date Of
+																Allocation</label>
+															<input type="date" class="form-control"
+																id="dateOfAllocation" name="allocation_date" required>
 														</div>
 														<div class="mb-3">
 															<label for="price" class="form-label">Price</label>
-															<input type="number" class="form-control" id="price" name="price" required>
+															<input type="number" class="form-control" id="price"
+																name="price" required>
 														</div>
 														<div class="mb-3">
 															<label for="status" class="form-label">Status</label>
-															<select class="form-control" id="status" name="status" required>
+															<select class="form-control" id="status" name="status"
+																required>
 																<option value="">Select Status</option>
-																<option value="{{ \App\Enums\GymStaffAssetStatusEnum::ALLOCATED }}">Allocated</option>
-																<option value="{{ \App\Enums\GymStaffAssetStatusEnum::UNDER_REPAIR }}">Under Repair</option>
-																<option value="{{ \App\Enums\GymStaffAssetStatusEnum::RETIRED }}">Retired</option>
+																<option
+																	value="{{ \App\Enums\GymStaffAssetStatusEnum::ALLOCATED }}">
+																	Allocated</option>
+																<option
+																	value="{{ \App\Enums\GymStaffAssetStatusEnum::UNDER_REPAIR }}">
+																	Under Repair</option>
+																<option
+																	value="{{ \App\Enums\GymStaffAssetStatusEnum::RETIRED }}">
+																	Retired</option>
 															</select>
 														</div>
 														<div class="mb-3">
-															<label for="assetImage" class="form-label">Asset Image</label>
-															<input type="file" class="form-control" id="assetImage" name="image">
+															<label for="assetImage" class="form-label">Asset
+																Image</label>
+															<input type="file" class="form-control" id="assetImage"
+																name="image">
 														</div>
 													</div>
 													<div class="modal-footer">
-														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-														<button type="submit" class="btn btn-primary">Save Asset</button>
+														<button type="button" class="btn btn-secondary"
+															data-bs-dismiss="modal">Close</button>
+														<button type="submit" class="btn btn-primary">Save
+															Asset</button>
 													</div>
 												</form>
 											</div>
@@ -304,12 +378,15 @@
 													</div>
 
 													<div class="dropdown mt-sm-0 mt-3">
-														<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addNewAssets" class="btn btn-outline-primary rounded">Add Assets</a>
+														<a href="javascript:void(0);" data-bs-toggle="modal"
+															data-bs-target="#addNewAssets"
+															class="btn btn-outline-primary rounded">Add Assets</a>
 													</div>
 												</div>
 												<div class="card-body">
 													<div class="table-responsive recentOrderTable">
-														<table id="assetTable" class="table verticle-middle table-responsive-md">
+														<table id="assetTable"
+															class="table verticle-middle table-responsive-md">
 															<thead>
 																<tr>
 																	<th scope="col">Asset No.</th>
@@ -334,21 +411,26 @@
 									</div>
 								</div>
 								<div class="tab-pane fade" id="leaves">
-									<div class="modal fade" id="addNewLeaves" tabindex="-1" aria-labelledby="addNewLeaveLabel" aria-hidden="true">
+									<div class="modal fade" id="addNewLeaves" tabindex="-1"
+										aria-labelledby="addNewLeaveLabel" aria-hidden="true">
 										<div class="modal-dialog">
 											<div class="modal-content">
 												<div class="modal-header">
 													<h5 class="modal-title" id="addNewLeaveLabel">Add New Leave</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+													<button type="button" class="btn-close" data-bs-dismiss="modal"
+														aria-label="Close"></button>
 												</div>
 												<form action="/add-staff-leave" method="POST">
 													@csrf
 													<div class="modal-body">
-														<input type="hidden" class="form-control staffId" id="staffId" name="staff_id">
+														<input type="hidden" class="form-control staffId" id="staffId"
+															name="staff_id">
 														<div class="mb-3">
 															<div class="form-group">
-																<label for="leave_type" class="form-label">Leave Type</label>
-																<select class="form-control" id="leave_type" name="leave_type" required>
+																<label for="leave_type" class="form-label">Leave
+																	Type</label>
+																<select class="form-control" id="leave_type"
+																	name="leave_type" required>
 																	<option value="">Select Leave Type</option>
 																	<option value="Sick Leave">Sick Leave</option>
 																	<option value="Vacation">Vacation</option>
@@ -357,32 +439,47 @@
 															</div>
 														</div>
 														<div class="mb-3">
-															<label for="start_date" class="form-label">Start Date</label>
-															<input type="date" class="form-control" id="start_date" name="start_date" required>
+															<label for="start_date" class="form-label">Start
+																Date</label>
+															<input type="date" class="form-control" id="start_date"
+																name="start_date" required>
 														</div>
 														<div class="mb-3">
 															<label for="end_date" class="form-label">End Date</label>
-															<input type="date" class="form-control" id="end_date" name="end_date" required>
+															<input type="date" class="form-control" id="end_date"
+																name="end_date" required>
 														</div>
 														<div class="mb-3">
-															<label for="reason" class="form-label">Reason for Leave</label>
-															<textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
+															<label for="reason" class="form-label">Reason for
+																Leave</label>
+															<textarea class="form-control" id="reason" name="reason"
+																rows="3" required></textarea>
 														</div>
 														<div class="mb-3">
 															<div class="form-group">
-																<label for="status" class="form-label">Leave Status</label>
-																<select class="form-control" id="status" name="status" required>
+																<label for="status" class="form-label">Leave
+																	Status</label>
+																<select class="form-control" id="status" name="status"
+																	required>
 																	<option value="">Select Leave Status</option>
-																	<option value="{{ \App\Enums\LeaveStatusEnum::ACCEPTED }}">Accepted</option>
-																	<option value="{{ \App\Enums\LeaveStatusEnum::REJECTED }}">Rejected</option>
-																	<option value="{{ \App\Enums\LeaveStatusEnum::PENDING }}">Pending</option>
+																	<option
+																		value="{{ \App\Enums\LeaveStatusEnum::ACCEPTED }}">
+																		Accepted</option>
+																	<option
+																		value="{{ \App\Enums\LeaveStatusEnum::REJECTED }}">
+																		Rejected</option>
+																	<option
+																		value="{{ \App\Enums\LeaveStatusEnum::PENDING }}">
+																		Pending</option>
 																</select>
 															</div>
 														</div>
 													</div>
 													<div class="modal-footer">
-														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-														<button type="submit" class="btn btn-primary">Save Leave</button>
+														<button type="button" class="btn btn-secondary"
+															data-bs-dismiss="modal">Close</button>
+														<button type="submit" class="btn btn-primary">Save
+															Leave</button>
 													</div>
 												</form>
 											</div>
@@ -397,12 +494,15 @@
 													</div>
 
 													<div class="dropdown mt-sm-0 mt-3">
-														<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addNewLeaves" class="btn btn-outline-primary rounded">Add Leaves</a>
+														<a href="javascript:void(0);" data-bs-toggle="modal"
+															data-bs-target="#addNewLeaves"
+															class="btn btn-outline-primary rounded">Add Leaves</a>
 													</div>
 												</div>
 												<div class="card-body">
 													<div class="table-responsive recentOrderTable">
-														<table id="leaveTable" class="table verticle-middle table-responsive-md">
+														<table id="leaveTable"
+															class="table verticle-middle table-responsive-md">
 															<thead>
 																<tr>
 																	<th scope="col">Leave Type</th>
@@ -424,9 +524,13 @@
 								<div class="tab-pane fade" id="slip">
 									<div class="pt-4">
 										<h4>This is contact title</h4>
-										<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
+										<p>Far far away, behind the word mountains, far from the countries Vokalia and
+											Consonantia, there live the blind texts. Separated they live in
+											Bookmarksgrove.
 										</p>
-										<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
+										<p>Far far away, behind the word mountains, far from the countries Vokalia and
+											Consonantia, there live the blind texts. Separated they live in
+											Bookmarksgrove.
 										</p>
 									</div>
 								</div>
@@ -443,7 +547,7 @@
 
 
 <script>
-	(function() {
+	(function () {
 		hideEmployeeDetailsSection();
 	})();
 
@@ -472,7 +576,7 @@
 		var staffIdFields = document.querySelectorAll('.staffId');
 
 		// Loop through each element and set the value
-		staffIdFields.forEach(function(field) {
+		staffIdFields.forEach(function (field) {
 			field.value = staffId;
 		});
 
@@ -647,7 +751,10 @@
 
 			row.innerHTML = `
             <td>${docs.document_name}</td>
-            <td><a href="${docs.file}" download>Click Here to Download</a></td>
+			<td class="text-center align-middle">
+    			<a href="${docs.file}" download> <i class="fas fa-download icon"></i></a>
+			</td>
+
             <td>
 				<form action="/update-document-status/${docs.id}" method="GET" style="width:60%;">
                     <select name="status" class="form-select" onchange="this.form.submit()">
@@ -684,7 +791,7 @@
 				staffId: employeeId,
 				attendanceStatus: attendanceStatus
 			},
-			success: function(response) {
+			success: function (response) {
 				// Handle success response (if needed)
 				console.log(response);
 				toastr.option = {
@@ -694,7 +801,7 @@
 				toastr.success(" Attendance Marked.");
 				fetchAttendanceChart(gymId, employeeId);
 			},
-			error: function(error) {
+			error: function (error) {
 				// Handle error (if needed)
 				console.error(error);
 			}
@@ -713,13 +820,13 @@
 				gymId: gymId,
 				staffId: staffId
 			},
-			success: function(response) {
+			success: function (response) {
 				// Handle success response (if needed)
 				console.log(response.data.Absent);
 				attendanceChart(response.data);
 				attendanceDetails(response.gym);
 			},
-			error: function(error) {
+			error: function (error) {
 				// Handle error (if needed)
 				console.log(error);
 			}
@@ -892,7 +999,7 @@
 			const reader = new FileReader();
 
 			if (file.type.startsWith('image/')) {
-				reader.onload = function(e) {
+				reader.onload = function (e) {
 					previewElement.src = e.target.result;
 					previewElement.style.display = 'block'; // Show the image preview
 				};
