@@ -5,6 +5,7 @@ use App\Http\Controllers\EquipmentControllerApi;
 use App\Http\Controllers\GoalControllerApi;
 use App\Http\Controllers\GymDetailControllerApi;
 use App\Http\Controllers\GymGalleryControllerApi;
+use App\Http\Controllers\GymUserAttendenceControllerApi;
 use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\GymUserLoginControllerApi;
 use App\Http\Controllers\GymUserTrainerControllerApi;
@@ -18,6 +19,7 @@ use App\Http\Controllers\UserInjuryControllerApi;
 use App\Http\Controllers\UserLevelControllerApi;
 use App\Http\Controllers\UserSubscriptionControllerApi;
 use App\Http\Controllers\UserWorkoutControllerApi;
+use App\Models\GymUserAttendence;
 use App\Models\UserSubscriptionPayment;
 use Illuminate\Support\Facades\Route;
 
@@ -61,10 +63,14 @@ Route::get('/fetch-advertisement', [AdvertisementControllerApi::class, 'fetchAdv
 Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
 
 Route::middleware('auth:api')->group(function () {
-    
-    Route::post('/update-daily-diet-status',[UserDietControllerApi::class,'updateUserDietStatus']);
 
-    Route::post('/update-daily-workout-status',[UserWorkoutControllerApi::class,'updateCurrentWorkout']);
+    Route::post('/get-user-attendence', [GymUserAttendenceControllerApi::class, 'getUserAttendance']);
+
+    Route::post('/mark-user-attendence',[GymUserAttendenceControllerApi::class,'markAttendance']);
+
+    Route::post('/update-daily-diet-status', [UserDietControllerApi::class, 'updateUserDietStatus']);
+
+    Route::post('/update-daily-workout-status', [UserWorkoutControllerApi::class, 'updateCurrentWorkout']);
 
     Route::post('/update-gym-user-profile', [GymUserControllerApi::class, 'updateGymUserProfile']);
 
@@ -89,17 +95,16 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/fetch-trainer', [GymUserTrainerControllerApi::class, 'fetchUserTrainer']);
 
     Route::post('/fetch-gym-details', [GymDetailControllerApi::class, 'fetchGymDetails']);
-    
+
     Route::post('/fetch-gym-gallery', [GymGalleryControllerApi::class, 'fetchGallery']);
-    
+
     Route::post('/fetch-workout-count', [UserWorkoutControllerApi::class, 'fetchTotalCompletedCounts']);
 
-    Route::get('/fetch-user-detail',[GymUserControllerApi::class,'fetchUserDetails']);
+    Route::get('/fetch-user-detail', [GymUserControllerApi::class, 'fetchUserDetails']);
 
-    Route::post('/change-email-or-phone',[GymUserControllerApi::class,'updateEmailOrPhoneNo']);
+    Route::post('/change-email-or-phone', [GymUserControllerApi::class, 'updateEmailOrPhoneNo']);
 
-    Route::get('/response',[UserSubscriptionPayment::class,'response']);
-
+    Route::get('/response', [UserSubscriptionPayment::class, 'response']);
 });
 
 
