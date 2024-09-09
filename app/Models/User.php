@@ -60,7 +60,7 @@ class User extends Authenticatable
 
     public function injuries()
     {
-        return $this->belongsToMany(UserInjury::class, 'injury_user');
+        return $this->belongsToMany(UserInjury::class, 'injury_users','user_id', 'injury_id');
     }
 
     public function staff()
@@ -331,6 +331,21 @@ class User extends Authenticatable
                 }
             }
 
+            if (!empty($userDetail['levels'])) {
+                foreach ($userDetail['levels'] as $levelId) {
+                    // Check if the level already exists for the user
+                    $existingLevel = LevelUser::where('user_id', $userProfile->id)
+                        ->where('level_id', $levelId)
+                        ->first();
+                    if (!$existingLevel) {
+                        LevelUser::create([
+                            'user_id' => $userProfile->id,
+                            'level_id' => $levelId
+                        ]);
+                    }
+                }
+            }
+
             return [
                 'status'  => 200,
                 'message' => 'Profile updated successfully',
@@ -340,7 +355,7 @@ class User extends Authenticatable
             Log::error('[User][updateUserProfile] Error while updating user profile: ' . $e->getMessage());
             return [
                 'status'  => 500,
-                'message' => 'An error occurred while updating the profile'
+                'message' => 'An error occurred while updating the profile' . $e->getMessage()
             ];
         }
     }
