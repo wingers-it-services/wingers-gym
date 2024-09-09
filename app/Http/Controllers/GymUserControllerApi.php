@@ -380,12 +380,10 @@ class GymUserControllerApi extends Controller
     {
         try {
             // Validate the incoming request data
-            $validatedData = $request->validate([
+           $request->validate([
                 'firstname'    => 'required|string',
                 'lastname'     => 'required|string',
-                'email'        => 'required',
                 'gender'       => 'required|string',
-                'phone_no'     => 'required',
                 'dob'          => 'required|date',
                 'height'       => 'required|numeric',
                 'weight'       => 'required|numeric',
@@ -394,16 +392,19 @@ class GymUserControllerApi extends Controller
                 'goals.*'      => 'exists:goals,id',
                 'injury_ids'   => 'array',
                 'injury_ids.*' => 'exists:user_injuries,id',
+                'levels'       => 'array',
+                'levels.*'     => 'exists:user_lebels,id',
+                'image'        => 'nullable',
             ]);
 
-            $result = $this->user->updateUserProfile($validatedData);
+            $result = $this->user->updateUserProfile($request->all());
 
             return response()->json($result, $result['status']);
         } catch (\Throwable $e) {
             Log::error('[UserControllerApi][updateGymUserProfile] Error while updating user profile: ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
-                'message' => 'An error occurred while updating the profile'
+                'message' => 'An error occurred while updating the profile' . $e->getMessage()
             ], 500);
         }
     }
@@ -419,14 +420,22 @@ class GymUserControllerApi extends Controller
                 ], 401);
             }
 
-            $user->load(['goals', 'injuries', 'levels']);
+            // Fetch related injuries, goals, and levels
+            $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
+            $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
+            $levels = $user->levels()->get(['level_id', 'lebel']);             // Adjust fields as per your model
+            
+
             return response()->json([
                 'status'  => 200,
                 'user'    => $user,
+                'injuries' => $injuries,
+                'goals'   => $goals,
+                'levels'  => $levels,
                 'message' => 'User detail fetched successfully',
             ], 200);
         } catch (\Exception $e) {
-            Log::error('[GymUserControllerApi][fetchUserDetails]Error fetching users details: ' . $e->getMessage());
+            Log::error('[GymUserControllerApi][fetchUserDetails] Error fetching users details: ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
                 'message' => 'Error fetching users details: ' . $e->getMessage(),

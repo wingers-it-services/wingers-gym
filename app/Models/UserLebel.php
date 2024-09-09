@@ -13,7 +13,7 @@ class UserLebel extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'level'
+        'lebel'
     ];
 
     protected static function boot()
@@ -22,5 +22,10 @@ class UserLebel extends Model
         static::creating(function ($model) {
             $model->uuid = Uuid::uuid4()->toString();
         });
+    }
+
+    public function levelUsers()
+    {
+        return $this->hasMany(LevelUser::class, 'level_id');
     }
 }

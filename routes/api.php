@@ -18,6 +18,7 @@ use App\Http\Controllers\UserInjuryControllerApi;
 use App\Http\Controllers\UserLevelControllerApi;
 use App\Http\Controllers\UserSubscriptionControllerApi;
 use App\Http\Controllers\UserWorkoutControllerApi;
+use App\Models\UserSubscriptionPayment;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/fetch-goal', [GoalControllerApi::class, 'fetchGoal'])->name('fetchGoal');
@@ -96,6 +97,12 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/fetch-user-detail',[GymUserControllerApi::class,'fetchUserDetails']);
 
     Route::post('/change-email-or-phone',[GymUserControllerApi::class,'updateEmailOrPhoneNo']);
+
+    Route::get('/response',[UserSubscriptionPayment::class,'response']);
+
 });
+
+
+Route::post('/phonepe-callback', [UserSubscriptionPayment::class, 'phonePeCallback']);
 
 Route::post('/check-email', [HomeUserLoginControllerApi::class, 'checkEmail'])->name('checkEmail');

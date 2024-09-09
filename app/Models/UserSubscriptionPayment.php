@@ -41,7 +41,6 @@ class UserSubscriptionPayment extends Model
             "email"              => $orderData['email'],
             "mobile"             => $orderData['mobile'],
             "subscription_id"    => $orderData['subscription_id'],
-            "igst"               => $orderData['igst'],
             "total"              => $orderData['subtotal'],
             "amount"             => $orderData['amount']
         ]);

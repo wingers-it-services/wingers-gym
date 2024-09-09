@@ -70,11 +70,16 @@ class UserService
             $this->uploadAdminProfilePicture($user, $enteredUserData["image"]);
         }
 
-        // Insert into the pivot table
-        GymUserGym::create(
-            ['user_id' => $user->id, 
-            'gym_id'  => $gymId],
-        );
+        $existingAssociation = GymUserGym::where('user_id', $user->id)
+            ->where('gym_id', $gymId)
+            ->first();
+
+        if (!$existingAssociation) {
+            GymUserGym::create([
+                'user_id' => $user->id,
+                'gym_id'  => $gymId,
+            ]);
+        }
 
         return true;
     }
