@@ -11,7 +11,8 @@
     <meta name="csrf-token" content="ZY4pR8wIEdrTLWxVivLo4lvqoE0UPbxm6RtBU20w">
     <meta name="author" content="DexignZone">
     <meta name="robots" content="">
-    <meta name="keywords" content="Fitness solution, Healthier lifestyle, Fito, Personalized programs,  Exercise, Nutrition, Motivation, Fitness journey, DexignZone">
+    <meta name="keywords"
+        content="Fitness solution, Healthier lifestyle, Fito, Personalized programs,  Exercise, Nutrition, Motivation, Fitness journey, DexignZone">
     <meta name="description" content="Some description for the page">
 
     <meta property="og:title" content="Fito - A Comprehensive Fitness Solution for a Healthier Lifestyle | DexignZone">
@@ -43,21 +44,27 @@
                                         @csrf
                                         <div class="form-group">
                                             <label class="mb-1"><strong>Email</strong></label>
-                                            <input type="email" class="form-control" name="email" placeholder="Email" required>
+                                            <input type="email" class="form-control" name="email" placeholder="Email"
+                                                required>
                                         </div>
                                         <div class="form-group position-relative">
                                             <label class="mb-1"><strong>Password</strong></label>
-                                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-                                            <span class="show-pass eye" onclick="togglePasswordVisibility()">
-                                                <i class="fa fa-eye-slash"></i>
-                                                <i class="fa fa-eye"></i>
+                                            <input type="password" class="form-control" id="password" name="password"
+                                                placeholder="Password" required>
+                                            <span class="show-pass eye" id="togglePassword"
+                                                onclick="togglePasswordVisibility()">
+                                                <i class="fa fa-eye-slash" id="eye-slash"></i>
+                                                <i class="fa fa-eye" id="eye" style="display:none;"></i>
                                             </span>
+
                                         </div>
                                         <div class="row d-flex justify-content-between mt-4 mb-2">
                                             <div class="form-group">
                                                 <div class="form-check custom-checkbox ms-1">
-                                                    <input type="checkbox" class="form-check-input" id="basic_checkbox_1">
-                                                    <label class="form-check-label" for="basic_checkbox_1">Remember my preference</label>
+                                                    <input type="checkbox" class="form-check-input"
+                                                        id="basic_checkbox_1">
+                                                    <label class="form-check-label" for="basic_checkbox_1">Remember my
+                                                        preference</label>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -69,7 +76,8 @@
                                         </div>
                                     </form>
                                     <div class="new-account mt-3">
-                                        <p>Don't have an account? <a class="text-primary" href='/register'>Sign up</a></p>
+                                        <p>Don't have an account? <a class="text-primary" href='/register'>Sign up</a>
+                                        </p>
                                     </div>
                                     <div class="new-account mt-3">
                                         <p><a class="text-primary" href='/admin/admin-login'>Admin LOgin</a></p>
@@ -94,18 +102,20 @@
     <script>
         function togglePasswordVisibility() {
             var passwordField = document.getElementById("password");
-            var toggleIcon = document.getElementById("togglePassword");
+            var eyeSlash = document.getElementById("eye-slash");
+            var eye = document.getElementById("eye");
 
             if (passwordField.type === "password") {
                 passwordField.type = "text";
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
+                eyeSlash.style.display = "none";
+                eye.style.display = "inline";
             } else {
                 passwordField.type = "password";
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
+                eyeSlash.style.display = "inline";
+                eye.style.display = "none";
             }
         }
+
     </script>
 
 

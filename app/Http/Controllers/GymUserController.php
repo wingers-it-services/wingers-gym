@@ -23,6 +23,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Throwable;
 
 class GymUserController extends Controller
@@ -137,7 +138,11 @@ class GymUserController extends Controller
             $validateData = $request->validate([
                 'firstname' => 'required',
                 'lastname' => 'required',
-                'email' => 'required|unique:gym_users,email',
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique('gym_users')->whereNull('deleted_at') // Exclude soft-deleted records
+                ],
                 'gender' => 'required',
                 'subscription_id' => 'required',
                 'blood_group' => 'nullable',
@@ -154,8 +159,11 @@ class GymUserController extends Controller
                 'profile_status' => 'nullable',
                 'staff_assign_id' => 'nullable',
                 'password' => 'required',
-                'phone_no' => 'required|unique:gym_users,phone_no',
-                'dob'       => 'required'
+                'phone_no' => [
+                    'required',
+                    Rule::unique('gym_users')->whereNull('deleted_at') // Exclude soft-deleted records
+                ],
+                'dob' => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -277,14 +285,14 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "user_id"       => 'required',
+                "user_id" => 'required',
                 "exercise_name" => 'required',
-                "day"           => 'required',
-                "sets"          => 'required|integer|min:1',
-                "reps"          => 'required|integer|min:1',
-                "weight"        => 'required|numeric|min:0',
-                "workout_des"   => 'required',
-                "workout_id"    => 'required'
+                "day" => 'required',
+                "sets" => 'required|integer|min:1',
+                "reps" => 'required|integer|min:1',
+                "weight" => 'required|numeric|min:0',
+                "workout_des" => 'required',
+                "workout_id" => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -304,18 +312,18 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "user_id"                       => 'required',
-                "meal_name"                     => 'required',
-                "calories"                      => 'required|integer|min:0',
-                "protein"                       => 'required|integer|min:0',
-                "carbs"                         => 'required|numeric|min:0',
-                "fats"                          => 'required|numeric|min:0',
-                "diet_id"                       => 'required',
-                "goal"                          => 'required',
-                "meal_type"                     => 'required',
-                "diet_description"              => 'required',
-                "alternative_diet_description"  => 'required',
-                "day"                           => 'required'
+                "user_id" => 'required',
+                "meal_name" => 'required',
+                "calories" => 'required|integer|min:0',
+                "protein" => 'required|integer|min:0',
+                "carbs" => 'required|numeric|min:0',
+                "fats" => 'required|numeric|min:0',
+                "diet_id" => 'required',
+                "goal" => 'required',
+                "meal_type" => 'required',
+                "diet_description" => 'required',
+                "alternative_diet_description" => 'required',
+                "day" => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -335,14 +343,14 @@ class GymUserController extends Controller
         try {
             // Validate the incoming request data
             $validatedData = $request->validate([
-                'user_id'       => 'required',
-                'workout_id'    => 'required',
-                'day'           => 'required',
+                'user_id' => 'required',
+                'workout_id' => 'required',
+                'day' => 'required',
                 'exercise_name' => 'required',
-                'sets'          => 'required|integer|min:1',
-                'reps'          => 'required|integer|min:1',
-                'weight'        => 'required|numeric|min:0',
-                'workout_des'   => 'required',
+                'sets' => 'required|integer|min:1',
+                'reps' => 'required|integer|min:1',
+                'weight' => 'required|numeric|min:0',
+                'workout_des' => 'required',
             ]);
 
             $workout = $this->workout->findOrFail($request->workout_id);
@@ -360,18 +368,18 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'diet_id'                       => 'required',
-                'user_id'                       => 'required',
-                'meal_name'                     => 'required',
-                "calories"                      => 'required|integer|min:0',
-                "protein"                       => 'required|integer|min:0',
-                "carbs"                         => 'required|numeric|min:0',
-                "fats"                          => 'required|numeric|min:0',
-                "goal"                          => 'required',
-                "meal_type"                     => 'required',
-                "diet_description"              => 'required',
-                "alternative_diet_description"  => 'required',
-                "day"                           => 'required'
+                'diet_id' => 'required',
+                'user_id' => 'required',
+                'meal_name' => 'required',
+                "calories" => 'required|integer|min:0',
+                "protein" => 'required|integer|min:0',
+                "carbs" => 'required|numeric|min:0',
+                "fats" => 'required|numeric|min:0',
+                "goal" => 'required',
+                "meal_type" => 'required',
+                "diet_description" => 'required',
+                "alternative_diet_description" => 'required',
+                "day" => 'required'
             ]);
 
             // Find the workout by ID
@@ -641,7 +649,7 @@ class GymUserController extends Controller
         if ($diet) {
             return response()->json([
                 'image' => asset($diet->image),
-                'id'     => $diet->id,
+                'id' => $diet->id,
                 'calories' => $diet->calories,
                 'protein' => $diet->protein,
                 'carbs' => $diet->carbs,
@@ -777,8 +785,8 @@ class GymUserController extends Controller
     {
         try {
             $request->validate([
-                "gymId"            => 'required',
-                "staffId"          => 'required',
+                "gymId" => 'required',
+                "staffId" => 'required',
                 "attendanceStatus" => 'required'
             ]);
 
@@ -810,7 +818,7 @@ class GymUserController extends Controller
     {
         try {
             $request->validate([
-                "gymId"   => 'required',
+                "gymId" => 'required',
                 "staffId" => 'required'
             ]);
 
@@ -829,10 +837,10 @@ class GymUserController extends Controller
                 return response()->json([
                     'status' => 200,
                     'data' => [
-                        "Absent"   => 0,
-                        "Halfday"  => 0,
+                        "Absent" => 0,
+                        "Halfday" => 0,
                         "WeekOff" => 0,
-                        "Present"  => 0,
+                        "Present" => 0,
                         "Unmarked" => 30
                     ]
                 ], 200);
@@ -840,7 +848,7 @@ class GymUserController extends Controller
 
             $gym = $gym->toArray();
             $data = [
-                "Absent"  => 0,
+                "Absent" => 0,
                 "Halfday" => 0,
                 "WeekOff" => 0,
                 "Present" => 0,
@@ -867,8 +875,8 @@ class GymUserController extends Controller
             }
             return response()->json([
                 'status' => 200,
-                'data'   => $data,
-                'gym'    => $gym
+                'data' => $data,
+                'gym' => $gym
             ], 200);
         } catch (\Throwable $th) {
             Log::error("[GymStaffController][fetchUserAttendanceChart] error " . $th->getMessage());

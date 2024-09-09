@@ -10,7 +10,8 @@
     <meta name="csrf-token" content="ZY4pR8wIEdrTLWxVivLo4lvqoE0UPbxm6RtBU20w">
     <meta name="author" content="DexignZone">
     <meta name="robots" content="">
-    <meta name="keywords" content="Fitness solution, Healthier lifestyle, Fito, Personalized programs,  Exercise, Nutrition, Motivation, Fitness journey, DexignZone">
+    <meta name="keywords"
+        content="Fitness solution, Healthier lifestyle, Fito, Personalized programs,  Exercise, Nutrition, Motivation, Fitness journey, DexignZone">
     <meta name="description" content="Some description for the page">
 
     <meta property="og:title" content="Fito - A Comprehensive Fitness Solution for a Healthier Lifestyle | DexignZone">
@@ -42,25 +43,29 @@
                                         @csrf
                                         {{-- <div class="form-group">
                                             <label class="mb-1" for="gym_name"><strong>User Name</strong></label>
-                                            <input type="text" class="form-control" name="username" placeholder="username" required>
+                                            <input type="text" class="form-control" name="username"
+                                                placeholder="username" required>
                                         </div> --}}
                                         <div class="form-group">
                                             <label class="mb-1" for="gym_name"><strong>GYM Name</strong></label>
-                                            <input type="text" class="form-control" name="gym_name" placeholder="Gym Name" required>
+                                            <input type="text" class="form-control" name="gym_name"
+                                                placeholder="Gym Name" required>
                                         </div>
                                         <div class="form-group">
                                             <label class="mb-1" for="email"><strong>Email</strong></label>
-                                            <input type="email" class="form-control" name="email" placeholder="Email" required>
+                                            <input type="email" class="form-control" name="email" placeholder="Email"
+                                                required>
                                         </div>
                                         <div class="form-group position-relative">
                                             <label class="mb-1" for="password"><strong>Password</strong></label>
-                                            <input type="password" class="form-control" name="password" placeholder="Password" required>
-                                            <span class="show-pass eye">
-
-                                                <i class="fa fa-eye-slash"></i>
-                                                <i class="fa fa-eye"></i>
-
+                                            <input type="password" class="form-control" id="password" name="password"
+                                                placeholder="Password" required>
+                                            <span class="show-pass eye" id="togglePassword"
+                                                onclick="togglePasswordVisibility()">
+                                                <i class="fa fa-eye-slash" id="eye-slash"></i>
+                                                <i class="fa fa-eye" id="eye" style="display:none;"></i>
                                             </span>
+
                                         </div>
 
                                         <div class="text-center mt-4">
@@ -81,6 +86,27 @@
     <!--**********************************
     Scripts
     ***********************************-->
+    <script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('js/custom.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('js/deznav-init.js')}}" type="text/javascript"></script>
+    <script>
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById("password");
+            var eyeSlash = document.getElementById("eye-slash");
+            var eye = document.getElementById("eye");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                eyeSlash.style.display = "none";
+                eye.style.display = "inline";
+            } else {
+                passwordField.type = "password";
+                eyeSlash.style.display = "inline";
+                eye.style.display = "none";
+            }
+        }
+
+    </script>
 
     {{-- Custom sweetAlert --}}
     @include('CustomSweetAlert');
