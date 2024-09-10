@@ -50,6 +50,9 @@ class GymUserLoginControllerApi extends Controller
                 $inputType = 'phone number';
             }
 
+            $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
+            $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
+            $levels = $user->levels()->get(['level_id', 'lebel']);
             // Check if the user exists
             if (!$user) {
                 return response()->json([
@@ -78,6 +81,9 @@ class GymUserLoginControllerApi extends Controller
                 return response()->json([
                     'status'       => 200,
                     'user'         => $user,
+                    'injuries'     => $injuries,
+                    'goals'        => $goals,
+                    'levels'       => $levels,
                     'access_token' => $token,
                     'message'      => 'Account not completed. Please complete your account.',
                 ], 200);
@@ -122,10 +128,13 @@ class GymUserLoginControllerApi extends Controller
                 'email' => 'required|email',
                 'user_type' => 'required' // Add user_type validation
             ]);
-    
+
             // Find the user by email
             $user = $this->user->where('email', $request->email)->first();
-    
+
+            $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
+            $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
+            $levels = $user->levels()->get(['level_id', 'lebel']);  
             // If user is found, proceed with further checks
             if ($user) {
                 // Check if the user_type matches
@@ -135,20 +144,23 @@ class GymUserLoginControllerApi extends Controller
                         'message'  => 'Invalid user type for this login.',
                     ], 403);
                 }
-    
+
                 // Generate token for the user
                 $token = $user->createToken('API Token')->accessToken;
-    
+
                 // Check if the user's profile status is complete
                 if ($user->profile_status == GymUserAccountStatusEnum::USER_INJURY_DETAIL) {
                     return response()->json([
                         'status'       => 200,
                         'user'         => $user,
+                        'injuries'     => $injuries,
+                        'goals'        => $goals,
+                        'levels'       => $levels,
                         'access_token' => $token,
                         'message'      => 'Login successfully',
                     ]);
                 }
-    
+
                 // If profile status is incomplete
                 return response()->json([
                     'status'       => 403,
@@ -157,7 +169,7 @@ class GymUserLoginControllerApi extends Controller
                     'message'      => 'User profile is not completed.',
                 ]);
             }
-    
+
             // If user does not exist
             return response()->json([
                 'status'   => 422,
@@ -172,5 +184,4 @@ class GymUserLoginControllerApi extends Controller
             ], 500);
         }
     }
-    
 }

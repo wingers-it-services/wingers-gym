@@ -14,13 +14,16 @@ class UserSubscriptionControllerApi extends Controller
 {
     use errorResponseTrait;
     protected $userSubscriptionHistory;
+    protected $userSubscriptionPayment;
     protected $gymSubscription;
 
     public function __construct(
         UserSubscriptionHistory $userSubscriptionHistory,
+        UserSubscriptionPayment $userSubscriptionPayment,
         GymSubscription $gymSubscription
     ) {
         $this->userSubscriptionHistory = $userSubscriptionHistory;
+        $this->userSubscriptionPayment = $userSubscriptionPayment;
         $this->gymSubscription = $gymSubscription;
     }
 
@@ -108,6 +111,33 @@ class UserSubscriptionControllerApi extends Controller
         }
     }
 
+    public function initialisePaymentWithTest(array $data)
+    {
+        $lastOrderId = UserSubscriptionPayment::latest('id')->value('id');
+        $newOrderId = ($lastOrderId == null) ? 'WITS1' :  'W1' . ($lastOrderId + 1);
+        $amount = $data['totalprice'] * 100;
+      
+        // $paymentData = [
+        //     'merchantId'            =>  'PGTESTPAYUAT',
+        //     'merchantTransactionId' =>  $newOrderId,
+        //     'merchantUserId'        =>  'MUID123',
+        //     'amount'                =>  $amount,
+        //     'redirectUrl'           => route('response'),
+        //     'redirectMode'          => 'POST',
+        //     'callbackUrl'           => route('response'),
+        //     'mobileNumber'          => $data['mobile'],
+        //     'paymentInstrument'     =>
+        //     [
+        //         'type' => 'PAY_PAGE',
+        //     ],
+        // ];
+
+        // $encode = base64_encode(json_encode($paymentData));
+
+
+        $this->userSubscriptionPayment->newOrder($data);
+    }
+
     public function phonePeCallback(Request $request)
     {
         try {
@@ -116,7 +146,7 @@ class UserSubscriptionControllerApi extends Controller
            
             $payload = $request->all();
             
-        
+            $this->response($request);
             return response()->json([
                 'status' => 'success',
                 'message' => 'Callback processed successfully.'
