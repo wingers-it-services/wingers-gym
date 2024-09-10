@@ -24,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
         $schedule->command('user:workout')->dailyAt('00:01');
         //For Diet
         $schedule->command('user:diets')->dailyAt('00:01');
+        
+        $schedule->command('user:attendence')->monthlyOn(1, '00:00');
 
     }
 

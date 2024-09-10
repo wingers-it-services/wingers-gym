@@ -11,11 +11,11 @@ enum AttendenceStatusEnum
     public static function getColor($status)
     {
         return match ($status) {
-            self::PRESENT => 'green',   // Green for present
-            self::ABSENT => 'red',      // Red for absent
-            self::WEEKEND => 'gray',    // Gray for weekend
-            self::HOLIDAY => 'blue',    // Blue for holiday
-            default => 'black',         // Black for unknown
+            self::PRESENT => '#8fbc8f',
+            self::ABSENT => '#cd5c5c', 
+            self::WEEKEND => '#808080',
+            self::HOLIDAY => '#deb887',
+            default => '#FFFFFF',      
         };
     }
 }

@@ -395,6 +395,7 @@ class GymUserControllerApi extends Controller
                 'levels'       => 'array',
                 'levels.*'     => 'exists:user_lebels,id',
                 'image'        => 'nullable',
+                'remove_image'    => 'nullable|in:0,1',
             ]);
 
             $result = $this->user->updateUserProfile($request->all());

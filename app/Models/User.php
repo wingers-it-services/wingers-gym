@@ -58,9 +58,23 @@ class User extends Authenticatable
         });
     }
 
+    public function getImageAttribute()
+    {
+        $imagePath = $this->attributes['image'];
+        $defaultImagePath = 'user_images/default.jpg';
+        $fullImagePath = $imagePath;
+
+        // Check if the file exists in the public directory
+        if ($imagePath && file_exists(public_path($fullImagePath))) {
+            return asset($fullImagePath);
+        }
+
+        return asset($defaultImagePath);
+    }
+
     public function injuries()
     {
-        return $this->belongsToMany(UserInjury::class, 'injury_users','user_id', 'injury_id');
+        return $this->belongsToMany(UserInjury::class, 'injury_users', 'user_id', 'injury_id');
     }
 
     public function staff()
@@ -273,8 +287,8 @@ class User extends Authenticatable
         try {
             $user = auth()->user();
             $userProfile = $this->find($user->id);
-            
-  
+
+
             // Check if the user exists
             if (!$userProfile) {
                 return [
@@ -282,7 +296,7 @@ class User extends Authenticatable
                     'message' => 'User not found'
                 ];
             }
-    
+
             // Update the basic profile information
             $userProfile->update([
                 'firstname'       => $userDetail['firstname'],
@@ -293,8 +307,15 @@ class User extends Authenticatable
                 'weight'          => $userDetail['weight'],
                 'days'            => $userDetail['days']
             ]);
-    
-            // Handle image update
+
+            if (isset($userDetail['remove_image']) && $userDetail['remove_image'] == 1) {
+                if ($userProfile->image && file_exists(public_path($userProfile->image))) {
+                    unlink(public_path($userProfile->image));
+                }
+                $userProfile->image = null; // Remove the image path from the database
+            } 
+            
+            // Handle new image upload if 'image' is provided
             if (isset($userDetail['image'])) {
                 if ($userProfile->image && file_exists(public_path($userProfile->image))) {
                     unlink(public_path($userProfile->image));
@@ -307,12 +328,13 @@ class User extends Authenticatable
                 $userProfile->image = $imagePath . $imageName;
             }
     
+
             $userProfile->save();
-    
+
             // Update injuries
             if (isset($userDetail['injury_ids']) && is_array($userDetail['injury_ids'])) {
                 $newInjuryIds = $userDetail['injury_ids'];
-    
+
                 // Update or create new injury records
                 foreach ($newInjuryIds as $injuryId) {
                     InjuryUser::updateOrCreate(
@@ -322,7 +344,7 @@ class User extends Authenticatable
                         ]
                     );
                 }
-    
+
                 // Delete injuries that are not in the new list
                 InjuryUser::where('user_id', $userProfile->id)
                     ->whereNotIn('injury_id', $newInjuryIds)
@@ -331,11 +353,11 @@ class User extends Authenticatable
                 // If no injury_ids are provided, remove all injury records for the user
                 InjuryUser::where('user_id', $userProfile->id)->delete();
             }
-    
+
             // Update goals
             if (!empty($userDetail['goals'])) {
                 $newGoalIds = $userDetail['goals'];
-    
+
                 // Update or create new goal records
                 foreach ($newGoalIds as $goalId) {
                     GoalUser::updateOrCreate(
@@ -345,7 +367,7 @@ class User extends Authenticatable
                         ]
                     );
                 }
-    
+
                 // Delete goals that are not in the new list
                 GoalUser::where('user_id', $userProfile->id)
                     ->whereNotIn('goal_id', $newGoalIds)
@@ -354,11 +376,11 @@ class User extends Authenticatable
                 // If no goals are provided, remove all goal records for the user
                 GoalUser::where('user_id', $userProfile->id)->delete();
             }
-    
+
             // Update levels
             if (!empty($userDetail['levels'])) {
                 $newLevelIds = $userDetail['levels'];
-    
+
                 // Update or create new level records
                 foreach ($newLevelIds as $levelId) {
                     LevelUser::updateOrCreate(
@@ -368,7 +390,7 @@ class User extends Authenticatable
                         ]
                     );
                 }
-    
+
                 // Delete levels that are not in the new list
                 LevelUser::where('user_id', $userProfile->id)
                     ->whereNotIn('level_id', $newLevelIds)
@@ -377,10 +399,11 @@ class User extends Authenticatable
                 // If no levels are provided, remove all level records for the user
                 LevelUser::where('user_id', $userProfile->id)->delete();
             }
-    
+
             $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
             $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
             $levels = $user->levels()->get(['level_id', 'lebel']);
+
             return [
                 'status'   => 200,
                 'message'  => 'Profile updated successfully',
@@ -397,7 +420,7 @@ class User extends Authenticatable
             ];
         }
     }
-    
+
 
     public function goalUsers()
     {
