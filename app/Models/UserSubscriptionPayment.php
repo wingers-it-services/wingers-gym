@@ -34,6 +34,7 @@ class UserSubscriptionPayment extends Model
 
     public function newOrder(array $orderData)
     {
+        $lastOrderId = $this->latest('id')->value('id');
         return $this->create([
             "orderId"            => $orderData['orderId'],
             "user_id"            => $orderData['userId'],

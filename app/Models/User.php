@@ -273,7 +273,8 @@ class User extends Authenticatable
         try {
             $user = auth()->user();
             $userProfile = $this->find($user->id);
-
+            
+  
             // Check if the user exists
             if (!$userProfile) {
                 return [
@@ -281,84 +282,122 @@ class User extends Authenticatable
                     'message' => 'User not found'
                 ];
             }
-
+    
+            // Update the basic profile information
             $userProfile->update([
                 'firstname'       => $userDetail['firstname'],
                 'lastname'        => $userDetail['lastname'],
-                'email'           => $userDetail['email'],
-                'phone_no'        => $userDetail['phone_no'],
                 'gender'          => $userDetail['gender'],
                 'dob'             => $userDetail['dob'],
                 'height'          => $userDetail['height'],
                 'weight'          => $userDetail['weight'],
                 'days'            => $userDetail['days']
             ]);
-
+    
+            // Handle image update
             if (isset($userDetail['image'])) {
                 if ($userProfile->image && file_exists(public_path($userProfile->image))) {
                     unlink(public_path($userProfile->image));
                 }
-
-                $imagePath = 'admin_user_images/';
+    
+                $imagePath = 'user_images/';
                 $imageName = time() . '_' . $userDetail['image']->getClientOriginalName();
                 $userDetail['image']->move(public_path($imagePath), $imageName);
-
+    
                 $userProfile->image = $imagePath . $imageName;
             }
-
+    
+            $userProfile->save();
+    
+            // Update injuries
             if (isset($userDetail['injury_ids']) && is_array($userDetail['injury_ids'])) {
-                foreach ($userDetail['injury_ids'] as $injuryId) {
-                    UserInjury::updateOrCreate(
+                $newInjuryIds = $userDetail['injury_ids'];
+    
+                // Update or create new injury records
+                foreach ($newInjuryIds as $injuryId) {
+                    InjuryUser::updateOrCreate(
                         [
                             'user_id'   => $userProfile->id,
                             'injury_id' => $injuryId
                         ]
                     );
                 }
+    
+                // Delete injuries that are not in the new list
+                InjuryUser::where('user_id', $userProfile->id)
+                    ->whereNotIn('injury_id', $newInjuryIds)
+                    ->delete();
+            } else {
+                // If no injury_ids are provided, remove all injury records for the user
+                InjuryUser::where('user_id', $userProfile->id)->delete();
             }
-
+    
+            // Update goals
             if (!empty($userDetail['goals'])) {
-                foreach ($userDetail['goals'] as $goalId) {
-                    $existingGoal = GoalUser::where('user_id', $userProfile->id)
-                        ->where('goal_id', $goalId)
-                        ->first();
-                    if (!$existingGoal) {
-                        GoalUser::create([
+                $newGoalIds = $userDetail['goals'];
+    
+                // Update or create new goal records
+                foreach ($newGoalIds as $goalId) {
+                    GoalUser::updateOrCreate(
+                        [
                             'user_id' => $userProfile->id,
                             'goal_id' => $goalId
-                        ]);
-                    }
+                        ]
+                    );
                 }
+    
+                // Delete goals that are not in the new list
+                GoalUser::where('user_id', $userProfile->id)
+                    ->whereNotIn('goal_id', $newGoalIds)
+                    ->delete();
+            } else {
+                // If no goals are provided, remove all goal records for the user
+                GoalUser::where('user_id', $userProfile->id)->delete();
             }
-
+    
+            // Update levels
             if (!empty($userDetail['levels'])) {
-                foreach ($userDetail['levels'] as $levelId) {
-                    // Check if the level already exists for the user
-                    $existingLevel = LevelUser::where('user_id', $userProfile->id)
-                        ->where('level_id', $levelId)
-                        ->first();
-                    if (!$existingLevel) {
-                        LevelUser::create([
-                            'user_id' => $userProfile->id,
+                $newLevelIds = $userDetail['levels'];
+    
+                // Update or create new level records
+                foreach ($newLevelIds as $levelId) {
+                    LevelUser::updateOrCreate(
+                        [
+                            'user_id'  => $userProfile->id,
                             'level_id' => $levelId
-                        ]);
-                    }
+                        ]
+                    );
                 }
+    
+                // Delete levels that are not in the new list
+                LevelUser::where('user_id', $userProfile->id)
+                    ->whereNotIn('level_id', $newLevelIds)
+                    ->delete();
+            } else {
+                // If no levels are provided, remove all level records for the user
+                LevelUser::where('user_id', $userProfile->id)->delete();
             }
-
+    
+            $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
+            $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
+            $levels = $user->levels()->get(['level_id', 'lebel']);
             return [
-                'status'  => 200,
-                'message' => 'Profile updated successfully',
-                'user'    => $userProfile,
+                'status'   => 200,
+                'message'  => 'Profile updated successfully',
+                'user'     => $userProfile,
+                'injuries'     => $injuries,
+                'goals'        => $goals,
+                'levels'       => $levels,
             ];
         } catch (Throwable $e) {
             Log::error('[User][updateUserProfile] Error while updating user profile: ' . $e->getMessage());
             return [
                 'status'  => 500,
-                'message' => 'An error occurred while updating the profile' . $e->getMessage()
+                'message' => 'An error occurred while updating the profile: ' . $e->getMessage()
             ];
         }
     }
+    
 
     public function goalUsers()
     {

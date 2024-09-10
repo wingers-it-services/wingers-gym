@@ -19,7 +19,6 @@ use App\Http\Controllers\UserInjuryControllerApi;
 use App\Http\Controllers\UserLevelControllerApi;
 use App\Http\Controllers\UserSubscriptionControllerApi;
 use App\Http\Controllers\UserWorkoutControllerApi;
-use App\Models\GymUserAttendence;
 use App\Models\UserSubscriptionPayment;
 use Illuminate\Support\Facades\Route;
 
@@ -108,6 +107,6 @@ Route::middleware('auth:api')->group(function () {
 });
 
 
-Route::post('/phonepe-callback', [UserSubscriptionPayment::class, 'phonePeCallback']);
+Route::post('/phonepe-callback', [UserSubscriptionControllerApi::class, 'phonePeCallback']);
 
 Route::post('/check-email', [HomeUserLoginControllerApi::class, 'checkEmail'])->name('checkEmail');
