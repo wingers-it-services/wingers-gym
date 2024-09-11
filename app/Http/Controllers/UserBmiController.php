@@ -46,6 +46,7 @@ class UserBmiController extends Controller
                 "height" => 'required',
                 "weight" => 'required',
                 "bmi" => 'required',
+                "month" => 'required'
             ]);
 
             $userId = $request->all()['user_id'];
@@ -86,6 +87,7 @@ class UserBmiController extends Controller
                 'quads' => 'nullable|numeric|min:0',
                 'hamstring' => 'nullable|numeric|min:0',
                 'calves' => 'nullable|numeric|min:0',
+                'month'  => 'required'
             ]);
 
             // Update or create the BMI record
@@ -94,7 +96,8 @@ class UserBmiController extends Controller
                 [
                     'height' => $request->height,
                     'weight' => $request->weight,
-                    'bmi' => $request->bmi
+                    'bmi' => $request->bmi,
+                    'month' => $request->month
                 ]
             );
 

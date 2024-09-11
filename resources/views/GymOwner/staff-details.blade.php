@@ -25,39 +25,39 @@
 							<div class="tab-pane fade show active" id="Breakfast" role="tabpanel">
 								<div class="featured-menus owl-carousel">
 									@foreach ($gymStaffs as $gymStaff)
-										<div class="items" id="staff-cards" data-gym-id='{{$gymStaff->gym_id}}'
-											data-employee-id='{{$gymStaff->id}}' data-employee-name='{{$gymStaff->name}}'
-											data-employee-email='{{$gymStaff->email}}'
-											data-employee-phone-number='{{$gymStaff->number}}'
-											data-employee-designation='{{ $gymStaff->designation->designation_name ?? '----' }}'
-											data-employee-salary='{{$gymStaff->salary}}'
-											data-employee-blood-group='{{$gymStaff->blood_group}}'
-											data-employee-joining-date='{{$gymStaff->joining_date}}'
-											data-employee-address='{{$gymStaff->address}}' onclick="showStaffData(this);">
-											<div class="d-sm-flex p-3 border border-light rounded">
-												<img class="me-4 food-image rounded" src="{{ $gymStaff->image }}" alt=""
-													style="height: 160px;">
-												<div>
-													<div class="d-flex align-items-center mb-2">
-														<span class="fs-14 text-primary">{{ $gymStaff->name  }}</span>
-													</div>
-
-													<ul>
-														<li class="mb-2"><i class="las la-clock scale5 me-3"></i>
-															<span
-																class="fs-14 text-black">#{{ $gymStaff->employee_id }}</span>
-														</li>
-														<li class="mb-2"><i class="las la-clock scale5 me-3"></i>
-															<span class="fs-14 text-black">{{ $gymStaff->number }}</span>
-														</li>
-														<li><i class="fa fa-star me-3 scale5 text-warning"
-																aria-hidden="true"></i><span
-																class="fs-14 text-black font-w500">{{ $gymStaff->name }}</span>
-														</li>
-													</ul>
+									<div class="items" id="staff-cards" data-gym-id='{{$gymStaff->gym_id}}'
+										data-employee-id='{{$gymStaff->id}}' data-employee-name='{{$gymStaff->name}}'
+										data-employee-email='{{$gymStaff->email}}'
+										data-employee-phone-number='{{$gymStaff->number}}'
+										data-employee-designation='{{ $gymStaff->designation->designation_name ?? '----' }}'
+										data-employee-salary='{{$gymStaff->salary}}'
+										data-employee-blood-group='{{$gymStaff->blood_group}}'
+										data-employee-joining-date='{{$gymStaff->joining_date}}'
+										data-employee-address='{{$gymStaff->address}}' onclick="showStaffData(this);">
+										<div class="d-sm-flex p-3 border border-light rounded">
+											<img class="me-4 food-image rounded" src="{{ $gymStaff->image }}" alt=""
+												style="height: 160px;">
+											<div>
+												<div class="d-flex align-items-center mb-2">
+													<span class="fs-14 text-primary">{{ $gymStaff->name  }}</span>
 												</div>
+
+												<ul>
+													<li class="mb-2"><i class="las la-clock scale5 me-3"></i>
+														<span
+															class="fs-14 text-black">#{{ $gymStaff->employee_id }}</span>
+													</li>
+													<li class="mb-2"><i class="las la-clock scale5 me-3"></i>
+														<span class="fs-14 text-black">{{ $gymStaff->number }}</span>
+													</li>
+													<li><i class="fa fa-star me-3 scale5 text-warning"
+															aria-hidden="true"></i><span
+															class="fs-14 text-black font-w500">{{ $gymStaff->name }}</span>
+													</li>
+												</ul>
 											</div>
 										</div>
+									</div>
 									@endforeach
 								</div>
 							</div>
@@ -141,27 +141,31 @@
 							<ul class="nav nav-tabs" role="tablist">
 
 								<li class="nav-item">
-									<a class="nav-link active" data-bs-toggle="tab" href="#profile"><i
-											class="la la-user me-2"></i> Profile</a>
+									<a class="nav-link active" data-bs-toggle="tab" href="#profile">
+										<i class="la la-user me-2"></i> Profile</a>
 								</li>
-								<!-- <li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#home"><i class="la la-home me-2"></i> Expenses</a>
-								</li> -->
+
 								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#contact"><i
-											class="la la-phone me-2"></i> Documents</a>
+									<a class="nav-link" data-bs-toggle="tab" href="#contact">
+										<i class="la la-file me-2"></i> Documents
+									</a>
 								</li>
+
 								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#assets"><i
-											class="la la-envelope me-2"></i> Assets</a>
+									<a class="nav-link" data-bs-toggle="tab" href="#assets">
+										<i class="la la-briefcase me-2"></i> Assets
+									</a>
 								</li>
+
 								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#leaves"><i
-											class="la la-envelope me-2"></i> Leaves</a>
+									<a class="nav-link" data-bs-toggle="tab" href="#leaves">
+										<i class="la la-calendar me-2"></i> Leaves
+									</a>
 								</li>
+
 								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#slip"><i
-											class="la la-envelope me-2"></i> Salary Slip</a>
+									<a class="nav-link" data-bs-toggle="tab" href="#slip">
+										<i class="la la-file-invoice-dollar me-2"></i> Salary Slip</a>
 								</li>
 							</ul>
 							<div class="tab-content">
@@ -547,7 +551,7 @@
 
 
 <script>
-	(function () {
+	(function() {
 		hideEmployeeDetailsSection();
 	})();
 
@@ -576,7 +580,7 @@
 		var staffIdFields = document.querySelectorAll('.staffId');
 
 		// Loop through each element and set the value
-		staffIdFields.forEach(function (field) {
+		staffIdFields.forEach(function(field) {
 			field.value = staffId;
 		});
 
@@ -791,7 +795,7 @@
 				staffId: employeeId,
 				attendanceStatus: attendanceStatus
 			},
-			success: function (response) {
+			success: function(response) {
 				// Handle success response (if needed)
 				console.log(response);
 				toastr.option = {
@@ -801,7 +805,7 @@
 				toastr.success(" Attendance Marked.");
 				fetchAttendanceChart(gymId, employeeId);
 			},
-			error: function (error) {
+			error: function(error) {
 				// Handle error (if needed)
 				console.error(error);
 			}
@@ -820,13 +824,13 @@
 				gymId: gymId,
 				staffId: staffId
 			},
-			success: function (response) {
+			success: function(response) {
 				// Handle success response (if needed)
 				console.log(response.data.Absent);
 				attendanceChart(response.data);
 				attendanceDetails(response.gym);
 			},
-			error: function (error) {
+			error: function(error) {
 				// Handle error (if needed)
 				console.log(error);
 			}
@@ -999,7 +1003,7 @@
 			const reader = new FileReader();
 
 			if (file.type.startsWith('image/')) {
-				reader.onload = function (e) {
+				reader.onload = function(e) {
 					previewElement.src = e.target.result;
 					previewElement.style.display = 'block'; // Show the image preview
 				};
