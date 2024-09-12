@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Gym;
 use App\Models\GymUserGym;
+use App\Models\Holiday;
 use App\Services\GymService;
 use App\Traits\SessionTrait;
 use Exception;
@@ -18,15 +19,18 @@ class GymDetailController extends Controller
     protected $gym;
     protected $gymService;
     protected $gymUserGym;
+    protected $gymHoliday;
 
     public function __construct(
         Gym $gym,
         GymService $gymService,
-        GymUserGym $gymUserGym
+        GymUserGym $gymUserGym,
+        Holiday $gymHoliday
     ) {
         $this->gym = $gym;
         $this->gymService = $gymService;
         $this->gymUserGym = $gymUserGym;
+        $this->gymHoliday = $gymHoliday;
     }
 
     public function showDashboard(Request $request)
@@ -83,7 +87,6 @@ class GymDetailController extends Controller
         session()->flush();
 
         return redirect()->route('login')->with('status', 'success')->with('message', 'Logout successfully');
-
     }
 
     public function registerGym(Request $request)
@@ -97,7 +100,7 @@ class GymDetailController extends Controller
 
             $gymUser = $this->gymService->createGymAccount($request->all());
             if ($gymUser) {
-                return redirect()->route('login')->with('status','success')->with('message', 'Gym Registered Succesfully.');
+                return redirect()->route('login')->with('status', 'success')->with('message', 'Gym Registered Succesfully.');
             }
             return redirect()->route('register')->with('status', 'error')->with('message', 'error in register gym.');
         } catch (Exception $e) {
@@ -173,10 +176,33 @@ class GymDetailController extends Controller
     {
         try {
             $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
             $totalUsers = $this->gymUserGym->countUsersInGym($gym->id);
-            return view('GymOwner.gym-profile', compact('gym', 'totalUsers'));
+            $holidays = $this->gymHoliday->where('gym_id', $gymId)->get();
+
+            return view('GymOwner.gym-profile', compact('gym', 'totalUsers', 'holidays'));
         } catch (\Exception $e) {
             Log::error('[GymDetailController][GymProfileView] Error fetching gym profile view: ' . $e->getMessage());
+        }
+    }
+
+    public function addHolidayByGym(Request $request)
+    {
+        try {
+            $request->validate([
+                'holiday_name'    => 'required',
+                'date' => 'required'
+            ]);
+
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
+
+            $this->gymHoliday->addHoliday($request->all(), $gymId);
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Holiday Added Succesfully.');
+        } catch (Exception $e) {
+            Log::error('[GymDetailController][addHolidayByGym] Error adding holiday: ' . $e->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Error adding holiday: ' . $e->getMessage());
         }
     }
 }
