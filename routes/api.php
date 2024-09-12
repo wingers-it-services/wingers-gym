@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdvertisementControllerApi;
+use App\Http\Controllers\Api\UserBmiControllerApi;
 use App\Http\Controllers\EquipmentControllerApi;
 use App\Http\Controllers\GoalControllerApi;
 use App\Http\Controllers\GymDetailControllerApi;
@@ -63,14 +64,14 @@ Route::get('/fetch-advertisement', [AdvertisementControllerApi::class, 'fetchAdv
 Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
 
 Route::middleware('auth:api')->group(function () {
-    
-    Route::post('/response',[UserSubscriptionControllerApi::class,'response']);
 
-    Route::post('/get-home-page-data',[HomeControllerApi::class,'fetchAdvertisementAndAttendance']);
+    Route::post('/response', [UserSubscriptionControllerApi::class, 'response']);
+
+    Route::post('/get-home-page-data', [HomeControllerApi::class, 'fetchAdvertisementAndAttendance']);
 
     Route::post('/get-user-attendence', [GymUserAttendenceControllerApi::class, 'getUserAttendance']);
 
-    Route::post('/mark-user-attendence',[GymUserAttendenceControllerApi::class,'markAttendance']);
+    Route::post('/mark-user-attendence', [GymUserAttendenceControllerApi::class, 'markAttendance']);
 
     Route::post('/update-daily-diet-status', [UserDietControllerApi::class, 'updateUserDietStatus']);
 
@@ -109,6 +110,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/change-email-or-phone', [GymUserControllerApi::class, 'updateEmailOrPhoneNo']);
 
     Route::get('/response', [UserSubscriptionPayment::class, 'response']);
+
+    Route::post('/fetch-user-bmis', [UserBmiControllerApi::class, 'getUserBmis']);
 });
 
 
