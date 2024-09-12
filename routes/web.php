@@ -298,3 +298,5 @@ Route::get('/rooms', [AdminController::class, 'showRooms']);
 Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
+
+Route::post('/add-holiday', [GymDetailController::class, 'addHolidayByGym']);

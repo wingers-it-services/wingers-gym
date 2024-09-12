@@ -16,6 +16,15 @@ class Holiday extends Model
         'date'
     ];
 
+    public function addHoliday(array $holidays, int $gymId)
+    {
+        $this->create([
+            'gym_id' => $gymId,
+            'holiday_name' =>  $holidays['holiday_name'],
+            'date' => $holidays['date']
+        ]);
+    }
+
     protected static function boot()
     {
         parent::boot();
