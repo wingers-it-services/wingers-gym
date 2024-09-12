@@ -9,6 +9,7 @@ use App\Models\UserSubscriptionPayment;
 use App\Traits\errorResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class UserSubscriptionControllerApi extends Controller
 {
@@ -116,7 +117,7 @@ class UserSubscriptionControllerApi extends Controller
         $lastOrderId = UserSubscriptionPayment::latest('id')->value('id');
         $newOrderId = ($lastOrderId == null) ? 'WITS1' :  'W1' . ($lastOrderId + 1);
         $amount = $data['totalprice'] * 100;
-      
+
         // $paymentData = [
         //     'merchantId'            =>  'PGTESTPAYUAT',
         //     'merchantTransactionId' =>  $newOrderId,
@@ -138,20 +139,71 @@ class UserSubscriptionControllerApi extends Controller
         $this->userSubscriptionPayment->newOrder($data);
     }
 
+    // public function purchaseSubscription(Request $request)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'gym_id'          => 'required|exists:gyms,id',
+    //             'subscription_id' => 'required',
+    //             'amount'          => 'required',
+    //         ]);
+
+    //         $order = $this->userSubscriptionPayment->newOrder($request->all);
+    //         return response()->json([
+    //             'status'  => 200,
+    //             'order'   => $order,
+    //             'message' => 'Error purchasing subscriptions details: '
+    //         ], 200);
+    //     } catch (Throwable $e) {
+    //         Log::error('[UserSubscriptionControllerApi][purchaseSubscription]Error purchasing subscriptions: ' . $e->getMessage());
+    //         return response()->json([
+    //             'status'  => 500,
+    //             'message' => 'Error purchasing subscriptions details: ' . $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
     public function phonePeCallback(Request $request)
     {
         try {
             Log::info('PhonePe Callback received: ', $request->all());
 
-           
-            $payload = $request->all();
-            
-            $this->response($request);
+            // Decode Base64 response
+            $jsonResponse = base64_decode($request->input('response'));
+
+            // Decode JSON response into an associative array
+            $decodedResponse = json_decode($jsonResponse, true);
+
+            // Check if JSON decoding was successful
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('JSON decode error: ' . json_last_error_msg());
+            }
+
+            // Ensure 'data' field exists in the response
+            if (!isset($decodedResponse['data'])) {
+                throw new \Exception('Missing data field in response');
+            }
+
+            $responseData = $decodedResponse['data'];
+
+            $orderData = [
+                'subtotal'            => $responseData['amount'] ?? 0,
+                'amount'              => $responseData['amount'] ?? 0,
+                'response'            => $jsonResponse,
+                'response_code'       => $decodedResponse['code'] ?? null,
+                'merchantId'          => $responseData['merchantTransactionId'] ?? null,
+            ];
+
+            // Log extracted order data
+            Log::info('Extracted Order Data: ', $orderData);
+
+            // Save the order data to the database
+            $this->userSubscriptionPayment->newOrder($orderData);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Callback processed successfully.'
             ], 200);
-
         } catch (\Exception $e) {
             // Log any exception that occurs
             Log::error('PhonePe Callback Error: ' . $e->getMessage());
@@ -159,7 +211,7 @@ class UserSubscriptionControllerApi extends Controller
             // Return an error response
             return response()->json([
                 'status' => 'error',
-                'message' => 'An error occurred while processing the callback.'
+                'message' => 'An error occurred while processing the callback. ' . $e->getMessage()
             ], 500);
         }
     }
@@ -167,10 +219,23 @@ class UserSubscriptionControllerApi extends Controller
     public function response(Request $request)
     {
         try {
-            $responseData = $request->all();
+            $request->validate([
+                'gym_id'                => 'required|exists:gyms,id',
+                'subscription_id'       => 'required',
+                'merchantTransactionId' => 'required'
+            ]);
 
-            $order = UserSubscriptionPayment::where('orderId',  $responseData['transactionId'])->first();
+            $order = UserSubscriptionPayment::where('merchantId',  $request->merchantTransactionId)->first();
             // $project = $this->project->find($order->project_id);
+            if (!$order) {
+                return response()->json([
+                    'success' => 404,
+                    'message' => 'No order available for this merchant transection ID',
+                ], 404);
+            }
+
+            $lastOrderId = UserSubscriptionPayment::latest('id')->value('id');
+            $orderId = $request->gym_id . 'WITSGYM' . ($lastOrderId + 1);
 
             if (!isset($order)) {
                 Log::error('[UserSubscriptionControllerApi][response] Invalid order ', [
@@ -179,37 +244,56 @@ class UserSubscriptionControllerApi extends Controller
                 ]);
                 return 'Payment failed';
             }
-
-            if ($responseData['code'] == PaymentStatusCodeEnum::PAYMENT_SUCCESS) {
-                $order->update([
-                    'response_code'       => $responseData['code'],
-                    'merchantId'          => $responseData['merchantId'],
-                    'providerReferenceId' => $responseData['providerReferenceId'],
-                    'responseData'        => json_encode($responseData),
+            $user = auth()->user();
+            if ($order->code == PaymentStatusCodeEnum::PAYMENT_SUCCESS) {
+                $orderDetail = $order->update([
+                    'orderId'          => $orderId,
+                    'userId'           => $user->id,
+                    'name'             => $user->firstname . $user->lastname,
+                    'email'            => $user->email,
+                    'mobile'           => $user->phone_no,
+                    'gym_id'           => $request->gym_id,
+                    'subscription_id'  => $request->subscription_id,
                 ]);
-            } else if ($responseData['code'] == PaymentStatusCodeEnum::PAYMENT_ERROR) {
+            } else if ($order->code == PaymentStatusCodeEnum::PAYMENT_ERROR) {
                 $order->update([
-                    'response_code'       => $responseData['code'],
-                    'merchantId'          => $responseData['merchantId'],
-                    'providerReferenceId' => $responseData['providerReferenceId'],
-                    'responseData'        => json_encode($responseData),
+                    'orderId'          => $orderId,
+                    'userId'           => $user->id,
+                    'name'             => $user->firstname . $user->lastname,
+                    'email'            => $user->email,
+                    'mobile'           => $user->phone_no,
+                    'gym_id'           => $request->gym_id,
+                    'subscription_id'  => $request->subscription_id,
                 ]);
                 Log::error('[UserSubscriptionControllerApi][response] Payment failed ' . 'input' . $request);
                 // return redirect()->route('project-single', [$project->uuid])->with('status', 'error')->with('message', 'Payment Failed.');
             } else {
                 $order->update([
-                    'response_code'  => $responseData['code'],
-                    'merchantId'     => $responseData['merchantId'],
-                    'responseData'   => json_encode($responseData),
+                    'orderId'          => $orderId,
+                    'userId'           => $user->id,
+                    'name'             => $user->firstname . $user->lastname,
+                    'email'            => $user->email,
+                    'mobile'           => $user->phone_no,
+                    'gym_id'           => $request->gym_id,
+                    'subscription_id'  => $request->subscription_id,
                 ]);
 
-                Log::error('[CheckoutController][response] Payment Pending '. 'input'. $request.'responseData'. json_encode($responseData));
+                Log::error('[UserSubscriptionControllerApi][response] Payment Pending ' . 'input' . $request);
                 // return redirect()->route('project-single', [$project->uuid])->with('status', 'error')->with('message', 'Payment Pending.');
             }
+            return response()->json([
+                'status'  => 200,
+                'order'   => $order,
+                'message' => 'Order done successfully'
+            ], 200);
             // return redirect()->route('project-single', [$project->uuid])->with('status', 'success' . $order->id)->with('message', 'Project downloaded successfully.');
         } catch (\Throwable $e) {
-            Log::error('Payment not done.' . 'Request=' . $request . 'Throwable=' . $e->getMessage());
+            Log::error('[UserSubscriptionControllerApi][response]Payment not done.' . 'Request=' . $request . 'Throwable=' . $e->getMessage());
             // return redirect()->route('project-single', [$project->uuid])->with('status', 'error')->with('message', 'Payment not done.');
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Order done successfully ' . $e->getMessage()
+            ], 500);
         }
     }
 }
