@@ -67,7 +67,7 @@
             <div class="container-fluid">
                 <div class="page-titles">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">FAQ</a></li>
+                        <!-- <li class="breadcrumb-item"><a href="javascript:void(0)">FAQ</a></li> -->
 
                     </ol>
                 </div>
@@ -654,9 +654,7 @@
 	<div class="footer">
 
 
-		<div class="copyright">
-			<p>Copyright © Designed &amp; Developed by <a href="https://wingersitservices.co.in/" target="_blank">Wingers IT Services Pvt. Ltd</a> 2024</p>
-		</div>
+	
 	</div> <!--************
             Footer end
         *************-->

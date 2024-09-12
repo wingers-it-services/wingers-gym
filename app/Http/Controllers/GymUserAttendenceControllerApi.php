@@ -19,7 +19,7 @@ class GymUserAttendenceControllerApi extends Controller
 
     public function __construct(
         GymUserAttendence $gymUserAttendence,
-        GymUserAttendence $holiday,
+        Holiday $holiday,
         Gym $gym
     ) {
         $this->gymUserAttendence = $gymUserAttendence;

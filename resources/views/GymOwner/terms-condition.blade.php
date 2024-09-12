@@ -30,6 +30,27 @@
 
 
 </head>
+<style>
+    .accordion-gradient .accordion-button {
+        color: #fff;
+        background-image: linear-gradient(to right, rgb #1D0E30 0%, rgb #1D0E30 100%);
+        border-color: transparent;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        box-shadow: none;
+    }
+
+    .accordion-gradient .accordion-button.collapsed {
+        border-bottom-left-radius: 0.375rem;
+        border-bottom-right-radius: 0.375rem;
+    }
+
+    .accordion-gradient .accordion-body {
+        color: #000;
+        background-image: linear-gradient(to right, #fff 0%, #fff 100%);
+        border-color: transparent;
+    }
+</style>
 
 <body>
 
@@ -67,21 +88,20 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header d-block">
-                            <h4 class="card-title">Terms And Conditions</h4>
+                            {{-- <h4 class="card-title">Terms And Conditions</h4> --}}
                             {{-- <p class="m-0 subtitle">Default accordion. Add <code>accordion</code> class in root</p> --}}
                         </div>
                         <div class="card-body">
-                            <div class="accordion accordion-primary" id="accordion-one">
+                            <div class="accordion accordion-rounded-stylish accordion-gradient" id="accordion-twelve">
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header">
+                                    <h2 class="accordion-header accordion-header-primary" id="headingOne5">
                                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#default-collapseOne" aria-expanded="true"
-                                            aria-controls="default-collapseOne">
+                                            data-bs-target="#collapseOne5">
                                             1. Applicability
                                         </button>
                                     </h2>
-                                    <div id="default-collapseOne" class="accordion-collapse collapse show"
-                                        data-bs-parent="#accordion-one">
+                                    <div id="collapseOne5" class="accordion-collapse collapse show"
+                                        aria-labelledby="headingOne5" data-bs-parent="#accordion-twelve">
                                         <div class="accordion-body">
                                             1.1 The General Terms and Conditions below apply to all offers and
                                             transactions of Wingers IT Services. Prices are subject to change.</br>
@@ -96,15 +116,14 @@
                                     </div>
                                 </div>
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#default-collapseTwo"
-                                            aria-expanded="false" aria-controls="default-collapseTwo">
+                                    <h2 class="accordion-header accordion-header-primary" id="headingTwo5">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseTwo5">
                                             2.QUALITY
                                         </button>
                                     </h2>
-                                    <div id="default-collapseTwo" class="accordion-collapse collapse"
-                                        data-bs-parent="#accordion-one">
+                                    <div id="collapseTwo5" class="accordion-collapse collapse"
+                                        aria-labelledby="headingTwo5" data-bs-parent="#accordion-twelve">
                                         <div class="accordion-body">
                                             2.1 The Application guarantees that all the products i.e marriage offers,
                                             jobs,business and events mentioned meets the standards of the concept.</br>
@@ -114,15 +133,14 @@
                                     </div>
                                 </div>
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#default-collapseThree"
-                                            aria-expanded="false">
+                                    <h2 class="accordion-header accordion-header-primary" id="headingThree5">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseThree5">
                                             3. Prices/offers
                                         </button>
                                     </h2>
-                                    <div id="default-collapseThree" class="accordion-collapse collapse"
-                                        data-bs-parent="#accordion-one">
+                                    <div id="collapseThree5" class="accordion-collapse collapse "
+                                        aria-labelledby="headingThree5" data-bs-parent="#accordion-twelve">
                                         <div class="accordion-body">
                                             3.1 All offers made by Wingers IT Services are without obligation and we
                                             expressly reserves the right to change the prices, in particular if this is
@@ -142,15 +160,14 @@
                                     </div>
                                 </div>
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#default-collapseFour"
-                                            aria-expanded="false" aria-controls="default-collapseFour">
+                                    <h2 class="accordion-header accordion-header-primary" id="headingFour5">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseFour5">
                                             4. Payments
                                         </button>
                                     </h2>
-                                    <div id="default-collapseFour" class="accordion-collapse collapse"
-                                        data-bs-parent="#accordion-one">
+                                    <div id="collapseFour5" class="accordion-collapse collapse "
+                                        aria-labelledby="headingFour5" data-bs-parent="#accordion-twelve">
                                         <div class="accordion-body">
                                             4.1 All prices are including GST.</br>
                                             4.2 Methods of payment we accept: Cash and Online via gpay, Paytm,etc.</br>
@@ -159,41 +176,37 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#default-collapseFive"
-                                            aria-expanded="false" aria-controls="default-collapseFive">
+                                    <h2 class="accordion-header accordion-header-primary" id="headingFive5">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseFive5">
                                             5. Other provisions
                                         </button>
                                     </h2>
-                                    <div id="default-collapseFive" class="accordion-collapse collapse"
-                                        data-bs-parent="#accordion-one">
+                                    <div id="collapseFive5" class="accordion-collapse collapse"
+                                        aria-labelledby="headingFive5" data-bs-parent="#accordion-twelve">
                                         <div class="accordion-body">
                                             5.1 If one or more of the provisions in these Terms and Conditions or any
-                                            other agreement with Wingers IT Services are in conflict with any applicable
-                                            legal regulation, the provision in question will lapse and be replaced by a
-                                            new comparable stipulation admissible by law to be determined by Wingers IT
-                                            Services.</br>
-                                            5.2 The law of India applies to all agreements entered into with or
-                                            concluded by Wingers IT Services. Any disputes arising directly or
-                                            indirectly from these agreements will be exclusively settled by the Court of
-                                            India.
+                                    other agreement with Wingers IT Services are in conflict with any applicable
+                                    legal regulation, the provision in question will lapse and be replaced by a
+                                    new comparable stipulation admissible by law to be determined by Wingers IT
+                                    Services.</br>
+                                    5.2 The law of India applies to all agreements entered into with or
+                                    concluded by Wingers IT Services. Any disputes arising directly or
+                                    indirectly from these agreements will be exclusively settled by the Court of
+                                    India.
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#default-collapseSix"
-                                            aria-expanded="false" aria-controls="default-collapseSix">
+                                    <h2 class="accordion-header accordion-header-primary" id="headingSix5">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseSix5">
                                             6. Cancellations
                                         </button>
                                     </h2>
-                                    <div id="default-collapseSix" class="accordion-collapse collapse"
-                                        data-bs-parent="#accordion-one">
+                                    <div id="collapseSix5" class="accordion-collapse collapse"
+                                        aria-labelledby="headingSix5" data-bs-parent="#accordion-twelve">
                                         <div class="accordion-body">
                                             6.1 If an event is cancelled or postponed, we will do its utmost to inform
                                             you as soon as possible. However, Wingers IT Services will not be
@@ -205,27 +218,23 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
-                <!-- Column ends -->
-
             </div>
-            <!-- Row ends -->
         </div>
-        <!-- container ends -->
+        <!-- Column ends -->
+
+    </div>
+    <!-- Row ends -->
+    </div>
+    <!-- container ends -->
     </div>
 
     <!--************
             Footer start
         *************-->
-    <div class="footer">
-
-
-        <div class="copyright">
-            <p>Copyright © Designed &amp; Developed by <a href="https://wingersitservices.co.in/"
-                    target="_blank">Wingers IT Services Pvt. Ltd</a> 2024</p>
-        </div>
-    </div> <!--************
+     <!--************
             Footer end
         *************-->
 
@@ -245,7 +254,5 @@
     <script src="https://fito.dexignzone.com/laravel/demo/js/custom.min.js" type="text/javascript"></script>
     <script src="https://fito.dexignzone.com/laravel/demo/js/deznav-init.js" type="text/javascript"></script>
 
-
 </body>
-
 </html>

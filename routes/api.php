@@ -9,6 +9,7 @@ use App\Http\Controllers\GymUserAttendenceControllerApi;
 use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\GymUserLoginControllerApi;
 use App\Http\Controllers\GymUserTrainerControllerApi;
+use App\Http\Controllers\HomeControllerApi;
 use App\Http\Controllers\HomeUserLoginControllerApi;
 use App\Http\Controllers\LocationControllerApi;
 use App\Http\Controllers\ReelControllerApi;
@@ -62,6 +63,10 @@ Route::get('/fetch-advertisement', [AdvertisementControllerApi::class, 'fetchAdv
 Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
 
 Route::middleware('auth:api')->group(function () {
+    
+    Route::post('/response',[UserSubscriptionControllerApi::class,'response']);
+
+    Route::post('/get-home-page-data',[HomeControllerApi::class,'fetchAdvertisementAndAttendance']);
 
     Route::post('/get-user-attendence', [GymUserAttendenceControllerApi::class, 'getUserAttendance']);
 
