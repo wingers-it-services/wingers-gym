@@ -7,7 +7,6 @@ use App\Models\Advertisement;
 use App\Models\Gym;
 use App\Models\GymUserAttendence;
 use App\Models\Holiday;
-use App\Models\User;
 use App\Models\UserSubscriptionHistory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -16,11 +15,23 @@ use Illuminate\Support\Facades\Log;
 class HomeControllerApi extends Controller
 {
     protected $advertisement;
+    protected $holiday;
+    protected $userSubscriptionHistory;
+    protected $gymUserAttendence;
+    protected $gym;
 
     public function __construct(
-        Advertisement $advertisement
+        Gym $gym,
+        Holiday $holiday,
+        Advertisement $advertisement,
+        GymUserAttendence $gymUserAttendence,
+        UserSubscriptionHistory $userSubscriptionHistory
     ) {
+        $this->gym = $gym;
+        $this->holiday = $holiday;
         $this->advertisement = $advertisement;
+        $this->gymUserAttendence = $gymUserAttendence;
+        $this->userSubscriptionHistory = $userSubscriptionHistory;
     }
 
     public function fetchAdvertisement(Request $request)
@@ -59,50 +70,96 @@ class HomeControllerApi extends Controller
             ]);
 
             $user = auth()->user();
-            $gym = Gym::find($request->gym_id);
+            $gym = $this->gym->find($request->gym_id);
 
-            $subscription = UserSubscriptionHistory::where('user_id', $user->id)
+            $subscription = $this->userSubscriptionHistory->where('user_id', $user->id)
                 ->where('status', 1)
                 ->where('gym_id', $request->gym_id)->first();
 
             $startDate = Carbon::parse($subscription->subscription_start_date);
             $endDate = Carbon::parse($subscription->subscription_end_date);
-            $todayDate = Carbon::now()->startOfDay(); 
+            $todayDate = Carbon::now()->startOfDay();
 
-            $holidays = Holiday::where('gym_id', $gym->id)
+            $holidays = $this->holiday->where('gym_id', $gym->id)
                 ->whereBetween('date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-                ->pluck('date'); 
+                ->pluck('date');
 
             $holidays = $holidays->map(function ($holidayDate) {
                 return Carbon::parse($holidayDate)->format('Y-m-d');
             });
 
-            $totalDays = $startDate->diffInDays($endDate) + 1; 
+            $totalDays = $startDate->diffInDays($endDate) + 1;
+            $totalPendingDays = $todayDate->diffInDays($endDate) + 1;
             $presentCount = 0;
+            $totalPresentDays = 0;
             $holidayCount = 0;
+            $holidayCountTillToday = 0;
             $weekendCount = 0;
+            $weekendCountTillToday = 0;
+            $absentCount = 0;
+
+            // for ($date = $startDate; $date->lte($todayDate); $date->addDay()) {
+            //     $dayOfWeek = $date->format('l'); // Get the day of the week (e.g., 'Sunday')
+
+            //     // Check if the day is a weekend (Sunday)
+            //     if ($dayOfWeek == 'Sunday') {
+            //         $weekendCountTillToday++;
+            //     }
+
+            //     // Check if the day is a holiday
+            //     if ($holidays->contains($date->format('Y-m-d'))) {
+            //         $holidayCount++;
+            //     }
+            // }
+
+            // for ($date = $startDate; $date->lte($todayDate); $date->addDay()) {
+            //     $dayOfWeek = $date->format('l'); // Get the day of the week (e.g., 'Sunday')
+
+            //     // Debug: Log the current date and day of week
+            //     Log::info('Checking Date: ' . $date->format('Y-m-d') . ', Day of Week: ' . $dayOfWeek);
+
+            //     // Check if the day is a weekend (Sunday)
+            //     if ($dayOfWeek == 'Sunday') {
+            //         $weekendCountTillToday++;
+            //     }
+
+            //     // Check if the day is a holiday
+            //     if ($holidays->contains($date->format('Y-m-d'))) {
+            //         $holidayCountTillToday++;
+            //     }
+            // }
 
             for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
-                $dayOfWeek = $date->format('l'); 
+                $dayOfWeek = $date->format('l');
 
                 if ($dayOfWeek == 'Sunday') {
                     $weekendCount++;
-                    continue; 
-                }
-                if ($holidays->contains($date->format('Y-m-d'))) {
-                    $holidayCount++;
-                    continue; 
+                    continue;
                 }
 
-                $attendance = GymUserAttendence::where('gym_id', $gym->id)
+                if ($holidays->contains($date->format('Y-m-d'))) {
+                    $holidayCount++;
+                    continue;
+                }
+
+                $attendance = $this->gymUserAttendence->where('gym_id', $gym->id)
                     ->where('gym_user_id', $user->id)
                     ->where('year', $date->year)
                     ->where('month', $date->month)
                     ->first();
 
                 $day = 'day' . $date->day;
+                // if ($attendance && $attendance->{$day} == AttendenceStatusEnum::PRESENT) {
+                //     $presentCount++;
+                // }
+
                 if ($attendance && $attendance->{$day} == AttendenceStatusEnum::PRESENT) {
                     $presentCount++;
+                    $totalPresentDays++; // Add actual present days to total present count till today
+                }
+
+                if ($attendance && $attendance->{$day} == AttendenceStatusEnum::ABSENT) {
+                    $absentCount++;
                 }
             }
 
@@ -110,28 +167,33 @@ class HomeControllerApi extends Controller
 
             $actualWorkingDays = $totalDays - $weekendCount - $holidayCount;
 
-            $pendingWorkingDays = min($pendingDays, $actualWorkingDays - $presentCount);
+            // $pendingWorkingDays = min($pendingDays, $actualWorkingDays - $presentCount);
+
+            $pendingWorkingDays = min($pendingDays, $actualWorkingDays);
 
             $pendingDaysPercentage = $totalDays > 0 ? ($pendingWorkingDays / $totalDays) * 100 : 0;
 
             $presentPercentage = $actualWorkingDays > 0 ? ($presentCount / $actualWorkingDays) * 100 : 0;
 
             return response()->json([
-                'status'                 => 200,
-                'total_days'             => $totalDays,
-                'present_days'           => $presentCount,
-                'weekends'               => $weekendCount,
-                'holidays'               => $holidayCount,
-                'pending_days'           => $pendingWorkingDays, // Pending working days after today
-                'pending_days_percentage' => number_format($pendingDaysPercentage, 2), // Pending days percentage
-                'subs'                   => $subscription,
-                'startDate'              => $startDate,
-                'enddate'                => $endDate,
-                'present_percentage'     => number_format($presentPercentage, 2),
-                'message'                => 'User attendance percentage and pending days fetched successfully'
+                'status'                  => 200,
+                'total_days'              => $totalDays,
+                'present_days'            => $presentCount,
+                'weekends'                => $weekendCount,
+                'total_weekends'                => $weekendCountTillToday,
+                'total_holidays'                => $holidayCountTillToday,
+                'holidays'                => $holidayCount,
+                'absents'                 => $absentCount,
+                'pending_working_days'    => $pendingWorkingDays,
+                'pending_days'            => $totalPendingDays,
+                'pending_days_percentage' => number_format($pendingDaysPercentage, 2),
+                'subs'                    => $subscription,
+                'startDate'               => $startDate,
+                'enddate'                 => $endDate,
+                'present_percentage'      => number_format($presentPercentage, 2),
+                'message'                 => 'User attendance percentage and pending days fetched successfully'
             ], 200);
         } catch (\Exception $e) {
-            // Handle exception and log errors
             Log::error('[GymUserAttendanceController][getUserAttendancePercentage] ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
@@ -147,30 +209,34 @@ class HomeControllerApi extends Controller
             $advertisementData = $advertisementResponse->getData();
 
             if ($advertisementData->status !== 200) {
-                return $advertisementResponse; 
+                return $advertisementResponse;
             }
 
             $attendanceResponse = $this->getUserAttendancePercentage($request);
             $attendanceData = $attendanceResponse->getData();
 
             if ($attendanceData->status !== 200) {
-                return $attendanceResponse; 
+                return $attendanceResponse;
             }
 
             return response()->json([
-                'status'                 => 200,
-                'advertisement'          => $advertisementData->advertisement,
-                'total_days'             => $attendanceData->total_days,
-                'present_days'           => $attendanceData->present_days,
-                'weekends'               => $attendanceData->weekends,
-                'holidays'               => $attendanceData->holidays,
-                'pending_days'           => $attendanceData->pending_days,
-                'pending_days_percentage' => $attendanceData->pending_days_percentage,
-                'subs'                   => $attendanceData->subs,
-                'startDate'              => $attendanceData->startDate,
-                'enddate'                => $attendanceData->enddate,
-                'present_percentage'     => $attendanceData->present_percentage,
-                'message'                => 'Advertisements and user attendance fetched successfully.',
+                'status'                   => 200,
+                'advertisement'            => $advertisementData->advertisement,
+                'total_days'               => $attendanceData->total_days,
+                // 'present_days'             => $attendanceData->present_days,
+                // 'weekends'                 => $attendanceData->weekends,
+                // 'absents'                  => $attendanceData->absents,
+                // 'holidays'                 => $attendanceData->holidays,
+                // 'total_weekends_till_toaday'           => $attendanceData->total_weekends,
+                // 'total_holidays_till_toaday'           => $attendanceData->total_holidays,
+                // 'pending_working_days'     => $attendanceData->pending_working_days,
+                'pending_days'             => $attendanceData->pending_days,
+                // 'pending_days_percentage'  => $attendanceData->pending_days_percentage,
+                // 'subs'                     => $attendanceData->subs,
+                // 'startDate'                => $attendanceData->startDate,
+                // 'enddate'                  => $attendanceData->enddate,
+                // 'present_percentage'       => $attendanceData->present_percentage,
+                'message'                  => 'Advertisements and user attendance fetched successfully.',
             ], 200);
         } catch (\Exception $e) {
             Log::error('[HomeControllerApi][fetchAdvertisementAndAttendance] Error: ' . $e->getMessage());
