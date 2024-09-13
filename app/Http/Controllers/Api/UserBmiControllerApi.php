@@ -65,7 +65,7 @@ class UserBmiControllerApi extends Controller
                 'status'            => 200,
                 'message'           => 'BMI details fetched successfully',
                 'body_measurements' => $bodyMeasurement,
-                'bmiIndex'          => $bmiIndex,
+                'bmi_index'          => $bmiIndex,
                 'bmi_title'         => array_key_exists('title', $bmiCategory) ? $bmiCategory['title'] : '',
                 'bmi_color_code'   => array_key_exists('color_code', $bmiCategory) ? $bmiCategory['color_code'] : '',
                 'chart_data'        => BmiChartDetailEnum::getBmiRanges()
