@@ -112,6 +112,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/response', [UserSubscriptionPayment::class, 'response']);
 
     Route::post('/fetch-user-bmis', [UserBmiControllerApi::class, 'getUserBmis']);
+
+    Route::post('/fetch-user-bmi-detail', [UserBmiControllerApi::class, 'getUserBmiDetails']);
 });
 
 
