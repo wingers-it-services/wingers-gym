@@ -60,13 +60,14 @@ class UserBmiControllerApi extends Controller
             if (!$bodyMeasurement) {
                 return $this->errorResponse('Error while fetching user BMI detail', 'Body details is empty', 422);
             }
-
+            $bmiCategory = BmiChartDetailEnum::getBmiCategory($bmiIndex);
             return response()->json([
                 'status'            => 200,
                 'message'           => 'BMI details fetched successfully',
                 'body_measurements' => $bodyMeasurement,
                 'bmiIndex'          => $bmiIndex,
-                'current_bmi_data'  => BmiChartDetailEnum::getBmiCategory($bmiIndex),
+                'bmi_title'         => array_key_exists('title', $bmiCategory) ? $bmiCategory['title'] : '',
+                'bmi_color_code'   => array_key_exists('color_code', $bmiCategory) ? $bmiCategory['color_code'] : '',
                 'chart_data'        => BmiChartDetailEnum::getBmiRanges()
             ], 200);
         } catch (Exception $e) {
