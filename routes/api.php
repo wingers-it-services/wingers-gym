@@ -20,6 +20,7 @@ use App\Http\Controllers\UserDietControllerApi;
 use App\Http\Controllers\UserInjuryControllerApi;
 use App\Http\Controllers\UserLevelControllerApi;
 use App\Http\Controllers\UserSubscriptionControllerApi;
+use App\Http\Controllers\UserWorkoutAnalyticApi;
 use App\Http\Controllers\UserWorkoutControllerApi;
 use App\Models\UserSubscriptionPayment;
 use Illuminate\Support\Facades\Route;
@@ -114,6 +115,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/fetch-user-bmis', [UserBmiControllerApi::class, 'getUserBmis']);
 
     Route::post('/fetch-user-bmi-detail', [UserBmiControllerApi::class, 'getUserBmiDetails']);
+
+    Route::post('/fetch-workout-analytic',[UserWorkoutAnalyticApi::class,'fetchUserAnalytic']);
 });
 
 
