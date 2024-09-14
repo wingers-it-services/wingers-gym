@@ -79,15 +79,4 @@ class InsertUserCurrentWorkout extends Command
         }
         return $details;
     }
-
-    // private function generateInitialDetails($numSets, $numReps, $weight)
-    // {
-    //     $details = [];
-
-    //     for ($i = 1; $i <= $numSets; $i++) {
-    //         $sets = new SetsDto($weight, 'not completed', $numReps, '00:00');
-    //         $details["set{$i}"] = $sets;
-    //     }
-    //     return $details;
-    // }
 }

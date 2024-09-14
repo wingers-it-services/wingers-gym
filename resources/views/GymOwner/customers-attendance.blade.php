@@ -5,6 +5,18 @@
 <!--**********************************
                 Content body start
     ***********************************-->
+<style>
+    .list-group {
+        --bs-list-group-action-hover-bg: #BCDF9D;
+        --bs-list-group-action-active-color: #BCDF9D;
+        --bs-list-group-action-active-bg: #BCDF9D;
+    }
+
+    .list-group-item.active {
+        background-color: #BCDF9D;
+        /* Optional text color change */
+    }
+</style>
 <div class="content-body ">
     <!-- row -->
     <div class="container-fluid">
@@ -16,16 +28,22 @@
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3" style="height: 100vh; overflow-y: auto;">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Employee List</h4>
-                    </div>
                     <div class="card-body p-0">
                         <div class="list-group list-group-flush">
                             @foreach ($gymStaffs as $gymStaff)
                             <a href="javascript:void(0);"
                                 class="list-group-item list-group-item-action d-flex align-items-center"
                                 id="staff-cards" data-gym-id='{{ $gymStaff->gym_id }}'
-                                data-user-id='{{ $gymStaff->id }}' onclick="showStaffData(this);">
+                                data-user-id='{{ $gymStaff->id }}'
+                                data-employee-name='{{ $gymStaff->firstname }} {{ $gymStaff->lastname }}'
+                                data-employee-email='{{ $gymStaff->email }}'
+                                data-employee-phone-number='{{ $gymStaff->phone_no }}'
+                                data-employee-designation='{{ $gymStaff->designation }}'
+                                data-employee-salary='{{ $gymStaff->salary }}'
+                                data-employee-blood-group='{{ $gymStaff->blood_group }}'
+                                data-employee-joining-date='{{ $gymStaff->joining_date }}'
+                                data-employee-address='{{ $gymStaff->address }}'
+                                onclick="showStaffData(this);">
                                 <img src="{{ $gymStaff->image }}" alt="" class="rounded-circle me-3"
                                     style="height: 50px; width: 50px; object-fit: cover;">
                                 <div>
@@ -40,7 +58,7 @@
                 </div>
             </div>
             <div class="col-xl-9 col-lg-9" id="default-info-section" style="text-align: center;">
-                <div class="col-xl-8">
+                <div class="col-xl-12">
                     <div class="card bg-light">
                         <div class="card-body mb-0">
                             <p class="card-text">Click on any Member to see it's attendance.</p>
@@ -48,7 +66,7 @@
                     </div>
                 </div>
             </div>
-                 <input type="hidden" id="staffId" class="staffId" />
+            <input type="hidden" id="staffId" class="staffId" />
 
             <div class="col-xl-9 col-lg-8 col-md-12" id="employee-details-section">
                 <div class="card">
@@ -112,6 +130,15 @@
     }
 
     function showStaffData(input) {
+        // Remove the "active" class from all list items
+        document.querySelectorAll('.list-group-item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Add the "active" class to the clicked item
+        input.classList.add('active');
+
+        // Fetch data attributes
         var gymId = parseInt(input.getAttribute("data-gym-id"));
         var staffId = parseInt(input.getAttribute("data-user-id"));
         var staffName = input.getAttribute("data-employee-name");
@@ -140,7 +167,6 @@
         document.getElementById('employee-details-section').style.display = "flex";
         document.getElementById('staff-name').innerText = staffName;
         document.getElementById('staff-name-section').style.display = "contents";
-
     }
 
     function markStaffAttendance(input) {
@@ -168,7 +194,6 @@
                 attendanceStatus: attendanceStatus
             },
             success: function(response) {
-                console.log(response);
                 toastr.option = {
                     'progressBar': true,
                     "closeButton": true,
@@ -214,11 +239,10 @@
             attendanceChartStatus.destroy();
         }
 
-        var xValues = ["Absent", "Halfday", "Week Off", "Present", "Unmarked"];
-        var yValues = [data.Absent, data.Halfday, data.WeekOff, data.Present, data.Unmarked];
+        var xValues = ["Absent", "Holiday", "Present", "Unmarked"];
+        var yValues = [data.Absent, data.Holiday, data.Present, data.Unmarked];
         var barColors = [
             "indianred",
-            "burlywood",
             "grey",
             "darkseagreen",
             "#f1f1fb"
@@ -300,9 +324,6 @@
                         switch (data['day' + i]) {
                             case "0":
                                 dayStatus = 'style="background-color: indianred;"';
-                                break;
-                            case "0.5":
-                                dayStatus = 'style="background-color: burlywood;"';
                                 break;
                             case "1":
                                 dayStatus = 'style="background-color: darkseagreen;"';
