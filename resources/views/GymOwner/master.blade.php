@@ -75,7 +75,7 @@
 				<!-- <img class="logo-abbr" src="{{asset('images/logo.png')}}" alt="">
 				<img class="logo-compact" src="{{asset('images/logo-text.png')}}" alt="">
 				<img class="brand-title" src="{{asset('images/logo-text.png')}}" alt=""> -->
-				<img class="brand-title" src="{{asset('images/logo.png')}}" alt="">
+				<img class="brand-title" src="{{asset('images/logo.png')}}" alt="" style="max-width: -webkit-fill-available;">
 			</a>
 
 			<div class="nav-control">
@@ -647,7 +647,7 @@
 			<nav class="navbar navbar-expand">
 				<div class="collapse navbar-collapse justify-content-between">
 					<div class="header-left">
-						<div class="dashboard_bar">WITS GYM</div>
+						<!-- <div class="dashboard_bar">WITS GYM</div> -->
 					</div>
 
 					<ul class="navbar-nav header-right">
