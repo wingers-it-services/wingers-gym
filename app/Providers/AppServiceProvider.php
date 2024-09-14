@@ -21,9 +21,9 @@ class AppServiceProvider extends ServiceProvider
     {
         $schedule->command('emails:send');
         //For Workout
-        $schedule->command('user:workout')->dailyAt('00:01');
+        $schedule->command('user:workout')->everyMinute();
         //For Diet
-        $schedule->command('user:diets')->dailyAt('00:01');
+        $schedule->command('user:diets')->everyMinute();
         
         $schedule->command('user:attendence')->monthlyOn(1, '00:00');
 

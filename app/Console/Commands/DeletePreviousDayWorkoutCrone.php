@@ -46,7 +46,7 @@ class DeletePreviousDayWorkoutCrone extends Command
                 ["user_workout_id", $item['user_workout_id']]
             ])->first();
 
-            $this->generateSetDetails($item['details']);
+            $setDetails = $this->generateSetDetails($item['details']);
 
             if (!$workout) {
                 WorkoutAnalytic::create([
@@ -56,31 +56,48 @@ class DeletePreviousDayWorkoutCrone extends Command
                     "user_id" => $item['user_id'],
                     "workout_id" => $item['workout_id'],
                     "user_workout_id" => $item['user_workout_id'],
-
-                    "total_sets" => $item['user_id'],
-                    "total_sets_completed" => $item['workout_id'],
-                    "percentage" => $item['user_workout_id']
-                ])->first();
+                    "total_sets" => $setDetails[0],
+                    "total_sets_completed" => $setDetails[1],
+                    "percentage" =>  $setDetails[2]
+                ]);
             }
         });
     }
 
     private function generateSetDetails($details)
     {
-        $details = json_decode($details);
+        $details = json_decode($details, true); // Decode JSON into an associative array
         $totalSets = 0;
         $totalSetsCompleted = 0;
 
-        foreach ($details as $detail) {
-            if ($detail[0]['status'] == "not completed") {
-                $totalSets += 1;
-            } else {
-                $totalSets += 1;
-                $totalSetsCompleted += 1;
+        // Loop through the dynamic sets (like set1, set2, etc.)
+        foreach ($details as $setKey => $setDetails) {
+            // Assuming each set is an array with one element, get the first element
+            foreach ($setDetails as $set) {
+                $totalSets += 1; // Increment total sets
+                if ($set['status'] == "completed") {
+                    $totalSetsCompleted += 1; // Increment completed sets
+                }
             }
         }
 
-        dd([$totalSets, $totalSetsCompleted]);
-        return [$totalSets, $totalSetsCompleted];
+        $completionPercentage = $this->calculateCompletedSetsPercentage($totalSetsCompleted, $totalSets);
+
+        // Return the results instead of using dd
+        return [$totalSets, $totalSetsCompleted, $completionPercentage];
     }
+
+    private function calculateCompletedSetsPercentage($totalSetsCompleted, $totalSets)
+    {
+        if($totalSets == 0)
+        {
+            return 0.00;
+        }
+        else
+        {
+            $percentage = $totalSetsCompleted/$totalSets * 100;
+            return $percentage; 
+        }
+    }
+
 }
