@@ -35,14 +35,11 @@ class UserBmiControllerApi extends Controller
                 return $this->errorResponse('Error while fetching user BMIs', 'User BMI list is empty', 422);
             }
 
-            return response()->json(
-                [
-                    'status' => 200,
-                    'message' => 'BMIs fetched successfully',
-                    'bmis' => $bmis,
-                ],
-                200,
-            );
+            return response()->json([
+                'status'  => 200,
+                'message' => 'BMIs fetched successfully',
+                'bmis'    => $bmis,
+            ], 200);
         } catch (Exception $e) {
             Log::error('[userBodyMeasurement][getUserBmis] Error occurred while getting user BMIs', ['error' => $e->getMessage()]);
             return $this->errorResponse('Error occurred while getting user BMIs', $e->getMessage(), 500);
@@ -61,13 +58,23 @@ class UserBmiControllerApi extends Controller
                 return $this->errorResponse('Error while fetching user BMI detail', 'Body details is empty', 422);
             }
             $bmiCategory = BmiChartDetailEnum::getBmiCategory($bmiIndex);
+
+            $fieldsToUpdate = ['chest', 'triceps', 'biceps', 'lats', 'shoulder', 'abs', 'forearms', 'traps', 'glutes', 'quads', 'hamstring', 'calves'];
+
+            // Concatenate "cm" to the specified fields
+            foreach ($fieldsToUpdate as $field) {
+                if (isset($data['body_measurements'][$field])) {
+                    $data['body_measurements'][$field] .= ' cm';
+                }
+            }
+
             return response()->json([
                 'status'            => 200,
                 'message'           => 'BMI details fetched successfully',
                 'body_measurements' => $bodyMeasurement,
-                'bmi_index'          => $bmiIndex,
+                'bmi_index'         => $bmiIndex,
                 'bmi_title'         => array_key_exists('title', $bmiCategory) ? $bmiCategory['title'] : '',
-                'bmi_color_code'   => array_key_exists('color_code', $bmiCategory) ? $bmiCategory['color_code'] : '',
+                'bmi_color_code'    => array_key_exists('color_code', $bmiCategory) ? $bmiCategory['color_code'] : '',
                 'chart_data'        => BmiChartDetailEnum::getBmiRanges()
             ], 200);
         } catch (Exception $e) {
