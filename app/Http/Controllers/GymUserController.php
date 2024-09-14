@@ -41,6 +41,7 @@ class GymUserController extends Controller
     protected $gymSubscription;
     protected $userSubscriptionHistory;
     protected $trainersHistory;
+    protected $gymUserAttendance;
 
     public function __construct(
         User $user,
@@ -54,7 +55,8 @@ class GymUserController extends Controller
         Designation $designation,
         GymSubscription $gymSubscription,
         UserSubscriptionHistory $userSubscriptionHistory,
-        UsersTrainerHistry $trainersHistory
+        UsersTrainerHistry $trainersHistory,
+        GymUserAttendence $gymUserAttendance
     ) {
         $this->user = $user;
         $this->gym = $gym;
@@ -68,6 +70,8 @@ class GymUserController extends Controller
         $this->gymSubscription = $gymSubscription;
         $this->userSubscriptionHistory = $userSubscriptionHistory;
         $this->trainersHistory = $trainersHistory;
+        $this->trainersHistory = $trainersHistory;
+        $this->gymUserAttendance = $gymUserAttendance;
     }
 
     public function listGymUser()
@@ -795,7 +799,7 @@ class GymUserController extends Controller
             $month = $now->month;
             $day = $now->day;
 
-            $gym = GymUserAttendence::updateOrCreate(
+            $gym = $this->gymUserAttendance->updateOrCreate(
                 [
                     'gym_user_id' => $request->staffId,
                     'gym_id' => $request->gymId,
@@ -838,8 +842,7 @@ class GymUserController extends Controller
                     'status' => 200,
                     'data' => [
                         "Absent" => 0,
-                        "Halfday" => 0,
-                        "WeekOff" => 0,
+                        "Holiday" => 0,
                         "Present" => 0,
                         "Unmarked" => 30
                     ]
@@ -849,22 +852,18 @@ class GymUserController extends Controller
             $gym = $gym->toArray();
             $data = [
                 "Absent" => 0,
-                "Halfday" => 0,
-                "WeekOff" => 0,
+                "Holiday" => 0,
                 "Present" => 0,
                 "Unmarked" => 0
             ];
 
             for ($i = 1; $i <= 31; $i++) {
                 switch ($gym['day' . $i]) {
-                    case 0.5:
-                        $data["Halfday"] += 1;
-                        break;
                     case 1:
                         $data["Present"] += 1;
                         break;
                     case 2:
-                        $data["WeekOff"] += 1;
+                        $data["Holiday"] += 1;
                         break;
                     case null:
                         $data["Unmarked"] += 1;
