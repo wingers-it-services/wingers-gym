@@ -61,6 +61,8 @@ class DeletePreviousDayWorkoutCrone extends Command
                     "percentage" =>  $setDetails[2]
                 ]);
             }
+            // After processing, delete the current record
+            $item->delete();
         });
     }
 
