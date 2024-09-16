@@ -22,7 +22,7 @@ class DeletePreviousDayWorkoutCrone extends Command
      *
      * @var string
      */
-    protected $description = 'Delete the Previous Day Workout Date wise';
+    protected $description = 'Delete the Previous Day Workout from CurrentDayWorkout table Date wise and Insert that data in the WorkoutAnalytics table';
 
     /**
      * Execute the console command.
@@ -64,6 +64,8 @@ class DeletePreviousDayWorkoutCrone extends Command
             // After processing, delete the current record
             $item->delete();
         });
+        $this->info("Workouts for {$previousDayStart} have been deleted successfully That data move to the WorkoutAnalytics Table!");
+
     }
 
     private function generateSetDetails($details)
@@ -85,7 +87,6 @@ class DeletePreviousDayWorkoutCrone extends Command
 
         $completionPercentage = $this->calculateCompletedSetsPercentage($totalSetsCompleted, $totalSets);
 
-        // Return the results instead of using dd
         return [$totalSets, $totalSetsCompleted, $completionPercentage];
     }
 
