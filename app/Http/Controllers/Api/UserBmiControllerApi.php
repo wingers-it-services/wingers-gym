@@ -74,8 +74,8 @@ class UserBmiControllerApi extends Controller
 
             // Concatenate "cm" to the specified fields
             foreach ($fieldsToUpdate as $field) {
-                if (isset($data['body_measurements'][$field])) {
-                    $data['body_measurements'][$field] .= ' cm';
+                if (isset($bodyMeasurement->$field)) {
+                    $bodyMeasurement->$field = $bodyMeasurement->$field . ' cm';
                 }
             }
 
