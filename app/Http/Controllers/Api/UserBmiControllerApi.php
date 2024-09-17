@@ -52,12 +52,20 @@ class UserBmiControllerApi extends Controller
         try {
             $authUser = auth()->user();
             $request->validate(['bmi_id' => 'required|numeric|exists:user_bmis,id']);
+            $bmi_id = $request->input('bmi_id');
 
-            $bodyMeasurement = $this->userBodyMeasurement->where('bmi_id', $request->input('bmi_id'))->first();
-            if ($bodyMeasurement && $bodyMeasurement->user_id !== $authUser->id) {
+            $bodyMeasurement = $this->userBodyMeasurement->where('bmi_id',    $bmi_id)->first();
+            if (!$bodyMeasurement) {
+                return $this->errorResponse(
+                    'Error while fetching user BMI detail',
+                    'Body details is empty',
+                    422
+                );
+            }
+            if ($bodyMeasurement->user_id !== $authUser->id) {
                 return $this->errorResponse(
                     'Error when fetching bmi details',
-                    "The bmi id {$request->input('bmi_id')} does not belong to this user.",
+                    "The bmi id {$bmi_id} does not belong to this user.",
                     422
                 );
             }
@@ -65,9 +73,7 @@ class UserBmiControllerApi extends Controller
             $bmiIndex = optional($this->userBmi->where('id', $request->input('bmi_id'))->first())->bmi ?? 0;
             $age = $this->calculateAge($authUser->dob);
 
-            if (!$bodyMeasurement) {
-                return $this->errorResponse('Error while fetching user BMI detail', 'Body details is empty', 422);
-            }
+
             $bmiCategory = BmiChartDetailEnum::getBmiCategory($bmiIndex);
 
             $fieldsToUpdate = ['chest', 'triceps', 'biceps', 'lats', 'shoulder', 'abs', 'forearms', 'traps', 'glutes', 'quads', 'hamstring', 'calves'];
