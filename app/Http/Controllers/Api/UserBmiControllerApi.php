@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\userBmi;
 use App\Models\UserBodyMeasurement;
 use App\Traits\errorResponseTrait;
+use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -49,22 +50,38 @@ class UserBmiControllerApi extends Controller
     public function getUserBmiDetails(Request $request)
     {
         try {
+            $authUser = auth()->user();
             $request->validate(['bmi_id' => 'required|numeric|exists:user_bmis,id']);
+            $bmi_id = $request->input('bmi_id');
 
-            $bodyMeasurement = $this->userBodyMeasurement->where('bmi_id', $request->input('bmi_id'))->first();
-            $bmiIndex = optional($this->userBmi->where('id', $request->input('bmi_id'))->first())->bmi ?? 0;
-
+            $bodyMeasurement = $this->userBodyMeasurement->where('bmi_id',    $bmi_id)->first();
             if (!$bodyMeasurement) {
-                return $this->errorResponse('Error while fetching user BMI detail', 'Body details is empty', 422);
+                return $this->errorResponse(
+                    'Error while fetching user BMI detail',
+                    'Body details is empty',
+                    422
+                );
             }
+            if ($bodyMeasurement->user_id !== $authUser->id) {
+                return $this->errorResponse(
+                    'Error when fetching bmi details',
+                    "The bmi id {$bmi_id} does not belong to this user.",
+                    422
+                );
+            }
+
+            $bmiIndex = optional($this->userBmi->where('id', $request->input('bmi_id'))->first())->bmi ?? 0;
+            $age = $this->calculateAge($authUser->dob);
+
+
             $bmiCategory = BmiChartDetailEnum::getBmiCategory($bmiIndex);
 
             $fieldsToUpdate = ['chest', 'triceps', 'biceps', 'lats', 'shoulder', 'abs', 'forearms', 'traps', 'glutes', 'quads', 'hamstring', 'calves'];
 
             // Concatenate "cm" to the specified fields
             foreach ($fieldsToUpdate as $field) {
-                if (isset($data['body_measurements'][$field])) {
-                    $data['body_measurements'][$field] .= ' cm';
+                if (isset($bodyMeasurement->$field)) {
+                    $bodyMeasurement->$field = $bodyMeasurement->$field . ' cm';
                 }
             }
 
@@ -73,6 +90,7 @@ class UserBmiControllerApi extends Controller
                 'message'           => 'BMI details fetched successfully',
                 'body_measurements' => $bodyMeasurement,
                 'bmi_index'         => $bmiIndex,
+                'age'               => $age,
                 'bmi_title'         => array_key_exists('title', $bmiCategory) ? $bmiCategory['title'] : '',
                 'bmi_color_code'    => array_key_exists('color_code', $bmiCategory) ? $bmiCategory['color_code'] : '',
                 'chart_data'        => BmiChartDetailEnum::getBmiRanges()
@@ -80,6 +98,19 @@ class UserBmiControllerApi extends Controller
         } catch (Exception $e) {
             Log::error('[userBodyMeasurement][getUserBmiDetails] Error occurred while getting user BMI detail', ['error' => $e->getMessage()]);
             return $this->errorResponse('Error occurred while getting user BMI detail', $e->getMessage(), 500);
+        }
+    }
+
+    private function calculateAge($dob): int
+    {
+        try {
+            $birthDate = new DateTime($dob);
+            $currentDate = new DateTime();
+            $age = $currentDate->diff($birthDate)->y;
+            return $age;
+        } catch (Exception $e) {
+            Log::error('[UserBmiControllerApi][calculateAge] error while calculating user age : ' . $e->getMessage());
+            return 0;
         }
     }
 }
