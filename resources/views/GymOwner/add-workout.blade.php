@@ -1,5 +1,5 @@
 @extends('GymOwner.master')
-@section('title','Dashboard')
+@section('title', 'Dashboard')
 @section('content')
 
 <div class="content-body">
@@ -17,7 +17,8 @@
                             <div class="col-lg-12">
                                 <h4 class="mb-3">Add Workout</h4>
                                 <hr>
-                                <form name="myForm" method="POST" enctype="multipart/form-data" action="/add-gym-workout">
+                                <form name="myForm" method="POST" enctype="multipart/form-data" class="needs-validation"
+                                    action="/add-gym-workout" novalidate>
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
@@ -28,14 +29,22 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label for="vedio_link">Video Link </label>
-                                            <input type="text" class="form-control" id="vedio_link" name="vedio_link" placeholder="">
+                                            <label for="vedio_link">Video Link</label>
+                                            <input type="text" class="form-control" id="vedio_link" name="vedio_link"
+                                                placeholder="Enter a valid video link" required>
+                                            <small id="videoLinkError" class="form-text text-danger"
+                                                style="display: none;">Please enter a valid video link (e.g.,
+                                                https://www.example.com).</small>
+                                            <div class="invalid-feedback">
+                                                Please enter a valid video link.
+                                            </div>
                                         </div>
 
 
                                         <div class="col-md-6 mb-3">
                                             <label for="category">Category</label>
-                                            <input type="text" class="form-control" name="category" id="category" required="">
+                                            <input type="text" class="form-control" name="category" id="category"
+                                                required>
                                             <div class="invalid-feedback">
                                                 Product name is required.
                                             </div>
@@ -43,7 +52,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="name">Workout Name</label>
-                                            <input type="text" class="form-control" id="name" name="name" required="">
+                                            <input type="text" class="form-control" id="name" name="name" required>
                                             <div class="invalid-feedback">
                                                 Product name is required.
                                             </div>
@@ -51,33 +60,44 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="gender">Gender</label>
                                             <div class="input-group">
-                                                <select class="me-sm-2 form-control default-select" id="gender" name="gender">
+                                                <select class="me-sm-2 form-control default-select" id="gender"
+                                                    name="gender" required>
                                                     <option value="">Choose...</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
 
                                                 </select>
                                             </div>
+                                            <div class="invalid-feedback">
+                                                Please select a gender.
+                                            </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="gender">User Type</label>
                                             <div class="input-group">
-                                                <select class="me-sm-2 form-control default-select" id="user_type" name="user_type">
+                                                <select class="me-sm-2 form-control default-select" id="user_type"
+                                                    name="user_type" required>
                                                     <option value="">Choose...</option>
                                                     <option value="gym">Gym</option>
                                                     <option value="home">Home</option>
                                                 </select>
+
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please select a user type. 
                                             </div>
                                         </div>
                                         <div class="col-md-12 mb-3">
                                             <label for="description">Description</label>
-                                            <textarea type="text" rows="25" class="form-control" id="description" name="description" required=""></textarea>
+                                            <textarea type="text" rows="25" class="form-control" id="description"
+                                                name="description" required=""></textarea>
                                             <div class="invalid-feedback">
                                                 Product name is required.
                                             </div>
                                         </div>
                                         <hr class="mb-4">
-                                        <button class="btn btn-primary btn-lg btn-block" type="submit">Add Workout</button>
+                                        <button class="btn btn-primary btn-lg btn-block" type="submit">Add
+                                            Workout</button>
                                     </div>
                                 </form>
                             </div>
@@ -107,25 +127,32 @@
                         </thead>
                         <tbody>
                             @foreach ($workouts as $subscription)
-                            <tr>
-                                <td>
-                                    <img width="80" src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}" loading="lazy" alt="Profile Image">
-                                </td>
-                                <td>{{$subscription->category }}</td>
-                                <td>{{$subscription->name }}</td>
-                                <td>{{$subscription->gender }}</td>
-                                <td>
-                                    <a class="dropdown-item view-workout" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#viewModal" data-workout="{{ json_encode($subscription) }}">
-                                        <i class="fa fa-eye color-muted"></i>
-                                    </a>
-                                </td>
+                                <tr>
+                                    <td>
+                                        <img width="80"
+                                            src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
+                                            loading="lazy" alt="Profile Image">
+                                    </td>
+                                    <td>{{$subscription->category }}</td>
+                                    <td>{{$subscription->name }}</td>
+                                    <td>{{$subscription->gender }}</td>
+                                    <td>
+                                        <a class="dropdown-item view-workout" href="javascript:void(0);"
+                                            data-bs-toggle="modal" data-bs-target="#viewModal"
+                                            data-workout="{{ json_encode($subscription) }}">
+                                            <i class="fa fa-eye color-muted"></i>
+                                        </a>
+                                    </td>
 
-                                <td class="text-end">
-                                    <span> <a href="javascript:void(0);" class="me-4 edit-workout" data-bs-toggle="tooltip" data-placement="top" title="Edit" data-workout="{{ json_encode($subscription) }}">
-                                            <i class="fa fa-pencil color-muted"></i></a>
-                                        <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
-                                </td>
-                            </tr>
+                                    <td class="text-end">
+                                        <span> <a href="javascript:void(0);" class="me-4 edit-workout"
+                                                data-bs-toggle="tooltip" data-placement="top" title="Edit"
+                                                data-workout="{{ json_encode($subscription) }}">
+                                                <i class="fa fa-pencil color-muted"></i></a>
+                                            <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
+                                                data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -134,7 +161,8 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel" aria-hidden="true">
+<div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -182,7 +210,8 @@
 
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <textarea type="text" class="form-control" rows="4" id="edit_description" name="description" required=""></textarea>
+                        <textarea type="text" class="form-control" rows="4" id="edit_description" name="description"
+                            required=""></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Update</button>
@@ -232,7 +261,25 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+
+    document.addEventListener('DOMContentLoaded', function () {
         function initializeEventListeners() {
             const editButtons = document.querySelectorAll('.edit-workout');
             const editImageInput = document.getElementById('edit_image');
@@ -240,7 +287,7 @@
             const editGenderSelect = document.getElementById('edit_gender');
 
             editButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     document.getElementById('edit_workout_id').value = workout.id;
@@ -265,11 +312,11 @@
 
             // Show a preview of the new image when selected
             if (editImageInput) {
-                editImageInput.addEventListener('change', function(event) {
+                editImageInput.addEventListener('change', function (event) {
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = function(e) {
+                        reader.onload = function (e) {
                             currentImage.src = e.target.result;
                         }
                         reader.readAsDataURL(file);
@@ -279,7 +326,7 @@
 
             // Handling view workout modal
             document.querySelectorAll('.view-workout').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     // Set the image src
@@ -326,7 +373,7 @@
         initializeEventListeners();
 
         // Reinitialize event listeners after DataTable redraw
-        $('#example3').on('draw.dt', function() {
+        $('#example3').on('draw.dt', function () {
             initializeEventListeners(); // Reattach event listeners
         });
     });
@@ -349,22 +396,34 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-    const viewModal = document.getElementById('viewModal');
-    const modal = new bootstrap.Modal(viewModal);
+    document.addEventListener('DOMContentLoaded', function () {
+        const viewModal = document.getElementById('viewModal');
+        const modal = new bootstrap.Modal(viewModal);
 
-    // Handle the close event to ensure the fade backdrop is removed
-    viewModal.addEventListener('hidden.bs.modal', function() {
-        document.body.classList.remove('modal-open'); // Ensure body class is removed
-        document.body.style.overflow = ''; // Reset body overflow style
+        // Handle the close event to ensure the fade backdrop is removed
+        viewModal.addEventListener('hidden.bs.modal', function () {
+            document.body.classList.remove('modal-open'); // Ensure body class is removed
+            document.body.style.overflow = ''; // Reset body overflow style
 
-        // Remove modal backdrops
-        const modalBackdrops = document.querySelectorAll('.modal-backdrop');
-        modalBackdrops.forEach(function(backdrop) {
-            backdrop.remove(); // Remove the backdrop element
+            // Remove modal backdrops
+            const modalBackdrops = document.querySelectorAll('.modal-backdrop');
+            modalBackdrops.forEach(function (backdrop) {
+                backdrop.remove(); // Remove the backdrop element
+            });
         });
     });
-});
+
+    document.getElementById('vedio_link').addEventListener('input', function () {
+        const videoLinkInput = this.value;
+        const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\/\w.-]*)*\/?$/;
+        const errorElement = document.getElementById('videoLinkError');
+
+        if (!urlPattern.test(videoLinkInput)) {
+            errorElement.style.display = 'block';
+        } else {
+            errorElement.style.display = 'none';
+        }
+    });
 
 </script>
 @include('CustomSweetAlert');

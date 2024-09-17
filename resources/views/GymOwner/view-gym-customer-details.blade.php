@@ -88,10 +88,8 @@
                                                         class="mb-0">Gender</span> <strong
                                                         class="text-muted">{{ $userDetail->gender }}</strong></li>
                                                 <li class="list-group-item d-flex justify-content-between"><span
-                                                        class="mb-0">Member Subscription</span> <strong
-                                                        class="text-muted">{{ $userDetail->subscription->subscription_name }}
-                                                    </strong></li>
-
+                                                        class="mb-0">Member Blood Group</span> <strong
+                                                        class="text-muted">{{ $userDetail->blood_group}} </strong></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -103,15 +101,17 @@
                                                     <strong
                                                         class="text-muted">{{ $userDetail->activeTrainers->first()->trainer->name ?? 'No active trainer' }}</strong>
                                                 </li>
-                                                <li class="list-group-item d-flex justify-content-between"><span
-                                                        class="mb-0">Member Blood Group</span> <strong
-                                                        class="text-muted">{{ $userDetail->blood_group}} </strong></li>
+
                                                 <li class="list-group-item d-flex justify-content-between"><span
                                                         class="mb-0">Country</span> <strong
                                                         class="text-muted">{{ $userDetail->country }}</strong></li>
                                                 <li class="list-group-item d-flex justify-content-between"><span
                                                         class="mb-0">State</span> <strong
                                                         class="text-muted">{{ $userDetail->state }}</strong></li>
+                                                <li class="list-group-item d-flex justify-content-between"><span
+                                                        class="mb-0">Zip</span> <strong
+                                                        class="text-muted">{{ $userDetail->zip_code }}</strong></li>
+                                                <div class="container mt-5">
                                             </ul>
                                         </div>
                                     </div>
@@ -119,191 +119,188 @@
                                         <div class="card overflow-hidden">
                                             <ul class="list-group list-group-flush">
 
-                                                <li class="list-group-item d-flex justify-content-between"><span
-                                                        class="mb-0">Zip</span> <strong
-                                                        class="text-muted">{{ $userDetail->zip_code }}</strong></li>
-                                                <div class="container mt-5">
-                                                    <ul class="list-group">
-                                                        <li class="list-group-item">
-                                                            <div class="row">
-                                                                <div class="col-auto">
-                                                                    <span class="mb-0">Address</span>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <strong
-                                                                        class="text-muted text-wrap">{{ $userDetail->address }}</strong>
-                                                                </div>
+
+                                                <ul class="list-group">
+                                                    <li class="list-group-item">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                                <span class="mb-0">Address</span>
                                                             </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </ul>
+                                                            <div class="col">
+                                                                <strong
+                                                                    class="text-muted text-wrap">{{ $userDetail->address }}</strong>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
                                         </div>
+                                        </ul>
                                     </div>
                                 </div>
-
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Gym Member Details</h4>
-                    </div>
-                    <div class="card-body">
-                        <!-- Nav tabs -->
-                        <div class="default-tab">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" href="#subscription"><i
-                                            class="fa fa-money"></i> Subscription</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-bs-toggle="tab" href="#workout"><i
-                                            class="fa-solid fa-dumbbell"></i> Workout</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-bs-toggle="tab" href="#Diet"><i class="fas fa-egg"></i>
-                                        Diet</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-bs-toggle="tab" href="#bmi"><i
-                                            class="fa-solid fa-weight-scale"></i> BMI</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-bs-toggle="tab" href="#trainers"><i
-                                            class="fa-solid fa-person-running"></i> Trainers</a>
-                                </li>
-                            </ul>
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Gym Member Details</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Nav tabs -->
+                    <div class="default-tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#subscription"><i
+                                        class="fa fa-money"></i> Subscription</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#workout"><i
+                                        class="fa-solid fa-dumbbell"></i> Workout</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#Diet"><i class="fas fa-egg"></i>
+                                    Diet</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#bmi"><i
+                                        class="fa-solid fa-weight-scale"></i> BMI</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#trainers"><i
+                                        class="fa-solid fa-person-running"></i> Trainers</a>
+                            </li>
+                        </ul>
 
-                            <div class="tab-content">
-                                <div class="tab-pane fade show active" id="subscription">
-                                    <div class="modal fade" id="addNewSubscription">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Add Subscription</h5>
-                                                    <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form action="{{ route('addUserSubscriptionByGym') }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="user_id"
-                                                            value="{{ $userDetail->id }}">
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <!-- Subscription Selection -->
-                                                                <h4 class="mb-3 text-black">Select Subscription</h4>
-                                                                <div class="mb-3">
-                                                                    <select class="form-control default-select"
-                                                                        id="subscription_id" name="subscription_id"
-                                                                        required>
-                                                                        <option value="" data-description=""
-                                                                            data-amount="" data-validity="">-- Select
-                                                                            Subscription --</option>
-                                                                        @foreach ($gymSubscriptions as $subscription)
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="subscription">
+                                <div class="modal fade" id="addNewSubscription">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Add Subscription</h5>
+                                                <button type="button" class="btn-close"
+                                                    data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('addUserSubscriptionByGym') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <!-- Subscription Selection -->
+                                                            <h4 class="mb-3 text-black">Select Subscription</h4>
+                                                            <div class="mb-3">
+                                                                <select class="form-control default-select"
+                                                                    id="subscription_id" name="subscription_id"
+                                                                    required>
+                                                                    <option value="" data-description="" data-amount=""
+                                                                        data-validity="">-- Select
+                                                                        Subscription --</option>
+                                                                    @foreach ($gymSubscriptions as $subscription)
                                                                         <option value="{{ $subscription->id }}"
                                                                             data-description="{{ $subscription->description }}"
                                                                             data-amount="{{ $subscription->amount }}"
                                                                             data-validity="{{ $subscription->validity }}">
                                                                             {{ $subscription->subscription_name }}
                                                                         </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
-                                                                <!-- Subscription Description -->
-                                                                <h4 class="mb-3 text-black">Subscription Description
-                                                                </h4>
-                                                                <div class="mb-3">
-                                                                    <textarea class="form-control" id="description"
-                                                                        rows="10" name="description" required
-                                                                        readonly></textarea>
-                                                                </div>
-                                                                <!-- Joining Date -->
-                                                                <div class="mb-3">
-                                                                    <label for="joining_date" class="form-label">Subscripion Start Date</label>
-                                                                    <input type="date" class="form-control"
-                                                                        id="joining_date" name="subscription_start_date"
-                                                                        required>
-                                                                </div>
-                                                                <!-- Amount and End Date -->
-                                                                <ul class="list-group mb-3">
-                                                                    <li
-                                                                        class="list-group-item d-flex justify-content-between lh-condensed">
-                                                                        <div>
-                                                                            <small class="text-muted">Subscription
-                                                                                Amount</small>
-                                                                        </div>
-                                                                        <span class="text-muted"
-                                                                            id="subscription_amount">₹0</span>
-                                                                        <input type="hidden" id="amount" name="amount">
-                                                                    </li>
-                                                                    <li
-                                                                        class="list-group-item d-flex justify-content-between lh-condensed">
-                                                                        <div>
-                                                                            <small class="text-muted">Subscription End
-                                                                                Date</small>
-                                                                            <input type="hidden" id="end_date"
-                                                                                name="subscription_end_date">
-                                                                        </div>
-                                                                        <span class="text-muted"
-                                                                            id="subscription_end_date"></span>
-                                                                    </li>
-                                                                </ul>
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
+                                                            <!-- Subscription Description -->
+                                                            <h4 class="mb-3 text-black">Subscription Description
+                                                            </h4>
+                                                            <div class="mb-3">
+                                                                <textarea class="form-control" id="description"
+                                                                    rows="10" name="description" required
+                                                                    readonly></textarea>
+                                                            </div>
+                                                            <!-- Joining Date -->
+                                                            <div class="mb-3">
+                                                                <label for="joining_date" class="form-label">Subscripion
+                                                                    Start
+                                                                    Date</label>
+                                                                <input type="date" class="form-control"
+                                                                    id="joining_date" name="subscription_start_date"
+                                                                    required>
+                                                            </div>
+                                                            <!-- Amount and End Date -->
+                                                            <ul class="list-group mb-3">
+                                                                <li
+                                                                    class="list-group-item d-flex justify-content-between lh-condensed">
+                                                                    <div>
+                                                                        <small class="text-muted">Subscription
+                                                                            Amount</small>
+                                                                    </div>
+                                                                    <span class="text-muted"
+                                                                        id="subscription_amount">₹0</span>
+                                                                    <input type="hidden" id="amount" name="amount">
+                                                                </li>
+                                                                <li
+                                                                    class="list-group-item d-flex justify-content-between lh-condensed">
+                                                                    <div>
+                                                                        <small class="text-muted">Subscription End
+                                                                            Date</small>
+                                                                        <input type="hidden" id="end_date"
+                                                                            name="subscription_end_date">
+                                                                    </div>
+                                                                    <span class="text-muted"
+                                                                        id="subscription_end_date"></span>
+                                                                </li>
+                                                            </ul>
                                                         </div>
-                                                        <div class="dropdown mt-sm-0 mt-3">
-                                                            <button type="submit" id="addSubscriptionButton"
-                                                                class="btn btn-outline-primary rounded">Add
-                                                                Subscription</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                                    </div>
+                                                    <div class="dropdown mt-sm-0 mt-3">
+                                                        <button type="submit" id="addSubscriptionButton"
+                                                            class="btn btn-outline-primary rounded">Add
+                                                            Subscription</button>
+                                                    </div>
+                                                </form>
                                             </div>
-
                                         </div>
 
                                     </div>
-                                    <div class="col-xl-12 col-xxl-12">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="card">
-                                                    <div class="card-header d-sm-flex d-block pb-0 border-0">
-                                                        <div class="me-auto pe-3">
-                                                            <h4 class="text-black fs-20">Subscriptions Plan List</h4>
-                                                        </div>
 
-                                                        <div class="dropdown mt-sm-0 mt-3">
-                                                            <a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#addNewSubscription"
-                                                                class="btn btn-outline-primary rounded">Add
-                                                                Subscription</a>
-                                                        </div>
+                                </div>
+                                <div class="col-xl-12 col-xxl-12">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-header d-sm-flex d-block pb-0 border-0">
+                                                    <div class="me-auto pe-3">
+                                                        <h4 class="text-black fs-20">Subscriptions Plan List</h4>
                                                     </div>
 
-                                                    <div class="card-body">
-                                                        <div class="table-responsive">
-                                                            <table id="example3"
-                                                                class="table table-bordered table-striped verticle-middle table-responsive-sm">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th scope="col">Plan</th>
-                                                                        <th scope="col">Amount</th>
-                                                                        <th scope="col">Validity</th>
-                                                                        <th scope="col">Start Date</th>
-                                                                        <th scope="col">End Date</th>
-                                                                        <th scope="col">Status</th>
-                                                                        <!-- <th scope="col" class="text-end">Action -->
-                                                                        </th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach($userSubscriptions as $subscription)
+                                                    <div class="dropdown mt-sm-0 mt-3">
+                                                        <a href="javascript:void(0);" data-bs-toggle="modal"
+                                                            data-bs-target="#addNewSubscription"
+                                                            class="btn btn-outline-primary rounded">Add
+                                                            Subscription</a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table id="example3"
+                                                            class="table table-bordered table-striped verticle-middle table-responsive-sm">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Plan</th>
+                                                                    <th scope="col">Amount</th>
+                                                                    <th scope="col">Validity</th>
+                                                                    <th scope="col">Start Date</th>
+                                                                    <th scope="col">End Date</th>
+                                                                    <th scope="col">Status</th>
+                                                                    <!-- <th scope="col" class="text-end">Action -->
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($userSubscriptions as $subscription)
                                                                     <tr>
                                                                         <td>{{$subscription->subscription->subscription_name}}
                                                                         </td>
@@ -316,13 +313,19 @@
                                                                         </td>
                                                                         <td>
 
-                                                                            <form action="/update-subscription-status/{{$userDetail->id}}" method="POST">
+                                                                            <form
+                                                                                action="/update-subscription-status/{{$userDetail->id}}"
+                                                                                method="POST">
                                                                                 @csrf
-                                                                                <select name="status" onchange="this.form.submit()" class="form-select" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'disabled' : '' }}>
-                                                                                    <option value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}"
+                                                                                <select name="status"
+                                                                                    onchange="this.form.submit()"
+                                                                                    class="form-select" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'disabled' : '' }}>
+                                                                                    <option
+                                                                                        value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}"
                                                                                         {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'selected' : '' }}>Active
                                                                                     </option>
-                                                                                    <option value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}"
+                                                                                    <option
+                                                                                        value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}"
                                                                                         {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'selected' : '' }}>Inactive
                                                                                     </option>
                                                                                 </select>
@@ -330,36 +333,199 @@
 
                                                                         </td>
                                                                         <!-- <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
-                                                                                                                                        </a><a href="javascript:void()" onclick="confirmSubscriptionDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
-                                                                                                                                </td> -->
+                                                                                                                                                    </a><a href="javascript:void()" onclick="confirmSubscriptionDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
+                                                                                                                                            </td> -->
                                                                     </tr>
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="tab-pane fade" id="workout">
-                                    <div class="modal fade" id="addNewWorkout">
-                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Add New Workout</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal">
-                                                    </button>
+                            <div class="tab-pane fade" id="workout">
+                                <div class="modal fade" id="addNewWorkout">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Add New Workout</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form autocomplete="off" method="POST" action="/add-user-workout">
+                                                    @csrf
+                                                    <input type="text" id="user_id" name="user_id"
+                                                        value="{{$userDetail->id}}" class="form-control" hidden>
+
+                                                    <input id="workoutIdInput" type="hidden" name="workout_id">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <label>Day</label>
+                                                            <select class="form-control" id="day" name="day" required>
+                                                                <option value="">Choose Day</option>
+                                                                <option value="monday">Monday</option>
+                                                                <option value="tuesday">Tuesday</option>
+                                                                <option value="wednesday">Wednesday</option>
+                                                                <option value="thursday">Thursday</option>
+                                                                <option value="friday">Friday</option>
+                                                                <option value="saturday">Saturday</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label>Exercise Name</label>
+                                                            <input id="workoutInput" class="form-control" type="text"
+                                                                name="exercise_name" placeholder="Workout Name"
+                                                                required>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Workout Details Section -->
+                                                    <div id="workoutDetails" class="form-group">
+                                                        <div class="row">
+                                                            <div
+                                                                style="display: flex; gap: 10px; align-items: center; overflow: auto;">
+                                                                <img id="workoutImage" src="" alt="Workout Image"
+                                                                    style="display:none; width: 100%; max-width: 350px; height: auto;">
+                                                                <video id="workoutVideo" controls
+                                                                    style="display:none; width: 100%; max-width: 350px; height: auto;">
+                                                                    <source id="workoutVideoSource" src=""
+                                                                        type="video/mp4">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </div>
+                                                            <div id="workoutGender"
+                                                                style="display:none; margin-top: 10px;"></div>
+                                                            <div id="workoutCategory"
+                                                                style="display:none; margin-top: 10px;"></div>
+                                                            <div id="workoutDescription"
+                                                                style="display:none; margin-top: 10px;"></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-md-4">
+                                                            <label for="sets">Sets</label>
+                                                            <input type="number" id="sets" name="sets" min="0"
+                                                                max="1000" class="form-control" required>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="reps">Reps</label>
+                                                            <input type="number" id="reps" name="reps" min="0"
+                                                                class="form-control" required />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="weight">Weight</label>
+                                                            <input type="number" id="weight" name="weight"
+                                                                placeholder="Enter Weight in Kg" class="form-control"
+                                                                required>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label>Description</label>
+                                                        <textarea type="text" rows="10" name="workout_des"
+                                                            class="form-control" required></textarea>
+                                                    </div>
+
+                                                    <button class="btn btn-primary">Submit</button>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-xxl-12">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-header d-sm-flex d-block pb-0 border-0">
+                                                    <div class="me-auto pe-3">
+                                                        <h4 class="text-black fs-20">Work Out</h4>
+                                                        <p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit
+                                                            amet, consectetur</p>
+                                                    </div>
+
+                                                    <div class="dropdown mt-sm-0 mt-3">
+                                                        <a href="javascript:void(0);" data-bs-toggle="modal"
+                                                            data-bs-target="#addNewWorkout"
+                                                            class="btn btn-outline-primary rounded">Add Workout</a>
+                                                    </div>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <form autocomplete="off" method="POST" action="/add-user-workout">
-                                                        @csrf
-                                                        <input type="text" id="user_id" name="user_id"
-                                                            value="{{$userDetail->id}}" class="form-control" hidden>
 
-                                                        <input id="workoutIdInput" type="hidden" name="workout_id">
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table id="example3"
+                                                            class="table table-bordered table-striped verticle-middle table-responsive-sm">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Day</th>
+                                                                    <th scope="col">Excerise Name</th>
+                                                                    <th scope="col">Sets</th>
+                                                                    <th scope="col">Reps</th>
+                                                                    <th scope="col">Weight</th>
+
+                                                                    <th scope="col" class="text-end">Action
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($workouts as $workout)
+                                                                    <tr>
+                                                                        <td>{{$workout->day}}</td>
+                                                                        <td>{{$workout->exercise_name}}</td>
+                                                                        <td>{{$workout->sets}} sets</td>
+                                                                        <td>{{$workout->reps}} Reps</td>
+
+                                                                        <td>{{$workout->weight}} kg</td>
+                                                                        </td>
+                                                                        <td class="text-end"><span> <a
+                                                                                    href="javascript:void(0);"
+                                                                                    class="me-4 edit-workout"
+                                                                                    data-bs-toggle="tooltip"
+                                                                                    data-placement="top" title="Edit"
+                                                                                    data-workout="{{ json_encode($workout) }}">
+                                                                                    <i class="fa fa-pencil color-muted"></i>
+                                                                                </a><a
+                                                                                    onclick="confirmDelete('{{ $workout->uuid }}')"
+                                                                                    href="javascript:void()"
+                                                                                    data-bs-toggle="tooltip"
+                                                                                    data-placement="top" title="Close"><i
+                                                                                        class="fas fa-times color-danger"></i></a></span>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="Diet">
+                                <div class="modal fade" id="addNewDiet">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Add New Diet</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="POST" action="/add-user-diet">
+                                                    @csrf
+                                                    <input id="diet_id" type="hidden" name="diet_id">
+                                                    <input type="text" id="user_id" name="user_id"
+                                                        value="{{$userDetail->id}}" class="form-control" hidden>
+                                                    <div class="form-group">
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <label>Day</label>
@@ -375,311 +541,143 @@
                                                                 </select>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <label>Exercise Name</label>
-                                                                <input id="workoutInput" class="form-control"
-                                                                    type="text" name="exercise_name"
-                                                                    placeholder="Workout Name" required>
+                                                                <label>Goal</label>
+                                                                <select class="form-control" id="goal" name="goal"
+                                                                    required>
+                                                                    <option value="">Choose Goal</option>
+                                                                    <option value="Weight Gain">Weight Gain</option>
+                                                                    <option value="Fit">Fit</option>
+                                                                    <option value="Weight Loss">Weight Loss</option>
+                                                                </select>
                                                             </div>
                                                         </div>
-
-                                                        <!-- Workout Details Section -->
-                                                        <div id="workoutDetails" class="form-group">
-                                                            <div class="row">
-                                                                <div
-                                                                    style="display: flex; gap: 10px; align-items: center; overflow: auto;">
-                                                                    <img id="workoutImage" src="" alt="Workout Image"
-                                                                        style="display:none; width: 100%; max-width: 350px; height: auto;">
-                                                                    <video id="workoutVideo" controls
-                                                                        style="display:none; width: 100%; max-width: 350px; height: auto;">
-                                                                        <source id="workoutVideoSource" src=""
-                                                                            type="video/mp4">
-                                                                        Your browser does not support the video tag.
-                                                                    </video>
-                                                                </div>
-                                                                <div id="workoutGender"
-                                                                    style="display:none; margin-top: 10px;"></div>
-                                                                <div id="workoutCategory"
-                                                                    style="display:none; margin-top: 10px;"></div>
-                                                                <div id="workoutDescription"
-                                                                    style="display:none; margin-top: 10px;"></div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label>Meal Type</label>
+                                                                <select class="form-control" id="meal_type"
+                                                                    name="meal_type" required>
+                                                                    <option value="">Choose Meal Type</option>
+                                                                    <option value="Vegetarian">Vegetarian</option>
+                                                                    <option value="Non-Vegetarian">Non-Vegetarian
+                                                                    </option>
+                                                                    <option value="Lacto-vegetarian">
+                                                                        Lacto-vegetarian</option>
+                                                                    <option value="Ovo-vegetarian">Ovo-vegetarian
+                                                                    </option>
+                                                                    <option value="Vegan">Vegan</option>
+                                                                    <option value="Pescatarian">Pescatarian
+                                                                    </option>
+                                                                    <option value="Beegan">Beegan</option>
+                                                                    <option value="Flexitarian">Flexitarian
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Meal Name</label>
+                                                                <input type="text" id="dietInput" name="meal_name"
+                                                                    class="form-control" autocomplete="off" required>
                                                             </div>
                                                         </div>
-
-                                                        <div class="form-group row">
-                                                            <div class="col-md-4">
-                                                                <label for="sets">Sets</label>
-                                                                <input type="number" id="sets" name="sets" min="0"
-                                                                    max="1000" class="form-control" required>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <label for="reps">Reps</label>
-                                                                <input type="number" id="reps" name="reps" min="0"
-                                                                    class="form-control" required />
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <label for="weight">Weight</label>
-                                                                <input type="number" id="weight" name="weight"
-                                                                    placeholder="Enter Weight in Kg"
-                                                                    class="form-control" required>
-                                                            </div>
+                                                    </div>
+                                                    <div id="dietDetails" style="display: none;">
+                                                        <div class="form-group text-center">
+                                                            <img id="dietImage" alt="Diet Image"
+                                                                style="display: none; max-width: 50%; height: auto;">
                                                         </div>
-
                                                         <div class="form-group">
-                                                            <label>Description</label>
-                                                            <textarea type="text" rows="10" name="workout_des"
-                                                                class="form-control" required></textarea>
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label>Calories</label>
+                                                                    <input type="number" name="calories" min="0"
+                                                                        max="1000" class="form-control" required>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label>Protein</label>
+                                                                    <input type="number" name="protein"
+                                                                        class="form-control" min="0" required />
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label>Carbs</label>
+                                                                    <input type="number" name="carbs"
+                                                                        class="form-control" required>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label>Fats</label>
+                                                                    <input type="number" name="fats"
+                                                                        class="form-control" required>
+                                                                </div>
+                                                            </div>
                                                         </div>
-
-                                                        <button class="btn btn-primary">Submit</button>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12 col-xxl-12">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="card">
-                                                    <div class="card-header d-sm-flex d-block pb-0 border-0">
-                                                        <div class="me-auto pe-3">
-                                                            <h4 class="text-black fs-20">Work Out</h4>
-                                                            <p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit
-                                                                amet, consectetur</p>
-                                                        </div>
-
-                                                        <div class="dropdown mt-sm-0 mt-3">
-                                                            <a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#addNewWorkout"
-                                                                class="btn btn-outline-primary rounded">Add Workout</a>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="card-body">
-                                                        <div class="table-responsive">
-                                                            <table id="example3"
-                                                                class="table table-bordered table-striped verticle-middle table-responsive-sm">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th scope="col">Day</th>
-                                                                        <th scope="col">Excerise Name</th>
-                                                                        <th scope="col">Sets</th>
-                                                                        <th scope="col">Reps</th>
-                                                                        <th scope="col">Weight</th>
-
-                                                                        <th scope="col" class="text-end">Action
-                                                                        </th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach ($workouts as $workout)
-                                                                    <tr>
-                                                                        <td>{{$workout->day}}</td>
-                                                                        <td>{{$workout->exercise_name}}</td>
-                                                                        <td>{{$workout->sets}} sets</td>
-                                                                        <td>{{$workout->reps}} Reps</td>
-
-                                                                        <td>{{$workout->weight}} kg</td>
-                                                                        </td>
-                                                                        <td class="text-end"><span> <a
-                                                                                    href="javascript:void(0);"
-                                                                                    class="me-4 edit-workout"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-placement="top" title="Edit"
-                                                                                    data-workout="{{ json_encode($workout) }}">
-                                                                                    <i
-                                                                                        class="fa fa-pencil color-muted"></i>
-                                                                                </a><a
-                                                                                    onclick="confirmDelete('{{ $workout->uuid }}')"
-                                                                                    href="javascript:void()"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-placement="top"
-                                                                                    title="Close"><i
-                                                                                        class="fas fa-times color-danger"></i></a></span>
-                                                                        </td>
-                                                                    </tr>
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <label>Diet Description</label>
+                                                                    <textarea type="text" rows="5"
+                                                                        name="diet_description" class="form-control"
+                                                                        required></textarea>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label>Alternative Diet Description</label>
+                                                                    <textarea type="text" rows="5"
+                                                                        name="alternative_diet_description"
+                                                                        class="form-control" required></textarea>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+
+                                                    <div id="dietNotFoundMessage" class="alert alert-danger text-center"
+                                                        style="display: none;">
+                                                        Diet not found. Please add the diet to the system.
+                                                    </div>
+
+                                                    <button class="btn btn-primary">Submit</button>
+                                                </form>
                                             </div>
 
                                         </div>
                                     </div>
+
                                 </div>
 
-                                <div class="tab-pane fade" id="Diet">
-                                    <div class="modal fade" id="addNewDiet">
-                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Add New Diet</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal">
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="/add-user-diet">
-                                                        @csrf
-                                                        <input id="diet_id" type="hidden" name="diet_id">
-                                                        <input type="text" id="user_id" name="user_id"
-                                                            value="{{$userDetail->id}}" class="form-control" hidden>
-                                                        <div class="form-group">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <label>Day</label>
-                                                                    <select class="form-control" id="day" name="day"
-                                                                        required>
-                                                                        <option value="">Choose Day</option>
-                                                                        <option value="monday">Monday</option>
-                                                                        <option value="tuesday">Tuesday</option>
-                                                                        <option value="wednesday">Wednesday</option>
-                                                                        <option value="thursday">Thursday</option>
-                                                                        <option value="friday">Friday</option>
-                                                                        <option value="saturday">Saturday</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label>Goal</label>
-                                                                    <select class="form-control" id="goal" name="goal"
-                                                                        required>
-                                                                        <option value="">Choose Goal</option>
-                                                                        <option value="Weight Gain">Weight Gain</option>
-                                                                        <option value="Fit">Fit</option>
-                                                                        <option value="Weight Loss">Weight Loss</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <label>Meal Type</label>
-                                                                    <select class="form-control" id="meal_type"
-                                                                        name="meal_type" required>
-                                                                        <option value="">Choose Meal Type</option>
-                                                                        <option value="Vegetarian">Vegetarian</option>
-                                                                        <option value="Non-Vegetarian">Non-Vegetarian
-                                                                        </option>
-                                                                        <option value="Lacto-vegetarian">
-                                                                            Lacto-vegetarian</option>
-                                                                        <option value="Ovo-vegetarian">Ovo-vegetarian
-                                                                        </option>
-                                                                        <option value="Vegan">Vegan</option>
-                                                                        <option value="Pescatarian">Pescatarian
-                                                                        </option>
-                                                                        <option value="Beegan">Beegan</option>
-                                                                        <option value="Flexitarian">Flexitarian
-                                                                        </option>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label>Meal Name</label>
-                                                                    <input type="text" id="dietInput" name="meal_name"
-                                                                        class="form-control" autocomplete="off"
-                                                                        required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div id="dietDetails" style="display: none;">
-                                                            <div class="form-group text-center">
-                                                                <img id="dietImage" alt="Diet Image"
-                                                                    style="display: none; max-width: 50%; height: auto;">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="row">
-                                                                    <div class="col-md-3">
-                                                                        <label>Calories</label>
-                                                                        <input type="number" name="calories" min="0"
-                                                                            max="1000" class="form-control" required>
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <label>Protein</label>
-                                                                        <input type="number" name="protein"
-                                                                            class="form-control" min="0" required />
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <label>Carbs</label>
-                                                                        <input type="number" name="carbs"
-                                                                            class="form-control" required>
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <label>Fats</label>
-                                                                        <input type="number" name="fats"
-                                                                            class="form-control" required>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <label>Diet Description</label>
-                                                                        <textarea type="text" rows="5"
-                                                                            name="diet_description" class="form-control"
-                                                                            required></textarea>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <label>Alternative Diet Description</label>
-                                                                        <textarea type="text" rows="5"
-                                                                            name="alternative_diet_description"
-                                                                            class="form-control" required></textarea>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div id="dietNotFoundMessage"
-                                                            class="alert alert-danger text-center"
-                                                            style="display: none;">
-                                                            Diet not found. Please add the diet to the system.
-                                                        </div>
-
-                                                        <button class="btn btn-primary">Submit</button>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-xl-12 col-xxl-12">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="card">
-                                                    <div class="card-header d-sm-flex d-block pb-0 border-0">
-                                                        <div class="me-auto pe-3">
-                                                            <h4 class="text-black fs-20">Diet plan list</h4>
-                                                            <p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit
-                                                                amet, consectetur</p>
-                                                        </div>
-
-                                                        <div class="dropdown mt-sm-0 mt-3">
-                                                            <a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#addNewDiet"
-                                                                class="btn btn-outline-primary rounded">Add Diet</a>
-                                                        </div>
+                                <div class="col-xl-12 col-xxl-12">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-header d-sm-flex d-block pb-0 border-0">
+                                                    <div class="me-auto pe-3">
+                                                        <h4 class="text-black fs-20">Diet plan list</h4>
+                                                        <p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit
+                                                            amet, consectetur</p>
                                                     </div>
 
-                                                    <div class="card-body">
-                                                        <div class="table-responsive">
-                                                            <table id="example3"
-                                                                class="table table-bordered table-striped verticle-middle table-responsive-sm">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th scope="col">Day</th>
-                                                                        <th scope="col">Meal Name</th>
-                                                                        <th scope="col">Calories</th>
-                                                                        <th scope="col">Protein</th>
-                                                                        <th scope="col">Carbs</th>
-                                                                        <th scope="col">Fats</th>
-                                                                        <th scope="col" class="text-end">Action
-                                                                        </th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach($diets as $diet)
+                                                    <div class="dropdown mt-sm-0 mt-3">
+                                                        <a href="javascript:void(0);" data-bs-toggle="modal"
+                                                            data-bs-target="#addNewDiet"
+                                                            class="btn btn-outline-primary rounded">Add Diet</a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table id="example3"
+                                                            class="table table-bordered table-striped verticle-middle table-responsive-sm">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Day</th>
+                                                                    <th scope="col">Meal Name</th>
+                                                                    <th scope="col">Calories</th>
+                                                                    <th scope="col">Protein</th>
+                                                                    <th scope="col">Carbs</th>
+                                                                    <th scope="col">Fats</th>
+                                                                    <th scope="col" class="text-end">Action
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($diets as $diet)
                                                                     <tr>
                                                                         <td>{{$diet->day}}</td>
                                                                         <td>{{$diet->meal_name}}</td>
@@ -695,62 +693,60 @@
                                                                                     data-bs-toggle="tooltip"
                                                                                     data-placement="top" title="Edit"
                                                                                     data-diet="{{ json_encode($diet) }}">
-                                                                                    <i
-                                                                                        class="fa fa-pencil color-muted"></i>
+                                                                                    <i class="fa fa-pencil color-muted"></i>
                                                                                 </a><a href="javascript:void()"
                                                                                     onclick="confirmDietDelete('{{ $diet->uuid }}')"
                                                                                     data-bs-toggle="tooltip"
-                                                                                    data-placement="top"
-                                                                                    title="Close"><i
+                                                                                    data-placement="top" title="Close"><i
                                                                                         class="fas fa-times color-danger"></i></a></span>
                                                                         </td>
                                                                     </tr>
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="tab-pane fade" id="bmi">
-                                    <!-- End of BMI Calculation Section -->
-                                    <div class="col-xl-12 col-xxl-12">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="card">
-                                                    <div class="card-header d-sm-flex d-block pb-0 border-0">
-                                                        <div class="me-auto pe-3">
-                                                            <h4 class="text-black fs-20">BMI List</h4>
-                                                        </div>
-
-                                                        <div class="dropdown mt-sm-0 mt-3">
-                                                            <a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#addNewBmi"
-                                                                class="btn btn-outline-primary rounded">Add BMI</a>
-                                                        </div>
+                            <div class="tab-pane fade" id="bmi">
+                                <!-- End of BMI Calculation Section -->
+                                <div class="col-xl-12 col-xxl-12">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-header d-sm-flex d-block pb-0 border-0">
+                                                    <div class="me-auto pe-3">
+                                                        <h4 class="text-black fs-20">BMI List</h4>
                                                     </div>
 
+                                                    <div class="dropdown mt-sm-0 mt-3">
+                                                        <a href="javascript:void(0);" data-bs-toggle="modal"
+                                                            data-bs-target="#addNewBmi"
+                                                            class="btn btn-outline-primary rounded">Add BMI</a>
+                                                    </div>
+                                                </div>
 
-                                                    <div class="card-body">
-                                                        <div class="table-responsive">
-                                                            <table id="example3"
-                                                                class="table table-bordered table-striped verticle-middle table-responsive-sm">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th scope="col">Month</th>
-                                                                        <th scope="col">Height</th>
-                                                                        <th scope="col">Weight</th>
-                                                                        <th scope="col">BMI</th>
-                                                                        <th scope="col" class="text-end">
-                                                                            Action</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach ($bmis as $bmi)
+
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table id="example3"
+                                                            class="table table-bordered table-striped verticle-middle table-responsive-sm">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Month</th>
+                                                                    <th scope="col">Height</th>
+                                                                    <th scope="col">Weight</th>
+                                                                    <th scope="col">BMI</th>
+                                                                    <th scope="col" class="text-end">
+                                                                        Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($bmis as $bmi)
                                                                     <tr>
                                                                         <td>{{ $bmi->month }}</td>
                                                                         <td>{{ $bmi->height }}</td>
@@ -758,13 +754,11 @@
                                                                         <td>{{ $bmi->bmi }}</td>
                                                                         <td class="text-end">
                                                                             <span>
-                                                                                <a href="javascript:void()"
-                                                                                    class="edit-bmi"
+                                                                                <a href="javascript:void()" class="edit-bmi"
                                                                                     data-bmi-id="{{ $bmi->id }}"
                                                                                     data-bs-toggle="tooltip"
                                                                                     data-placement="top" title="Edit">
-                                                                                    <i
-                                                                                        class="fa fa-pencil color-muted"></i>
+                                                                                    <i class="fa fa-pencil color-muted"></i>
                                                                                 </a>
 
                                                                                 &nbsp; &nbsp;
@@ -778,108 +772,108 @@
                                                                             </span>
                                                                         </td>
                                                                     </tr>
-                                                                    @endforeach
+                                                                @endforeach
 
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
+
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="tab-pane fade" id="trainers">
-                                    <div class="modal fade" id="addNewTainer">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Assign Trainer</h5>
-                                                    <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form action="/allocateTrainer" method="POST">
-                                                        @csrf
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <input type="hidden" name="user_id"
-                                                                    value="{{$userDetail->id}}">
-                                                                <!-- Subscription Selection -->
-                                                                <div class="mb-3">
-                                                                    <label for="trainer">Select a Trainer:</label>
-                                                                    <select class="me-sm-2 form-control default-select"
-                                                                        id="trainer" name="trainer_id">
-                                                                        <option value="0">Select</option>
-                                                                        @foreach ($trainers as $trainer)
+                            <div class="tab-pane fade" id="trainers">
+                                <div class="modal fade" id="addNewTainer">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Assign Trainer</h5>
+                                                <button type="button" class="btn-close"
+                                                    data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="/allocateTrainer" method="POST">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <input type="hidden" name="user_id"
+                                                                value="{{$userDetail->id}}">
+                                                            <!-- Subscription Selection -->
+                                                            <div class="mb-3">
+                                                                <label for="trainer">Select a Trainer:</label>
+                                                                <select class="me-sm-2 form-control default-select"
+                                                                    id="trainer" name="trainer_id">
+                                                                    <option value="0">Select</option>
+                                                                    @foreach ($trainers as $trainer)
                                                                         <option value="{{$trainer->id}}">
                                                                             {{$trainer->name}}
                                                                         </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
-                                                                <!-- Subscription Description -->
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <!-- Subscription Description -->
 
-                                                                <div class="mb-3">
-                                                                    <label for="status">Select Trainer Status:</label>
-                                                                    <select class="me-sm-2 form-control default-select"
-                                                                        id="status" name="status">
-                                                                        <option>Select</option>
-                                                                        <option
-                                                                            value="{{ \App\Enums\TrainerAssignToUserStatus::ACTIVE }}">
-                                                                            Active</option>
-                                                                        <option
-                                                                            value="{{ \App\Enums\TrainerAssignToUserStatus::INACTIVE }}">
-                                                                            Inactive</option>
-                                                                    </select>
-                                                                </div>
+                                                            <div class="mb-3">
+                                                                <label for="status">Select Trainer Status:</label>
+                                                                <select class="me-sm-2 form-control default-select"
+                                                                    id="status" name="status">
+                                                                    <option>Select</option>
+                                                                    <option
+                                                                        value="{{ \App\Enums\TrainerAssignToUserStatus::ACTIVE }}">
+                                                                        Active</option>
+                                                                    <option
+                                                                        value="{{ \App\Enums\TrainerAssignToUserStatus::INACTIVE }}">
+                                                                        Inactive</option>
+                                                                </select>
                                                             </div>
                                                         </div>
-                                                        <div class="dropdown mt-sm-0 mt-3">
-                                                            <button type="submit"
-                                                                class="btn btn-outline-primary rounded">Assign</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                                    </div>
+                                                    <div class="dropdown mt-sm-0 mt-3">
+                                                        <button type="submit"
+                                                            class="btn btn-outline-primary rounded">Assign</button>
+                                                    </div>
+                                                </form>
                                             </div>
-
                                         </div>
 
                                     </div>
-                                    <div class="card">
-                                        <div class="col-xl-12 col-xxl-12">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="card">
-                                                        <div class="card-header d-sm-flex d-block pb-0 border-0">
-                                                            <div class="me-auto pe-3">
-                                                                <h4 class="text-black fs-20">Assigned Trainers List</h4>
-                                                            </div>
 
-                                                            <div class="dropdown mt-sm-0 mt-3">
-                                                                <a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                    data-bs-target="#addNewTainer"
-                                                                    class="btn btn-outline-primary rounded">Assign
-                                                                    Trainers</a>
-                                                            </div>
+                                </div>
+                                <div class="card">
+                                    <div class="col-xl-12 col-xxl-12">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="card">
+                                                    <div class="card-header d-sm-flex d-block pb-0 border-0">
+                                                        <div class="me-auto pe-3">
+                                                            <h4 class="text-black fs-20">Assigned Trainers List</h4>
                                                         </div>
 
-                                                        <div class="card-body">
-                                                            <div class="table-responsive">
-                                                                <table id="example3"
-                                                                    class="table table-bordered table-striped verticle-middle table-responsive-sm">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th scope="col">Trainer Name</th>
-                                                                            <th scope="col">Status</th>
-                                                                            <!-- <th scope="col" class="text-end">Action -->
-                                                                            </th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        @foreach($trainersHistories as $trainer)
+                                                        <div class="dropdown mt-sm-0 mt-3">
+                                                            <a href="javascript:void(0);" data-bs-toggle="modal"
+                                                                data-bs-target="#addNewTainer"
+                                                                class="btn btn-outline-primary rounded">Assign
+                                                                Trainers</a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="table-responsive">
+                                                            <table id="example3"
+                                                                class="table table-bordered table-striped verticle-middle table-responsive-sm">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col">Trainer Name</th>
+                                                                        <th scope="col">Status</th>
+                                                                        <!-- <th scope="col" class="text-end">Action -->
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach($trainersHistories as $trainer)
                                                                         <tr>
                                                                             <td>{{$trainer->trainer->name}}</td>
                                                                             <td>
@@ -888,8 +882,7 @@
                                                                                     method="POST">
                                                                                     @csrf
                                                                                     @method('POST')
-                                                                                    <input type="hidden"
-                                                                                        name="trainer_id"
+                                                                                    <input type="hidden" name="trainer_id"
                                                                                         value="{{ $trainer->id }}">
                                                                                     <!-- Hidden field for trainer_id -->
                                                                                     <select name="status"
@@ -907,10 +900,9 @@
                                                                                 </form>
                                                                             </td>
                                                                         </tr>
-                                                                        @endforeach
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -924,553 +916,548 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="modal fade" id="editWorkoutModal" tabindex="-1" role="dialog"
-            aria-labelledby="editWorkoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Workout</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="editWorkoutForm" method="POST" action="/update-user-workout">
-                            @csrf
-                            <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
-                            <input type="hidden" id="edit_workout_id" name="workout_id">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Day</label>
-                                        <select class="form-control" id="edit_day" name="day" required>
-                                            <option value="">Choose Day</option>
-                                            <option value="monday">Monday</option>
-                                            <option value="tuesday">Tuesday</option>
-                                            <option value="wednesday">Wednesday</option>
-                                            <option value="thursday">Thursday</option>
-                                            <option value="friday">Friday</option>
-                                            <option value="saturday">Saturday</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>Exercise Name</label>
-                                        <input type="text" id="edit_exercise_name" name="exercise_name"
-                                            class="form-control" required>
-                                    </div>
+    <div class="modal fade" id="editWorkoutModal" tabindex="-1" role="dialog" aria-labelledby="editWorkoutModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Workout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editWorkoutForm" method="POST" action="/update-user-workout">
+                        @csrf
+                        <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
+                        <input type="hidden" id="edit_workout_id" name="workout_id">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Day</label>
+                                    <select class="form-control" id="edit_day" name="day" required>
+                                        <option value="">Choose Day</option>
+                                        <option value="monday">Monday</option>
+                                        <option value="tuesday">Tuesday</option>
+                                        <option value="wednesday">Wednesday</option>
+                                        <option value="thursday">Thursday</option>
+                                        <option value="friday">Friday</option>
+                                        <option value="saturday">Saturday</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Exercise Name</label>
+                                    <input type="text" id="edit_exercise_name" name="exercise_name" class="form-control"
+                                        required>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label>Sets</label>
-                                        <input type="number" id="edit_sets" name="sets" min="0" max="1000"
-                                            class="form-control" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Reps</label>
-                                        <input type="number" id="edit_reps" name="reps" class="form-control" min="0"
-                                            required />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Weight</label>
-                                        <input type="number" id="edit_weight" name="weight"
-                                            placeholder="Enter Weight in Kg" class="form-control" required>
-                                    </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Sets</label>
+                                    <input type="number" id="edit_sets" name="sets" min="0" max="1000"
+                                        class="form-control" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Reps</label>
+                                    <input type="number" id="edit_reps" name="reps" class="form-control" min="0"
+                                        required />
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Weight</label>
+                                    <input type="number" id="edit_weight" name="weight" placeholder="Enter Weight in Kg"
+                                        class="form-control" required>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea type="text" id="edit_notes" rows="10" name="workout_des" class="form-control"
-                                    required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Update</button>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea type="text" id="edit_notes" rows="10" name="workout_des" class="form-control"
+                                required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Diet</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="editDietForm" method="POST" action="/update-user-diet">
-                            @csrf
-                            <input type="hidden" id="edit_diet_id" name="diet_id">
-                            <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Day</label>
-                                        <select class="form-control" id="edit_diet_day" name="day" required>
-                                            <option value="">Choose Day</option>
-                                            <option value="monday">Monday</option>
-                                            <option value="tuesday">Tuesday</option>
-                                            <option value="wednesday">Wednesday</option>
-                                            <option value="thursday">Thursday</option>
-                                            <option value="friday">Friday</option>
-                                            <option value="saturday">Saturday</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>Goal</label>
-                                        <select class="form-control" id="edit_goal" name="goal" required>
-                                            <option value="">Choose Goal</option>
-                                            <option value="Weight Gain">Weight Gain</option>
-                                            <option value="Fit">Fit</option>
-                                            <option value="Weight Loss">Weight Loss</option>
-                                        </select>
-                                    </div>
+    <div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Diet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editDietForm" method="POST" action="/update-user-diet">
+                        @csrf
+                        <input type="hidden" id="edit_diet_id" name="diet_id">
+                        <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Day</label>
+                                    <select class="form-control" id="edit_diet_day" name="day" required>
+                                        <option value="">Choose Day</option>
+                                        <option value="monday">Monday</option>
+                                        <option value="tuesday">Tuesday</option>
+                                        <option value="wednesday">Wednesday</option>
+                                        <option value="thursday">Thursday</option>
+                                        <option value="friday">Friday</option>
+                                        <option value="saturday">Saturday</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Goal</label>
+                                    <select class="form-control" id="edit_goal" name="goal" required>
+                                        <option value="">Choose Goal</option>
+                                        <option value="Weight Gain">Weight Gain</option>
+                                        <option value="Fit">Fit</option>
+                                        <option value="Weight Loss">Weight Loss</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Meal Type</label>
+                                    <select class="form-control" id="edit_meal_type" name="meal_type" required>
+                                        <option value="">Choose Meal Type</option>
+                                        <option value="Vegetarian">Vegetarian</option>
+                                        <option value="Non-Vegetarian">Non-Vegetarian </option>
+                                        <option value="Lacto-vegetarian">Lacto-vegetarian</option>
+                                        <option value="Ovo-vegetarian">Ovo-vegetarian </option>
+                                        <option value="Vegan">Vegan</option>
+                                        <option value="Pescatarian">Pescatarian </option>
+                                        <option value="Beegan">Beegan</option>
+                                        <option value="Flexitarian">Flexitarian </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Meal Name</label>
+                                    <input type="text" id="edit_meal_name" name="meal_name" class="form-control"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Calories</label>
+                                    <input type="number" id="edit_calories" name="calories" min="0" max="1000"
+                                        class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Protein</label>
+                                    <input type="number" id="edit_protein" name="protein" class="form-control" min="0"
+                                        required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Carbs</label>
+                                    <input type="number" id="edit_carbs" name="carbs" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Fats</label>
+                                    <input type="number" id="edit_fats" name="fats" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Diet Description</label>
+                                    <textarea type="text" id="edit_diet_discription" name="diet_description" rows="5"
+                                        class="form-control" required></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Alternative Diet Description</label>
+                                    <textarea type="text" id="edit_alternative_diet_description"
+                                        name="alternative_diet_description" rows="5" class="form-control"
+                                        required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="addNewBmi" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add BMI</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" id="bmiForm" novalidate
+                        action="{{ route('addUserBodyMeasurement') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label for="month">Select Month</label>
+                                <select class="form-control" id="month" name="month" required>
+                                    <option value="">Choose Month</option>
+                                    <option value="January">January</option>
+                                    <option value="February">February</option>
+                                    <option value="March">March</option>
+                                    <option value="April">April</option>
+                                    <option value="May">May</option>
+                                    <option value="June">June</option>
+                                    <option value="July">July</option>
+                                    <option value="August">August</option>
+                                    <option value="September">September</option>
+                                    <option value="October">October</option>
+                                    <option value="November">November</option>
+                                    <option value="December">December</option>
+                                </select>
+                                <div class="invalid-feedback">Month is required.</div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <!-- Left section -->
+                            <div class="col-lg-4 mb-4">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Meal Type</label>
-                                        <select class="form-control" id="edit_meal_type" name="meal_type" required>
-                                            <option value="">Choose Meal Type</option>
-                                            <option value="Vegetarian">Vegetarian</option>
-                                            <option value="Non-Vegetarian">Non-Vegetarian </option>
-                                            <option value="Lacto-vegetarian">Lacto-vegetarian</option>
-                                            <option value="Ovo-vegetarian">Ovo-vegetarian </option>
-                                            <option value="Vegan">Vegan</option>
-                                            <option value="Pescatarian">Pescatarian </option>
-                                            <option value="Beegan">Beegan</option>
-                                            <option value="Flexitarian">Flexitarian </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>Meal Name</label>
-                                        <input type="text" id="edit_meal_name" name="meal_name" class="form-control"
+                                    <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="chest">Chest (cm)</label>
+                                        <input type="text" class="form-control" id="chest" name="chest" placeholder=""
                                             required>
+                                        <div class="invalid-feedback">Chest measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="triceps">Triceps (cm)</label>
+                                        <input type="text" class="form-control" id="triceps" name="triceps"
+                                            placeholder="" required>
+                                        <div class="invalid-feedback">Triceps measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="biceps">Biceps (cm)</label>
+                                        <input type="text" class="form-control" id="biceps" name="biceps"
+                                            placeholder="">
+                                        <div class="invalid-feedback">Biceps measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="lats">Lats (cm)</label>
+                                        <input type="text" class="form-control" id="lats" name="lats" placeholder=""
+                                            required>
+                                        <div class="invalid-feedback">Lats measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="shoulder">Shoulder (cm)</label>
+                                        <input type="text" class="form-control" id="shoulder" name="shoulder"
+                                            placeholder="" required>
+                                        <div class="invalid-feedback">Shoulder measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="abs">Abs (cm)</label>
+                                        <input type="text" class="form-control" id="abs" name="abs" placeholder=""
+                                            required>
+                                        <div class="invalid-feedback">Abs measurement is required.</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+
+                            <!-- Center section for the human body skeleton -->
+                            <div class="col-lg-4 mb-4 text-center">
+                                <img src="/images/bmi_images/male-skeleton.png" alt="Human Body Skeleton"
+                                    class="img-fluid"
+                                    style="margin-top: 45px; margin-left: -25px; max-width: 129%; height: 90%;">
+                            </div>
+
+                            <!-- Right section -->
+                            <div class="col-lg-4 mb-4">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Calories</label>
-                                        <input type="number" id="edit_calories" name="calories" min="0" max="1000"
-                                            class="form-control" required>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="forearms">Forearms (cm)</label>
+                                        <input type="text" class="form-control" id="forearms" name="forearms"
+                                            placeholder="" required>
+                                        <div class="invalid-feedback">Forearms measurement is required.</div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label>Protein</label>
-                                        <input type="number" id="edit_protein" name="protein" class="form-control"
-                                            min="0" required />
+                                    <div class="col-md-12 mb-3">
+                                        <label for="traps">Traps (cm)</label>
+                                        <input type="text" class="form-control" id="traps" name="traps" placeholder=""
+                                            required>
+                                        <div class="invalid-feedback">Traps measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="glutes">Glutes (cm)</label>
+                                        <input type="text" class="form-control" id="glutes" name="glutes"
+                                            placeholder="">
+                                        <div class="invalid-feedback">Glutes measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="quads">Quads (cm)</label>
+                                        <input type="text" class="form-control" id="quads" name="quads" placeholder=""
+                                            required>
+                                        <div class="invalid-feedback">Quads measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="hamstring">Hamstring (cm)</label>
+                                        <input type="text" class="form-control" id="hamstring" name="hamstring"
+                                            placeholder="" required>
+                                        <div class="invalid-feedback">Hamstring measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="calves">Calves (cm)</label>
+                                        <input type="text" class="form-control" id="calves" name="calves" placeholder=""
+                                            required>
+                                        <div class="invalid-feedback">Calves measurement is required.</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                        </div>
+
+                        <!-- BMI Calculation Section -->
+                        <div class="row mt-5">
+                            <div class="col-lg-12">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-black">Calculate BMI</span>
+                                </h4>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Carbs</label>
-                                        <input type="number" id="edit_carbs" name="carbs" class="form-control" required>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="height">Height (cm)</label>
+                                        <input type="number" class="form-control" id="height" name="height"
+                                            placeholder="Enter height in cm" required>
+                                        <div class="invalid-feedback">Height is required.</div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label>Fats</label>
-                                        <input type="number" id="edit_fats" name="fats" class="form-control" required>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="bmi_weight">Weight (kg)</label>
+                                        <input type="number" class="form-control" id="bmi_weight" name="weight"
+                                            placeholder="Enter weight in kg" required>
+                                        <div class="invalid-feedback">Weight is required.</div>
+                                    </div>
+                                    <!-- BMI Result Display -->
+                                    <div class="col-md-4 mb-3">
+                                        <div id="bmiResult" style="display: none;">
+                                            <h4>Your BMI is: <br><br><span id="bmiDisplay"></span></h4>
+
+                                            <!-- Hidden input to store BMI value for submission -->
+                                            <input type="hidden" id="storeBmi" name="bmi">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Diet Description</label>
-                                        <textarea type="text" id="edit_diet_discription" name="diet_description"
-                                            rows="5" class="form-control" required></textarea>
+                                    <div class="col-md-6 mb-3">
+                                        <button type="button" class="btn btn-primary btn-lg btn-block"
+                                            onclick="calculateBMI()">Calculate BMI</button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label>Alternative Diet Description</label>
-                                        <textarea type="text" id="edit_alternative_diet_description"
-                                            name="alternative_diet_description" rows="5" class="form-control"
-                                            required></textarea>
+                                    <div class="col-md-6 mb-3">
+                                        <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset</button>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+                                    </div>
+                                </div>
+
+
                             </div>
-                            <button type="submit" class="btn btn-primary">Update</button>
-                        </form>
-                    </div>
+                        </div>
+
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 
-
-        <div class="modal fade" id="addNewBmi" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add BMI</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form class="needs-validation" id="bmiForm" novalidate
-                            action="{{ route('addUserBodyMeasurement') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <label for="month">Select Month</label>
-                                    <select class="form-control" id="month" name="month" required>
-                                        <option value="">Choose Month</option>
-                                        <option value="January">January</option>
-                                        <option value="February">February</option>
-                                        <option value="March">March</option>
-                                        <option value="April">April</option>
-                                        <option value="May">May</option>
-                                        <option value="June">June</option>
-                                        <option value="July">July</option>
-                                        <option value="August">August</option>
-                                        <option value="September">September</option>
-                                        <option value="October">October</option>
-                                        <option value="November">November</option>
-                                        <option value="December">December</option>
-                                    </select>
-                                    <div class="invalid-feedback">Month is required.</div>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <!-- Left section -->
-                                <div class="col-lg-4 mb-4">
-                                    <div class="row">
-                                        <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
-                                        <div class="col-md-12 mb-3">
-                                            <label for="chest">Chest (cm)</label>
-                                            <input type="text" class="form-control" id="chest" name="chest"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Chest measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="triceps">Triceps (cm)</label>
-                                            <input type="text" class="form-control" id="triceps" name="triceps"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Triceps measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="biceps">Biceps (cm)</label>
-                                            <input type="text" class="form-control" id="biceps" name="biceps"
-                                                placeholder="">
-                                            <div class="invalid-feedback">Biceps measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="lats">Lats (cm)</label>
-                                            <input type="text" class="form-control" id="lats" name="lats" placeholder=""
-                                                required>
-                                            <div class="invalid-feedback">Lats measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="shoulder">Shoulder (cm)</label>
-                                            <input type="text" class="form-control" id="shoulder" name="shoulder"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Shoulder measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="abs">Abs (cm)</label>
-                                            <input type="text" class="form-control" id="abs" name="abs" placeholder=""
-                                                required>
-                                            <div class="invalid-feedback">Abs measurement is required.</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Center section for the human body skeleton -->
-                                <div class="col-lg-4 mb-4 text-center">
-                                    <img src="/images/bmi_images/male-skeleton.png" alt="Human Body Skeleton"
-                                        class="img-fluid"
-                                        style="margin-top: 45px; margin-left: -25px; max-width: 129%; height: 90%;">
-                                </div>
-
-                                <!-- Right section -->
-                                <div class="col-lg-4 mb-4">
-                                    <div class="row">
-                                        <div class="col-md-12 mb-3">
-                                            <label for="forearms">Forearms (cm)</label>
-                                            <input type="text" class="form-control" id="forearms" name="forearms"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Forearms measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="traps">Traps (cm)</label>
-                                            <input type="text" class="form-control" id="traps" name="traps"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Traps measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="glutes">Glutes (cm)</label>
-                                            <input type="text" class="form-control" id="glutes" name="glutes"
-                                                placeholder="">
-                                            <div class="invalid-feedback">Glutes measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="quads">Quads (cm)</label>
-                                            <input type="text" class="form-control" id="quads" name="quads"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Quads measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="hamstring">Hamstring (cm)</label>
-                                            <input type="text" class="form-control" id="hamstring" name="hamstring"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Hamstring measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="calves">Calves (cm)</label>
-                                            <input type="text" class="form-control" id="calves" name="calves"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Calves measurement is required.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- BMI Calculation Section -->
-                            <div class="row mt-5">
-                                <div class="col-lg-12">
-                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="text-black">Calculate BMI</span>
-                                    </h4>
-                                    <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <label for="height">Height (cm)</label>
-                                            <input type="number" class="form-control" id="height" name="height"
-                                                placeholder="Enter height in cm" required>
-                                            <div class="invalid-feedback">Height is required.</div>
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <label for="bmi_weight">Weight (kg)</label>
-                                            <input type="number" class="form-control" id="bmi_weight" name="weight"
-                                                placeholder="Enter weight in kg" required>
-                                            <div class="invalid-feedback">Weight is required.</div>
-                                        </div>
-                                        <!-- BMI Result Display -->
-                                        <div class="col-md-4 mb-3">
-                                            <div id="bmiResult" style="display: none;">
-                                                <h4>Your BMI is: <br><br><span id="bmiDisplay"></span></h4>
-
-                                                <!-- Hidden input to store BMI value for submission -->
-                                                <input type="hidden" id="storeBmi" name="bmi">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <button type="button" class="btn btn-primary btn-lg btn-block"
-                                                onclick="calculateBMI()">Calculate BMI</button>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <button type="reset"
-                                                class="btn btn-secondary btn-lg btn-block">Reset</button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12 mb-3">
-                                            <button type="submit"
-                                                class="btn btn-success btn-lg btn-block">Submit</button>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
+    <!-- Edit BMI and Body Measurement Modal -->
+    <div class="modal fade" id="editBmiModal" tabindex="-1" role="dialog" aria-labelledby="editBmiModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit BMI and Body Measurements</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>
-        </div>
-
-        <!-- Edit BMI and Body Measurement Modal -->
-        <div class="modal fade" id="editBmiModal" tabindex="-1" role="dialog" aria-labelledby="editBmiModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit BMI and Body Measurements</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form class="needs-validation" id="editBmiForm" novalidate action="/update-user-bmi"
-                            method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <label for="month">Select Month</label>
-                                    <select class="form-control" id="edit_month" name="month" required>
-                                        <option value="">Choose Month</option>
-                                        <option value="January">January</option>
-                                        <option value="February">February</option>
-                                        <option value="March">March</option>
-                                        <option value="April">April</option>
-                                        <option value="May">May</option>
-                                        <option value="June">June</option>
-                                        <option value="July">July</option>
-                                        <option value="August">August</option>
-                                        <option value="September">September</option>
-                                        <option value="October">October</option>
-                                        <option value="November">November</option>
-                                        <option value="December">December</option>
-                                    </select>
-                                    <div class="invalid-feedback">Month is required.</div>
-                                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" id="editBmiForm" novalidate action="/update-user-bmi" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label for="month">Select Month</label>
+                                <select class="form-control" id="edit_month" name="month" required>
+                                    <option value="">Choose Month</option>
+                                    <option value="January">January</option>
+                                    <option value="February">February</option>
+                                    <option value="March">March</option>
+                                    <option value="April">April</option>
+                                    <option value="May">May</option>
+                                    <option value="June">June</option>
+                                    <option value="July">July</option>
+                                    <option value="August">August</option>
+                                    <option value="September">September</option>
+                                    <option value="October">October</option>
+                                    <option value="November">November</option>
+                                    <option value="December">December</option>
+                                </select>
+                                <div class="invalid-feedback">Month is required.</div>
                             </div>
-                            <br>
-                            <div class="row">
-                                <!-- Left section (same as add modal) -->
-                                <div class="col-lg-4 mb-4">
-                                    <div class="row">
-                                        <div class="col-md-12 mb-3">
-                                            <label for="edit_chest">Chest (cm)</label>
-                                            <input type="text" class="form-control" id="edit_chest" name="chest"
-                                                required>
-                                            <div class="invalid-feedback">Chest measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="edit_triceps">Triceps (cm)</label>
-                                            <input type="text" class="form-control" id="edit_triceps" name="triceps"
-                                                required>
-                                            <div class="invalid-feedback">Triceps measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="biceps">Biceps (cm)</label>
-                                            <input type="text" class="form-control" id="edit_biceps" name="biceps"
-                                                placeholder="">
-                                            <div class="invalid-feedback">Biceps measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="lats">Lats (cm)</label>
-                                            <input type="text" class="form-control" id="edit_lats" name="lats"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Lats measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="shoulder">Shoulder (cm)</label>
-                                            <input type="text" class="form-control" id="edit_shoulder" name="shoulder"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Shoulder measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="abs">Abs (cm)</label>
-                                            <input type="text" class="form-control" id="edit_abs" name="abs"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Abs measurement is required.</div>
-                                        </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <!-- Left section (same as add modal) -->
+                            <div class="col-lg-4 mb-4">
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="edit_chest">Chest (cm)</label>
+                                        <input type="text" class="form-control" id="edit_chest" name="chest" required>
+                                        <div class="invalid-feedback">Chest measurement is required.</div>
                                     </div>
-                                </div>
-
-                                <!-- Center section for the human body skeleton -->
-                                <div class="col-lg-4 mb-4 text-center">
-                                    <img src="/images/bmi_images/male-skeleton.png" alt="Human Body Skeleton"
-                                        class="img-fluid"
-                                        style="margin-top: 45px; margin-left: -25px; max-width: 129%; height: 90%;">
-                                </div>
-
-                                <!-- Right section (same as add modal) -->
-                                <div class="col-lg-4 mb-4">
-                                    <div class="row">
-                                        <div class="col-md-12 mb-3">
-                                            <label for="edit_forearms">Forearms (cm)</label>
-                                            <input type="text" class="form-control" id="edit_forearms" name="forearms"
-                                                required>
-                                            <div class="invalid-feedback">Forearms measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="edit_traps">Traps (cm)</label>
-                                            <input type="text" class="form-control" id="edit_traps" name="traps"
-                                                required>
-                                            <div class="invalid-feedback">Traps measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="glutes">Glutes (cm)</label>
-                                            <input type="text" class="form-control" id="edit_glutes" name="glutes"
-                                                placeholder="">
-                                            <div class="invalid-feedback">Glutes measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="quads">Quads (cm)</label>
-                                            <input type="text" class="form-control" id="edit_quads" name="quads"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Quads measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="hamstring">Hamstring (cm)</label>
-                                            <input type="text" class="form-control" id="edit_hamstring" name="hamstring"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Hamstring measurement is required.</div>
-                                        </div>
-                                        <div class="col-md-12 mb-3">
-                                            <label for="calves">Calves (cm)</label>
-                                            <input type="text" class="form-control" id="edit_calves" name="calves"
-                                                placeholder="" required>
-                                            <div class="invalid-feedback">Calves measurement is required.</div>
-                                        </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="edit_triceps">Triceps (cm)</label>
+                                        <input type="text" class="form-control" id="edit_triceps" name="triceps"
+                                            required>
+                                        <div class="invalid-feedback">Triceps measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="biceps">Biceps (cm)</label>
+                                        <input type="text" class="form-control" id="edit_biceps" name="biceps"
+                                            placeholder="">
+                                        <div class="invalid-feedback">Biceps measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="lats">Lats (cm)</label>
+                                        <input type="text" class="form-control" id="edit_lats" name="lats"
+                                            placeholder="" required>
+                                        <div class="invalid-feedback">Lats measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="shoulder">Shoulder (cm)</label>
+                                        <input type="text" class="form-control" id="edit_shoulder" name="shoulder"
+                                            placeholder="" required>
+                                        <div class="invalid-feedback">Shoulder measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="abs">Abs (cm)</label>
+                                        <input type="text" class="form-control" id="edit_abs" name="abs" placeholder=""
+                                            required>
+                                        <div class="invalid-feedback">Abs measurement is required.</div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- BMI Calculation Section -->
-                            <div class="row mt-5">
-                                <div class="col-lg-12">
-                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="text-black">Edit BMI</span>
-                                    </h4>
-                                    <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <label for="edit_height">Height (cm)</label>
-                                            <input type="number" class="form-control" id="edit_height" name="height"
-                                                required>
-                                            <div class="invalid-feedback">Height is required.</div>
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <label for="edit_body_weight">Weight (kg)</label>
-                                            <input type="number" class="form-control" id="edit_body_weight"
-                                                name="weight" required>
-                                            <div class="invalid-feedback">Weight is required.</div>
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <label for="edit_calculatedBmi">BMI</label>
-                                            <input type="number" class="form-control" id="edit_calculatedBmi" name="bmi"
-                                                placeholder="BMI will be calculated" readonly>
-                                        </div>
+                            <!-- Center section for the human body skeleton -->
+                            <div class="col-lg-4 mb-4 text-center">
+                                <img src="/images/bmi_images/male-skeleton.png" alt="Human Body Skeleton"
+                                    class="img-fluid"
+                                    style="margin-top: 45px; margin-left: -25px; max-width: 129%; height: 90%;">
+                            </div>
+
+                            <!-- Right section (same as add modal) -->
+                            <div class="col-lg-4 mb-4">
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="edit_forearms">Forearms (cm)</label>
+                                        <input type="text" class="form-control" id="edit_forearms" name="forearms"
+                                            required>
+                                        <div class="invalid-feedback">Forearms measurement is required.</div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <button type="button" class="btn btn-primary btn-lg btn-block"
-                                                onclick="calculateEditBmi()">Calculate BMI</button>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <button type="reset"
-                                                class="btn btn-secondary btn-lg btn-block">Reset</button>
-                                        </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="edit_traps">Traps (cm)</label>
+                                        <input type="text" class="form-control" id="edit_traps" name="traps" required>
+                                        <div class="invalid-feedback">Traps measurement is required.</div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-12 mb-3">
-                                            <button type="submit"
-                                                class="btn btn-success btn-lg btn-block">Update</button>
-                                        </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="glutes">Glutes (cm)</label>
+                                        <input type="text" class="form-control" id="edit_glutes" name="glutes"
+                                            placeholder="">
+                                        <div class="invalid-feedback">Glutes measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="quads">Quads (cm)</label>
+                                        <input type="text" class="form-control" id="edit_quads" name="quads"
+                                            placeholder="" required>
+                                        <div class="invalid-feedback">Quads measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="hamstring">Hamstring (cm)</label>
+                                        <input type="text" class="form-control" id="edit_hamstring" name="hamstring"
+                                            placeholder="" required>
+                                        <div class="invalid-feedback">Hamstring measurement is required.</div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="calves">Calves (cm)</label>
+                                        <input type="text" class="form-control" id="edit_calves" name="calves"
+                                            placeholder="" required>
+                                        <div class="invalid-feedback">Calves measurement is required.</div>
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+
+                        <!-- BMI Calculation Section -->
+                        <div class="row mt-5">
+                            <div class="col-lg-12">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-black">Edit BMI</span>
+                                </h4>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="edit_height">Height (cm)</label>
+                                        <input type="number" class="form-control" id="edit_height" name="height"
+                                            required>
+                                        <div class="invalid-feedback">Height is required.</div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="edit_body_weight">Weight (kg)</label>
+                                        <input type="number" class="form-control" id="edit_body_weight" name="weight"
+                                            required>
+                                        <div class="invalid-feedback">Weight is required.</div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="edit_calculatedBmi">BMI</label>
+                                        <input type="number" class="form-control" id="edit_calculatedBmi" name="bmi"
+                                            placeholder="BMI will be calculated" readonly>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <button type="button" class="btn btn-primary btn-lg btn-block"
+                                            onclick="calculateEditBmi()">Calculate BMI</button>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <button type="submit" class="btn btn-success btn-lg btn-block">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const editButtons = document.querySelectorAll('.edit-workout');
 
         editButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const workout = JSON.parse(this.dataset.workout);
 
                 document.getElementById('edit_workout_id').value = workout.id;
@@ -1486,11 +1473,11 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const editButtons = document.querySelectorAll('.edit-diet');
 
         editButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const diet = JSON.parse(this.getAttribute('data-diet'));
 
                 document.getElementById('edit_diet_id').value = diet.id;
@@ -1542,7 +1529,7 @@
         });
     }
 
-    document.getElementById('subscription_id').addEventListener('change', function() {
+    document.getElementById('subscription_id').addEventListener('change', function () {
         const selectedOption = this.options[this.selectedIndex];
         const amount = selectedOption.getAttribute('data-amount');
         const description = selectedOption.getAttribute('data-description');
@@ -1563,7 +1550,7 @@
         }
     });
 
-    document.getElementById('joining_date').addEventListener('change', function() {
+    document.getElementById('joining_date').addEventListener('change', function () {
         const selectedOption = document.getElementById('subscription_id').options[document.getElementById('subscription_id').selectedIndex];
         const validity = selectedOption.getAttribute('data-validity');
 
@@ -1591,11 +1578,11 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const editButtons = document.querySelectorAll('.edit-bmi');
 
         editButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const bmiId = this.getAttribute('data-bmi-id');
 
                 if (bmiId) {
@@ -1695,16 +1682,16 @@
         }
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const workoutInput = document.getElementById('workoutInput');
 
         // Trigger the dropdown on input click
-        workoutInput.addEventListener("focus", function() {
+        workoutInput.addEventListener("focus", function () {
             fetchWorkouts(this.value);
         });
 
         // Trigger the dropdown on input typing
-        workoutInput.addEventListener("input", function() {
+        workoutInput.addEventListener("input", function () {
             fetchWorkouts(this.value);
         });
 
@@ -1719,7 +1706,7 @@
                     query: query
                 },
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     var a = document.createElement("DIV");
                     a.setAttribute("id", workoutInput.id + "autocomplete-list");
                     a.setAttribute("class", "autocomplete-items");
@@ -1731,7 +1718,7 @@
                         b.innerHTML += item.name.substr(query.length);
                         b.innerHTML += "<input type='hidden' value='" + item.name + "' data-id='" + item.id + "'>";
 
-                        b.addEventListener("click", function(e) {
+                        b.addEventListener("click", function (e) {
                             workoutInput.value = this.getElementsByTagName("input")[0].value;
                             document.getElementById('workoutIdInput').value = this.getElementsByTagName("input")[0].getAttribute('data-id');
                             fetchWorkoutDetails(workoutInput.value);
@@ -1742,7 +1729,7 @@
                 }
             });
 
-            workoutInput.addEventListener("keydown", function(e) {
+            workoutInput.addEventListener("keydown", function (e) {
                 var x = document.getElementById(this.id + "autocomplete-list");
                 if (x) x = x.getElementsByTagName("div");
                 if (e.keyCode == 40) {
@@ -1782,7 +1769,7 @@
                 }
             }
 
-            document.addEventListener("click", function(e) {
+            document.addEventListener("click", function (e) {
                 closeAllLists(e.target);
             });
         }
@@ -1797,7 +1784,7 @@
                 exercise_name: exerciseName
             },
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 if (data) {
                     // Update the image
                     if (data.image) {
@@ -1836,14 +1823,14 @@
                     }
                 }
             },
-            error: function() {
+            error: function () {
                 console.error('Error fetching workout details');
             }
         });
     }
 
     //For Diet Name auto search
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         dietautocomplete(document.getElementById('dietInput'));
     });
 
@@ -1851,12 +1838,12 @@
         var currentFocus;
 
         // Trigger the full list on input focus
-        inp.addEventListener("focus", function(e) {
+        inp.addEventListener("focus", function (e) {
             var val = this.value; // Initial input value (empty on focus)
             fetchMealList(val); // Fetch full meal list
         });
 
-        inp.addEventListener("input", function(e) {
+        inp.addEventListener("input", function (e) {
             var val = this.value;
             closeAllLists(); // Close any previously opened list
             if (!val) {
@@ -1875,7 +1862,7 @@
                     query: query // Send the input value as a query
                 },
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     var a = document.createElement("DIV");
                     a.setAttribute("id", inp.id + "autocomplete-list");
                     a.setAttribute("class", "autocomplete-items");
@@ -1886,7 +1873,7 @@
                         b.innerHTML = "<strong>" + item.substr(0, query.length) + "</strong>";
                         b.innerHTML += item.substr(query.length);
                         b.innerHTML += "<input type='hidden' value='" + item + "'>";
-                        b.addEventListener("click", function(e) {
+                        b.addEventListener("click", function (e) {
                             inp.value = this.getElementsByTagName("input")[0].value;
                             fetchDietDetails(inp.value); // Fetch the meal details on selection
                             closeAllLists(); // Close list on selection
@@ -1897,7 +1884,7 @@
             });
         }
 
-        inp.addEventListener("keydown", function(e) {
+        inp.addEventListener("keydown", function (e) {
             var x = document.getElementById(this.id + "autocomplete-list");
             if (x) x = x.getElementsByTagName("div");
             if (e.keyCode == 40) { // Down key
@@ -1937,7 +1924,7 @@
             }
         }
 
-        document.addEventListener("click", function(e) {
+        document.addEventListener("click", function (e) {
             closeAllLists(e.target);
         });
     }
@@ -1960,7 +1947,7 @@
                     meal_name: mealName
                 },
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     if (data && data.id) {
                         if (data.image) {
                             $("#dietImage").attr("src", data.image).show();
@@ -1981,7 +1968,7 @@
                         $('#dietNotFoundMessage').show();
                     }
                 },
-                error: function() {
+                error: function () {
                     $('#dietDetails').slideUp();
                     $('#dietNotFoundMessage').show();
                 }
