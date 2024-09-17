@@ -5,7 +5,7 @@
 <!--**********************************
             Content body start
         ***********************************-->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <style>
 	.upload-box {
@@ -97,7 +97,8 @@
 									<a class="nav-link" href="#wizard_Payment"> <span>3</span></a>
 								</li>
 							</ul>
-							<form name="myForm" method="post" enctype="multipart/form-data" action="/gym-staff">
+							<form name="myForm" method="post" enctype="multipart/form-data" class="needs-validation"
+								action="/gym-staff" novalidate>
 								@csrf
 								<div class="tab-content">
 									<div id="wizard_Service" class="tab-pane" role="tabpanel"
@@ -121,7 +122,7 @@
 														<label for="staff_photo" class="form-label">Staff Image</label>
 														<input class="form-control form-control-sm" id="staff_photo"
 															name="staff_photo" onchange="loadFile(event)"
-															accept="image/*" type="file">
+															accept="image/*" type="file" required>
 													</div>
 												</div>
 											</div>
@@ -135,7 +136,10 @@
 													<label class="text-label">Employee Id<span
 															class="required">*</span></label>
 													<input type="number" name="staff_id" class="form-control"
-														placeholder="123">
+														placeholder="123" required>
+													<div class="invalid-feedback">
+														Staff image is required.
+													</div>
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
@@ -143,25 +147,34 @@
 													<label class="text-label">Full Name<span
 															class="required">*</span></label>
 													<input type="text" name="full_name" class="form-control"
-														placeholder="Montana">
+														placeholder="Montana" required>
+													<div class="invalid-feedback">
+														Staff Full Name is required.
+													</div>
 												</div>
 											</div>
 											<div class="col-md-6 mb-3">
 												<label for="gender">Gender</label>
 												<select class="me-sm-2 form-control default-select" id="gender"
-													name="gender">
+													name="gender" required>
 													<option selected>Choose...</option>
 													<option value="male">Male</option>
 													<option value="female">Female</option>
 													<option value="Other">Other</option>
 												</select>
+												<div class="invalid-feedback">
+													Choose a gender.
+												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
 												<div class="form-group">
-													<label class="text-label">Experience in Years<span
+													<label class="text-label">Experience (in Years)<span
 															class="required">*</span></label>
 													<input type="text" class="form-control" id="experience"
-														name="experience" placeholder="Experience">
+														name="experience" placeholder="Experience" required>
+													<div class="invalid-feedback">
+														Staff Experience is required.
+													</div>
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
@@ -169,30 +182,54 @@
 													<label class="text-label">Email Address<span
 															class="required">*</span></label>
 													<input type="email" class="form-control" id="email" name="email"
-														placeholder="example@example.com.com">
+														placeholder="example@example.com" required>
+													<small id="emailError" class="text-danger"
+														style="display: none;">Please enter a valid email
+														address.</small>
+													<div class="invalid-feedback">
+														Staff Email is required.
+													</div>
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
 												<div class="form-group">
 													<label class="text-label">Phone Number<span
 															class="required">*</span></label>
-													<input type="text" name="phone_number" id="phone_number"
-														class="form-control" placeholder="(+1)408-657-9007">
+													<input type="number" name="phone_number" id="phone_number"
+														class="form-control" placeholder="(+1)408-657-9007" required>
+													<small id="phoneError" class="text-danger"
+														style="display: none;">Please enter a valid phone
+														number.</small>
+													<div class="invalid-feedback">
+														Staff Phone Number is required.
+													</div>
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
 												<div class="form-group">
 													<label class="text-label">Date Of Birth<span
 															class="required">*</span></label>
-													<input type="date" name="dob" id="dob" class="form-control">
+													<input type="date" name="dob" id="dob" class="form-control"
+														required>
+													<small id="dobError" class="text-danger" style="display: none;">You
+														must be at least 18 years old.</small>
+													<div class="invalid-feedback" required>
+														Staff D.O.B is required.
+													</div>
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
 												<div class="form-group">
 													<label class="text-label">Whatsapp Number<span
 															class="required">*</span></label>
-													<input type="text" name="whatsapp_no" id="whatsapp_no"
+													<input type="number" name="whatsapp_no" id="whatsapp_no"
 														class="form-control" placeholder="(+1)408-657-9007">
+													<small id="whatsphoneError" class="text-danger"
+														style="display: none;">Please enter a valid whatsapp
+														number.</small>
+													<div class="invalid-feedback" required>
+														Staff Whatsapp No. is required.
+													</div>
 												</div>
 											</div>
 
@@ -201,7 +238,10 @@
 													<label class="text-label">Joining Date<span
 															class="required">*</span></label>
 													<input type="date" name="joining_date" id="joining_date"
-														class="form-control">
+														class="form-control" required>
+													<div class="invalid-feedback">
+														Staff Joining Date is required.
+													</div>
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
@@ -209,7 +249,10 @@
 													<label class="text-label">Salary<span
 															class="required">*</span></label>
 													<input type="text" name="salary" id="salary" placeholder="10000"
-														class="form-control">
+														class="form-control" required>
+													<div class="invalid-feedback">
+														Staff Salary is required.
+													</div>
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
@@ -217,7 +260,7 @@
 													<label class="text-label">Blood Group<span
 															class="required">*</span></label>
 													<select class="me-sm-2 form-control default-select" id="blood_group"
-														name="blood_group">
+														name="blood_group" required>
 														<option value="">Choose...</option>
 														<option value="A+">A+</option>
 														<option value="A-">A-</option>
@@ -228,6 +271,9 @@
 														<option value="O+">O+</option>
 														<option value="O-">O-</option>
 													</select>
+													<div class="invalid-feedback">
+														Choose a Blood Group .
+													</div>
 												</div>
 											</div>
 											<div class="col-lg-6 mb-2">
@@ -244,6 +290,9 @@
 															</option>
 														@endforeach
 													</select>
+													<div class="invalid-feedback">
+														Choose a Staff Designation.
+													</div>
 												</div>
 											</div>
 											<div class="col-lg-4 mb-2" id="fees-field">
@@ -278,8 +327,11 @@
 												<div class="form-group">
 													<label class="text-label">Address<span
 															class="required">*</span></label>
-													<textarea type="text" name="address" rows="4"
-														class="form-control"></textarea>
+													<textarea type="text" name="address" rows="4" class="form-control"
+														required></textarea>
+													<div class="invalid-feedback">
+														Staff Address is required.
+													</div>
 												</div>
 											</div>
 										</div>
@@ -291,10 +343,10 @@
 													<label for="mailclient11" class="upload-container"
 														id="upload-container-aadhar">
 														<input type="file" name="aadhaar_card" id="mailclient11" hidden
-															onchange="handleFileUpload(this, 'aadhar')">
+															onchange="handleFileUpload(this, 'aadhar')" required>
 														<div class="upload-box" id="upload-box-aadhar">
 															<div class="icon-container">
-															<i class="fas fa-upload icon"></i>
+																<i class="fas fa-upload icon"></i>
 															</div>
 															<span class="upload-text">Upload Aadhar Card</span>
 															<div class="progress-bar" id="progress-bar-aadhar"></div>
@@ -307,10 +359,10 @@
 													<label for="mailclient12" class="upload-container"
 														id="upload-container-pan">
 														<input type="file" name="pan_card" id="mailclient12" hidden
-															onchange="handleFileUpload(this, 'pan')">
+															onchange="handleFileUpload(this, 'pan')" required>
 														<div class="upload-box" id="upload-box-pan">
 															<div class="icon-container">
-															<i class="fas fa-upload icon"></i>
+																<i class="fas fa-upload icon"></i>
 															</div>
 															<span class="upload-text">Upload Pan Card</span>
 															<div class="progress-bar" id="progress-bar-pan"></div>
@@ -323,10 +375,10 @@
 													<label for="mailclient13" class="upload-container"
 														id="upload-container-cheque">
 														<input type="file" name="cancel_cheque" id="mailclient13" hidden
-															onchange="handleFileUpload(this, 'cheque')">
+															onchange="handleFileUpload(this, 'cheque')" required>
 														<div class="upload-box" id="upload-box-cheque">
 															<div class="icon-container">
-															<i class="fas fa-upload icon"></i>
+																<i class="fas fa-upload icon"></i>
 															</div>
 															<span class="upload-text">Upload Cancel Cheque</span>
 															<div class="progress-bar" id="progress-bar-cheque"></div>
@@ -339,10 +391,10 @@
 													<label for="mailclient14" class="upload-container"
 														id="upload-container-other">
 														<input type="file" name="other" id="mailclient14" hidden
-															onchange="handleFileUpload(this, 'other')">
+															onchange="handleFileUpload(this, 'other')" required>
 														<div class="upload-box" id="upload-box-other">
 															<div class="icon-container">
-															<i class="fas fa-upload icon"></i>
+																<i class="fas fa-upload icon"></i>
 															</div>
 															<span class="upload-text">Upload Other Document</span>
 															<div class="progress-bar" id="progress-bar-other"></div>
@@ -362,6 +414,24 @@
 	</div>
 </div>
 <script>
+
+	(function () {
+		'use strict'
+		var forms = document.querySelectorAll('.needs-validation')
+
+		Array.prototype.slice.call(forms)
+			.forEach(function (form) {
+				form.addEventListener('submit', function (event) {
+					if (!form.checkValidity()) {
+						event.preventDefault()
+						event.stopPropagation()
+					}
+
+					form.classList.add('was-validated')
+				}, false)
+			})
+	})()
+
 	var loadFile = function (event) {
 		var input = event.target;
 		var image = document.getElementById('selected_image');
@@ -435,38 +505,235 @@
 	});
 
 	function handleFileUpload(input, id) {
-    if (input.files && input.files[0]) {
-        const uploadBox = document.getElementById('upload-box-' + id);
-        const progressBar = document.getElementById('progress-bar-' + id);
-        const textElement = uploadBox.querySelector('.upload-text');
-        const fileName = input.files[0].name;
-        const maxLength = 20; // Maximum characters to display for file name
+		if (input.files && input.files[0]) {
+			const uploadBox = document.getElementById('upload-box-' + id);
+			const progressBar = document.getElementById('progress-bar-' + id);
+			const textElement = uploadBox.querySelector('.upload-text');
+			const fileName = input.files[0].name;
+			const maxLength = 20; // Maximum characters to display for file name
 
-        // Truncate the file name if it's too long
-        const displayName = fileName.length > maxLength ? fileName.substring(0, maxLength) + '...' : fileName;
+			// Truncate the file name if it's too long
+			const displayName = fileName.length > maxLength ? fileName.substring(0, maxLength) + '...' : fileName;
 
-        // Reset progress bar and remove 'uploaded' state
-        progressBar.style.width = '0%';
-        uploadBox.classList.remove('uploaded');
+			// Reset progress bar and remove 'uploaded' state
+			progressBar.style.width = '0%';
+			uploadBox.classList.remove('uploaded');
 
-        // Simulate upload progress
-        let progress = 0;
-        const progressInterval = setInterval(() => {
-            progress += 10;
-            progressBar.style.width = progress + '%';
+			// Simulate upload progress
+			let progress = 0;
+			const progressInterval = setInterval(() => {
+				progress += 10;
+				progressBar.style.width = progress + '%';
 
-            if (progress >= 100) {
-                clearInterval(progressInterval);
+				if (progress >= 100) {
+					clearInterval(progressInterval);
 
-                // After "upload", mark as uploaded
-                setTimeout(() => {
-                    uploadBox.classList.add('uploaded');
-                    textElement.textContent = displayName + " uploaded!";
-                }, 300); // Small delay to simulate upload completion
-            }
-        }, 100); // Simulates progress in 100ms intervals
-    }
-}
+					// After "upload", mark as uploaded
+					setTimeout(() => {
+						uploadBox.classList.add('uploaded');
+						textElement.textContent = displayName + " uploaded!";
+					}, 300); // Small delay to simulate upload completion
+				}
+			}, 100); // Simulates progress in 100ms intervals
+		}
+	}
+
+	// document.addEventListener("DOMContentLoaded", function () {
+	// 	const emailInput = document.getElementById("email");
+	// 	const phoneInput = document.getElementById("phone_number");
+	// 	const whatsPhoneInput = document.getElementById("whatsapp_no");
+	// 	const emailError = document.getElementById("emailError");
+	// 	const phoneError = document.getElementById("phoneError");
+	// 	const phoneError1 = document.getElementById("whatsphoneError");
+
+	// 	const dobInput = document.getElementById("dob");
+	// 	const dobError = document.getElementById("dobError");
+
+	// 	// Regular expression for validating email
+	// 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+	// 	// Regular expression for validating phone numbers
+	// 	const phoneRegex = /^(\(\+\d{1,3}\))?\d{3}\d{3}\d{4}$/;
+
+	// 	// Email Validation Event Listener
+	// 	emailInput.addEventListener("input", function () {
+	// 		if (emailRegex.test(emailInput.value)) {
+	// 			emailError.style.display = "none";
+	// 		} else {
+	// 			emailError.style.display = "block";
+	// 		}
+	// 	});
+
+	// 	// Phone Validation Event Listener
+	// 	phoneInput.addEventListener("input", function () {
+	// 		if (phoneRegex.test(phoneInput.value)) {
+	// 			phoneError.style.display = "none";
+	// 		} else {
+	// 			phoneError.style.display = "block";
+	// 		}
+	// 	});
+
+	// 	whatsPhoneInput.addEventListener("input", function () {
+	// 		if (phoneRegex.test(whatsPhoneInput.value)) {
+	// 			phoneError1.style.display = "none";
+	// 		} else {
+	// 			phoneError1.style.display = "block";
+	// 		}
+	// 	});
+
+	// 	dobInput.addEventListener("input", function () {
+	// 		const selectedDate = new Date(dobInput.value);
+	// 		const today = new Date();
+
+	// 		let age = today.getFullYear() - selectedDate.getFullYear();
+	// 		const monthDiff = today.getMonth() - selectedDate.getMonth();
+
+	// 		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate())) {
+	// 			age--;
+	// 		}
+
+	// 		if (age >= 18) {
+	// 			dobError.style.display = "none";
+	// 		} else {
+	// 			dobError.style.display = "block";
+	// 		}
+	// 	});
+	// });
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const form = document.getElementById("myForm");
+
+		const emailInput = document.getElementById("email");
+		const phoneInput = document.getElementById("phone_number");
+		const whatsPhoneInput = document.getElementById("whatsapp_no");
+		const dobInput = document.getElementById("dob");
+
+		const emailError = document.getElementById("emailError");
+		const phoneError = document.getElementById("phoneError");
+		const phoneError1 = document.getElementById("whatsphoneError");
+		const dobError = document.getElementById("dobError");
+
+		// Helper function to validate email format
+		function isValidEmail(email) {
+			const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+			return emailPattern.test(email);
+		}
+
+		// Helper function to validate phone format
+		function isValidPhone(phone) {
+			const phonePattern = /^\d{10}$/; // for 10-digit phone numbers
+			return phonePattern.test(phone);
+		}
+
+		// Helper function to validate DOB (age >= 18)
+		function isValidDOB(dob) {
+			const selectedDate = new Date(dob);
+			const today = new Date();
+			let age = today.getFullYear() - selectedDate.getFullYear();
+			const monthDiff = today.getMonth() - selectedDate.getMonth();
+
+			if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate())) {
+				age--;
+			}
+			return age >= 18;
+		}
+
+		// Real-time validation for email
+		emailInput.addEventListener("input", function () {
+			if (!isValidEmail(emailInput.value)) {
+				emailError.style.display = "block";
+			} else {
+				emailError.style.display = "none";
+			}
+		});
+
+		// Real-time validation for phone
+		phoneInput.addEventListener("input", function () {
+			if (!isValidPhone(phoneInput.value)) {
+				phoneError.style.display = "block";
+			} else {
+				phoneError.style.display = "none";
+			}
+		});
+
+		whatsPhoneInput.addEventListener("input", function () {
+			if (!isValidPhone(whatsPhoneInput.value)) {
+				phoneError1.style.display = "block";
+			} else {
+				phoneError1.style.display = "none";
+			}
+		});
+
+
+		// Real-time validation for DOB
+		dobInput.addEventListener("input", function () {
+			if (!isValidDOB(dobInput.value)) {
+				dobError.style.display = "block";
+			} else {
+				dobError.style.display = "none";
+			}
+		});
+
+
+		// Form validation on submit
+		form.addEventListener("submit", function (event) {
+			let isFormValid = true;
+
+			// Email validation on submit
+			if (!isValidEmail(emailInput.value)) {
+				emailError.style.display = "block";
+				emailInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				emailError.style.display = "none";
+				emailInput.classList.remove("is-invalid");
+			}
+
+			// Phone validation on submit
+			if (!isValidPhone(phoneInput.value)) {
+				phoneError.style.display = "block";
+				phoneInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				phoneError.style.display = "none";
+				phoneInput.classList.remove("is-invalid");
+			}
+
+			// WhatsApp Phone validation on submit
+			if (!isValidPhone(whatsPhoneInput.value)) {
+				phoneError1.style.display = "block";
+				whatsPhoneInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				phoneError1.style.display = "none";
+				whatsPhoneInput.classList.remove("is-invalid");
+			}
+
+			// DOB validation on submit
+			if (!isValidDOB(dobInput.value)) {
+				dobError.style.display = "block";
+				dobInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				dobError.style.display = "none";
+				dobInput.classList.remove("is-invalid");
+			}
+
+			// Prevent form submission if any field is invalid
+			if (!isFormValid) {
+				event.preventDefault(); // Stop form from submitting
+			}
+		});
+
+	});
+
+	document.addEventListener('DOMContentLoaded', function () {
+
+		
+
+	});
+
+
 
 </script>
 @include('CustomSweetAlert');

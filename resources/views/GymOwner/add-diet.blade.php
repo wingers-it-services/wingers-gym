@@ -27,52 +27,51 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <h4 class="mb-3">Add Diet</h4>
-                                <form name="myForm" method="POST" enctype="multipart/form-data" action="/add-gym-diet">
+                                <form name="myForm" method="POST" enctype="multipart/form-data" action="/add-gym-diet" class="needs-validation" novalidate>
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="image">Diet Image</label>
-                                            <input type="file" class="form-control" id="image" name="image" required="">
+                                            <input type="file" class="form-control" id="image" name="image" required>
                                             <div class="invalid-feedback">
                                                 Diet image is required.
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="name">Diet Name</label>
-                                            <input type="text" class="form-control" id="name" name="name" required="">
+                                            <input type="text" class="form-control" id="name" name="name" required>
                                             <div class="invalid-feedback">
                                                 Diet name is required.
                                             </div>
                                         </div>
                                         <div class="col-md-3 mb-3">
-                                            <label for="calories">Calories</label>
+                                            <label for="calories">Calories (in kcals)</label>
                                             <input type="number" class="form-control" id="calories" name="calories"
-                                                required="">
+                                                required>
                                             <div class="invalid-feedback">
-                                                Calories image is required.
+                                                Calories quantity is required.
                                             </div>
                                         </div>
                                         <div class="col-md-3 mb-3">
-                                            <label for="protein">Protein</label>
+                                            <label for="protein">Protein (in grams)</label>
                                             <input type="number" class="form-control" id="protein" name="protein"
-                                                required="">
+                                                required>
                                             <div class="invalid-feedback">
                                                 Protein name is required.
                                             </div>
                                         </div>
                                         <div class="col-md-3 mb-3">
-                                            <label for="carbs">Carbs</label>
-                                            <input type="number" class="form-control" id="carbs" name="carbs"
-                                                required="">
+                                            <label for="carbs">Carbs (in grams) </label>
+                                            <input type="number" class="form-control" id="carbs" name="carbs" required>
                                             <div class="invalid-feedback">
-                                                Carbs image is required.
+                                                Carbs quantity is required.
                                             </div>
                                         </div>
                                         <div class="col-md-3 mb-3">
-                                            <label for="fats">Fats</label>
-                                            <input type="number" class="form-control" id="fats" name="fats" required="">
+                                            <label for="fats">Fats (in grams)</label>
+                                            <input type="number" class="form-control" id="fats" name="fats" required>
                                             <div class="invalid-feedback">
-                                                Fats name is required.
+                                                Fats quantity is required.
                                             </div>
                                         </div>
 
@@ -80,12 +79,15 @@
                                             <label for="gender">Gender</label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="gender"
-                                                    name="gender">
+                                                    name="gender" required>
                                                     <option value="">Choose...</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
 
                                                 </select>
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Choose a gender.
                                             </div>
                                         </div>
 
@@ -93,12 +95,15 @@
                                             <label for="goal">Goal </label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="goal"
-                                                    name="goal">
+                                                    name="goal" required>
                                                     <option value="">Choose...</option>
                                                     <option value="Weight Gain">Weight Gain</option>
                                                     <option value="Fit">Fit</option>
                                                     <option value="Weight Loss">Weight Loss</option>
                                                 </select>
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Choose a Goal.
                                             </div>
                                         </div>
 
@@ -106,7 +111,7 @@
                                             <label for="meal_type">Meal Type </label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="meal_type"
-                                                    name="meal_type">
+                                                    name="meal_type" required>
                                                     <option value="">Choose...</option>
                                                     <option value="Vegetarian">Vegetarian</option>
                                                     <option value="Non-Vegetarian">Non-Vegetarian </option>
@@ -118,12 +123,15 @@
                                                     <option value="Flexitarian">Flexitarian </option>
                                                 </select>
                                             </div>
+                                            <div class="invalid-feedback">
+                                                Choose a Meal Type.
+                                            </div>
                                         </div>
 
                                         <div class="col-md-3 mb-3">
                                             <label for="min_age">Min Age </label>
                                             <input type="number" class="form-control" id="min_age" name="min_age"
-                                                placeholder="">
+                                                placeholder="" required>
                                             <div class="invalid-feedback">
                                                 Min Age is required.
                                             </div>
@@ -132,7 +140,7 @@
                                         <div class="col-md-3 mb-3">
                                             <label for="max_age">Max Age </label>
                                             <input type="number" class="form-control" id="max_age" name="max_age"
-                                                placeholder="">
+                                                placeholder="" required>
                                             <div class="invalid-feedback">
                                                 Max Age is required.
                                             </div>
@@ -141,7 +149,10 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="diet">Diet Description</label>
                                             <textarea type="text" class="form-control" id="diet" name="diet" rows="5"
-                                                placeholder=""></textarea>
+                                                placeholder="" required></textarea>
+                                            <div class="invalid-feedback">
+                                                Diet Description is required.
+                                            </div>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
@@ -179,32 +190,32 @@
                         </thead>
                         <tbody>
                             @foreach ($diets as $subscription)
-                            <tr>
-                                <td>
-                                    <img width="80"
-                                        src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
-                                        loading="lazy" alt="Profile Image">
-                                </td>
-                                <td>{{$subscription->name }}</td>
-                                <td>{{$subscription->gender }}</td>
-                                <td>{{$subscription->goal }}</td>
-                                <td>{{$subscription->min_age }} - {{ $subscription->max_age }}</td>
-                                <td class="text-end">
-                                    <a class="dropdown-item view-workout" href="javascript:void(0);"
-                                        data-bs-toggle="modal" data-bs-target="#d"
-                                        data-workout="{{ json_encode($subscription) }}">
-                                        <i class="fa fa-eye color-muted"></i>
-                                    </a>
-                                </td>
-                                <td class="text-end">
-                                    <span><a href="javascript:void(0);" class="me-4 edit-book-button"
-                                            data-bs-toggle="modal" data-bs-target="#editSuscription"
-                                            data-book='@json($subscription)'><i class="fa fa-pencil color-muted"></i>
+                                <tr>
+                                    <td>
+                                        <img width="80"
+                                            src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
+                                            loading="lazy" alt="Profile Image">
+                                    </td>
+                                    <td>{{$subscription->name }}</td>
+                                    <td>{{$subscription->gender }}</td>
+                                    <td>{{$subscription->goal }}</td>
+                                    <td>{{$subscription->min_age }} - {{ $subscription->max_age }}</td>
+                                    <td class="text-end">
+                                        <a class="dropdown-item view-workout" href="javascript:void(0);"
+                                            data-bs-toggle="modal" data-bs-target="#d"
+                                            data-workout="{{ json_encode($subscription) }}">
+                                            <i class="fa fa-eye color-muted"></i>
                                         </a>
-                                        <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
-                                            data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td class="text-end">
+                                        <span><a href="javascript:void(0);" class="me-4 edit-book-button"
+                                                data-bs-toggle="modal" data-bs-target="#editSuscription"
+                                                data-book='@json($subscription)'><i class="fa fa-pencil color-muted"></i>
+                                            </a>
+                                            <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
+                                                data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -365,7 +376,25 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+
+    document.addEventListener('DOMContentLoaded', function () {
         // Function to initialize event listeners for edit and view buttons
         function initializeEventListeners() {
             // Edit Diet Modal
@@ -377,7 +406,7 @@
 
 
             editButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const diet = JSON.parse(this.getAttribute('data-book'));
 
                     document.getElementById('edit_diet_id').value = diet.id;
@@ -400,11 +429,11 @@
 
             // Show a preview of the new image when selected
             if (editImageInput) {
-                editImageInput.addEventListener('change', function(event) {
+                editImageInput.addEventListener('change', function (event) {
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = function(e) {
+                        reader.onload = function (e) {
                             currentImage.src = e.target.result;
                         }
                         reader.readAsDataURL(file);
@@ -414,7 +443,7 @@
 
             // View Workout Modal
             document.querySelectorAll('.view-workout').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     // Set the image src
@@ -450,7 +479,7 @@
         initializeEventListeners();
 
         // Reinitialize event listeners after DataTable redraw (or similar events)
-        $('#example3').on('draw.dt', function() {
+        $('#example3').on('draw.dt', function () {
             initializeEventListeners(); // Reattach event listeners
         });
     });
