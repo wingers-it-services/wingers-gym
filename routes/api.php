@@ -110,8 +110,6 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('/change-email-or-phone', [GymUserControllerApi::class, 'updateEmailOrPhoneNo']);
 
-    Route::get('/response', [UserSubscriptionPayment::class, 'response']);
-
     Route::post('/fetch-user-bmis', [UserBmiControllerApi::class, 'getUserBmis']);
 
     Route::post('/fetch-user-bmi-detail', [UserBmiControllerApi::class, 'getUserBmiDetails']);

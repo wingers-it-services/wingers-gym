@@ -35,12 +35,12 @@ class GymSubscription extends Model
     {
         $this->create([
             'subscription_name' => $subscriptionArray['subscription_name'],
-            'amount' => $subscriptionArray['amount'],
-            'validity' => $subscriptionArray['validity'],
-            'description' => $subscriptionArray['description'],
-            'gym_id' => $gymId,
-            'status' => GymSubscriptionStatusEnum::ACTIVE,
-            'start_date' => $subscriptionArray['start_date']
+            'amount'            => $subscriptionArray['amount'],
+            'validity'          => $subscriptionArray['validity'],
+            'description'       => $subscriptionArray['description'],
+            'gym_id'            => $gymId,
+            'status'            => GymSubscriptionStatusEnum::ACTIVE,
+            'start_date'        => $subscriptionArray['start_date']
         ]);
     }
 
@@ -52,13 +52,12 @@ class GymSubscription extends Model
         }
         try {
             $updateData = [
-                "subscription_name"           => $validatedData['subscription_name'],
-                "amount"          => $validatedData['amount'],
-                "validity"          => $validatedData['validity'],
-                "description"         => $validatedData['description'],
-                "start_date"        => $validatedData['start_date']
+                "subscription_name"  => $validatedData['subscription_name'],
+                "amount"             => $validatedData['amount'],
+                "validity"           => $validatedData['validity'],
+                "description"        => $validatedData['description'],
+                "start_date"         => $validatedData['start_date']
             ];
-
 
             $subcriptionDetail->update($updateData);
 
