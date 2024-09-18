@@ -68,124 +68,85 @@ class HomeControllerApi extends Controller
             $request->validate([
                 'gym_id' => 'required|exists:gyms,id',
             ]);
-
+    
             $user = auth()->user();
             $gym = $this->gym->find($request->gym_id);
-
+    
             $subscription = $this->userSubscriptionHistory->where('user_id', $user->id)
                 ->where('status', 1)
                 ->where('gym_id', $request->gym_id)->first();
-
+    // dd($subscription);
             $startDate = Carbon::parse($subscription->subscription_start_date);
             $endDate = Carbon::parse($subscription->subscription_end_date);
             $todayDate = Carbon::now()->startOfDay();
-
+    
             $holidays = $this->holiday->where('gym_id', $gym->id)
                 ->whereBetween('date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
                 ->pluck('date');
-
+    
             $holidays = $holidays->map(function ($holidayDate) {
                 return Carbon::parse($holidayDate)->format('Y-m-d');
             });
-
+    
             $totalDays = $startDate->diffInDays($endDate) + 1;
-            $totalPendingDays = $todayDate->diffInDays($endDate) + 1;
             $presentCount = 0;
             $totalPresentDays = 0;
             $holidayCount = 0;
-            $holidayCountTillToday = 0;
             $weekendCount = 0;
-            $weekendCountTillToday = 0;
             $absentCount = 0;
-
-            // for ($date = $startDate; $date->lte($todayDate); $date->addDay()) {
-            //     $dayOfWeek = $date->format('l'); // Get the day of the week (e.g., 'Sunday')
-
-            //     // Check if the day is a weekend (Sunday)
-            //     if ($dayOfWeek == 'Sunday') {
-            //         $weekendCountTillToday++;
-            //     }
-
-            //     // Check if the day is a holiday
-            //     if ($holidays->contains($date->format('Y-m-d'))) {
-            //         $holidayCount++;
-            //     }
-            // }
-
-            // for ($date = $startDate; $date->lte($todayDate); $date->addDay()) {
-            //     $dayOfWeek = $date->format('l'); // Get the day of the week (e.g., 'Sunday')
-
-            //     // Debug: Log the current date and day of week
-            //     Log::info('Checking Date: ' . $date->format('Y-m-d') . ', Day of Week: ' . $dayOfWeek);
-
-            //     // Check if the day is a weekend (Sunday)
-            //     if ($dayOfWeek == 'Sunday') {
-            //         $weekendCountTillToday++;
-            //     }
-
-            //     // Check if the day is a holiday
-            //     if ($holidays->contains($date->format('Y-m-d'))) {
-            //         $holidayCountTillToday++;
-            //     }
-            // }
-
-            for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
+    
+            for ($date = $startDate; $date->lte($todayDate); $date->addDay()) {
                 $dayOfWeek = $date->format('l');
-
+                $formattedDate = $date->format('Y-m-d');
+    
+                // Check for weekends
                 if ($dayOfWeek == 'Sunday') {
                     $weekendCount++;
+                    $presentCount++; // Count weekends as present
                     continue;
                 }
-
-                if ($holidays->contains($date->format('Y-m-d'))) {
+    
+                // Check for holidays
+                if ($holidays->contains($formattedDate)) {
                     $holidayCount++;
+                    $presentCount++; // Count holidays as present
                     continue;
                 }
-
+    
+                // Check for attendance
                 $attendance = $this->gymUserAttendence->where('gym_id', $gym->id)
                     ->where('gym_user_id', $user->id)
                     ->where('year', $date->year)
                     ->where('month', $date->month)
                     ->first();
-
+    
                 $day = 'day' . $date->day;
-                // if ($attendance && $attendance->{$day} == AttendenceStatusEnum::PRESENT) {
-                //     $presentCount++;
-                // }
-
+    
                 if ($attendance && $attendance->{$day} == AttendenceStatusEnum::PRESENT) {
                     $presentCount++;
-                    $totalPresentDays++; // Add actual present days to total present count till today
+                    $totalPresentDays++; // Increment actual present days
                 }
-
+    
                 if ($attendance && $attendance->{$day} == AttendenceStatusEnum::ABSENT) {
                     $absentCount++;
                 }
             }
-
+    
             $pendingDays = $endDate->greaterThan($todayDate) ? (int)$todayDate->diffInDays($endDate) : 0;
-
             $actualWorkingDays = $totalDays - $weekendCount - $holidayCount;
-
-            // $pendingWorkingDays = min($pendingDays, $actualWorkingDays - $presentCount);
-
             $pendingWorkingDays = min($pendingDays, $actualWorkingDays);
-
             $pendingDaysPercentage = $totalDays > 0 ? ($pendingWorkingDays / $totalDays) * 100 : 0;
-
             $presentPercentage = $actualWorkingDays > 0 ? ($presentCount / $actualWorkingDays) * 100 : 0;
-
+    
             return response()->json([
                 'status'                  => 200,
                 'total_days'              => $totalDays,
-                'present_days'            => $presentCount,
+                'present_days'            => $presentCount, // Includes present, weekend, and holiday
                 'weekends'                => $weekendCount,
-                'total_weekends'                => $weekendCountTillToday,
-                'total_holidays'                => $holidayCountTillToday,
-                'holidays'                => $holidayCount,
+                'total_holidays'          => $holidayCount,
                 'absents'                 => $absentCount,
                 'pending_working_days'    => $pendingWorkingDays,
-                'pending_days'            => $totalPendingDays,
+                'pending_days'            => $pendingDays,
                 'pending_days_percentage' => number_format($pendingDaysPercentage, 2),
                 'subs'                    => $subscription,
                 'startDate'               => $startDate,
@@ -201,6 +162,7 @@ class HomeControllerApi extends Controller
             ], 500);
         }
     }
+    
 
     public function fetchAdvertisementAndAttendance(Request $request)
     {
@@ -223,15 +185,15 @@ class HomeControllerApi extends Controller
                 'status'                   => 200,
                 'advertisement'            => $advertisementData->advertisement,
                 'total_days'               => $attendanceData->total_days,
-                // 'present_days'             => $attendanceData->present_days,
-                // 'weekends'                 => $attendanceData->weekends,
-                // 'absents'                  => $attendanceData->absents,
+                'present_days'             => $attendanceData->present_days,
+                'weekends'                 => $attendanceData->weekends,
+                'absents'                  => $attendanceData->absents,
                 // 'holidays'                 => $attendanceData->holidays,
                 // 'total_weekends_till_toaday'           => $attendanceData->total_weekends,
-                // 'total_holidays_till_toaday'           => $attendanceData->total_holidays,
+                'total_holidays_till_toaday'           => $attendanceData->total_holidays,
                 // 'pending_working_days'     => $attendanceData->pending_working_days,
                 'pending_days'             => $attendanceData->pending_days,
-                'present_days'             => 50,
+                // 'present_days'             => 50,
                 'biceps' => 70,
                 'leg' => 70,
                 'forearm' => 10,

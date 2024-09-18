@@ -49,17 +49,24 @@ class UserSubscriptionHistory extends Model
     
             $startDate = now(); // Default to the current date
     
-            // Check if `is_current` is 0, and fetch the user's last active subscription for this gym
-            if (isset($subscription['is_current']) && $subscription['is_current'] == 0) {
-                $lastActiveSubscription = $this
-                    ->where('user_id', $user->id)
-                    ->where('gym_id', $subscription['gym_id'])
-                    ->where('status', GymSubscriptionStatusEnum::ACTIVE) // Assuming 'active' is the status for active subscriptions
-                    ->orderBy('subscription_end_date', 'desc') // Get the latest active subscription
-                    ->first();
+            // Fetch the user's last active subscription for this gym
+            $lastActiveSubscription = $this
+                ->where('user_id', $user->id)
+                ->where('gym_id', $subscription['gym_id'])
+                ->where('status', GymSubscriptionStatusEnum::ACTIVE) // Assuming 'ACTIVE' is the status for active subscriptions
+                ->orderBy('subscription_end_date', 'desc') // Get the latest active subscription
+                ->first();
     
-                // If an active subscription exists, set its end date as the start date for the new subscription
-                if ($lastActiveSubscription) {
+            // If an active subscription exists
+            if ($lastActiveSubscription) {
+                // If the user wants to start the new subscription immediately
+                if (isset($subscription['start_immediately']) && $subscription['start_immediately'] == true) {
+                    // Update the last active subscription to expired
+                    $lastActiveSubscription->update([
+                        'status' => 3,
+                    ]);
+                } else {
+                    // Set the end date of the last subscription as the start date for the new one
                     $startDate = $lastActiveSubscription->subscription_end_date;
                 }
             }
@@ -87,5 +94,5 @@ class UserSubscriptionHistory extends Model
             return false;
         }
     }
-    
+       
 }
