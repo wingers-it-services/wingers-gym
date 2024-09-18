@@ -225,7 +225,7 @@ class UserSubscriptionControllerApi extends Controller
         try {
             $request->validate([
                 'gym_id'                => 'required|exists:gyms,id',
-                'subscription_id'       => 'required',
+                'subscription_id'       => 'required|exists:gym_subscriptions,id',
                 'merchantTransactionId' => 'required'
             ]);
 
@@ -259,6 +259,26 @@ class UserSubscriptionControllerApi extends Controller
                     'gym_id'           => $request->gym_id,
                     'subscription_id'  => $request->subscription_id,
                 ]);
+
+                $subscriptionData = [
+                    'gym_id'                  => $request->gym_id,
+                    'subscription_id'         => $request->subscription_id,
+                    'original_transaction_id' => $request->merchantTransactionId,
+                    'is_current'              => 1, 
+                    'status'                  => 1, 
+                    'amount'                  => $order->amount,
+                    'coupon_id'               => $order->coupon_id ?? 0
+                ];
+    
+                // Call buySubscription to create the user's subscription
+                $subscription = $this->userSubscriptionHistory->buySubscription($subscriptionData);
+    
+                if (!$subscription) {
+                    return response()->json([
+                        'success' => 500,
+                        'message' => 'Failed to create subscription',
+                    ], 500);
+                }
             } else if ($order->code == PaymentStatusCodeEnum::PAYMENT_ERROR) {
                 $order->update([
                     'orderId'          => $orderId,
