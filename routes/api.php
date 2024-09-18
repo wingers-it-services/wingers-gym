@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdvertisementControllerApi;
 use App\Http\Controllers\Api\UserBmiControllerApi;
 use App\Http\Controllers\EquipmentControllerApi;
+use App\Http\Controllers\FcmTokenControllerApi;
 use App\Http\Controllers\GoalControllerApi;
 use App\Http\Controllers\GymDetailControllerApi;
 use App\Http\Controllers\GymGalleryControllerApi;
@@ -114,7 +115,9 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('/fetch-user-bmi-detail', [UserBmiControllerApi::class, 'getUserBmiDetails']);
 
-    Route::post('/fetch-workout-analytic',[UserWorkoutAnalyticApi::class,'fetchUserAnalytic']);
+    Route::post('/fetch-workout-analytic', [UserWorkoutAnalyticApi::class, 'fetchUserAnalytic']);
+
+    Route::post('/add-fcm-token', [FcmTokenControllerApi::class, 'addUserFcmToken']);
 });
 
 

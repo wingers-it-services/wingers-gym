@@ -13,6 +13,7 @@ use App\Http\Controllers\UserBmiController;
 use App\Traits\SessionTrait;
 use App\Http\Controllers\GymDesignationController;
 use App\Http\Controllers\GymGalleryController;
+use App\Http\Controllers\GymSheduleController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WorkoutController;
 use App\Http\Middleware\EnsureGymTokenIsValid;
@@ -96,6 +97,10 @@ Route::post('/register', [GymDetailController::class, 'registerGym'])->name('reg
 Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
 
 Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
+
+    Route::post('/add-gym-schedule',[GymSheduleController::class,'addGymShedule'])->name('addGymShedule');
+
+    Route::get('/schedules', [GymSheduleController::class, 'getSchedules']);
 
     /* dashboard */
     Route::get('/dashboard', [GymDetailController::class, 'showDashboard'])->name('dashboard');
