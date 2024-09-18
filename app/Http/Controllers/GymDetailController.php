@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Gym;
 use App\Models\GymUserGym;
+use App\Models\GymWeekend;
 use App\Models\Holiday;
 use App\Services\GymService;
 use App\Traits\SessionTrait;
@@ -20,17 +21,20 @@ class GymDetailController extends Controller
     protected $gymService;
     protected $gymUserGym;
     protected $gymHoliday;
+    protected $gymWeekend;
 
     public function __construct(
         Gym $gym,
         GymService $gymService,
         GymUserGym $gymUserGym,
-        Holiday $gymHoliday
+        Holiday $gymHoliday,
+        GymWeekend $gymWeekend
     ) {
         $this->gym = $gym;
         $this->gymService = $gymService;
         $this->gymUserGym = $gymUserGym;
         $this->gymHoliday = $gymHoliday;
+        $this->gymWeekend = $gymWeekend;
     }
 
     public function showDashboard(Request $request)
@@ -109,35 +113,32 @@ class GymDetailController extends Controller
         }
     }
 
-    public function updateGym(Request $request)
+    public function updateGymAccount(Request $request)
     {
         try {
             $request->validate([
                 "username" => 'required',
-                "email" => 'required',
                 "phone_no" => 'required',
-                "password" => 'required',
                 "gym_name" => 'required',
                 "address" => 'required',
-                "city" => 'required',
-                "state" => 'required',
-                "country" => 'required',
+                "city_id" => 'required',
+                "state_id" => 'required',
+                "country_id" => 'required',
                 "web_link" => 'required',
                 "gym_type" => 'required',
-                "terms_and_conditions" => 'nullable',
-                "facebook" => 'nullable',
-                "instagram" => 'nullable'
+                "face_link" => 'nullable',
+                "insta_link" => 'nullable'
             ]);
 
-
+// dd( $request->all());
             $isProfileUpdated = $this->gymService->createGymAccount($request->all());
             if ($isProfileUpdated) {
-                return redirect()->route('showGymProfile')->with('status', 'success')->with('message', 'Gym profile updated succesfully.');
+                return redirect()->back()->with('status', 'success')->with('message', 'Gym profile updated succesfully.');
             }
-            return redirect()->route('showGymProfile')->with('status', 'error')->with('message', 'error while updating gym.');
+            return redirect()->back()->with('status', 'error')->with('message', 'error while updating gym.');
         } catch (Exception $e) {
             Log::error('[GymDetailController][updateGym] Error updating gym :' . $e->getMessage());
-            return redirect()->route('showGymProfile')->with('status', 'error')->with('message', 'error while updating gym.');
+            return redirect()->back()->with('status', 'error')->with('message', 'error while updating gym.');
         }
     }
 
@@ -179,8 +180,10 @@ class GymDetailController extends Controller
             $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
             $totalUsers = $this->gymUserGym->countUsersInGym($gym->id);
             $holidays = $this->gymHoliday->where('gym_id', $gymId)->get();
+            $savedWeekendDays = GymWeekend::where('gym_id', $gymId)->pluck('weekend_day')->toArray();
 
-            return view('GymOwner.gym-profile', compact('gym', 'totalUsers', 'holidays'));
+
+            return view('GymOwner.gym-profile', compact('gym', 'totalUsers', 'holidays', 'savedWeekendDays'));
         } catch (\Exception $e) {
             Log::error('[GymDetailController][GymProfileView] Error fetching gym profile view: ' . $e->getMessage());
         }
@@ -203,6 +206,59 @@ class GymDetailController extends Controller
         } catch (Exception $e) {
             Log::error('[GymDetailController][addHolidayByGym] Error adding holiday: ' . $e->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'Error adding holiday: ' . $e->getMessage());
+        }
+    }
+
+    public function deleteHoliday($id)
+    {
+        $holiday = $this->gymHoliday->findOrFail($id);
+        $holiday->delete();
+
+        return redirect()->back()->with('status', 'success')->with('message', 'Holiday Is Succesfully Deleted!');
+    }
+
+    public function addWeekendsByGym(Request $request)
+    {
+        try {
+            $validateData = $request->validate([
+                'weekend_day'    => 'required|array',
+            ]);
+
+            // Get the currently authenticated gym
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
+
+            // Get existing saved weekend days for the gym
+            $existingWeekends = $this->gymWeekend->where('gym_id', $gymId)->pluck('weekend_day')->toArray();
+
+            // Get the newly selected weekend days from the request
+            $selectedDays = $request->weekend_day;
+
+            // Determine which days to add
+            $daysToAdd = array_diff($selectedDays, $existingWeekends);
+
+            // Determine which days to delete
+            $daysToDelete = array_diff($existingWeekends, $selectedDays);
+
+            // Add new weekend days
+            foreach ($daysToAdd as $day) {
+                $this->gymWeekend->create([
+                    'gym_id' => $gymId,
+                    'weekend_day' => $day
+                ]);
+            }
+
+            // Delete the unchecked days
+            if (!empty($daysToDelete)) {
+                $this->gymWeekend->where('gym_id', $gymId)
+                    ->whereIn('weekend_day', $daysToDelete)
+                    ->delete();
+            }
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Weekend Updated Successfully.');
+        } catch (Exception $e) {
+            Log::error('[GymDetailController][addWeekendsByGym] Error updating weekends: ' . $e->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Error updating weekends: ' . $e->getMessage());
         }
     }
 }

@@ -150,6 +150,8 @@
                                     </li>
                                     <li class="nav-item"><a href="#profile-settings" data-bs-toggle="tab" class="nav-link">Setting</a>
                                     </li>
+                                    <li class="nav-item"><a href="#account-settings" data-bs-toggle="tab" class="nav-link">Account Setting</a>
+                                    </li>
                                 </ul>
                                 <div class="tab-content">
                                     <div id="about-me" class="tab-pane fade active show">
@@ -260,48 +262,59 @@
                                             <div class="settings-form">
                                                 <div class="row">
                                                     <!-- Add Weekends Section -->
-                                                    <div class="col-md-6">
-                                                        <!-- Heading and Add Button Inline -->
-                                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                                            <h4 class="text-primary mb-0">Add Weekends</h4>
-                                                            <button class="btn btn-sm btn-primary">
-                                                                 Add
-                                                            </button>
-                                                        </div>
-
-                                                        <form>
+                                                    <div class="col-md-12">
+                                                        <form action="/add-weekend" method="POST">
+                                                            @csrf
+                                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                <h4 class="text-primary mb-0">Add Weekends</h4>
+                                                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                                            </div>
                                                             <div class="row">
                                                                 <div class="form-group col-md-12">
                                                                     <label>Select Weekend Days</label>
+                                                                    <div class="row">
+                                                                        <!-- Left Column (first 4 days) -->
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check custom-checkbox">
+                                                                                <input type="checkbox" name="weekend_day[]" class="form-check-input" id="weekend-monday" value="monday"
+                                                                                    {{ in_array('monday', $savedWeekendDays) ? 'checked' : '' }}>
+                                                                                <label class="form-check-label" for="weekend-monday">Monday</label>
+                                                                            </div>
+                                                                            <div class="form-check custom-checkbox">
+                                                                                <input type="checkbox" name="weekend_day[]" class="form-check-input" id="weekend-tuesday" value="tuesday"
+                                                                                    {{ in_array('tuesday', $savedWeekendDays) ? 'checked' : '' }}>
+                                                                                <label class="form-check-label" for="weekend-tuesday">Tuesday</label>
+                                                                            </div>
+                                                                            <div class="form-check custom-checkbox">
+                                                                                <input type="checkbox" name="weekend_day[]" class="form-check-input" id="weekend-wednesday" value="wednesday"
+                                                                                    {{ in_array('wednesday', $savedWeekendDays) ? 'checked' : '' }}>
+                                                                                <label class="form-check-label" for="weekend-wednesday">Wednesday</label>
+                                                                            </div>
+                                                                            <div class="form-check custom-checkbox">
+                                                                                <input type="checkbox" name="weekend_day[]" class="form-check-input" id="weekend-thursday" value="thursday"
+                                                                                    {{ in_array('thursday', $savedWeekendDays) ? 'checked' : '' }}>
+                                                                                <label class="form-check-label" for="weekend-thursday">Thursday</label>
+                                                                            </div>
+                                                                        </div>
 
-                                                                    <!-- Checkbox options for the weekend days -->
-                                                                    <div class="form-check custom-checkbox">
-                                                                        <input type="checkbox" class="form-check-input" id="weekend-monday">
-                                                                        <label class="form-check-label" for="weekend-monday">Monday</label>
-                                                                    </div>
-                                                                    <div class="form-check custom-checkbox">
-                                                                        <input type="checkbox" class="form-check-input" id="weekend-tuesday">
-                                                                        <label class="form-check-label" for="weekend-tuesday">Tuesday</label>
-                                                                    </div>
-                                                                    <div class="form-check custom-checkbox">
-                                                                        <input type="checkbox" class="form-check-input" id="weekend-wednesday">
-                                                                        <label class="form-check-label" for="weekend-wednesday">Wednesday</label>
-                                                                    </div>
-                                                                    <div class="form-check custom-checkbox">
-                                                                        <input type="checkbox" class="form-check-input" id="weekend-thursday">
-                                                                        <label class="form-check-label" for="weekend-thursday">Thursday</label>
-                                                                    </div>
-                                                                    <div class="form-check custom-checkbox">
-                                                                        <input type="checkbox" class="form-check-input" id="weekend-friday">
-                                                                        <label class="form-check-label" for="weekend-friday">Friday</label>
-                                                                    </div>
-                                                                    <div class="form-check custom-checkbox">
-                                                                        <input type="checkbox" class="form-check-input" id="weekend-saturday">
-                                                                        <label class="form-check-label" for="weekend-saturday">Saturday</label>
-                                                                    </div>
-                                                                    <div class="form-check custom-checkbox">
-                                                                        <input type="checkbox" class="form-check-input" id="weekend-sunday">
-                                                                        <label class="form-check-label" for="weekend-sunday">Sunday</label>
+                                                                        <!-- Right Column (remaining 3 days) -->
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check custom-checkbox">
+                                                                                <input type="checkbox" name="weekend_day[]" class="form-check-input" id="weekend-friday" value="friday"
+                                                                                    {{ in_array('friday', $savedWeekendDays) ? 'checked' : '' }}>
+                                                                                <label class="form-check-label" for="weekend-friday">Friday</label>
+                                                                            </div>
+                                                                            <div class="form-check custom-checkbox">
+                                                                                <input type="checkbox" name="weekend_day[]" class="form-check-input" id="weekend-saturday" value="saturday"
+                                                                                    {{ in_array('saturday', $savedWeekendDays) ? 'checked' : '' }}>
+                                                                                <label class="form-check-label" for="weekend-saturday">Saturday</label>
+                                                                            </div>
+                                                                            <div class="form-check custom-checkbox">
+                                                                                <input type="checkbox" name="weekend_day[]" class="form-check-input" id="weekend-sunday" value="sunday"
+                                                                                    {{ in_array('sunday', $savedWeekendDays) ? 'checked' : '' }}>
+                                                                                <label class="form-check-label" for="weekend-sunday">Sunday</label>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -309,16 +322,12 @@
                                                     </div>
 
 
-                                                    <!-- Add Holidays Section -->
-                                                    <!-- Button to trigger the modal -->
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-12">
                                                         <div class="row">
                                                             <div class="col-md-12 d-flex justify-content-between align-items-center">
-                                                                <!-- Holidays Heading -->
                                                                 <h4 class="text-primary">List of Holidays</h5>
-                                                                    <!-- Add Holiday Button with + Icon -->
                                                                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addHolidayModal">
-                                                                        <i class="fa fa-plus"></i> <!-- Font Awesome Plus Icon -->
+                                                                        <i class="fa fa-plus"></i>
                                                                     </button>
                                                             </div>
                                                         </div>
@@ -326,13 +335,14 @@
                                                         @if($holidays->isEmpty())
                                                         <p>No holidays added yet.</p>
                                                         @else
-                                                        <!-- Scrollable Container -->
-                                                        <div class="table-responsive" style="max-height: 263px; overflow-y: auto; margin-top: 10px;">
+
+                                                        <div class="table-responsive" style="max-height: 291px; overflow-y: auto; margin-top: 10px;">
                                                             <table class="table table-bordered">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Name</th>
                                                                         <th>Date</th>
+                                                                        <th>Delete</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -340,24 +350,20 @@
                                                                     <tr>
                                                                         <td>{{ $holiday->holiday_name }}</td>
                                                                         <td>{{ \Carbon\Carbon::parse($holiday->date)->format('d M Y') }}</td>
+                                                                        <td>
+
+                                                                            <a href="#" onclick="confirmDelete('{{ $holiday->id }}')"><button type="submit" class="btn btn-danger btn-sm">
+                                                                                    <i class="fas fa-trash-alt"></i> <!-- Font Awesome Trash Icon -->
+                                                                                </button></a>
+
+                                                                        </td>
                                                                     </tr>
                                                                     @endforeach
                                                                 </tbody>
                                                             </table>
                                                         </div>
                                                         @endif
-                                                        <br>
-                                                        <br>
-                                                        <!-- <div class="row">
-                                                            <h4 class="text-primary">Add Holidays</h4>
-                                                            <button class="btn btn-primary" data-toggle="modal" data-target="#addHolidayModal">
-                                                                Add Holiday
-                                                            </button>
-                                                        </div> -->
-
                                                     </div>
-
-
                                                 </div>
 
                                                 <!-- Modal Structure -->
@@ -394,61 +400,74 @@
 
                                             </div>
                                         </div>
+                                    </div>
 
+                                    <div id="account-settings" class="tab-pane fade">
                                         <br>
-                                        <!-- Account Settings Section (Existing) -->
-                                        <div class="settings-form">
-                                            <h4 class="text-primary">Account Setting</h4>
-                                            <form>
-                                                <div class="row">
-                                                    <div class="form-group col-md-6">
-                                                        <label>Email</label>
-                                                        <input type="email" placeholder="Email" class="form-control">
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label>Password</label>
-                                                        <input type="password" placeholder="Password" class="form-control">
-                                                    </div>
+                                        <form action="/update-gym-account" method="POST">
+                                            @csrf
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Gym Name</label>
+                                                    <input type="text" name="gym_name" placeholder="Email" value="{{$gym->gym_name	}}" class="form-control">
                                                 </div>
-                                                <div class="form-group">
-                                                    <label>Address</label>
-                                                    <input type="text" placeholder="1234 Main St" class="form-control">
+                                                <div class="form-group col-md-6">
+                                                    <label>Username</label>
+                                                    <input type="text" name="username" value="{{$gym->username}}" class="form-control">
                                                 </div>
-                                                <div class="form-group">
-                                                    <label>Address 2</label>
-                                                    <input type="text" placeholder="Apartment, studio, or floor" class="form-control">
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Email</label>
+                                                    <input type="email" name="email" placeholder="Email" value="{{$gym->email}}" class="form-control" >
                                                 </div>
-                                                <div class="row">
-                                                    <div class="form-group col-md-6">
-                                                        <label>City</label>
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                    <div class="form-group col-md-4">
-                                                        <label>State</label>
-                                                        <select class="form-control default-select" id="inputState">
-                                                            <option selected="">Choose...</option>
-                                                            <option>Option 1</option>
-                                                            <option>Option 2</option>
-                                                            <option>Option 3</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group col-md-2">
-                                                        <label>Zip</label>
-                                                        <input type="text" class="form-control">
-                                                    </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Phone</label>
+                                                    <input type="text" name="phone_no" placeholder="Phone" value="{{$gym->phone_no}}" class="form-control">
                                                 </div>
-                                                <div class="form-group">
-                                                    <div class="form-check custom-checkbox">
-                                                        <input type="checkbox" class="form-check-input" id="gridCheck">
-                                                        <label class="form-check-label" for="gridCheck"> Check me out</label>
-                                                    </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Gym Type</label>
+                                                    <input type="text" name="gym_type" placeholder="Email" value="{{$gym->gym_type}}" class="form-control">
                                                 </div>
-                                                <button class="btn btn-primary" type="submit">Sign in</button>
-                                            </form>
-                                        </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Facebook Link</label>
+                                                    <input type="text" name="face_link" placeholder="Facebook Link" value="{{$gym->face_link}}" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Website Link</label>
+                                                    <input type="text" name="web_link" placeholder="Web Link" value="{{$gym->web_link}}" class="form-control">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Instagram Link</label>
+                                                    <input type="text" name="insta_link" placeholder="Insta Link" value="{{$gym->insta_link}}" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Address</label>
+                                                <textarea name="address" placeholder="Apartment, studio, or floor" class="form-control">{{$gym->address}}</textarea>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label>City</label>
+                                                    <input name="city_id" type="text" class="form-control" value="{{$gym->city_id}}">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>State</label>
+                                                    <input name="state_id" type="text" class="form-control" value="{{$gym->state_id}}">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>Country</label>
+                                                    <input name="country_id" type="text" class="form-control" value="{{$gym->country_id}}">
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-primary" type="submit">Update</button>
+                                        </form>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         <!-- Modal -->
@@ -482,7 +501,23 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-
+<script>
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to delete this holiday?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-holiday/' + id;
+            }
+        });
+    }
+</script>
 
 @include('CustomSweetAlert');
 @endsection

@@ -84,7 +84,7 @@
 
                                             </div>
                                             <div class="invalid-feedback">
-                                                Please select a user type. 
+                                                Please select a user type.
                                             </div>
                                         </div>
                                         <div class="col-md-12 mb-3">
@@ -127,32 +127,32 @@
                         </thead>
                         <tbody>
                             @foreach ($workouts as $subscription)
-                                <tr>
-                                    <td>
-                                        <img width="80"
-                                            src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
-                                            loading="lazy" alt="Profile Image">
-                                    </td>
-                                    <td>{{$subscription->category }}</td>
-                                    <td>{{$subscription->name }}</td>
-                                    <td>{{$subscription->gender }}</td>
-                                    <td>
-                                        <a class="dropdown-item view-workout" href="javascript:void(0);"
-                                            data-bs-toggle="modal" data-bs-target="#viewModal"
-                                            data-workout="{{ json_encode($subscription) }}">
-                                            <i class="fa fa-eye color-muted"></i>
-                                        </a>
-                                    </td>
+                            <tr>
+                                <td>
+                                    <img width="80"
+                                        src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
+                                        loading="lazy" alt="Profile Image">
+                                </td>
+                                <td>{{$subscription->category }}</td>
+                                <td>{{$subscription->name }}</td>
+                                <td>{{$subscription->gender }}</td>
+                                <td>
+                                    <a class="dropdown-item view-workout" href="javascript:void(0);"
+                                        data-bs-toggle="modal" data-bs-target="#viewModal"
+                                        data-workout="{{ json_encode($subscription) }}">
+                                        <i class="fa fa-eye color-muted"></i>
+                                    </a>
+                                </td>
 
-                                    <td class="text-end">
-                                        <span> <a href="javascript:void(0);" class="me-4 edit-workout"
-                                                data-bs-toggle="tooltip" data-placement="top" title="Edit"
-                                                data-workout="{{ json_encode($subscription) }}">
-                                                <i class="fa fa-pencil color-muted"></i></a>
-                                            <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
-                                                data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
-                                    </td>
-                                </tr>
+                                <td class="text-end">
+                                    <span> <a href="javascript:void(0);" class="me-4 edit-workout"
+                                            data-bs-toggle="tooltip" data-placement="top" title="Edit"
+                                            data-workout="{{ json_encode($subscription) }}">
+                                            <i class="fa fa-pencil color-muted"></i></a>
+                                        <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
+                                            data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
+                                </td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -261,25 +261,43 @@
 
 
 <script>
+    (function() {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
 
-    (function () {
-        'use strict'
-        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                // Check form validity
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
 
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
+                // Custom video link validation
+                const videoLinkInput = document.getElementById('vedio_link').value;
+                const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\/\w.-]*)*\/?$/;
+                const errorElement = document.getElementById('videoLinkError');
+                let isVideoLinkValid = true;
 
-                    form.classList.add('was-validated')
-                }, false)
-            })
-    })()
+                if (!urlPattern.test(videoLinkInput)) {
+                    errorElement.style.display = 'block';
+                    isVideoLinkValid = false;
+                } else {
+                    errorElement.style.display = 'none';
+                }
 
-    document.addEventListener('DOMContentLoaded', function () {
+                // If video link is invalid or the form is not valid, prevent form submission
+                if (!isVideoLinkValid || !form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+
+    document.addEventListener('DOMContentLoaded', function() {
         function initializeEventListeners() {
             const editButtons = document.querySelectorAll('.edit-workout');
             const editImageInput = document.getElementById('edit_image');
@@ -287,7 +305,7 @@
             const editGenderSelect = document.getElementById('edit_gender');
 
             editButtons.forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     document.getElementById('edit_workout_id').value = workout.id;
@@ -312,11 +330,11 @@
 
             // Show a preview of the new image when selected
             if (editImageInput) {
-                editImageInput.addEventListener('change', function (event) {
+                editImageInput.addEventListener('change', function(event) {
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = function (e) {
+                        reader.onload = function(e) {
                             currentImage.src = e.target.result;
                         }
                         reader.readAsDataURL(file);
@@ -326,7 +344,7 @@
 
             // Handling view workout modal
             document.querySelectorAll('.view-workout').forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     // Set the image src
@@ -373,7 +391,7 @@
         initializeEventListeners();
 
         // Reinitialize event listeners after DataTable redraw
-        $('#example3').on('draw.dt', function () {
+        $('#example3').on('draw.dt', function() {
             initializeEventListeners(); // Reattach event listeners
         });
     });
@@ -396,24 +414,24 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const viewModal = document.getElementById('viewModal');
         const modal = new bootstrap.Modal(viewModal);
 
         // Handle the close event to ensure the fade backdrop is removed
-        viewModal.addEventListener('hidden.bs.modal', function () {
+        viewModal.addEventListener('hidden.bs.modal', function() {
             document.body.classList.remove('modal-open'); // Ensure body class is removed
             document.body.style.overflow = ''; // Reset body overflow style
 
             // Remove modal backdrops
             const modalBackdrops = document.querySelectorAll('.modal-backdrop');
-            modalBackdrops.forEach(function (backdrop) {
+            modalBackdrops.forEach(function(backdrop) {
                 backdrop.remove(); // Remove the backdrop element
             });
         });
     });
 
-    document.getElementById('vedio_link').addEventListener('input', function () {
+    document.getElementById('vedio_link').addEventListener('input', function() {
         const videoLinkInput = this.value;
         const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\/\w.-]*)*\/?$/;
         const errorElement = document.getElementById('videoLinkError');
@@ -424,7 +442,6 @@
             errorElement.style.display = 'none';
         }
     });
-
 </script>
 @include('CustomSweetAlert');
 @endsection
