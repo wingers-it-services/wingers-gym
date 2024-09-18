@@ -56,16 +56,21 @@ class DeletePreviousDayWorkoutCrone extends Command
                     "user_id" => $item['user_id'],
                     "workout_id" => $item['workout_id'],
                     "user_workout_id" => $item['user_workout_id'],
-                    "total_sets" => $setDetails[0],
-                    "total_sets_completed" => $setDetails[1],
-                    "percentage" =>  $setDetails[2]
+                    "total_sets" => $setDetails['total_sets'],
+                    "total_sets_completed" => $setDetails['total_sets_completed'],
+                    "percentage" =>  $setDetails['percentage']
+                ]);
+            } else {
+                $workout->update([
+                    "total_sets" => $setDetails['total_sets'],
+                    "total_sets_completed" => $setDetails['total_sets_completed'],
+                    "percentage" => $setDetails['percentage']
                 ]);
             }
             // After processing, delete the current record
             $item->delete();
         });
         $this->info("Workouts for {$previousDayStart} have been deleted successfully That data move to the WorkoutAnalytics Table!");
-
     }
 
     private function generateSetDetails($details)
@@ -87,20 +92,16 @@ class DeletePreviousDayWorkoutCrone extends Command
 
         $completionPercentage = $this->calculateCompletedSetsPercentage($totalSetsCompleted, $totalSets);
 
-        return [$totalSets, $totalSetsCompleted, $completionPercentage];
+        return ["total_sets" => $totalSets, "total_sets_completed" => $totalSetsCompleted, "percentage" => $completionPercentage];
     }
 
     private function calculateCompletedSetsPercentage($totalSetsCompleted, $totalSets)
     {
-        if($totalSets == 0)
-        {
+        if ($totalSets == 0) {
             return 0.00;
-        }
-        else
-        {
-            $percentage = $totalSetsCompleted/$totalSets * 100;
-            return $percentage; 
+        } else {
+            $percentage = $totalSetsCompleted / $totalSets * 100;
+            return $percentage;
         }
     }
-
 }

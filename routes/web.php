@@ -305,3 +305,10 @@ Route::get('/addUsers', [AdminController::class, 'showAddUsers']);
 Route::get('/userPayment', [AdminController::class, 'showUserPayment']);
 
 Route::post('/add-holiday', [GymDetailController::class, 'addHolidayByGym']);
+Route::get('/delete-holiday/{id}', [GymDetailController::class, 'deleteHoliday']);
+
+Route::post('/add-weekend', [GymDetailController::class, 'addWeekendsByGym']);
+
+Route::post('/update-gym-account', [GymDetailController::class, 'updateGymAccount']);
+
+
