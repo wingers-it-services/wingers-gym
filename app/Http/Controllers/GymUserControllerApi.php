@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\OtpService;
 use App\Services\UserService;
 use App\Traits\errorResponseTrait;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -420,20 +421,27 @@ class GymUserControllerApi extends Controller
                     'message' => 'User not authenticated',
                 ], 401);
             }
-
+    
             // Fetch related injuries, goals, and levels
             $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
             $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
-            $levels = $user->levels()->get(['level_id', 'lebel']);             // Adjust fields as per your model
+            $levels = $user->levels()->get(['level_id', 'lebel']);         // Adjust fields as per your model
             
+            // Calculate user's age based on DOB (assuming 'dob' field exists in user table)
+            $age = null;
+            if ($user->dob) {
+                $age = Carbon::parse($user->dob)->age;
+            }
 
+            $user->age = $age;
+    
             return response()->json([
-                'status'  => 200,
-                'user'    => $user,
+                'status'   => 200,
+                'user'     => $user,
                 'injuries' => $injuries,
-                'goals'   => $goals,
-                'levels'  => $levels,
-                'message' => 'User detail fetched successfully',
+                'goals'    => $goals,
+                'levels'   => $levels,
+                'message'  => 'User detail fetched successfully',
             ], 200);
         } catch (\Exception $e) {
             Log::error('[GymUserControllerApi][fetchUserDetails] Error fetching users details: ' . $e->getMessage());
