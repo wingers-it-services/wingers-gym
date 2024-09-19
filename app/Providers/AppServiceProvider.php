@@ -19,7 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(Schedule $schedule)
     {
-        $schedule->command('emails:send');
         //For Workout
         $schedule->command('user:workout')->dailyAt('00:01');
 
@@ -30,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
 
         // For Deleting Previous Day's Workout Data - Runs at the end of the day
         $schedule->command('user:delete-previous-day-workout')->dailyAt('23:59');
+        $schedule->command('user:delete-previous-day-diet')->dailyAt('23:59');
 
     }
 

@@ -113,6 +113,10 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="profile-blog mb-5 text-center">
+                            <h5 class="text-primary d-inline">Scan OR Code</h5>
+                            <img src="{{$gym->qrcode}}" alt="" class="img-fluid mt-4 mb-4 w-80 d-block mx-auto">
+                        </div>
                         <div class="profile-news">
                             <h5 class="text-primary d-inline">Our Latest Reviews</h5>
                             <div class="media pt-3 pb-3">
@@ -150,7 +154,7 @@
                                     </li>
                                     <li class="nav-item"><a href="#profile-settings" data-bs-toggle="tab" class="nav-link">Setting</a>
                                     </li>
-                                    <li class="nav-item"><a href="#account-settings" data-bs-toggle="tab" class="nav-link">Account Setting</a>
+                                    <li class="nav-item"><a href="#account-settings" data-bs-toggle="tab" class="nav-link">Update Profile</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content">
@@ -419,8 +423,9 @@
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label>Email</label>
-                                                    <input type="email" name="email" placeholder="Email" value="{{$gym->email}}" class="form-control" >
+                                                    <input type="email" name="email" placeholder="Email" value="{{$gym->email}}" class="form-control" readonly>
                                                 </div>
+
                                                 <div class="form-group col-md-6">
                                                     <label>Phone</label>
                                                     <input type="text" name="phone_no" placeholder="Phone" value="{{$gym->phone_no}}" class="form-control">
@@ -429,7 +434,7 @@
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label>Gym Type</label>
-                                                    <input type="text" name="gym_type" placeholder="Email" value="{{$gym->gym_type}}" class="form-control">
+                                                    <input type="text" name="gym_type" placeholder="Gym Type" value="{{$gym->gym_type}}" class="form-control">
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label>Facebook Link</label>
@@ -464,7 +469,7 @@
                                                     <input name="country_id" type="text" class="form-control" value="{{$gym->country_id}}">
                                                 </div>
                                             </div>
-                                            <button class="btn btn-primary" type="submit">Update</button>
+                                            <button class="btn btn-primary col-md-12" type="submit">Update</button>
                                         </form>
                                     </div>
                                 </div>
