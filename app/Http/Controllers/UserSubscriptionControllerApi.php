@@ -127,7 +127,7 @@ class UserSubscriptionControllerApi extends Controller
     {
         $lastOrderId = UserSubscriptionPayment::latest('id')->value('id');
         $newOrderId = ($lastOrderId == null) ? 'WITS1' :  'W1' . ($lastOrderId + 1);
-        $amount = $data['totalprice'];
+        $amount = $data['totalprice']/100;
 
         // $paymentData = [
         //     'merchantId'            =>  'PGTESTPAYUAT',
@@ -152,6 +152,7 @@ class UserSubscriptionControllerApi extends Controller
 
     // public function purchaseSubscription(Request $request)
     // {
+
     //     try {
     //         $request->validate([
     //             'gym_id'          => 'required|exists:gyms,id',
@@ -271,12 +272,13 @@ class UserSubscriptionControllerApi extends Controller
                 $subscriptionData = [
                     'gym_id'                  => $request->gym_id,
                     'subscription_id'         => $request->subscription_id,
-                    'original_transaction_id' => 23,
+                    'original_transaction_id' => $request->merchantTransactionId,
                     'start_immediately'       => $request->start_immediately,
-                    'status'                  => 1,
+                    'status'                  => $request->start_immediately == 1 ? 1 : 0, // Set status based on start_immediately
                     'amount'                  => $order->amount,
                     'coupon_id'               => $order->coupon_id ?? 0
                 ];
+                
 
                 // Call buySubscription to create the user's subscription
                 $subscription = $this->userSubscriptionHistory->buySubscription($subscriptionData);

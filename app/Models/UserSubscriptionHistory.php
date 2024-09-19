@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\GymSubscriptionStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
 
@@ -63,11 +64,13 @@ class UserSubscriptionHistory extends Model
                 if (isset($subscription['start_immediately']) && $subscription['start_immediately'] == true) {
                     // Update the last active subscription to expired
                     $lastActiveSubscription->update([
-                        'status' => 3,
+                        'status' => 2,
                     ]);
                 } else {
                     // Set the end date of the last subscription as the start date for the new one
-                    $startDate = $lastActiveSubscription->subscription_end_date;
+                    // $startDate = $lastActiveSubscription->subscription_end_date;
+                    
+                    $startDate = Carbon::parse($lastActiveSubscription->subscription_end_date);
                 }
             }
     
