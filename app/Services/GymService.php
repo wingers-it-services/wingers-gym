@@ -31,14 +31,15 @@ class GymService
             'image',
             'username',
             'address',
-            'city',
-            'state',
-            'country',
+            'city_id',
+            'state_id',
+            'country_id',
             'web_link',
             'gym_type',
             'face_link',
             'insta_link',
-            'qrcode'
+            'qrcode',
+            'phone_no'
         ];
 
         $gymData = [];

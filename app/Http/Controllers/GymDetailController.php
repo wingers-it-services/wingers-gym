@@ -130,7 +130,6 @@ class GymDetailController extends Controller
                 "insta_link" => 'nullable'
             ]);
 
-// dd( $request->all());
             $isProfileUpdated = $this->gymService->createGymAccount($request->all());
             if ($isProfileUpdated) {
                 return redirect()->back()->with('status', 'success')->with('message', 'Gym profile updated succesfully.');
