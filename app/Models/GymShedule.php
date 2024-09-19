@@ -16,6 +16,7 @@ class GymShedule extends Model
 
     protected $fillable = [
         'gym_id',
+        'date',
         'event_name',
         'week_day',
         'start_time',

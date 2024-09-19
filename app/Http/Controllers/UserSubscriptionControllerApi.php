@@ -51,10 +51,17 @@ class UserSubscriptionControllerApi extends Controller
                 ], 422);
             }
 
+            $activeSubscription = $this->userSubscriptionHistory
+                ->where('gym_id', $request->gym_id)
+                ->where('user_id', auth()->user()->id)
+                ->where('status', 1)
+                ->exists();
+
             return response()->json([
-                'status'         => 200,
-                'subscriptions'  => $subscriptions,
-                'message'        => 'Subscriptions Fetch Successfully'
+                'status'                => 200,
+                'subscriptions'         => $subscriptions,
+                'alredy_subscription'   => $activeSubscription ? 1 : 0,
+                'message'               => 'Subscriptions Fetch Successfully'
             ], 200);
         } catch (\Exception $e) {
             Log::error('[UserSubscriptionControllerApi][fetchSubscription]Error fetching subscriptions details: ' . $e->getMessage());
@@ -86,13 +93,13 @@ class UserSubscriptionControllerApi extends Controller
                     'message' => 'User not authenticated',
                 ], 401);
             }
-            
+
             $subscriptions = $this->userSubscriptionHistory->with(['subscription' => function ($query) {
                 $query->withTrashed();
             }])
-            ->where('user_id', $user->id)
-            ->where('gym_id', $request->gym_id)
-            ->get();
+                ->where('user_id', $user->id)
+                ->where('gym_id', $request->gym_id)
+                ->get();
 
             if ($subscriptions->isEmpty()) {
                 return response()->json([
@@ -120,7 +127,7 @@ class UserSubscriptionControllerApi extends Controller
     {
         $lastOrderId = UserSubscriptionPayment::latest('id')->value('id');
         $newOrderId = ($lastOrderId == null) ? 'WITS1' :  'W1' . ($lastOrderId + 1);
-        $amount = $data['totalprice'] * 100;
+        $amount = $data['totalprice'];
 
         // $paymentData = [
         //     'merchantId'            =>  'PGTESTPAYUAT',
@@ -226,7 +233,8 @@ class UserSubscriptionControllerApi extends Controller
             $request->validate([
                 'gym_id'                => 'required|exists:gyms,id',
                 'subscription_id'       => 'required|exists:gym_subscriptions,id',
-                'merchantTransactionId' => 'required'
+                'merchantTransactionId' => 'required',
+                'start_immediately'     => 'required'
             ]);
 
             $order = UserSubscriptionPayment::where('merchantId',  $request->merchantTransactionId)->first();
@@ -249,7 +257,7 @@ class UserSubscriptionControllerApi extends Controller
                 return 'Payment failed';
             }
             $user = auth()->user();
-            if ($order->code == PaymentStatusCodeEnum::PAYMENT_SUCCESS) {
+            if ($order->response_code == PaymentStatusCodeEnum::PAYMENT_SUCCESS) {
                 $orderDetail = $order->update([
                     'orderId'          => $orderId,
                     'userId'           => $user->id,
@@ -263,23 +271,23 @@ class UserSubscriptionControllerApi extends Controller
                 $subscriptionData = [
                     'gym_id'                  => $request->gym_id,
                     'subscription_id'         => $request->subscription_id,
-                    'original_transaction_id' => $request->merchantTransactionId,
-                    'is_current'              => 1, 
-                    'status'                  => 1, 
+                    'original_transaction_id' => 23,
+                    'start_immediately'       => $request->start_immediately,
+                    'status'                  => 1,
                     'amount'                  => $order->amount,
                     'coupon_id'               => $order->coupon_id ?? 0
                 ];
-    
+
                 // Call buySubscription to create the user's subscription
                 $subscription = $this->userSubscriptionHistory->buySubscription($subscriptionData);
-    
+
                 if (!$subscription) {
                     return response()->json([
                         'success' => 500,
                         'message' => 'Failed to create subscription',
                     ], 500);
                 }
-            } else if ($order->code == PaymentStatusCodeEnum::PAYMENT_ERROR) {
+            } else if ($order->response_code == PaymentStatusCodeEnum::PAYMENT_ERROR) {
                 $order->update([
                     'orderId'          => $orderId,
                     'userId'           => $user->id,
