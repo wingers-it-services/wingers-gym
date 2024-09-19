@@ -68,76 +68,84 @@ class HomeControllerApi extends Controller
             $request->validate([
                 'gym_id' => 'required|exists:gyms,id',
             ]);
-    
+
             $user = auth()->user();
             $gym = $this->gym->find($request->gym_id);
-    
+
             $subscription = $this->userSubscriptionHistory->where('user_id', $user->id)
                 ->where('status', 1)
                 ->where('gym_id', $request->gym_id)->first();
-    // dd($subscription);
+            // dd($subscription);
             $startDate = Carbon::parse($subscription->subscription_start_date);
             $endDate = Carbon::parse($subscription->subscription_end_date);
             $todayDate = Carbon::now()->startOfDay();
-    
+
             $holidays = $this->holiday->where('gym_id', $gym->id)
                 ->whereBetween('date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
                 ->pluck('date');
-    
+
             $holidays = $holidays->map(function ($holidayDate) {
                 return Carbon::parse($holidayDate)->format('Y-m-d');
             });
-    
+
             $totalDays = $startDate->diffInDays($endDate) + 1;
             $presentCount = 0;
             $totalPresentDays = 0;
             $holidayCount = 0;
             $weekendCount = 0;
             $absentCount = 0;
-    
+
             for ($date = $startDate; $date->lte($todayDate); $date->addDay()) {
                 $dayOfWeek = $date->format('l');
                 $formattedDate = $date->format('Y-m-d');
-    
+
                 // Check for weekends
                 if ($dayOfWeek == 'Sunday') {
                     $weekendCount++;
                     $presentCount++; // Count weekends as present
                     continue;
                 }
-    
+
                 // Check for holidays
                 if ($holidays->contains($formattedDate)) {
                     $holidayCount++;
                     $presentCount++; // Count holidays as present
                     continue;
                 }
-    
+
                 // Check for attendance
                 $attendance = $this->gymUserAttendence->where('gym_id', $gym->id)
                     ->where('gym_user_id', $user->id)
                     ->where('year', $date->year)
                     ->where('month', $date->month)
                     ->first();
-    
+
+                    if (!$attendance) {
+                        return response()->json([
+                            'status'  => 422,
+                            'message' => 'No attendance records found for the user.'
+                        ], 422);
+                    }
+
                 $day = 'day' . $date->day;
-    
+
                 if ($attendance && $attendance->{$day} == AttendenceStatusEnum::PRESENT) {
                     $presentCount++;
                     $totalPresentDays++; // Increment actual present days
                 }
-    
+
                 if ($attendance && $attendance->{$day} == AttendenceStatusEnum::ABSENT) {
                     $absentCount++;
                 }
             }
     
+
             $pendingDays = $endDate->greaterThan($todayDate) ? (int)$todayDate->diffInDays($endDate) : 0;
             $actualWorkingDays = $totalDays - $weekendCount - $holidayCount;
             $pendingWorkingDays = min($pendingDays, $actualWorkingDays);
             $pendingDaysPercentage = $totalDays > 0 ? ($pendingWorkingDays / $totalDays) * 100 : 0;
             $presentPercentage = $actualWorkingDays > 0 ? ($presentCount / $actualWorkingDays) * 100 : 0;
-    
+
             return response()->json([
                 'status'                  => 200,
                 'total_days'              => $totalDays,
@@ -162,7 +170,7 @@ class HomeControllerApi extends Controller
             ], 500);
         }
     }
-    
+
 
     public function fetchAdvertisementAndAttendance(Request $request)
     {
