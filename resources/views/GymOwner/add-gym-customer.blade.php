@@ -78,7 +78,7 @@
 											onchange="loadFile(event)" accept="image/*" type="file" required>
 									</div>
 								</div>
-
+								<input type="hidden" id="user_id" name="user_id" value="">
 								<div class="col-lg-8 order-lg-1">
 									<div class="row">
 										<div class="col-md-6 mb-3">
@@ -469,6 +469,7 @@
 
 			if (clearFields) {
 				// Clear all user detail fields
+				document.getElementById('user_id').value = '';
 				document.getElementById('firstname').value = '';
 				document.getElementById('lastname').value = '';
 				document.getElementById('address').value = '';
@@ -494,6 +495,7 @@
 				subscriptionSelect.value = '';
 			} else {
 				// Set user data if provided
+				document.getElementById('user_id').value = user.id || ''; // Set the user ID if exists
 				document.getElementById('firstname').value = user.firstname || '';
 				document.getElementById('lastname').value = user.lastname || '';
 				document.getElementById('address').value = user.address || '';

@@ -9,6 +9,7 @@ use App\Models\userBmi;
 use App\Models\Gym;
 use App\Models\GymSubscription;
 use App\Models\GymUserAttendence;
+use App\Models\GymUserGym;
 use App\Models\GymUserSubscriptionsHistory;
 use App\Models\User;
 use App\Models\UserBodyMeasurement;
@@ -77,8 +78,7 @@ class GymUserController extends Controller
     public function listGymUser()
     {
         $gymUser = Auth::guard('gym')->user();
-        $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
-        $users = $this->user->where('gym_id', $gymId)->get();
+        $users = $gymUser->users;
         return view('GymOwner.gym-customers', compact('users'));
     }
 
@@ -142,11 +142,7 @@ class GymUserController extends Controller
             $validateData = $request->validate([
                 'firstname' => 'required',
                 'lastname' => 'required',
-                'email' => [
-                    'required',
-                    'email',
-                    Rule::unique('gym_users')->whereNull('deleted_at') // Exclude soft-deleted records
-                ],
+                'email' => 'required',
                 'gender' => 'required',
                 'subscription_id' => 'required',
                 'blood_group' => 'nullable',
@@ -163,17 +159,46 @@ class GymUserController extends Controller
                 'profile_status' => 'nullable',
                 'staff_assign_id' => 'nullable',
                 'password' => 'required',
-                'phone_no' => [
-                    'required',
-                    Rule::unique('gym_users')->whereNull('deleted_at') // Exclude soft-deleted records
-                ],
+                'phone_no' => 'required',
                 'dob' => 'required'
             ]);
 
-            $gymUser = Auth::guard('gym')->user();
-            $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
+            $gymId = Auth::guard('gym')->user()->id;
 
-            $user = $this->userService->createUserAccount($validateData, $gymId);
+            if ($request->filled('user_id')) {
+                // If user_id is present, update the existing user
+                $user = User::findOrFail($request->user_id);
+                $user->update($validateData); // Update the user data
+
+                $existingGymUser = GymUserGym::where('user_id', $user->id)
+                ->where('gym_id', $gymId)
+                ->first();
+                
+                if ($existingGymUser) {
+                    // If the user is already associated with this gym, show a message
+                    return redirect()->back()->with('status', 'error')->with('message', 'This user is already associated with this gym.');
+                }
+
+                GymUserGym::create([
+                    'gym_id' => $gymId,
+                    'user_id' => $request->user_id
+                ]);
+
+                UserSubscriptionHistory::create([
+                    'user_id' => $request->user_id,
+                    'subscription_id' => $request->subscription_id,
+                    'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
+                    'subscription_start_date' => $request->subscription_start_date,
+                    'subscription_end_date' => $request->subscription_end_date,
+                    'status' => $user->subscription_status,
+                    'amount' => $request->amount, // Ensure this is part of the request or calculate it
+                    'coupon_id' => 2,
+                    'gym_id' => $gymId
+                ]);
+            } else {
+                // If no user_id, create a new user
+                $user = $this->userService->createUserAccount($validateData, $gymId);
+            }
 
             // Create the user account
             if ($user) {
@@ -192,6 +217,7 @@ class GymUserController extends Controller
                 'coupon_id' => 2,
                 'gym_id' => $gymId
             ]);
+
 
             return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Successfully');
         } catch (\Exception $e) {
@@ -691,6 +717,7 @@ class GymUserController extends Controller
             if (!$subscriptionHistory) {
                 return redirect()->back()->with('status', 'error')->with('message', 'No subscription history found for the user.');
             }
+
 
             // Update the status
             $subscriptionHistory->update([
