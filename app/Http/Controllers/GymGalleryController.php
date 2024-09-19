@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gym;
 use App\Models\GymGallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,17 +11,21 @@ use Illuminate\Support\Facades\Log;
 class GymGalleryController extends Controller
 {
     protected $gymGallery;
+    protected $gym;
 
-    public function __construct(GymGallery $gymGallery)
+    public function __construct(GymGallery $gymGallery, Gym $gym)
     {
         $this->gymGallery = $gymGallery;
+        $this->gym = $gym;
     }
 
     public function gymGalleryView()
     {
         $status = null;
         $message = null;
-        $gymGalleryFiles = $this->gymGallery->all();
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
+        $gymGalleryFiles = $this->gymGallery->where('gym_id', $gymId)->get();
         return view('GymOwner.gym-gallery', compact('status', 'message', 'gymGalleryFiles'));
     }
 

@@ -109,18 +109,25 @@
 								Mark Present Today
 							</button>
 							<div class="dropdown-menu dropdown-menu-end">
-								<a class="dropdown-item" href="javascript:void(0);" data-gym-id='{{$gymStaff->gym_id}}'
-									data-employee-id='{{$gymStaff->id}}' data-attendance-status='1'
+								<a class="dropdown-item" href="javascript:void(0);"
+									data-gym-id='{{$gymStaff->gym_id ?? ''}}'
+									data-employee-id='{{$gymStaff->id ?? ''}}'
+									data-attendance-status='1'
 									onclick="markStaffAttendance(this);">Present</a>
 
-								<a class="dropdown-item" href="javascript:void(0);" data-gym-id='{{$gymStaff->gym_id}}'
-									data-employee-id='{{$gymStaff->id}}' data-attendance-status='0'
+								<a class="dropdown-item" href="javascript:void(0);"
+									data-gym-id='{{$gymStaff->gym_id ?? ''}}'
+									data-employee-id='{{$gymStaff->id ?? ''}}'
+									data-attendance-status='0'
 									onclick="markStaffAttendance(this);">Absent</a>
 
-								<a class="dropdown-item" href="javascript:void(0);" data-gym-id='{{$gymStaff->gym_id}}'
-									data-employee-id='{{$gymStaff->id}}' data-attendance-status='.5'
+								<a class="dropdown-item" href="javascript:void(0);"
+									data-gym-id='{{$gymStaff->gym_id ?? ''}}'
+									data-employee-id='{{$gymStaff->id ?? ''}}'
+									data-attendance-status='.5'
 									onclick="markStaffAttendance(this);">Half Day</a>
 							</div>
+
 
 						</div>
 					</div>
