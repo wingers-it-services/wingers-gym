@@ -72,8 +72,9 @@ class UserSubscriptionHistory extends Model
             }
     
             // Calculate the end date based on the validity of the new subscription
-            $endDate = $startDate->copy()->addMonths($subscriptionDetails->validity);
-    
+            // $endDate = $startDate->copy()->addMonths($subscriptionDetails->validity);
+            $endDate = $startDate->copy()->addMonths((int)$subscriptionDetails->validity);
+
             // Create the subscription record
             $userSubscription = $this->create([
                 'user_id'                 => $user->id,
@@ -93,6 +94,5 @@ class UserSubscriptionHistory extends Model
             Log::error('[UserSubscriptionHistory][buySubscription] Error buying subscription: ' . $e->getMessage());
             return false;
         }
-    }
-       
+    }       
 }

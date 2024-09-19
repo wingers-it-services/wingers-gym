@@ -16,11 +16,12 @@ return new class extends Migration
             $table->uuid()->index();
             $table->unsignedBigInteger('gym_id')->index();
             $table->text('event_name');
-            $table->integer('week_day');
+            $table->date('date')->nullable();
+            $table->integer('week_day')->nullable();
             $table->time('start_time');
             $table->time('end_time');
             $table->boolean('is_recurring')->default(false);
-            $table->longText('description');
+            $table->longText('description')->nullable();
             $table->timestamps();
         });
     }

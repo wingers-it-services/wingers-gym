@@ -88,7 +88,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="control-label">Week Day</label>
+                                        <label class="control-label">Date</label>
                                         <select class="form-control form-white" data-placeholder="Choose a day..." name="week_day" id="week_day">
                                             <option value="" disabled selected>Choose a day...</option>
                                             @foreach(\App\Enums\WeekDaysEnum::getWeekDays() as $key => $day)
@@ -96,6 +96,7 @@
                                             @endforeach
                                         </select>
                                         <div id="week_days_section" style="padding-top: 5%; display: none;">
+                                        <label class="control-label">Week Day</label>
                                             @foreach(\App\Enums\WeekDaysEnum::getWeekDays() as $key => $day)
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="week_days[]" value="{{ $key }}" id="day{{ $key }}">
