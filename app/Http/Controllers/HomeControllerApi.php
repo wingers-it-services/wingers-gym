@@ -298,4 +298,6 @@ class HomeControllerApi extends Controller
             ], 500);
         }
     }
+
+    
 }

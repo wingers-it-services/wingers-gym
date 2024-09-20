@@ -11,7 +11,10 @@ class Advertisement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'banner'
+        'banner',
+        'ad_title',
+        'ad_link',
+        'type'
     ];
 
     public function getBannerAttribute()

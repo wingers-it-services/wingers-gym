@@ -12,21 +12,21 @@ class AdvertisementControllerApi extends Controller
     {
         try {
 
-            $advertisement = Advertisement::get();
+            $advertisement = Advertisement::where('type','ads')->get();
 
             if (!$advertisement) {
                 return response()->json([
-                    'status'     => 422,
+                    'status'        => 422,
                     'advertisement' => null,
-                    'message'    => 'No advertisement found.',
+                    'message'       => 'No advertisement found.',
                 ], 422);
             }
 
 
             return response()->json([
-                'status'     => 200,
+                'status'        => 200,
                 'advertisement' => $advertisement,
-                'message'    => 'advertisement fetched successfully.',
+                'message'       => 'advertisement fetched successfully.',
             ], 200);
         } catch (\Exception $e) {
             Log::error('[AdvertisementControllerApi][fetchAdvertisement] Error fetching advertisement details: ' . $e->getMessage());
