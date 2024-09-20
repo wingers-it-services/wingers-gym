@@ -43,28 +43,36 @@ class DeletePreviousDayWorkoutCrone extends Command
                 ["year", $currentYear],
                 ["gym_id", $item['gym_id']],
                 ["user_id", $item['user_id']],
-                ["user_workout_id", $item['user_workout_id']]
+                ["user_workout_id", $item['user_workout_id']],
+                ["targeted_body_part", $item['targeted_body_part']]
             ])->first();
 
             $setDetails = $this->generateSetDetails($item['details']);
-
+            
             if (!$workout) {
                 WorkoutAnalytic::create([
-                    "month" => $currentMonth,
-                    "year" => $currentYear,
-                    "gym_id" => $item['gym_id'],
-                    "user_id" => $item['user_id'],
-                    "workout_id" => $item['workout_id'],
-                    "user_workout_id" => $item['user_workout_id'],
-                    "total_sets" => $setDetails['total_sets'],
+                    "month"                => $currentMonth,
+                    "year"                 => $currentYear,
+                    "gym_id"               => $item['gym_id'],
+                    "user_id"              => $item['user_id'],
+                    "workout_id"           => $item['workout_id'],
+                    "targeted_body_part"   => $item['targeted_body_part'],
+                    "user_workout_id"      => $item['user_workout_id'],
+                    "total_sets"           => $setDetails['total_sets'],
                     "total_sets_completed" => $setDetails['total_sets_completed'],
-                    "percentage" =>  $setDetails['percentage']
+                    "percentage"           =>  $setDetails['percentage']
                 ]);
             } else {
+                $newTotalSets = $workout->total_sets + $setDetails['total_sets'];
+                $newTotalSetsCompleted = $workout->total_sets_completed + $setDetails['total_sets_completed'];
+                
+                // Calculate the new percentage based on the updated values
+                $newPercentage = ($newTotalSetsCompleted / $newTotalSets) * 100;
+            
                 $workout->update([
-                    "total_sets" => $setDetails['total_sets'],
-                    "total_sets_completed" => $setDetails['total_sets_completed'],
-                    "percentage" => $setDetails['percentage']
+                    "total_sets"           => $newTotalSets,
+                    "total_sets_completed" => $newTotalSetsCompleted,
+                    "percentage"           => $newPercentage
                 ]);
             }
             // After processing, delete the current record

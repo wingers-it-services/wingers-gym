@@ -8,27 +8,32 @@ use App\Models\Gym;
 use App\Models\GymUserAttendence;
 use App\Models\Holiday;
 use App\Models\UserSubscriptionHistory;
+use App\Models\WorkoutAnalytic;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class HomeControllerApi extends Controller
 {
-    protected $advertisement;
-    protected $holiday;
-    protected $userSubscriptionHistory;
-    protected $gymUserAttendence;
     protected $gym;
+    protected $holiday;
+    protected $analytics;
+    protected $advertisement;
+    protected $gymUserAttendence;
+    protected $userSubscriptionHistory;
 
     public function __construct(
         Gym $gym,
         Holiday $holiday,
+        WorkoutAnalytic $analytics,
         Advertisement $advertisement,
         GymUserAttendence $gymUserAttendence,
         UserSubscriptionHistory $userSubscriptionHistory
     ) {
         $this->gym = $gym;
         $this->holiday = $holiday;
+        $this->analytics = $analytics;
         $this->advertisement = $advertisement;
         $this->gymUserAttendence = $gymUserAttendence;
         $this->userSubscriptionHistory = $userSubscriptionHistory;
@@ -150,7 +155,13 @@ class HomeControllerApi extends Controller
             }
 
 
-            $pendingDays = $endDate->greaterThan($todayDate) ? (int)$todayDate->diffInDays($endDate) : 0;
+            if ($todayDate->lessThan($startDate)) {
+                // If the subscription hasn't started yet, pending days should be counted from the start date (inclusive)
+                $pendingDays = $endDate->greaterThanOrEqualTo($startDate) ? (int)$startDate->diffInDays($endDate->addDay()) : 0;
+            } else {
+                // If the subscription has already started, count from the current date (inclusive)
+                $pendingDays = $endDate->greaterThanOrEqualTo($todayDate) ? (int)$todayDate->diffInDays($endDate->addDay()) : 0;
+            }
             $actualWorkingDays = $totalDays - $weekendCount - $holidayCount;
             $pendingWorkingDays = min($pendingDays, $actualWorkingDays);
             $pendingDaysPercentage = $totalDays > 0 ? ($pendingWorkingDays / $totalDays) * 100 : 0;
@@ -241,11 +252,12 @@ class HomeControllerApi extends Controller
             // Fetch Advertisement
             $advertisementResponse = $this->fetchAdvertisement($request);
             $advertisementData = $advertisementResponse->getData();
-
+    
             // Fetch Attendance
             $attendanceResponse = $this->getUserAttendancePercentage($request);
             $attendanceData = $attendanceResponse->getData();
-
+    
+            // Default response structure
             $response = [
                 'status' => 200,
                 'message' => '',
@@ -253,23 +265,23 @@ class HomeControllerApi extends Controller
                 'total_days' => 0,
                 'present_days' => 0,
                 'pending_days' => 0,
-                'biceps' => 70,
-                'leg' => 70,
-                'forearm' => 10,
-                'tricep' => 11,
-                'back' => 42,
-                'shoulder' => 50,
-                'chest' => 10,
-                'abs' => 22,
+                'biceps' => 0,
+                'leg' => 0,
+                'forearm' => 0,
+                'tricep' => 0,
+                'back' => 0,
+                'shoulder' => 0,
+                'chest' => 0,
+                'abs' => 0,
             ];
-
+    
             // Handle Advertisement Response
             if ($advertisementData->status === 200) {
                 $response['advertisement'] = $advertisementData->advertisement;
             } else if ($advertisementData->status === 422) {
                 $response['message'] .= 'Advertisement data could not be fetched. ';
             }
-
+    
             // Handle Attendance Response
             if ($attendanceData->status === 200) {
                 $response['total_days'] = $attendanceData->total_days;
@@ -278,17 +290,28 @@ class HomeControllerApi extends Controller
             } else if ($attendanceData->status === 422) {
                 $response['message'] .= 'Attendance data could not be fetched. ';
             }
-
-            // Set success message if both responses are successful
-            if ($advertisementData->status === 200 && $attendanceData->status === 200) {
-                $response['message'] = 'Advertisements and user attendance fetched successfully.';
+    
+            // Fetch Analytics and update response
+            $analyticsResponse = $this->fetchAnalytics($request);
+            $analyticsData = $analyticsResponse->getData();
+    
+            if ($analyticsData->status === 200) {
+                foreach ($analyticsData->analytics as $bodyPart => $percentage) {
+                    $response[$bodyPart] = $percentage;
+                }
+            } else if ($analyticsData->status === 422) {
+                $response['message'] .= 'Analytics data could not be fetched. ';
+            }
+    
+            // Set success message if all responses are successful
+            if ($advertisementData->status === 200 && $attendanceData->status === 200 && $analyticsData->status === 200) {
+                $response['message'] = 'Advertisements, user attendance, and analytics fetched successfully.';
             } else {
-                // If there are partial results, adjust the message accordingly
                 if (!$response['message']) {
                     $response['message'] = 'Some data could not be fetched.';
                 }
             }
-
+    
             return response()->json($response, 200);
         } catch (\Exception $e) {
             Log::error('[HomeControllerApi][fetchAdvertisementAndAttendance] Error: ' . $e->getMessage());
@@ -298,6 +321,50 @@ class HomeControllerApi extends Controller
             ], 500);
         }
     }
-
+    
+    // Separate function to fetch analytics
+    public function fetchAnalytics(Request $request)
+    {
+        try {
+            $currentMonth = Carbon::now()->month;
+            $currentYear = Carbon::now()->year;
+    
+            // Fetch the workout analytics for the current month and year, grouped by targeted body part
+            $analytics = WorkoutAnalytic::where('user_id', auth()->user()->id)
+                ->where('gym_id', $request->gym_id)
+                ->where('month', $currentMonth)
+                ->where('year', $currentYear)
+                ->get()
+                ->groupBy('targeted_body_part');
+    
+            if ($analytics->isEmpty()) {
+                return response()->json([
+                    'status' => 422,
+                    'analytics' => null,
+                    'message' => 'No analytics found for the current month.',
+                ], 422);
+            }
+    
+            // Prepare the response with average percentage for each body part
+            $response = [];
+            foreach ($analytics as $bodyPart => $data) {
+                // Calculate the average percentage for each body part
+                $averagePercentage = $data->avg('percentage');
+                $response[$bodyPart] = round($averagePercentage, 2); // Round the percentage to 2 decimal places
+            }
+    
+            return response()->json([
+                'status' => 200,
+                'analytics' => $response,
+                'message' => 'Analytics fetched successfully for the current month.',
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('[HomeControllerApi][fetchAnalytics] Error fetching analytics details: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Error fetching analytics details: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
     
 }

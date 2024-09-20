@@ -19,7 +19,8 @@ class WorkoutAnalytic extends Model
         'user_workout_id',
         'total_sets',
         'total_sets_completed',
-        'percentage'
+        'percentage',
+        'targeted_body_part'
     ];
 
     protected static function boot()
