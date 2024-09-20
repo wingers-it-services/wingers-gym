@@ -317,14 +317,15 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "user_id" => 'required',
-                "exercise_name" => 'required',
-                "day" => 'required',
-                "sets" => 'required|integer|min:1',
-                "reps" => 'required|integer|min:1',
-                "weight" => 'required|numeric|min:0',
-                "workout_des" => 'required',
-                "workout_id" => 'required'
+                "user_id"             => 'required',
+                "exercise_name"       => 'required',
+                "day"                 => 'required',
+                "sets"                => 'required|integer|min:1',
+                "reps"                => 'required|integer|min:1',
+                "weight"              => 'required|numeric|min:0',
+                "workout_des"         => 'required',
+                "workout_id"          => 'required',
+                "targeted_body_part"  => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -383,6 +384,7 @@ class GymUserController extends Controller
                 'reps' => 'required|integer|min:1',
                 'weight' => 'required|numeric|min:0',
                 'workout_des' => 'required',
+                'targeted_body_part' => 'required',
             ]);
 
             $workout = $this->workout->findOrFail($request->workout_id);
@@ -611,9 +613,11 @@ class GymUserController extends Controller
         $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
         $query = $request->get('query');
 
+        $admin = $this->gym->where('gym_type', 'admin')->first();
         // Fetch both name and id
         $workouts = Workout::where('name', 'LIKE', "%{$query}%")
             ->where('added_by', $gymId)
+            ->orWhere('added_by',$admin->id)
             ->get(['id', 'name']);
 
         return response()->json($workouts);

@@ -249,7 +249,6 @@ class HomeControllerApi extends Controller
             $response = [
                 'status' => 200,
                 'message' => '',
-                // Default empty values for advertisement and attendance details
                 'advertisement' => null,
                 'total_days' => 0,
                 'present_days' => 0,

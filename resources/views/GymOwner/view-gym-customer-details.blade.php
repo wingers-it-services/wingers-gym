@@ -416,21 +416,38 @@
                                                     </div>
 
                                                     <div class="form-group row">
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-6">
                                                             <label for="sets">Sets</label>
                                                             <input type="number" id="sets" name="sets" min="0"
                                                                 max="1000" class="form-control" required>
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-6">
                                                             <label for="reps">Reps</label>
                                                             <input type="number" id="reps" name="reps" min="0"
                                                                 class="form-control" required />
                                                         </div>
-                                                        <div class="col-md-4">
+
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-md-6">
                                                             <label for="weight">Weight</label>
                                                             <input type="number" id="weight" name="weight"
                                                                 placeholder="Enter Weight in Kg" class="form-control"
                                                                 required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="weight">Targetted Body Part</label>
+                                                            <select class="form-control" id="targeted_body_part" name="targeted_body_part" required>
+                                                                <option value="">Choose....</option>
+                                                                <option value="biceps">Biceps</option>
+                                                                <option value="leg">Leg</option>
+                                                                <option value="forearm">Forearm</option>
+                                                                <option value="tricep">Tricep</option>
+                                                                <option value="shoulder">Shoulder</option>
+                                                                <option value="chest">Chest</option>
+                                                                <option value="abs">Abs</option>
+                                                                <option value="back">Back</option>
+                                                            </select>
                                                         </div>
                                                     </div>
 
@@ -476,6 +493,7 @@
                                                                     <th scope="col">Sets</th>
                                                                     <th scope="col">Reps</th>
                                                                     <th scope="col">Weight</th>
+                                                                    <th scope="col">Targetted Body</th>
 
                                                                     <th scope="col" class="text-end">Action
                                                                     </th>
@@ -490,6 +508,7 @@
                                                                     <td>{{$workout->reps}} Reps</td>
 
                                                                     <td>{{$workout->weight}} kg</td>
+                                                                    <td>{{$workout->targeted_body_part}}</td>
                                                                     </td>
                                                                     <td class="text-end"><span> <a
                                                                                 href="javascript:void(0);"
@@ -962,500 +981,519 @@
                         </div>
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label>Sets</label>
                                     <input type="number" id="edit_sets" name="sets" min="0" max="1000"
                                         class="form-control" required>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label>Reps</label>
                                     <input type="number" id="edit_reps" name="reps" class="form-control" min="0"
                                         required />
                                 </div>
-                                <div class="col-md-4">
-                                    <label>Weight</label>
-                                    <input type="number" id="edit_weight" name="weight" placeholder="Enter Weight in Kg"
-                                        class="form-control" required>
-                                </div>
+
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea type="text" id="edit_notes" rows="10" name="workout_des" class="form-control"
-                                required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </form>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Weight</label>
+                                <input type="number" id="edit_weight" name="weight" placeholder="Enter Weight in Kg"
+                                    class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Targetted Body Part</label>
+                                <select class="form-control" id="edit_targeted_body_part" name="targeted_body_part" required>
+                                    <option value="">Choose....</option>
+                                    <option value="biceps">Biceps</option>
+                                    <option value="leg">Leg</option>
+                                    <option value="forearm">Forearm</option>
+                                    <option value="tricep">Tricep</option>
+                                    <option value="shoulder">Shoulder</option>
+                                    <option value="chest">Chest</option>
+                                    <option value="abs">Abs</option>
+                                    <option value="back">Back</option>
+                                </select>
+                            </div>
+                        
                 </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea type="text" id="edit_notes" rows="10" name="workout_des" class="form-control"
+                        required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Diet</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editDietForm" method="POST" action="/update-user-diet">
-                        @csrf
-                        <input type="hidden" id="edit_diet_id" name="diet_id">
-                        <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Day</label>
-                                    <select class="form-control" id="edit_diet_day" name="day" required>
-                                        <option value="">Choose Day</option>
-                                        <option value="monday">Monday</option>
-                                        <option value="tuesday">Tuesday</option>
-                                        <option value="wednesday">Wednesday</option>
-                                        <option value="thursday">Thursday</option>
-                                        <option value="friday">Friday</option>
-                                        <option value="saturday">Saturday</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label>Goal</label>
-                                    <select class="form-control" id="edit_goal" name="goal" required>
-                                        <option value="">Choose Goal</option>
-                                        <option value="Weight Gain">Weight Gain</option>
-                                        <option value="Fit">Fit</option>
-                                        <option value="Weight Loss">Weight Loss</option>
-                                    </select>
-                                </div>
+<div class="modal fade" id="editDietModal" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Diet</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editDietForm" method="POST" action="/update-user-diet">
+                    @csrf
+                    <input type="hidden" id="edit_diet_id" name="diet_id">
+                    <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Day</label>
+                                <select class="form-control" id="edit_diet_day" name="day" required>
+                                    <option value="">Choose Day</option>
+                                    <option value="monday">Monday</option>
+                                    <option value="tuesday">Tuesday</option>
+                                    <option value="wednesday">Wednesday</option>
+                                    <option value="thursday">Thursday</option>
+                                    <option value="friday">Friday</option>
+                                    <option value="saturday">Saturday</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Goal</label>
+                                <select class="form-control" id="edit_goal" name="goal" required>
+                                    <option value="">Choose Goal</option>
+                                    <option value="Weight Gain">Weight Gain</option>
+                                    <option value="Fit">Fit</option>
+                                    <option value="Weight Loss">Weight Loss</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Meal Type</label>
+                                <select class="form-control" id="edit_meal_type" name="meal_type" required>
+                                    <option value="">Choose Meal Type</option>
+                                    <option value="Vegetarian">Vegetarian</option>
+                                    <option value="Non-Vegetarian">Non-Vegetarian </option>
+                                    <option value="Lacto-vegetarian">Lacto-vegetarian</option>
+                                    <option value="Ovo-vegetarian">Ovo-vegetarian </option>
+                                    <option value="Vegan">Vegan</option>
+                                    <option value="Pescatarian">Pescatarian </option>
+                                    <option value="Beegan">Beegan</option>
+                                    <option value="Flexitarian">Flexitarian </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Meal Name</label>
+                                <input type="text" id="edit_meal_name" name="meal_name" class="form-control"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Calories</label>
+                                <input type="number" id="edit_calories" name="calories" min="0" max="1000"
+                                    class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Protein</label>
+                                <input type="number" id="edit_protein" name="protein" class="form-control" min="0"
+                                    required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Carbs</label>
+                                <input type="number" id="edit_carbs" name="carbs" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Fats</label>
+                                <input type="number" id="edit_fats" name="fats" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Diet Description</label>
+                                <textarea type="text" id="edit_diet_discription" name="diet_description" rows="5"
+                                    class="form-control" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Alternative Diet Description</label>
+                                <textarea type="text" id="edit_alternative_diet_description"
+                                    name="alternative_diet_description" rows="5" class="form-control"
+                                    required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addNewBmi" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add BMI</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="needs-validation" id="bmiForm" novalidate
+                    action="{{ route('addUserBodyMeasurement') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="month">Select Month</label>
+                            <select class="form-control" id="month" name="month" required>
+                                <option value="">Choose Month</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                            <div class="invalid-feedback">Month is required.</div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <!-- Left section -->
+                        <div class="col-lg-4 mb-4">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label>Meal Type</label>
-                                    <select class="form-control" id="edit_meal_type" name="meal_type" required>
-                                        <option value="">Choose Meal Type</option>
-                                        <option value="Vegetarian">Vegetarian</option>
-                                        <option value="Non-Vegetarian">Non-Vegetarian </option>
-                                        <option value="Lacto-vegetarian">Lacto-vegetarian</option>
-                                        <option value="Ovo-vegetarian">Ovo-vegetarian </option>
-                                        <option value="Vegan">Vegan</option>
-                                        <option value="Pescatarian">Pescatarian </option>
-                                        <option value="Beegan">Beegan</option>
-                                        <option value="Flexitarian">Flexitarian </option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label>Meal Name</label>
-                                    <input type="text" id="edit_meal_name" name="meal_name" class="form-control"
+                                <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
+                                <div class="col-md-12 mb-3">
+                                    <label for="chest">Chest (cm)</label>
+                                    <input type="text" class="form-control" id="chest" name="chest" placeholder=""
                                         required>
+                                    <div class="invalid-feedback">Chest measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="triceps">Triceps (cm)</label>
+                                    <input type="text" class="form-control" id="triceps" name="triceps"
+                                        placeholder="" required>
+                                    <div class="invalid-feedback">Triceps measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="biceps">Biceps (cm)</label>
+                                    <input type="text" class="form-control" id="biceps" name="biceps"
+                                        placeholder="">
+                                    <div class="invalid-feedback">Biceps measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="lats">Lats (cm)</label>
+                                    <input type="text" class="form-control" id="lats" name="lats" placeholder=""
+                                        required>
+                                    <div class="invalid-feedback">Lats measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="shoulder">Shoulder (cm)</label>
+                                    <input type="text" class="form-control" id="shoulder" name="shoulder"
+                                        placeholder="" required>
+                                    <div class="invalid-feedback">Shoulder measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="abs">Abs (cm)</label>
+                                    <input type="text" class="form-control" id="abs" name="abs" placeholder=""
+                                        required>
+                                    <div class="invalid-feedback">Abs measurement is required.</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+
+                        <!-- Center section for the human body skeleton -->
+                        <div class="col-lg-4 mb-4 text-center">
+                            <img src="/images/bmi_images/male-skeleton.png" alt="Human Body Skeleton"
+                                class="img-fluid"
+                                style="margin-top: 45px; margin-left: -25px; max-width: 129%; height: 90%;">
+                        </div>
+
+                        <!-- Right section -->
+                        <div class="col-lg-4 mb-4">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label>Calories</label>
-                                    <input type="number" id="edit_calories" name="calories" min="0" max="1000"
-                                        class="form-control" required>
+                                <div class="col-md-12 mb-3">
+                                    <label for="forearms">Forearms (cm)</label>
+                                    <input type="text" class="form-control" id="forearms" name="forearms"
+                                        placeholder="" required>
+                                    <div class="invalid-feedback">Forearms measurement is required.</div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label>Protein</label>
-                                    <input type="number" id="edit_protein" name="protein" class="form-control" min="0"
-                                        required />
+                                <div class="col-md-12 mb-3">
+                                    <label for="traps">Traps (cm)</label>
+                                    <input type="text" class="form-control" id="traps" name="traps" placeholder=""
+                                        required>
+                                    <div class="invalid-feedback">Traps measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="glutes">Glutes (cm)</label>
+                                    <input type="text" class="form-control" id="glutes" name="glutes"
+                                        placeholder="">
+                                    <div class="invalid-feedback">Glutes measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="quads">Quads (cm)</label>
+                                    <input type="text" class="form-control" id="quads" name="quads" placeholder=""
+                                        required>
+                                    <div class="invalid-feedback">Quads measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="hamstring">Hamstring (cm)</label>
+                                    <input type="text" class="form-control" id="hamstring" name="hamstring"
+                                        placeholder="" required>
+                                    <div class="invalid-feedback">Hamstring measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="calves">Calves (cm)</label>
+                                    <input type="text" class="form-control" id="calves" name="calves" placeholder=""
+                                        required>
+                                    <div class="invalid-feedback">Calves measurement is required.</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                    </div>
+
+                    <!-- BMI Calculation Section -->
+                    <div class="row mt-5">
+                        <div class="col-lg-12">
+                            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="text-black">Calculate BMI</span>
+                            </h4>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label>Carbs</label>
-                                    <input type="number" id="edit_carbs" name="carbs" class="form-control" required>
+                                <div class="col-md-4 mb-3">
+                                    <label for="height">Height (cm)</label>
+                                    <input type="number" class="form-control" id="height" name="height"
+                                        placeholder="Enter height in cm" required>
+                                    <div class="invalid-feedback">Height is required.</div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label>Fats</label>
-                                    <input type="number" id="edit_fats" name="fats" class="form-control" required>
+                                <div class="col-md-4 mb-3">
+                                    <label for="bmi_weight">Weight (kg)</label>
+                                    <input type="number" class="form-control" id="bmi_weight" name="weight"
+                                        placeholder="Enter weight in kg" required>
+                                    <div class="invalid-feedback">Weight is required.</div>
+                                </div>
+                                <!-- BMI Result Display -->
+                                <div class="col-md-4 mb-3">
+                                    <div id="bmiResult" style="display: none;">
+                                        <h4>Your BMI is: <br><br><span id="bmiDisplay"></span></h4>
+
+                                        <!-- Hidden input to store BMI value for submission -->
+                                        <input type="hidden" id="storeBmi" name="bmi">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label>Diet Description</label>
-                                    <textarea type="text" id="edit_diet_discription" name="diet_description" rows="5"
-                                        class="form-control" required></textarea>
+                                <div class="col-md-6 mb-3">
+                                    <button type="button" class="btn btn-primary btn-lg btn-block"
+                                        onclick="calculateBMI()">Calculate BMI</button>
                                 </div>
-                                <div class="col-md-6">
-                                    <label>Alternative Diet Description</label>
-                                    <textarea type="text" id="edit_alternative_diet_description"
-                                        name="alternative_diet_description" rows="5" class="form-control"
-                                        required></textarea>
+                                <div class="col-md-6 mb-3">
+                                    <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset</button>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+                                </div>
+                            </div>
+
+
                         </div>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </form>
-                </div>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>
+</div>
 
-
-    <div class="modal fade" id="addNewBmi" tabindex="-1" role="dialog" aria-labelledby="editDietModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add BMI</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="needs-validation" id="bmiForm" novalidate
-                        action="{{ route('addUserBodyMeasurement') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <label for="month">Select Month</label>
-                                <select class="form-control" id="month" name="month" required>
-                                    <option value="">Choose Month</option>
-                                    <option value="January">January</option>
-                                    <option value="February">February</option>
-                                    <option value="March">March</option>
-                                    <option value="April">April</option>
-                                    <option value="May">May</option>
-                                    <option value="June">June</option>
-                                    <option value="July">July</option>
-                                    <option value="August">August</option>
-                                    <option value="September">September</option>
-                                    <option value="October">October</option>
-                                    <option value="November">November</option>
-                                    <option value="December">December</option>
-                                </select>
-                                <div class="invalid-feedback">Month is required.</div>
-                            </div>
+<!-- Edit BMI and Body Measurement Modal -->
+<div class="modal fade" id="editBmiModal" tabindex="-1" role="dialog" aria-labelledby="editBmiModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit BMI and Body Measurements</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="needs-validation" id="editBmiForm" novalidate action="/update-user-bmi" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="month">Select Month</label>
+                            <select class="form-control" id="edit_month" name="month" required>
+                                <option value="">Choose Month</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                            <div class="invalid-feedback">Month is required.</div>
                         </div>
-                        <br>
-                        <div class="row">
-                            <!-- Left section -->
-                            <div class="col-lg-4 mb-4">
-                                <div class="row">
-                                    <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
-                                    <div class="col-md-12 mb-3">
-                                        <label for="chest">Chest (cm)</label>
-                                        <input type="text" class="form-control" id="chest" name="chest" placeholder=""
-                                            required>
-                                        <div class="invalid-feedback">Chest measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="triceps">Triceps (cm)</label>
-                                        <input type="text" class="form-control" id="triceps" name="triceps"
-                                            placeholder="" required>
-                                        <div class="invalid-feedback">Triceps measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="biceps">Biceps (cm)</label>
-                                        <input type="text" class="form-control" id="biceps" name="biceps"
-                                            placeholder="">
-                                        <div class="invalid-feedback">Biceps measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="lats">Lats (cm)</label>
-                                        <input type="text" class="form-control" id="lats" name="lats" placeholder=""
-                                            required>
-                                        <div class="invalid-feedback">Lats measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="shoulder">Shoulder (cm)</label>
-                                        <input type="text" class="form-control" id="shoulder" name="shoulder"
-                                            placeholder="" required>
-                                        <div class="invalid-feedback">Shoulder measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="abs">Abs (cm)</label>
-                                        <input type="text" class="form-control" id="abs" name="abs" placeholder=""
-                                            required>
-                                        <div class="invalid-feedback">Abs measurement is required.</div>
-                                    </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <!-- Left section (same as add modal) -->
+                        <div class="col-lg-4 mb-4">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="edit_chest">Chest (cm)</label>
+                                    <input type="text" class="form-control" id="edit_chest" name="chest" required>
+                                    <div class="invalid-feedback">Chest measurement is required.</div>
                                 </div>
-                            </div>
-
-                            <!-- Center section for the human body skeleton -->
-                            <div class="col-lg-4 mb-4 text-center">
-                                <img src="/images/bmi_images/male-skeleton.png" alt="Human Body Skeleton"
-                                    class="img-fluid"
-                                    style="margin-top: 45px; margin-left: -25px; max-width: 129%; height: 90%;">
-                            </div>
-
-                            <!-- Right section -->
-                            <div class="col-lg-4 mb-4">
-                                <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <label for="forearms">Forearms (cm)</label>
-                                        <input type="text" class="form-control" id="forearms" name="forearms"
-                                            placeholder="" required>
-                                        <div class="invalid-feedback">Forearms measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="traps">Traps (cm)</label>
-                                        <input type="text" class="form-control" id="traps" name="traps" placeholder=""
-                                            required>
-                                        <div class="invalid-feedback">Traps measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="glutes">Glutes (cm)</label>
-                                        <input type="text" class="form-control" id="glutes" name="glutes"
-                                            placeholder="">
-                                        <div class="invalid-feedback">Glutes measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="quads">Quads (cm)</label>
-                                        <input type="text" class="form-control" id="quads" name="quads" placeholder=""
-                                            required>
-                                        <div class="invalid-feedback">Quads measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="hamstring">Hamstring (cm)</label>
-                                        <input type="text" class="form-control" id="hamstring" name="hamstring"
-                                            placeholder="" required>
-                                        <div class="invalid-feedback">Hamstring measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="calves">Calves (cm)</label>
-                                        <input type="text" class="form-control" id="calves" name="calves" placeholder=""
-                                            required>
-                                        <div class="invalid-feedback">Calves measurement is required.</div>
-                                    </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="edit_triceps">Triceps (cm)</label>
+                                    <input type="text" class="form-control" id="edit_triceps" name="triceps"
+                                        required>
+                                    <div class="invalid-feedback">Triceps measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="biceps">Biceps (cm)</label>
+                                    <input type="text" class="form-control" id="edit_biceps" name="biceps"
+                                        placeholder="">
+                                    <div class="invalid-feedback">Biceps measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="lats">Lats (cm)</label>
+                                    <input type="text" class="form-control" id="edit_lats" name="lats"
+                                        placeholder="" required>
+                                    <div class="invalid-feedback">Lats measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="shoulder">Shoulder (cm)</label>
+                                    <input type="text" class="form-control" id="edit_shoulder" name="shoulder"
+                                        placeholder="" required>
+                                    <div class="invalid-feedback">Shoulder measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="abs">Abs (cm)</label>
+                                    <input type="text" class="form-control" id="edit_abs" name="abs" placeholder=""
+                                        required>
+                                    <div class="invalid-feedback">Abs measurement is required.</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- BMI Calculation Section -->
-                        <div class="row mt-5">
-                            <div class="col-lg-12">
-                                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-black">Calculate BMI</span>
-                                </h4>
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="height">Height (cm)</label>
-                                        <input type="number" class="form-control" id="height" name="height"
-                                            placeholder="Enter height in cm" required>
-                                        <div class="invalid-feedback">Height is required.</div>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="bmi_weight">Weight (kg)</label>
-                                        <input type="number" class="form-control" id="bmi_weight" name="weight"
-                                            placeholder="Enter weight in kg" required>
-                                        <div class="invalid-feedback">Weight is required.</div>
-                                    </div>
-                                    <!-- BMI Result Display -->
-                                    <div class="col-md-4 mb-3">
-                                        <div id="bmiResult" style="display: none;">
-                                            <h4>Your BMI is: <br><br><span id="bmiDisplay"></span></h4>
-
-                                            <!-- Hidden input to store BMI value for submission -->
-                                            <input type="hidden" id="storeBmi" name="bmi">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <button type="button" class="btn btn-primary btn-lg btn-block"
-                                            onclick="calculateBMI()">Calculate BMI</button>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset</button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
-                                    </div>
-                                </div>
-
-
-                            </div>
+                        <!-- Center section for the human body skeleton -->
+                        <div class="col-lg-4 mb-4 text-center">
+                            <img src="/images/bmi_images/male-skeleton.png" alt="Human Body Skeleton"
+                                class="img-fluid"
+                                style="margin-top: 45px; margin-left: -25px; max-width: 129%; height: 90%;">
                         </div>
 
-                    </form>
-                </div>
+                        <!-- Right section (same as add modal) -->
+                        <div class="col-lg-4 mb-4">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="edit_forearms">Forearms (cm)</label>
+                                    <input type="text" class="form-control" id="edit_forearms" name="forearms"
+                                        required>
+                                    <div class="invalid-feedback">Forearms measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="edit_traps">Traps (cm)</label>
+                                    <input type="text" class="form-control" id="edit_traps" name="traps" required>
+                                    <div class="invalid-feedback">Traps measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="glutes">Glutes (cm)</label>
+                                    <input type="text" class="form-control" id="edit_glutes" name="glutes"
+                                        placeholder="">
+                                    <div class="invalid-feedback">Glutes measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="quads">Quads (cm)</label>
+                                    <input type="text" class="form-control" id="edit_quads" name="quads"
+                                        placeholder="" required>
+                                    <div class="invalid-feedback">Quads measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="hamstring">Hamstring (cm)</label>
+                                    <input type="text" class="form-control" id="edit_hamstring" name="hamstring"
+                                        placeholder="" required>
+                                    <div class="invalid-feedback">Hamstring measurement is required.</div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="calves">Calves (cm)</label>
+                                    <input type="text" class="form-control" id="edit_calves" name="calves"
+                                        placeholder="" required>
+                                    <div class="invalid-feedback">Calves measurement is required.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BMI Calculation Section -->
+                    <div class="row mt-5">
+                        <div class="col-lg-12">
+                            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="text-black">Edit BMI</span>
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="edit_height">Height (cm)</label>
+                                    <input type="number" class="form-control" id="edit_height" name="height"
+                                        required>
+                                    <div class="invalid-feedback">Height is required.</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="edit_body_weight">Weight (kg)</label>
+                                    <input type="number" class="form-control" id="edit_body_weight" name="weight"
+                                        required>
+                                    <div class="invalid-feedback">Weight is required.</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="edit_calculatedBmi">BMI</label>
+                                    <input type="number" class="form-control" id="edit_calculatedBmi" name="bmi"
+                                        placeholder="BMI will be calculated" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <button type="button" class="btn btn-primary btn-lg btn-block"
+                                        onclick="calculateEditBmi()">Calculate BMI</button>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <button type="submit" class="btn btn-success btn-lg btn-block">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
-    <!-- Edit BMI and Body Measurement Modal -->
-    <div class="modal fade" id="editBmiModal" tabindex="-1" role="dialog" aria-labelledby="editBmiModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit BMI and Body Measurements</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="needs-validation" id="editBmiForm" novalidate action="/update-user-bmi" method="POST"
-                        enctype="multipart/form-data">
-                        @csrf
-                        <input type="hidden" name="user_id" value="{{ $userDetail->id }}">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <label for="month">Select Month</label>
-                                <select class="form-control" id="edit_month" name="month" required>
-                                    <option value="">Choose Month</option>
-                                    <option value="January">January</option>
-                                    <option value="February">February</option>
-                                    <option value="March">March</option>
-                                    <option value="April">April</option>
-                                    <option value="May">May</option>
-                                    <option value="June">June</option>
-                                    <option value="July">July</option>
-                                    <option value="August">August</option>
-                                    <option value="September">September</option>
-                                    <option value="October">October</option>
-                                    <option value="November">November</option>
-                                    <option value="December">December</option>
-                                </select>
-                                <div class="invalid-feedback">Month is required.</div>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <!-- Left section (same as add modal) -->
-                            <div class="col-lg-4 mb-4">
-                                <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <label for="edit_chest">Chest (cm)</label>
-                                        <input type="text" class="form-control" id="edit_chest" name="chest" required>
-                                        <div class="invalid-feedback">Chest measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="edit_triceps">Triceps (cm)</label>
-                                        <input type="text" class="form-control" id="edit_triceps" name="triceps"
-                                            required>
-                                        <div class="invalid-feedback">Triceps measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="biceps">Biceps (cm)</label>
-                                        <input type="text" class="form-control" id="edit_biceps" name="biceps"
-                                            placeholder="">
-                                        <div class="invalid-feedback">Biceps measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="lats">Lats (cm)</label>
-                                        <input type="text" class="form-control" id="edit_lats" name="lats"
-                                            placeholder="" required>
-                                        <div class="invalid-feedback">Lats measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="shoulder">Shoulder (cm)</label>
-                                        <input type="text" class="form-control" id="edit_shoulder" name="shoulder"
-                                            placeholder="" required>
-                                        <div class="invalid-feedback">Shoulder measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="abs">Abs (cm)</label>
-                                        <input type="text" class="form-control" id="edit_abs" name="abs" placeholder=""
-                                            required>
-                                        <div class="invalid-feedback">Abs measurement is required.</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Center section for the human body skeleton -->
-                            <div class="col-lg-4 mb-4 text-center">
-                                <img src="/images/bmi_images/male-skeleton.png" alt="Human Body Skeleton"
-                                    class="img-fluid"
-                                    style="margin-top: 45px; margin-left: -25px; max-width: 129%; height: 90%;">
-                            </div>
-
-                            <!-- Right section (same as add modal) -->
-                            <div class="col-lg-4 mb-4">
-                                <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <label for="edit_forearms">Forearms (cm)</label>
-                                        <input type="text" class="form-control" id="edit_forearms" name="forearms"
-                                            required>
-                                        <div class="invalid-feedback">Forearms measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="edit_traps">Traps (cm)</label>
-                                        <input type="text" class="form-control" id="edit_traps" name="traps" required>
-                                        <div class="invalid-feedback">Traps measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="glutes">Glutes (cm)</label>
-                                        <input type="text" class="form-control" id="edit_glutes" name="glutes"
-                                            placeholder="">
-                                        <div class="invalid-feedback">Glutes measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="quads">Quads (cm)</label>
-                                        <input type="text" class="form-control" id="edit_quads" name="quads"
-                                            placeholder="" required>
-                                        <div class="invalid-feedback">Quads measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="hamstring">Hamstring (cm)</label>
-                                        <input type="text" class="form-control" id="edit_hamstring" name="hamstring"
-                                            placeholder="" required>
-                                        <div class="invalid-feedback">Hamstring measurement is required.</div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="calves">Calves (cm)</label>
-                                        <input type="text" class="form-control" id="edit_calves" name="calves"
-                                            placeholder="" required>
-                                        <div class="invalid-feedback">Calves measurement is required.</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- BMI Calculation Section -->
-                        <div class="row mt-5">
-                            <div class="col-lg-12">
-                                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-black">Edit BMI</span>
-                                </h4>
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="edit_height">Height (cm)</label>
-                                        <input type="number" class="form-control" id="edit_height" name="height"
-                                            required>
-                                        <div class="invalid-feedback">Height is required.</div>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="edit_body_weight">Weight (kg)</label>
-                                        <input type="number" class="form-control" id="edit_body_weight" name="weight"
-                                            required>
-                                        <div class="invalid-feedback">Weight is required.</div>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="edit_calculatedBmi">BMI</label>
-                                        <input type="number" class="form-control" id="edit_calculatedBmi" name="bmi"
-                                            placeholder="BMI will be calculated" readonly>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <button type="button" class="btn btn-primary btn-lg btn-block"
-                                            onclick="calculateEditBmi()">Calculate BMI</button>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset</button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <button type="submit" class="btn btn-success btn-lg btn-block">Update</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 </div>
 </div>
 
@@ -1474,6 +1512,7 @@
                 document.getElementById('edit_sets').value = workout.sets;
                 document.getElementById('edit_reps').value = workout.reps;
                 document.getElementById('edit_weight').value = workout.weight;
+                document.getElementById('edit_targeted_body_part').value = workout.targeted_body_part;
                 document.getElementById('edit_notes').value = workout.workout_des;
 
                 new bootstrap.Modal(document.getElementById('editWorkoutModal')).show();

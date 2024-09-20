@@ -23,7 +23,8 @@ class UserWorkout extends Model
         'weight',
         'workout_des',
         'gym_id',
-        'is_completed'
+        'is_completed',
+        'targeted_body_part'
     ];
 
     public function workoutDetails()
@@ -40,15 +41,16 @@ class UserWorkout extends Model
     {
         try {
             return $this->create([
-                'gym_id'        => $gym_id,
-                'user_id'       => $addWorkout['user_id'],
-                'workout_id'    => $addWorkout['workout_id'],
-                'day'           => $addWorkout['day'],
-                'exercise_name' => $addWorkout['exercise_name'],
-                'sets'          => $addWorkout['sets'],
-                'reps'          => $addWorkout['reps'],
-                'weight'        => $addWorkout['weight'],
-                'workout_des'   => $addWorkout['workout_des'],
+                'gym_id'             => $gym_id,
+                'user_id'            => $addWorkout['user_id'],
+                'workout_id'         => $addWorkout['workout_id'],
+                'day'                => $addWorkout['day'],
+                'exercise_name'      => $addWorkout['exercise_name'],
+                'sets'               => $addWorkout['sets'],
+                'reps'               => $addWorkout['reps'],
+                'weight'             => $addWorkout['weight'],
+                'workout_des'        => $addWorkout['workout_des'],
+                'targeted_body_part' => $addWorkout['targeted_body_part'],
             ]);
         } catch (\Throwable $e) {
             Log::error('[UserWorkout][addWorkout] Error adding gym detail: ' . $e->getMessage());
