@@ -225,25 +225,26 @@ class GymUserController extends Controller
             } else {
                 // If no user_id, create a new user
                 $user = $this->userService->createUserAccount($validateData, $gymId);
-            }
 
-            // Create the user account
-            if ($user) {
-                $user = User::where('email', $validateData['email'])->first(); // Adjust the query as needed
-            }
 
-            // Save to user_subscription_histories
-            UserSubscriptionHistory::create([
-                'user_id' => $user->id,
-                'subscription_id' => $request->subscription_id,
-                'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
-                'subscription_start_date' => $request->subscription_start_date,
-                'subscription_end_date' => $request->subscription_end_date,
-                'status' => $user->subscription_status,
-                'amount' => $request->amount, // Ensure this is part of the request or calculate it
-                'coupon_id' => 2,
-                'gym_id' => $gymId
-            ]);
+                // Create the user account
+                if ($user) {
+                    $user = User::where('email', $validateData['email'])->first(); // Adjust the query as needed
+                }
+
+                // Save to user_subscription_histories
+                UserSubscriptionHistory::create([
+                    'user_id' => $user->id,
+                    'subscription_id' => $request->subscription_id,
+                    'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
+                    'subscription_start_date' => $request->subscription_start_date,
+                    'subscription_end_date' => $request->subscription_end_date,
+                    'status' => $user->subscription_status,
+                    'amount' => $request->amount, // Ensure this is part of the request or calculate it
+                    'coupon_id' => 2,
+                    'gym_id' => $gymId
+                ]);
+            }
 
 
             return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Successfully');
@@ -266,9 +267,11 @@ class GymUserController extends Controller
         $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
         $bmis = $this->bmi->with('bodyMeasurement')->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $subscriptionId = $userDetail->subscription_id;
-        $userSubscriptions = $this->userSubscriptionHistory->with(['subscription' => function ($query) {
-            $query->withTrashed();
-        }])->where('gym_id', $gymId)->where('user_id', $userId)->get();
+        $userSubscriptions = $this->userSubscriptionHistory->with([
+            'subscription' => function ($query) {
+                $query->withTrashed();
+            }
+        ])->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $trainers = $this->gymStaff
             ->where('gym_id', $gymId)
             ->whereHas('designation', function ($query) {
@@ -344,15 +347,15 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "user_id"             => 'required',
-                "exercise_name"       => 'required',
-                "day"                 => 'required',
-                "sets"                => 'required|integer|min:1',
-                "reps"                => 'required|integer|min:1',
-                "weight"              => 'required|numeric|min:0',
-                "workout_des"         => 'required',
-                "workout_id"          => 'required',
-                "targeted_body_part"  => 'required'
+                "user_id" => 'required',
+                "exercise_name" => 'required',
+                "day" => 'required',
+                "sets" => 'required|integer|min:1',
+                "reps" => 'required|integer|min:1',
+                "weight" => 'required|numeric|min:0',
+                "workout_des" => 'required',
+                "workout_id" => 'required',
+                "targeted_body_part" => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -644,7 +647,7 @@ class GymUserController extends Controller
         // Fetch both name and id
         $workouts = Workout::where('name', 'LIKE', "%{$query}%")
             ->where('added_by', $gymId)
-            ->orWhere('added_by',$admin->id)
+            ->orWhere('added_by', $admin->id)
             ->get(['id', 'name']);
 
         return response()->json($workouts);
