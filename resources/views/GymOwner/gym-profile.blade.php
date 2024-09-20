@@ -408,8 +408,25 @@
 
                                     <div id="account-settings" class="tab-pane fade">
                                         <br>
-                                        <form action="/update-gym-account" method="POST">
+                                        <form action="/update-gym-account" method="POST" enctype="multipart/form-data">
                                             @csrf
+                                            <div class="card mb-4" style="max-width: 600px; margin: 0 auto;">
+                                                <div class="card-body text-center">
+                                                    <!-- Display Current Profile Image -->
+                                                    <div class="profile-image-wrapper mb-3">
+                                                        @if($gym->image)
+                                                        <img id="profileImagePreview" src="{{ asset($gym->image) }}" alt="Profile Image" style="width: 250px; height: 160px; object-fit: cover; border: 3px solid #6CC51D;">
+                                                        @else
+                                                        <img id="profileImagePreview" src="{{ asset('images/avatar/default_gym_image.png') }}" alt="Default Image" style="width: 250px; height: 160px; object-fit: cover; border: 3px solid #007bff;">
+                                                        @endif
+                                                    </div>
+
+                                                    <!-- File input for image upload -->
+                                                    <div class="form-group">
+                                                        <input type="file" name="image" id="profileImageInput" class="form-control-file">
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label>Gym Name</label>
@@ -522,6 +539,17 @@
             }
         });
     }
+
+    document.getElementById('profileImageInput').addEventListener('change', function(event) {
+        const imageFile = event.target.files[0];
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profileImagePreview').src = e.target.result;
+            };
+            reader.readAsDataURL(imageFile);
+        }
+    });
 </script>
 
 @include('CustomSweetAlert');

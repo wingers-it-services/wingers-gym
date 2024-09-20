@@ -127,10 +127,21 @@ class GymDetailController extends Controller
                 "web_link" => 'required',
                 "gym_type" => 'required',
                 "face_link" => 'nullable',
-                "insta_link" => 'nullable'
+                "insta_link" => 'nullable',
+                "image" => 'nullable'
             ]);
 
-            $isProfileUpdated = $this->gymService->createGymAccount($request->all());
+            // Collect the form data, including the image if present
+            $gymData = $request->all();
+
+            // Handle image upload if there's an image file
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $gymData['image'] = $image;
+            }
+
+            // Update gym profile data using the service
+            $isProfileUpdated = $this->gymService->createGymAccount($gymData);
             if ($isProfileUpdated) {
                 return redirect()->back()->with('status', 'success')->with('message', 'Gym profile updated succesfully.');
             }

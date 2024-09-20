@@ -27,6 +27,7 @@ class GymService
         $fieldsToUpdate = [
             'gym_name',
             'email',
+            'image',
             'password',
             'image',
             'username',
