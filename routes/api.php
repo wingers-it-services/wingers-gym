@@ -61,11 +61,11 @@ Route::post('/profile-part-four-updated', [GymUserControllerApi::class, 'profile
 Route::post('/add-user-injuries', [GymUserControllerApi::class, 'addUserInjuries']);
 
 
-Route::get('/fetch-advertisement', [AdvertisementControllerApi::class, 'fetchAdvertisement']);
-
 Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
 
 Route::middleware('auth:api')->group(function () {
+
+    Route::get('/fetch-advertisement', [AdvertisementControllerApi::class, 'fetchAdvertisement']);
 
     Route::post('/response', [UserSubscriptionControllerApi::class, 'response']);
 
