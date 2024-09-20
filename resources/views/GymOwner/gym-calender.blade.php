@@ -89,12 +89,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="control-label">Date</label>
-                                        <select class="form-control form-white" data-placeholder="Choose a day..." name="week_day" id="week_day">
-                                            <option value="" disabled selected>Choose a day...</option>
-                                            @foreach(\App\Enums\WeekDaysEnum::getWeekDays() as $key => $day)
-                                            <option value="{{ $key }}">{{ $day }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input class="form-control form-white" type="date" name="date" id="date">             
                                         <div id="week_days_section" style="padding-top: 5%; display: none;">
                                         <label class="control-label">Week Day</label>
                                             @foreach(\App\Enums\WeekDaysEnum::getWeekDays() as $key => $day)
@@ -138,7 +133,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const isRecurringSelect = document.getElementById('is_recurring');
-        const weekDaySelect = document.getElementById('week_day');
+        const weekDaySelect = document.getElementById('date');
         const weekDaysSection = document.getElementById('week_days_section');
 
         isRecurringSelect.addEventListener('change', function() {
@@ -151,6 +146,58 @@
             }
         });
     });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        selectable: true,
+        editable: true,
+        droppable: true,
+        events: function(fetchInfo, successCallback, failureCallback) {
+            // Perform an AJAX request to fetch the events from the backend
+            $.ajax({
+                url: "/fetch-gym-schedules",  // Define your route here
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    var events = [];
+
+                    // Loop through the response to format events for FullCalendar
+                    response.forEach(function(event) {
+                        events.push({
+                            title: event.title,
+                            start: event.start,  // Use start directly from the response
+                            end: event.end,  // Use end directly from the response
+                            className: event.className,
+                            allDay: !event.start_time // If there's no time, it's an all-day event
+                        });
+                    });
+
+                    // Pass the formatted events to FullCalendar
+                    successCallback(events);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching events:", error);
+                    failureCallback(error);  // Handle failure
+                }
+            });
+        },
+        eventDrop: function(arg) {
+            if (document.getElementById('drop-remove').checked) {
+                arg.draggedEl.parentNode.removeChild(arg.draggedEl);
+            }
+        }
+    });
+
+    calendar.render();
+});
+
 </script>
 
 

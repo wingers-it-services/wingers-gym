@@ -32,13 +32,14 @@ class Gym extends Authenticatable
         'gym_type',
         'face_link',
         'insta_link',
-        'qrcode'
+        'qrcode',
+        'established_at'
     ];
 
     public function getImageAttribute()
     {
         $imagePath = $this->attributes['image'];
-        $defaultImagePath = 'images/profile/17.jpg';
+        $defaultImagePath = 'images/profile/no_profile.png';
         $fullImagePath = $imagePath; 
 
         // Check if the file exists in the public directory

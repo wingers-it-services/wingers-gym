@@ -100,7 +100,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     Route::post('/add-gym-schedule',[GymSheduleController::class,'addGymShedule'])->name('addGymShedule');
 
-    Route::get('/schedules', [GymSheduleController::class, 'getSchedules']);
+    Route::get('/fetch-gym-schedules', [GymSheduleController::class, 'fetchSchedule'])->name('fetchSchedule');
 
     /* dashboard */
     Route::get('/dashboard', [GymDetailController::class, 'showDashboard'])->name('dashboard');
