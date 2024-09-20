@@ -19,7 +19,8 @@ class CurrentDayWorkout extends Model
         'gym_id',
         'user_id',
         'details',
-        'is_completed'
+        'is_completed',
+        'targeted_body_part'
     ];
 
     public function workoutDetails()

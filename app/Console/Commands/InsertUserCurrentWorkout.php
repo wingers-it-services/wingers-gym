@@ -44,14 +44,15 @@ class InsertUserCurrentWorkout extends Command
 
             // Convert the details array to JSON
             $detailsJson = json_encode($detailsArray);
-
+            
             // Insert the workout into the CurrentDayWorkout table
             CurrentDayWorkout::create([
-                'workout_id'      => $userWorkout->workout_id,
-                'user_workout_id' => $userWorkout->id,
-                'gym_id'          => $userWorkout->gym_id,
-                'user_id'         => $userWorkout->user_id,
-                'details'         => $detailsJson, // Store JSON-encoded details
+                'workout_id'         => $userWorkout->workout_id,
+                'user_workout_id'    => $userWorkout->id,
+                'targeted_body_part' => $userWorkout->targeted_body_part,
+                'gym_id'             => $userWorkout->gym_id,
+                'user_id'            => $userWorkout->user_id,
+                'details'            => $detailsJson, // Store JSON-encoded details
             ]);
         }
         $this->info("Workouts for {$dayOfWeek} have been successfully added to the CurrentDayWorkout table!");
