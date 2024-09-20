@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('gym_id');
             $table->integer('subscription_id');
-            $table->integer('original_transaction_id');
+            $table->string('original_transaction_id');
             $table->date('joining_date');
             $table->date('end_date');
             $table->integer('status');

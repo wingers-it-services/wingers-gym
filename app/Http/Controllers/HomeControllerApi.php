@@ -75,6 +75,16 @@ class HomeControllerApi extends Controller
             $subscription = $this->userSubscriptionHistory->where('user_id', $user->id)
                 ->where('status', 1)
                 ->where('gym_id', $request->gym_id)->first();
+
+
+
+            // if (!$subscription) {
+            //     return response()->json([
+            //         'status'        => 422,
+            //         'subscription' => null,
+            //         'message'       => 'No subscription found.',
+            //     ], 422);
+            // }
             // dd($subscription);
             $startDate = Carbon::parse($subscription->subscription_start_date);
             $endDate = Carbon::parse($subscription->subscription_end_date);
@@ -120,12 +130,12 @@ class HomeControllerApi extends Controller
                     ->where('month', $date->month)
                     ->first();
 
-                    if (!$attendance) {
-                        return response()->json([
-                            'status'  => 422,
-                            'message' => 'No attendance records found for the user.'
-                        ], 422);
-                    }
+                // if (!$attendance) {
+                //     return response()->json([
+                //         'status'  => 422,
+                //         'message' => 'No attendance records found for the user.'
+                //     ], 422);
+                // }
 
                 $day = 'day' . $date->day;
 
@@ -138,7 +148,7 @@ class HomeControllerApi extends Controller
                     $absentCount++;
                 }
             }
-    
+
 
             $pendingDays = $endDate->greaterThan($todayDate) ? (int)$todayDate->diffInDays($endDate) : 0;
             $actualWorkingDays = $totalDays - $weekendCount - $holidayCount;
@@ -148,13 +158,13 @@ class HomeControllerApi extends Controller
 
             return response()->json([
                 'status'                  => 200,
-                'total_days'              => $totalDays,
-                'present_days'            => $presentCount, // Includes present, weekend, and holiday
-                'weekends'                => $weekendCount,
-                'total_holidays'          => $holidayCount,
-                'absents'                 => $absentCount,
+                'total_days'              => $totalDays ?? 0,
+                'present_days'            => $presentCount ?? 0, // Includes present, weekend, and holiday
+                'weekends'                => $weekendCount ?? 0,
+                'total_holidays'          => $holidayCount ?? 0,
+                'absents'                 => $absentCount ?? 0,
                 'pending_working_days'    => $pendingWorkingDays,
-                'pending_days'            => $pendingDays,
+                'pending_days'            => $pendingDays ?? 0,
                 'pending_days_percentage' => number_format($pendingDaysPercentage, 2),
                 'subs'                    => $subscription,
                 'startDate'               => $startDate,
@@ -172,36 +182,78 @@ class HomeControllerApi extends Controller
     }
 
 
+    // public function fetchAdvertisementAndAttendance(Request $request)
+    // {
+    //     try {
+    //         $advertisementResponse = $this->fetchAdvertisement($request);
+    //         $advertisementData = $advertisementResponse->getData();
+
+    //         if ($advertisementData->status !== 200) {
+    //             return $advertisementResponse;
+    //         }
+
+    //         $attendanceResponse = $this->getUserAttendancePercentage($request);
+    //         $attendanceData = $attendanceResponse->getData();
+
+    //         if ($attendanceData->status !== 200) {
+    //             return $attendanceResponse;
+    //         }
+
+    //         return response()->json([
+    //             'status'                   => 200,
+    //             'advertisement'            => $advertisementData->advertisement,
+    //             'total_days'               => $attendanceData->total_days,
+    //             'present_days'             => $attendanceData->present_days,
+    //             'pending_days'             => $attendanceData->pending_days,
+    //             // 'weekends'                 => $attendanceData->weekends,
+    //             // 'absents'                  => $attendanceData->absents,
+    //             // 'holidays'                 => $attendanceData->holidays,
+    //             // 'total_weekends_till_toaday'           => $attendanceData->total_weekends,
+    //             // 'total_holidays_till_toaday'           => $attendanceData->total_holidays,
+    //             // 'pending_working_days'     => $attendanceData->pending_working_days,
+    //             'biceps' => 70,
+    //             'leg' => 70,
+    //             'forearm' => 10,
+    //             'tricep' => 11,
+    //             'back' => 42,
+    //             'shoulder' => 50,
+    //             'chest' => 10,
+    //             'abs' => 22,
+    //             // 'pending_days_percentage'  => $attendanceData->pending_days_percentage,
+    //             // 'subs'                     => $attendanceData->subs,
+    //             // 'startDate'                => $attendanceData->startDate,
+    //             // 'enddate'                  => $attendanceData->enddate,
+    //             // 'present_percentage'       => $attendanceData->present_percentage,
+    //             'message'                  => 'Advertisements and user attendance fetched successfully.',
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         Log::error('[HomeControllerApi][fetchAdvertisementAndAttendance] Error: ' . $e->getMessage());
+    //         return response()->json([
+    //             'status'  => 500,
+    //             'message' => 'Error fetching data: ' . $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
     public function fetchAdvertisementAndAttendance(Request $request)
     {
         try {
+            // Fetch Advertisement
             $advertisementResponse = $this->fetchAdvertisement($request);
             $advertisementData = $advertisementResponse->getData();
 
-            if ($advertisementData->status !== 200) {
-                return $advertisementResponse;
-            }
-
+            // Fetch Attendance
             $attendanceResponse = $this->getUserAttendancePercentage($request);
             $attendanceData = $attendanceResponse->getData();
 
-            if ($attendanceData->status !== 200) {
-                return $attendanceResponse;
-            }
-
-            return response()->json([
-                'status'                   => 200,
-                'advertisement'            => $advertisementData->advertisement,
-                'total_days'               => $attendanceData->total_days,
-                'present_days'             => $attendanceData->present_days,
-                'weekends'                 => $attendanceData->weekends,
-                'absents'                  => $attendanceData->absents,
-                // 'holidays'                 => $attendanceData->holidays,
-                // 'total_weekends_till_toaday'           => $attendanceData->total_weekends,
-                'total_holidays_till_toaday'           => $attendanceData->total_holidays,
-                // 'pending_working_days'     => $attendanceData->pending_working_days,
-                'pending_days'             => $attendanceData->pending_days,
-                // 'present_days'             => 50,
+            $response = [
+                'status' => 200,
+                'message' => '',
+                // Default empty values for advertisement and attendance details
+                'advertisement' => null,
+                'total_days' => 0,
+                'present_days' => 0,
+                'pending_days' => 0,
                 'biceps' => 70,
                 'leg' => 70,
                 'forearm' => 10,
@@ -210,17 +262,39 @@ class HomeControllerApi extends Controller
                 'shoulder' => 50,
                 'chest' => 10,
                 'abs' => 22,
-                // 'pending_days_percentage'  => $attendanceData->pending_days_percentage,
-                // 'subs'                     => $attendanceData->subs,
-                // 'startDate'                => $attendanceData->startDate,
-                // 'enddate'                  => $attendanceData->enddate,
-                // 'present_percentage'       => $attendanceData->present_percentage,
-                'message'                  => 'Advertisements and user attendance fetched successfully.',
-            ], 200);
+            ];
+
+            // Handle Advertisement Response
+            if ($advertisementData->status === 200) {
+                $response['advertisement'] = $advertisementData->advertisement;
+            } else if ($advertisementData->status === 422) {
+                $response['message'] .= 'Advertisement data could not be fetched. ';
+            }
+
+            // Handle Attendance Response
+            if ($attendanceData->status === 200) {
+                $response['total_days'] = $attendanceData->total_days;
+                $response['present_days'] = $attendanceData->present_days;
+                $response['pending_days'] = $attendanceData->pending_days;
+            } else if ($attendanceData->status === 422) {
+                $response['message'] .= 'Attendance data could not be fetched. ';
+            }
+
+            // Set success message if both responses are successful
+            if ($advertisementData->status === 200 && $attendanceData->status === 200) {
+                $response['message'] = 'Advertisements and user attendance fetched successfully.';
+            } else {
+                // If there are partial results, adjust the message accordingly
+                if (!$response['message']) {
+                    $response['message'] = 'Some data could not be fetched.';
+                }
+            }
+
+            return response()->json($response, 200);
         } catch (\Exception $e) {
             Log::error('[HomeControllerApi][fetchAdvertisementAndAttendance] Error: ' . $e->getMessage());
             return response()->json([
-                'status'  => 500,
+                'status' => 500,
                 'message' => 'Error fetching data: ' . $e->getMessage(),
             ], 500);
         }

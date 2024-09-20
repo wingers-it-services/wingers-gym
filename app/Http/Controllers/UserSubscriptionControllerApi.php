@@ -200,7 +200,7 @@ class UserSubscriptionControllerApi extends Controller
 
             $orderData = [
                 'subtotal'            => $responseData['amount'] ?? 0,
-                'amount'              => $responseData['amount'] ?? 0,
+                'amount'              => $responseData['amount']/100 ?? 0,
                 'response'            => $jsonResponse,
                 'response_code'       => $decodedResponse['code'] ?? null,
                 'merchantId'          => $responseData['merchantTransactionId'] ?? null,

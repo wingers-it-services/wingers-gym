@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Gym;
 use App\Models\GymUserGym;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -69,15 +70,31 @@ class GymDetailControllerApi extends Controller
                     'message'    => 'You are not authorized to access this gym.',
                 ], 403);
             }
-    
+            $totalYears = 0;
+            $remainingMonths=0;
+            if (!empty($gymDetails->established_at)) {
+                $establishedDate = Carbon::parse($gymDetails->established_at);
+                $now = Carbon::now();
+            
+                // Calculate the total difference in months
+                $totalMonths = $establishedDate->diffInMonths($now);
+                
+                // Calculate years and remaining months
+                $totalYears = floor($totalMonths / 12); // Complete years
+                $remainingMonths = $totalMonths % 12; 
+            
+            }
+            
+            
             // Calculate total years and review (dummy logic for now)
-            $totalYears = 1; // Replace with actual logic if available
+            // Replace with actual logic if available
             $review = 0;     // Replace with actual logic if available
     
             // Convert gymDetails to array and add custom fields
             $gymDetailsArray = array_merge($gymDetails->toArray(), [
-                'review'      => $review, // Placeholder for gym review
-                'total_years' => $totalYears, // Placeholder for total years
+                'review'      => $review, 
+                'total_years' => $totalYears,    
+                'months' => $remainingMonths, 
             ]);
     
             // Update staff data to include designation name instead of ID

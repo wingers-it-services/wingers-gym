@@ -60,7 +60,7 @@ class GymShedule extends Model
                 return $this->create([
                     'gym_id'       => $gym->id,
                     'event_name'   => $scheduleDetails['event_name'],
-                    'week_day'     => $scheduleDetails['week_day'],
+                    'date'         => $scheduleDetails['date'],
                     'start_time'   => $scheduleDetails['start_time'],
                     'end_time'     => $scheduleDetails['end_time'],
                     'is_recurring' => $scheduleDetails['is_recurring'],
