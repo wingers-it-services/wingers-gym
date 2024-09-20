@@ -151,12 +151,11 @@ class GymUserController extends Controller
                 'country' => 'required',
                 'state' => 'required',
                 'zip_code' => 'required',
-                'image' => 'required',
+                'image' => 'nullable',
                 'subscription_end_date' => 'required',
                 'subscription_start_date' => 'required',
                 'coupon_id' => 'nullable',
                 'subscription_status' => 'nullable',
-                'profile_status' => 'nullable',
                 'staff_assign_id' => 'nullable',
                 'password' => 'required',
                 'phone_no' => 'required',
@@ -168,12 +167,40 @@ class GymUserController extends Controller
             if ($request->filled('user_id')) {
                 // If user_id is present, update the existing user
                 $user = User::findOrFail($request->user_id);
+                $imagePath = $user->image; // Default to existing image path
+
+                if ($request->hasFile('image')) {
+                    // Delete the existing image if it exists
+                    if ($user->image) {
+                        $existingImagePath = public_path($imagePath);
+                        if (file_exists($existingImagePath)) {
+                            unlink($existingImagePath);
+                        }
+                    }
+
+                    // Handle new image upload
+                    $imageFile = $request->file('image');
+                    $filename = time() . '_' . $imageFile->getClientOriginalName();
+                    $imagePath = 'user_images/' . $filename;
+
+                    // Move the image file to the public directory
+                    if ($imageFile->move(public_path('user_images'), $filename)) {
+                        // Update the user image path in the database
+                        $user->update(['image' => $imagePath]);
+                    } else {
+                        return back()->with('status', 'error')->with('message', 'Image upload failed');
+                    }
+                }
+
+
                 $user->update($validateData); // Update the user data
+                $user->image = $imagePath;
+                $user->save();
 
                 $existingGymUser = GymUserGym::where('user_id', $user->id)
-                ->where('gym_id', $gymId)
-                ->first();
-                
+                    ->where('gym_id', $gymId)
+                    ->first();
+
                 if ($existingGymUser) {
                     // If the user is already associated with this gym, show a message
                     return redirect()->back()->with('status', 'error')->with('message', 'This user is already associated with this gym.');
@@ -181,11 +208,11 @@ class GymUserController extends Controller
 
                 GymUserGym::create([
                     'gym_id' => $gymId,
-                    'user_id' => $request->user_id
+                    'user_id' => $user->id
                 ]);
 
                 UserSubscriptionHistory::create([
-                    'user_id' => $request->user_id,
+                    'user_id' => $user->id,
                     'subscription_id' => $request->subscription_id,
                     'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
                     'subscription_start_date' => $request->subscription_start_date,

@@ -75,7 +75,7 @@
 
 									<div class="input-group">
 										<input class="form-control form-control-sm" id="image" name="image"
-											onchange="loadFile(event)" accept="image/*" type="file" required>
+											onchange="loadFile(event)" accept="image/*" type="file">
 									</div>
 								</div>
 								<input type="hidden" id="user_id" name="user_id" value="">
@@ -478,6 +478,7 @@
 				document.getElementById('zip_code').value = '';
 				document.getElementById('joining_date').value = '';
 				document.getElementById('password').value = '';
+				document.getElementById('dob').value = '';
 
 				// Reset image to default
 				const image = document.getElementById('selected_image');
@@ -506,6 +507,7 @@
 				document.getElementById('password').value = user.password || '';
 				document.getElementById('phone_no').value = user.phone_no || '';
 				document.getElementById('email').value = user.email || '';
+				document.getElementById('dob').value = user.dob || '';
 
 
 				// Handle image preview if available
