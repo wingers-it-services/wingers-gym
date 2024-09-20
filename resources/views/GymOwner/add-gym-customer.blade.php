@@ -121,7 +121,7 @@
 									<div class="row">
 										<div class="col-md-6 mb-3">
 											<label for="employee_id">Staff Assigned</label>
-											<select class="me-sm-2 form-control default-select" id="staff_assign_id"
+											<select class="me-sm-2 form-control" id="staff_assign_id"
 												name="staff_assign_id">
 												@foreach ($gymStaff as $staff)
 												<option value="{{ $staff->id }}">{{ $staff->designation_name}}</option>
@@ -134,8 +134,8 @@
 
 										<div class="col-md-6 mb-3">
 											<label for="gender">Gender</label>
-											<select class="me-sm-2 form-control default-select" id="gender"
-												name="gender">
+											<select class="me-sm-2 form-control" id="gender"
+												name="gender" required>
 												<option value="male">Male</option>
 												<option value="female">Female</option>
 												<option value="Other">Other</option>
@@ -146,8 +146,8 @@
 									<div class="row">
 										<div class="col-md-6 mb-3">
 											<label for="blood_group">Member Blood Group</label>
-											<select class="me-sm-2 form-control default-select" id="blood_group"
-												name="blood_group">
+											<select class="me-sm-2 form-control" id="blood_group"
+												name="blood_group" required>
 												<option value="A+">A+</option>
 												<option value="A-">A-</option>
 												<option value="B+">B+</option>
@@ -518,12 +518,10 @@
 				const genderSelect = document.getElementById('gender');
 				const bloodGroupSelect = document.getElementById('blood_group');
 				const staffAssignSelect = document.getElementById('staff_assign_id');
-				const subscriptionSelect = document.getElementById('subscription_id');
 
 				genderSelect.value = user.gender || '';
 				bloodGroupSelect.value = user.blood_group || '';
 				staffAssignSelect.value = user.staff_assign_id || '';
-				subscriptionSelect.value = user.subscription_id || '';
 			}
 		}
 
