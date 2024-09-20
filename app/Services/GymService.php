@@ -93,17 +93,15 @@ class GymService
     public function uploadAdminProfilePicture(Gym $gym, UploadedFile $image): Gym
     {
         if ($gym->image) {
-            $oldImagePath = public_path($gym->image);
-            if (File::exists($oldImagePath)) {
-                // Delete the old image
-                if (!File::delete($oldImagePath)) {
-                    // Log an error message if the deletion fails
-                    \Log::error("Failed to delete old image: $oldImagePath");
+            $imagePath = $gym->image;
+            
+            if ($gym->image) {
+                $existingImagePath = public_path($gym->image);
+                if (file_exists($existingImagePath)) {
+                    unlink($existingImagePath); // Delete old image
                 }
-            } else {
-                // Log an error message if the file does not exist
-                \Log::error("Old image does not exist: $oldImagePath");
             }
+
         }
 
         // Save the new image
