@@ -59,13 +59,13 @@
                             <div class="text-center">
                                 <div class="row">
                                     <div class="col">
-                                        <h3 class="m-b-0">{{ $totalUsers }}</h3><span>Follower</span>
+                                        <h3 class="m-b-0">{{ $totalUsers }}</h3><span>Users</span>
                                     </div>
                                     <div class="col">
                                         <h3 class="m-b-0">5</h3><span>Total Years</span>
                                     </div>
                                     <div class="col">
-                                        <h3 class="m-b-0">45</h3><span>Reviews</span>
+                                        <h3 class="m-b-0">45</h3><span>Total Months</span>
                                     </div>
                                 </div>
                                 <!-- <div class="mt-4">
@@ -117,7 +117,7 @@
                             <h5 class="text-primary d-inline">Scan OR Code</h5>
                             <img src="{{$gym->qrcode}}" alt="" class="img-fluid mt-4 mb-4 w-80 d-block mx-auto">
                         </div>
-                        <div class="profile-news">
+                        <!-- <div class="profile-news">
                             <h5 class="text-primary d-inline">Our Latest Reviews</h5>
                             <div class="media pt-3 pb-3">
                                 <img src="https://fito.dexignzone.com/laravel/demo/images/profile/5.jpg" alt="image" class="me-3 rounded" width="75">
@@ -140,7 +140,7 @@
                                     <p class="mb-0">I shared this on my fb wall a few months back, and I thought.</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

@@ -151,7 +151,7 @@ class GymUserController extends Controller
                 'country' => 'required',
                 'state' => 'required',
                 'zip_code' => 'required',
-                'image' => 'nullable', 
+                'image' => 'nullable',
                 'subscription_end_date' => 'required',
                 'subscription_start_date' => 'required',
                 'coupon_id' => 'nullable',
@@ -161,89 +161,99 @@ class GymUserController extends Controller
                 'phone_no' => 'required',
                 'dob' => 'required'
             ]);
-    
+
             $gymId = Auth::guard('gym')->user()->id;
-    
+
             if ($request->filled('user_id')) {
                 // If user_id is present, update the existing user
                 $user = User::findOrFail($request->user_id);
                 $imagePath = $user->image; // Default to existing image path
-    
+
                 if ($request->hasFile('image')) {
                     // Delete the existing image if it exists
                     if ($user->image) {
                         $existingImagePath = public_path($user->image);
                         if (file_exists($existingImagePath)) {
-                            unlink($existingImagePath); // Delete old image
+                            unlink($existingImagePath);
                         }
                     }
-    
+
                     // Handle new image upload
                     $imageFile = $request->file('image');
                     $filename = time() . '_' . $imageFile->getClientOriginalName();
                     $imagePath = 'user_images/' . $filename;
-    
+
                     // Move the image file to the public directory
-                    $imageFile->move(public_path('user_images'), $filename);
+                    if (!$imageFile->move(public_path('user_images'), $filename)) {
+                        return back()->with('status', 'error')->with('message', 'Image upload failed');
+                    }
                 }
-    
-                // Update user data
-                $user->update(array_merge($validateData, ['image' => $imagePath])); // Image is updated if new one uploaded, otherwise stays the same
-    
+
+                // Update the user data, but only include 'image' if a new image was uploaded
+                $updateData = $validateData;
+                if ($request->hasFile('image')) {
+                    $updateData['image'] = $imagePath;
+                }
+
+                $user->update($updateData);
+
+                // Check if the user is already associated with this gym
                 $existingGymUser = GymUserGym::where('user_id', $user->id)
                     ->where('gym_id', $gymId)
                     ->first();
-    
+
                 if ($existingGymUser) {
-                    // If the user is already associated with this gym, show a message
                     return redirect()->back()->with('status', 'error')->with('message', 'This user is already associated with this gym.');
                 }
-    
+
+                // Associate the user with the gym
                 GymUserGym::create([
                     'gym_id' => $gymId,
                     'user_id' => $user->id
                 ]);
-    
+
+                // Update or create the user subscription history
                 UserSubscriptionHistory::create([
                     'user_id' => $user->id,
                     'subscription_id' => $request->subscription_id,
-                    'original_transaction_id' => 1, // Adjust as necessary
+                    'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
                     'subscription_start_date' => $request->subscription_start_date,
                     'subscription_end_date' => $request->subscription_end_date,
                     'status' => $user->subscription_status,
                     'amount' => $request->amount, // Ensure this is part of the request or calculate it
-                    'coupon_id' => 1, // Use request coupon ID or default
+                    'coupon_id' => 2,
                     'gym_id' => $gymId
                 ]);
-    
             } else {
                 // If no user_id, create a new user
                 $user = $this->userService->createUserAccount($validateData, $gymId);
-    
-                if ($user) {
-                    $user = User::where('email', $validateData['email'])->first(); // Fetch the newly created user
-                }
-    
-                UserSubscriptionHistory::create([
-                    'user_id' => $user->id,
-                    'subscription_id' => $request->subscription_id,
-                    'original_transaction_id' => 1, // Adjust as necessary
-                    'subscription_start_date' => $request->subscription_start_date,
-                    'subscription_end_date' => $request->subscription_end_date,
-                    'status' => $user->subscription_status,
-                    'amount' => $request->amount, // Ensure this is part of the request or calculate it
-                    'coupon_id' => 1, // Use request coupon ID or default
-                    'gym_id' => $gymId
-                ]);
             }
-    
+
+            // Create the user account
+            if ($user) {
+                $user = User::where('email', $validateData['email'])->first(); // Adjust the query as needed
+            }
+
+            // Save to user_subscription_histories
+            UserSubscriptionHistory::create([
+                'user_id' => $user->id,
+                'subscription_id' => $request->subscription_id,
+                'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
+                'subscription_start_date' => $request->subscription_start_date,
+                'subscription_end_date' => $request->subscription_end_date,
+                'status' => $user->subscription_status,
+                'amount' => $request->amount, // Ensure this is part of the request or calculate it
+                'coupon_id' => 2,
+                'gym_id' => $gymId
+            ]);
+
+
             return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Successfully');
         } catch (\Exception $e) {
-            Log::error('[GymUserController][addUserByGym] Error adding/updating user: ' . $e->getMessage());
-            return back()->with('status', 'error')->with('message', 'User Not Added/Updated: ' . $e->getMessage());
+            Log::error('[GymUserController][addUserByGym] Error adding user: ' . $e->getMessage());
+            return back()->with('status', 'error')->with('message', 'User Not Added' . $e->getMessage());
         }
     }
-    
 
 
     public function showUserProfile($uuid)
@@ -258,11 +268,9 @@ class GymUserController extends Controller
         $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
         $bmis = $this->bmi->with('bodyMeasurement')->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $subscriptionId = $userDetail->subscription_id;
-        $userSubscriptions = $this->userSubscriptionHistory->with([
-            'subscription' => function ($query) {
-                $query->withTrashed();
-            }
-        ])->where('gym_id', $gymId)->where('user_id', $userId)->get();
+        $userSubscriptions = $this->userSubscriptionHistory->with(['subscription' => function ($query) {
+            $query->withTrashed();
+        }])->where('gym_id', $gymId)->where('user_id', $userId)->get();
         $trainers = $this->gymStaff
             ->where('gym_id', $gymId)
             ->whereHas('designation', function ($query) {
@@ -338,15 +346,15 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "user_id" => 'required',
-                "exercise_name" => 'required',
-                "day" => 'required',
-                "sets" => 'required|integer|min:1',
-                "reps" => 'required|integer|min:1',
-                "weight" => 'required|numeric|min:0',
-                "workout_des" => 'required',
-                "workout_id" => 'required',
-                "targeted_body_part" => 'required'
+                "user_id"             => 'required',
+                "exercise_name"       => 'required',
+                "day"                 => 'required',
+                "sets"                => 'required|integer|min:1',
+                "reps"                => 'required|integer|min:1',
+                "weight"              => 'required|numeric|min:0',
+                "workout_des"         => 'required',
+                "workout_id"          => 'required',
+                "targeted_body_part"  => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();

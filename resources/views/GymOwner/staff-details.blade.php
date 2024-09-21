@@ -1,7 +1,64 @@
 @extends('GymOwner.master')
 @section('title', 'Dashboard')
 @section('content')
+<style>
+	.attendance-menu {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    position: absolute;
+    z-index: 999;
+    width: 150px;
+}
 
+.attendance-menu .dropdown-item {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    margin: 5px 0;
+    text-align: center;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.attendance-menu .dropdown-item:hover {
+    background-color: #45a049;
+}
+
+.attendance-menu .dropdown-item:active {
+    background-color: #3e8e41;
+}
+
+.attendance-menu .dropdown-item:focus {
+    outline: none;
+}
+
+.day {
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+    font-weight: bold;
+}
+
+.day:hover {
+    background-color: #ddd;
+}
+
+.day[style*="background-color"] {
+    color: #fff;
+    border-radius: 50%;
+}
+
+.prev, .next {
+    color: #aaa;
+}
+
+</style>
 <!--**********************************
             Content body start
 ***********************************-->
@@ -220,7 +277,7 @@
 
 									</div>
 								</div>
-
+								
 								<div class="tab-pane fade" id="contact">
 									<div class="modal fade" id="addDoc" tabindex="-1" aria-labelledby="addNewDocLabel"
 										aria-hidden="true">
@@ -785,221 +842,7 @@
 
 
 
-	function markStaffAttendance(input) {
-		var gymId = parseInt(input.getAttribute("data-gym-id"));
-		var employeeId = document.getElementById("staffId").value;
-		var attendanceStatus = input.getAttribute("data-attendance-status");
 
-		// Send an AJAX request to update the user's status
-		$.ajax({
-			url: '{{ route("markGymStaffAttendance") }}', // Define your update status route
-			method: 'POST',
-			headers: {
-				'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include the CSRF token in the headers
-			},
-			data: {
-				gymId: gymId,
-				staffId: employeeId,
-				attendanceStatus: attendanceStatus
-			},
-			success: function(response) {
-				// Handle success response (if needed)
-				console.log(response);
-				toastr.option = {
-					'progressBar': true,
-					"closeButton": true,
-				}
-				toastr.success(" Attendance Marked.");
-				fetchAttendanceChart(gymId, employeeId);
-			},
-			error: function(error) {
-				// Handle error (if needed)
-				console.error(error);
-			}
-		});
-	}
-
-	function fetchAttendanceChart(gymId, staffId) {
-		// Send an AJAX request to update the user's status
-		$.ajax({
-			url: '{{ route("fetchAttendanceChart") }}', // Define your update status route
-			method: 'POST',
-			headers: {
-				'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include the CSRF token in the headers
-			},
-			data: {
-				gymId: gymId,
-				staffId: staffId
-			},
-			success: function(response) {
-				// Handle success response (if needed)
-				console.log(response.data.Absent);
-				attendanceChart(response.data);
-				attendanceDetails(response.gym);
-			},
-			error: function(error) {
-				// Handle error (if needed)
-				console.log(error);
-			}
-		});
-	}
-
-	function attendanceChart(data) {
-		let attendanceChartStatus = Chart.getChart("attendanceChart"); // <canvas> id
-		if (attendanceChartStatus != undefined) {
-			attendanceChartStatus.destroy();
-		}
-
-		var xValues = ["Absent", "Halfday", "Week Off", "Present", "Unmarked"];
-		var yValues = [data.Absent, data.Halfday, data.WeekOff, data.Present, data.Unmarked];
-		var barColors = [
-			"indianred",
-			"burlywood",
-			"grey",
-			"darkseagreen",
-			"#f1f1fb"
-		];
-
-		var attendanceChart = new Chart("attendanceChart", {
-			type: "doughnut",
-			data: {
-				labels: xValues,
-				datasets: [{
-					backgroundColor: barColors,
-					data: yValues
-				}]
-			},
-			options: {
-				responsive: true,
-				maintainAspectRatio: false
-			}
-		});
-	}
-	// Send an AJAX request to update the user's
-
-	function attendanceDetails(data) {
-		const daysContainer = document.querySelector(".days");
-		const nextBtn = document.querySelector(".next");
-		const prevBtn = document.querySelector(".prev");
-		const todayBtn = document.querySelector(".today");
-		const month = document.querySelector(".month");
-
-		const months = [
-			"January",
-			"February",
-			"March",
-			"April",
-			"May",
-			"June",
-			"July",
-			"August",
-			"September",
-			"October",
-			"November",
-			"December",
-		];
-
-		const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-		const date = new Date();
-		let currentMonth = date.getMonth();
-		let currentYear = date.getFullYear();
-
-		const renderCalendar = () => {
-			date.setDate(1);
-			const firstDay = new Date(currentYear, currentMonth, 1);
-			const lastDay = new Date(currentYear, currentMonth + 1, 0);
-			const lastDayIndex = lastDay.getDay();
-			const lastDayDate = lastDay.getDate();
-			const prevLastDay = new Date(currentYear, currentMonth, 0);
-			const prevLastDayDate = prevLastDay.getDate();
-			const nextDays = 7 - lastDayIndex - 1;
-
-			month.innerHTML = `${months[currentMonth]} ${currentYear}`;
-
-			let days = "";
-
-			for (let x = firstDay.getDay(); x > 0; x--) {
-				days += `<div class="day prev">${prevLastDayDate - x + 1}</div>`;
-			}
-
-			for (let i = 1; i <= lastDayDate; i++) {
-				if (
-					i === new Date().getDate() &&
-					currentMonth === new Date().getMonth() &&
-					currentYear === new Date().getFullYear()
-				) {
-					days += `<div class="day today">${i}</div>`;
-				} else {
-					if (data && ('day' + i) in data) {
-						var dayStatus = '';
-						switch (data['day' + i]) {
-							case "0":
-								dayStatus = 'style="background-color: indianred;"';
-								break;
-							case "0.5":
-								dayStatus = 'style="background-color: burlywood;"';
-								break;
-							case "1":
-								dayStatus = 'style="background-color: darkseagreen;"';
-								break;
-							case "2":
-								dayStatus = 'style="background-color: grey;"';
-								break;
-							default:
-								dayStatus = 'style="background-color: "#f1f1fb";"';
-								break;
-						}
-					}
-					days += `<div class="day" ${dayStatus}>${i} </div>`;
-				}
-			}
-
-			for (let j = 1; j <= nextDays; j++) {
-				days += `<div class="day next">${j} </div>`;
-			}
-
-			daysContainer.innerHTML = days;
-			hideTodayBtn();
-		};
-
-		nextBtn.addEventListener("click", () => {
-			currentMonth++;
-			if (currentMonth > 11) {
-				currentMonth = 0;
-				currentYear++;
-			}
-			renderCalendar();
-		});
-
-		prevBtn.addEventListener("click", () => {
-			currentMonth--;
-			if (currentMonth < 0) {
-				currentMonth = 11;
-				currentYear--;
-			}
-			renderCalendar();
-		});
-
-		todayBtn.addEventListener("click", () => {
-			currentMonth = date.getMonth();
-			currentYear = date.getFullYear();
-			renderCalendar();
-		});
-
-		function hideTodayBtn() {
-			if (
-				currentMonth === new Date().getMonth() &&
-				currentYear === new Date().getFullYear()
-			) {
-				todayBtn.style.display = "none";
-			} else {
-				todayBtn.style.display = "flex";
-			}
-		}
-
-		renderCalendar();
-	}
 
 	function previewFile(input, previewId, iconId) {
 		const file = input.files[0];
@@ -1025,6 +868,209 @@
 			previewElement.style.display = 'none'; // Hide the image preview
 		}
 	}
+
+	
+
+	function fetchAttendanceChart(gymId, staffId) {
+		// Send an AJAX request to fetch attendance chart data
+		$.ajax({
+			url: '{{ route("fetchAttendanceChart") }}',
+			method: 'POST',
+			headers: {
+				'X-CSRF-TOKEN': '{{ csrf_token() }}'
+			},
+			data: {
+				gymId: gymId,
+				staffId: staffId
+			},
+			success: function(response) {
+				attendanceChart(response.data);
+				attendanceDetails(response.gym);
+			},
+			error: function(error) {
+				console.error(error);
+			}
+		});
+	}
+
+	function attendanceChart(data) {
+		let chartStatus = Chart.getChart("attendanceChart"); // <canvas> id
+		if (chartStatus != undefined) {
+			chartStatus.destroy(); // Destroy if chart exists
+		}
+
+		var xValues = ["Absent", "Halfday", "Week Off", "Present", "Unmarked"];
+		var yValues = [data.Absent, data.Halfday, data.WeekOff, data.Present, data.Unmarked];
+		var barColors = ["indianred", "burlywood", "grey", "darkseagreen", "#f1f1fb"];
+
+		var attendanceChart = new Chart("attendanceChart", {
+			type: "doughnut",
+			data: {
+				labels: xValues,
+				datasets: [{
+					backgroundColor: barColors,
+					data: yValues
+				}]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false
+			}
+		});
+	}
+
+	function attendanceDetails(data) {
+    const daysContainer = document.querySelector(".days");
+    const nextBtn = document.querySelector(".next");
+    const prevBtn = document.querySelector(".prev");
+    const todayBtn = document.querySelector(".today");
+    const month = document.querySelector(".month");
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+
+    function renderCalendar() {
+        const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+        const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+        const lastDayDate = lastDayOfMonth.getDate();
+        const prevLastDay = new Date(currentYear, currentMonth, 0).getDate();
+        const startDay = firstDayOfMonth.getDay();
+        const nextDays = 7 - lastDayOfMonth.getDay() - 1;
+
+        month.innerHTML = `${months[currentMonth]} ${currentYear}`;
+        let daysHtml = "";
+
+        for (let x = startDay; x > 0; x--) {
+            daysHtml += `<div class="day prev">${prevLastDay - x + 1}</div>`;
+        }
+
+        for (let i = 1; i <= lastDayDate; i++) {
+            let dayStatus = '';
+            if (data && ('day' + i) in data) {
+                switch (data['day' + i]) {
+                    case "0":
+                        dayStatus = 'style="background-color: indianred;"';
+                        break;
+                    case "0.5":
+                        dayStatus = 'style="background-color: burlywood;"';
+                        break;
+                    case "1":
+                        dayStatus = 'style="background-color: darkseagreen;"';
+                        break;
+                    case "2":
+                        dayStatus = 'style="background-color: grey;"';
+                        break;
+                    default:
+                        dayStatus = 'style="background-color: #f1f1fb;"';
+                }
+            }
+            daysHtml += `<div class="day" ${dayStatus} onclick="openAttendanceMenu(this, ${i})">${i}</div>`;
+        }
+
+        for (let j = 1; j <= nextDays; j++) {
+            daysHtml += `<div class="day next">${j}</div>`;
+        }
+
+        daysContainer.innerHTML = daysHtml;
+    }
+	
+
+    nextBtn.addEventListener("click", () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        renderCalendar();
+    });
+
+    prevBtn.addEventListener("click", () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        renderCalendar();
+    });
+
+    todayBtn.addEventListener("click", () => {
+        currentMonth = new Date().getMonth();
+        currentYear = new Date().getFullYear();
+        renderCalendar();
+    });
+
+    renderCalendar();
+}
+
+function openAttendanceMenu(dayElement, day) {
+	$staffId = document.getElementById('staffId').value;
+    const existingMenu = document.querySelector('.attendance-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+
+    const attendanceMenu = document.createElement('div');
+    attendanceMenu.classList.add('attendance-menu');
+    attendanceMenu.innerHTML = `
+        <button class="dropdown-item" onclick="markDayAttendance(${day}, 1, {{$gymStaff->gym_id}} , $staffId)">Present</button>
+        <button class="dropdown-item" onclick="markDayAttendance(${day}, 0, {{$gymStaff->gym_id}}, $staffId)">Absent</button>
+        <button class="dropdown-item" onclick="markDayAttendance(${day}, 0.5, {{$gymStaff->gym_id}}, $staffId)">Half Day</button>
+    `;
+
+    document.body.appendChild(attendanceMenu);
+    positionAttendanceMenu(dayElement, attendanceMenu);
+
+    document.addEventListener('click', function outsideClickListener(event) {
+        if (!attendanceMenu.contains(event.target) && !dayElement.contains(event.target)) {
+            attendanceMenu.remove();
+            document.removeEventListener('click', outsideClickListener);
+        }
+    });
+}
+
+function positionAttendanceMenu(dayElement, menu) {
+    const rect = dayElement.getBoundingClientRect();
+    menu.style.position = 'absolute';
+    menu.style.top = `${rect.bottom + window.scrollY}px`;
+    menu.style.left = `${rect.left + window.scrollX}px`;
+}
+
+function markDayAttendance(day, status, gymId, employeeId)  {
+    $.ajax({
+        url: '{{ route("markGymStaffAttendance") }}',
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        data: {
+            gymId: gymId,
+            staffId: employeeId,
+            attendanceStatus: status,
+            day: day
+        },
+        success: function(response) {
+            const selectedDay = document.querySelector(`.day:nth-child(${day})`);
+            switch (status) {
+                case 1:
+                    selectedDay.style.backgroundColor = 'darkseagreen';
+                    break;
+                case 0.5:
+                    selectedDay.style.backgroundColor = 'burlywood';
+                    break;
+                case 0:
+                    selectedDay.style.backgroundColor = 'indianred';
+                    break;
+            }
+            toastr.success("Attendance marked for day " + day);
+        },
+        error: function(error) {
+            console.error(error);
+            toastr.error("Failed to mark attendance.");
+        }
+    });
+}
+
 </script>
 <!--**********************************
             Content body end
