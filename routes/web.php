@@ -98,7 +98,7 @@ Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLo
 
 Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
-    Route::post('/add-gym-schedule',[GymSheduleController::class,'addGymShedule'])->name('addGymShedule');
+    Route::post('/add-gym-schedule', [GymSheduleController::class, 'addGymShedule'])->name('addGymShedule');
 
     Route::get('/fetch-gym-schedules', [GymSheduleController::class, 'fetchSchedule'])->name('fetchSchedule');
 
@@ -310,5 +310,3 @@ Route::get('/delete-holiday/{id}', [GymDetailController::class, 'deleteHoliday']
 Route::post('/add-weekend', [GymDetailController::class, 'addWeekendsByGym']);
 
 Route::post('/update-gym-account', [GymDetailController::class, 'updateGymAccount']);
-
-

@@ -112,29 +112,35 @@ class GymStaffController extends Controller
             $request->validate([
                 "gymId"            => 'required',
                 "staffId"          => 'required',
-                "attendanceStatus" => 'required'
+                "attendanceStatus" => 'required',
+                "day"              => 'required' // Ensure the day is valid
             ]);
 
             $now = Carbon::now();
             $year = $now->year;
             $month = $now->month;
-            $day = $now->day;
 
-            $gym = $this->gymStaffAttendance->updateOrCreate([
-                'gym_staff_id' => $request->staffId,
-                'gym_id' => $request->gymId,
-                'month' => $month,
-                'year' => $year
-            ], [
-                'day' . $day => $request->attendanceStatus
-            ]);
+            // Save attendance for the specific day
+            $gymAttendance = GymStaffAttendance::updateOrCreate(
+                [
+                    'gym_staff_id' => $request->staffId,
+                    'gym_id' => $request->gymId,
+                    'month' => $month,
+                    'year' => $year
+                ],
+                [
+                    'day' . $request->day => $request->attendanceStatus // Update the specific day
+                ]
+            );
 
-            return response()->json(['status' => 200, 'data' => $gym], 200);
+            return response()->json(['status' => 200, 'data' => $gymAttendance], 200);
         } catch (\Throwable $th) {
-            Log::error("[GymStaffController][addGymStaff] error " . $th->getMessage());
+            Log::error("[GymStaffController][markGymStaffAttendance] error " . $th->getMessage());
             return response()->json(['status' => 500], 500);
         }
     }
+
+
 
 
     public function fetchAttendanceChart(Request $request)
