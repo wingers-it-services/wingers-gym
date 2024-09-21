@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AttendenceStatusEnum;
+use App\Enums\GymSubscriptionStatusEnum;
 use App\Models\Advertisement;
 use App\Models\Gym;
 use App\Models\GymUserAttendence;
@@ -10,7 +11,6 @@ use App\Models\Holiday;
 use App\Models\UserSubscriptionHistory;
 use App\Models\WorkoutAnalytic;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -18,23 +18,23 @@ class HomeControllerApi extends Controller
 {
     protected $gym;
     protected $holiday;
-    protected $analytics;
     protected $advertisement;
+    protected $workoutAnalytic;
     protected $gymUserAttendence;
     protected $userSubscriptionHistory;
 
     public function __construct(
         Gym $gym,
         Holiday $holiday,
-        WorkoutAnalytic $analytics,
         Advertisement $advertisement,
+        WorkoutAnalytic $workoutAnalytic,
         GymUserAttendence $gymUserAttendence,
         UserSubscriptionHistory $userSubscriptionHistory
     ) {
         $this->gym = $gym;
         $this->holiday = $holiday;
-        $this->analytics = $analytics;
         $this->advertisement = $advertisement;
+        $this->workoutAnalytic = $workoutAnalytic;
         $this->gymUserAttendence = $gymUserAttendence;
         $this->userSubscriptionHistory = $userSubscriptionHistory;
     }
@@ -77,20 +77,11 @@ class HomeControllerApi extends Controller
             $user = auth()->user();
             $gym = $this->gym->find($request->gym_id);
 
-            $subscription = $this->userSubscriptionHistory->where('user_id', $user->id)
-                ->where('status', 1)
+            $subscription = $this->userSubscriptionHistory
+                ->where('user_id', $user->id)
+                ->where('status', GymSubscriptionStatusEnum::ACTIVE)
                 ->where('gym_id', $request->gym_id)->first();
 
-
-
-            // if (!$subscription) {
-            //     return response()->json([
-            //         'status'        => 422,
-            //         'subscription' => null,
-            //         'message'       => 'No subscription found.',
-            //     ], 422);
-            // }
-            // dd($subscription);
             $startDate = Carbon::parse($subscription->subscription_start_date);
             $endDate = Carbon::parse($subscription->subscription_end_date);
             $todayDate = Carbon::now()->startOfDay();
@@ -135,13 +126,6 @@ class HomeControllerApi extends Controller
                     ->where('month', $date->month)
                     ->first();
 
-                // if (!$attendance) {
-                //     return response()->json([
-                //         'status'  => 422,
-                //         'message' => 'No attendance records found for the user.'
-                //     ], 422);
-                // }
-
                 $day = 'day' . $date->day;
 
                 if ($attendance && $attendance->{$day} == AttendenceStatusEnum::PRESENT) {
@@ -153,7 +137,6 @@ class HomeControllerApi extends Controller
                     $absentCount++;
                 }
             }
-
 
             if ($todayDate->lessThan($startDate)) {
                 // If the subscription hasn't started yet, pending days should be counted from the start date (inclusive)
@@ -192,96 +175,51 @@ class HomeControllerApi extends Controller
         }
     }
 
-
-    // public function fetchAdvertisementAndAttendance(Request $request)
-    // {
-    //     try {
-    //         $advertisementResponse = $this->fetchAdvertisement($request);
-    //         $advertisementData = $advertisementResponse->getData();
-
-    //         if ($advertisementData->status !== 200) {
-    //             return $advertisementResponse;
-    //         }
-
-    //         $attendanceResponse = $this->getUserAttendancePercentage($request);
-    //         $attendanceData = $attendanceResponse->getData();
-
-    //         if ($attendanceData->status !== 200) {
-    //             return $attendanceResponse;
-    //         }
-
-    //         return response()->json([
-    //             'status'                   => 200,
-    //             'advertisement'            => $advertisementData->advertisement,
-    //             'total_days'               => $attendanceData->total_days,
-    //             'present_days'             => $attendanceData->present_days,
-    //             'pending_days'             => $attendanceData->pending_days,
-    //             // 'weekends'                 => $attendanceData->weekends,
-    //             // 'absents'                  => $attendanceData->absents,
-    //             // 'holidays'                 => $attendanceData->holidays,
-    //             // 'total_weekends_till_toaday'           => $attendanceData->total_weekends,
-    //             // 'total_holidays_till_toaday'           => $attendanceData->total_holidays,
-    //             // 'pending_working_days'     => $attendanceData->pending_working_days,
-    //             'biceps' => 70,
-    //             'leg' => 70,
-    //             'forearm' => 10,
-    //             'tricep' => 11,
-    //             'back' => 42,
-    //             'shoulder' => 50,
-    //             'chest' => 10,
-    //             'abs' => 22,
-    //             // 'pending_days_percentage'  => $attendanceData->pending_days_percentage,
-    //             // 'subs'                     => $attendanceData->subs,
-    //             // 'startDate'                => $attendanceData->startDate,
-    //             // 'enddate'                  => $attendanceData->enddate,
-    //             // 'present_percentage'       => $attendanceData->present_percentage,
-    //             'message'                  => 'Advertisements and user attendance fetched successfully.',
-    //         ], 200);
-    //     } catch (\Exception $e) {
-    //         Log::error('[HomeControllerApi][fetchAdvertisementAndAttendance] Error: ' . $e->getMessage());
-    //         return response()->json([
-    //             'status'  => 500,
-    //             'message' => 'Error fetching data: ' . $e->getMessage(),
-    //         ], 500);
-    //     }
-    // }
-
     public function fetchAdvertisementAndAttendance(Request $request)
     {
         try {
+            Log::info('[HomeControllerApi][fetchAdvertisementAndAttendance] Start fetching data');
+
             // Fetch Advertisement
             $advertisementResponse = $this->fetchAdvertisement($request);
             $advertisementData = $advertisementResponse->getData();
-    
+            Log::info('[HomeControllerApi][fetchAdvertisementAndAttendance] Advertisement Data:', (array)$advertisementData);
+
             // Fetch Attendance
             $attendanceResponse = $this->getUserAttendancePercentage($request);
             $attendanceData = $attendanceResponse->getData();
-    
-            // Default response structure
+            Log::info('[HomeControllerApi][fetchAdvertisementAndAttendance] Attendance Data:', (array)$attendanceData);
+
+            // Fetch Analytics
+            $analyticsResponse = $this->fetchAnalytics($request);
+            $analyticsData = $analyticsResponse->getData();
+            Log::info('[HomeControllerApi][fetchAdvertisementAndAttendance] Analytics Data:', (array)$analyticsData);
+
+            // Prepare response structure
             $response = [
-                'status' => 200,
-                'message' => '',
+                'status'        => 200,
+                'message'       => '',
                 'advertisement' => null,
-                'total_days' => 0,
-                'present_days' => 0,
-                'pending_days' => 0,
-                'biceps' => 0,
-                'leg' => 0,
-                'forearm' => 0,
-                'tricep' => 0,
-                'back' => 0,
-                'shoulder' => 0,
-                'chest' => 0,
-                'abs' => 0,
+                'total_days'    => 0,
+                'present_days'  => 0,
+                'pending_days'  => 0,
+                'biceps'        => 0,
+                'leg'           => 0,
+                'forearm'       => 0,
+                'tricep'        => 0,
+                'back'          => 0,
+                'shoulder'      => 0,
+                'chest'         => 0,
+                'abs'           => 0,
             ];
-    
+
             // Handle Advertisement Response
             if ($advertisementData->status === 200) {
                 $response['advertisement'] = $advertisementData->advertisement;
             } else if ($advertisementData->status === 422) {
                 $response['message'] .= 'Advertisement data could not be fetched. ';
             }
-    
+
             // Handle Attendance Response
             if ($attendanceData->status === 200) {
                 $response['total_days'] = $attendanceData->total_days;
@@ -290,19 +228,21 @@ class HomeControllerApi extends Controller
             } else if ($attendanceData->status === 422) {
                 $response['message'] .= 'Attendance data could not be fetched. ';
             }
-    
-            // Fetch Analytics and update response
-            $analyticsResponse = $this->fetchAnalytics($request);
-            $analyticsData = $analyticsResponse->getData();
-    
+
+            // Handle Analytics Response
             if ($analyticsData->status === 200) {
-                foreach ($analyticsData->analytics as $bodyPart => $percentage) {
-                    $response[$bodyPart] = $percentage;
-                }
+                $response['biceps'] = $analyticsData->analytics->biceps ?? 0;
+                $response['leg'] = $analyticsData->analytics->leg ?? 0;
+                $response['forearm'] = $analyticsData->analytics->forearm ?? 0;
+                $response['tricep'] = $analyticsData->analytics->triceps ?? 0;
+                $response['back'] = $analyticsData->analytics->back ?? 0;
+                $response['shoulder'] = $analyticsData->analytics->shoulder ?? 0;
+                $response['chest'] = $analyticsData->analytics->chest ?? 0;
+                $response['abs'] = $analyticsData->analytics->abs ?? 0;
             } else if ($analyticsData->status === 422) {
                 $response['message'] .= 'Analytics data could not be fetched. ';
             }
-    
+
             // Set success message if all responses are successful
             if ($advertisementData->status === 200 && $attendanceData->status === 200 && $analyticsData->status === 200) {
                 $response['message'] = 'Advertisements, user attendance, and analytics fetched successfully.';
@@ -311,7 +251,9 @@ class HomeControllerApi extends Controller
                     $response['message'] = 'Some data could not be fetched.';
                 }
             }
-    
+
+            Log::info('[HomeControllerApi][fetchAdvertisementAndAttendance] Final Response:', $response);
+
             return response()->json($response, 200);
         } catch (\Exception $e) {
             Log::error('[HomeControllerApi][fetchAdvertisementAndAttendance] Error: ' . $e->getMessage());
@@ -321,22 +263,24 @@ class HomeControllerApi extends Controller
             ], 500);
         }
     }
-    
+
     // Separate function to fetch analytics
     public function fetchAnalytics(Request $request)
     {
         try {
             $currentMonth = Carbon::now()->month;
             $currentYear = Carbon::now()->year;
-    
-            // Fetch the workout analytics for the current month and year, grouped by targeted body part
-            $analytics = WorkoutAnalytic::where('user_id', auth()->user()->id)
+
+            // Fetch workout analytics for the current month and year, grouped by targeted body part
+            $analytics = $this->workoutAnalytic
+                ->where('user_id', auth()->user()->id)
                 ->where('gym_id', $request->gym_id)
                 ->where('month', $currentMonth)
                 ->where('year', $currentYear)
                 ->get()
                 ->groupBy('targeted_body_part');
-    
+
+            // If no analytics found for the current month
             if ($analytics->isEmpty()) {
                 return response()->json([
                     'status' => 422,
@@ -344,27 +288,63 @@ class HomeControllerApi extends Controller
                     'message' => 'No analytics found for the current month.',
                 ], 422);
             }
-    
-            // Prepare the response with average percentage for each body part
-            $response = [];
+
+            // Prepare the response with specific body parts
+            $response = [
+                'shoulder' => 0,
+                'abs'      => 0,
+                'leg'      => 0,
+                'chest'    => 0,
+                'back'     => 0,
+                'biceps'   => 0,
+                'triceps'  => 0,
+                'forearm'  => 0,
+            ];
+
+            // Calculate average percentage for each body part and map to response
             foreach ($analytics as $bodyPart => $data) {
-                // Calculate the average percentage for each body part
                 $averagePercentage = $data->avg('percentage');
-                $response[$bodyPart] = round($averagePercentage, 2); // Round the percentage to 2 decimal places
+
+                // Map the body part to the response (ensure the body part names match your database)
+                switch (strtolower($bodyPart)) {
+                    case 'shoulder':
+                        $response['shoulder'] = round($averagePercentage, 2);
+                        break;
+                    case 'abs':
+                        $response['abs'] = round($averagePercentage, 2);
+                        break;
+                    case 'leg':
+                        $response['leg'] = round($averagePercentage, 2);
+                        break;
+                    case 'chest':
+                        $response['chest'] = round($averagePercentage, 2);
+                        break;
+                    case 'back':
+                        $response['back'] = round($averagePercentage, 2);
+                        break;
+                    case 'biceps':
+                        $response['biceps'] = round($averagePercentage, 2);
+                        break;
+                    case 'triceps':
+                        $response['triceps'] = round($averagePercentage, 2);
+                        break;
+                    case 'forearm':
+                        $response['forearm'] = round($averagePercentage, 2);
+                        break;
+                }
             }
-    
+
             return response()->json([
-                'status' => 200,
+                'status'    => 200,
                 'analytics' => $response,
-                'message' => 'Analytics fetched successfully for the current month.',
+                'message'   => 'Analytics fetched successfully for the current month.',
             ], 200);
         } catch (\Exception $e) {
             Log::error('[HomeControllerApi][fetchAnalytics] Error fetching analytics details: ' . $e->getMessage());
             return response()->json([
-                'status' => 500,
+                'status'  => 500,
                 'message' => 'Error fetching analytics details: ' . $e->getMessage(),
             ], 500);
         }
     }
-    
 }
