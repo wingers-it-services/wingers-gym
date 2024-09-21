@@ -13,7 +13,7 @@
 }
 
 .attendance-menu .dropdown-item {
-    background-color: #4CAF50;
+    background-color: #8fbc8f;
     border: none;
     color: white;
     cursor: pointer;
@@ -1014,8 +1014,8 @@ function openAttendanceMenu(dayElement, day) {
     attendanceMenu.classList.add('attendance-menu');
     attendanceMenu.innerHTML = `
         <button class="dropdown-item" onclick="markDayAttendance(${day}, 1, {{$gymStaff->gym_id}} , $staffId)">Present</button>
-        <button class="dropdown-item" onclick="markDayAttendance(${day}, 0, {{$gymStaff->gym_id}}, $staffId)">Absent</button>
-        <button class="dropdown-item" onclick="markDayAttendance(${day}, 0.5, {{$gymStaff->gym_id}}, $staffId)">Half Day</button>
+        <button class="dropdown-item" onclick="markDayAttendance(${day}, 0, {{$gymStaff->gym_id}}, $staffId)" style="background-color: indianred;">Absent</button>
+        <button class="dropdown-item" onclick="markDayAttendance(${day}, 0.5, {{$gymStaff->gym_id}}, $staffId)" style="background-color: burlywood;">Half Day</button>
     `;
 
     document.body.appendChild(attendanceMenu);
