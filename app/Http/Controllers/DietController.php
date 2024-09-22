@@ -29,7 +29,8 @@ class DietController extends Controller
     {
         $gym = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
-        $diets = $this->diet->where('gym_id', $gymId)->get();
+        $admin = $this->gym->where('gym_type', 'admin')->first();
+        $diets = $this->diet->where('gym_id', $gymId)->orWhere('added_by', $admin->id)->get();
         return view('GymOwner.add-diet', compact('diets'));
     }
 
