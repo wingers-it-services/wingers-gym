@@ -20,6 +20,7 @@ use App\Http\Controllers\SiteSettingControllerApi;
 use App\Http\Controllers\SupplimentControllerApi;
 use App\Http\Controllers\UserDietControllerApi;
 use App\Http\Controllers\UserInjuryControllerApi;
+use App\Http\Controllers\UserInquiryControllerApi;
 use App\Http\Controllers\UserLevelControllerApi;
 use App\Http\Controllers\UserSubscriptionControllerApi;
 use App\Http\Controllers\UserWorkoutAnalyticApi;
@@ -65,6 +66,10 @@ Route::post('/add-user-injuries', [GymUserControllerApi::class, 'addUserInjuries
 Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
 
 Route::middleware('auth:api')->group(function () {
+
+    Route::post('/send-inquiry', [UserInquiryControllerApi::class, 'sendInquiry']);
+
+    Route::post('/fetch-inquiry', [UserInquiryControllerApi::class, 'fetchInquiry']);
 
     Route::get('/logout', [GymUserControllerApi::class, 'userLogout']);
     
