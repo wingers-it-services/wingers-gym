@@ -142,6 +142,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     /* markGymStaffAttendance */
     Route::post('/mark-gym-staff-attendance', [GymStaffController::class, 'markGymStaffAttendance'])->name('markGymStaffAttendance');
+    Route::get('/getGymHolidaysAndWeekends/{gym_id}', [GymStaffController::class, 'getGymHolidaysAndWeekends'])->name('getGymHolidaysAndWeekends');
 
     /* fetchAttendanceChart */
     Route::post('/fetch-attendance-chart', [GymStaffController::class, 'fetchAttendanceChart'])->name('fetchAttendanceChart');

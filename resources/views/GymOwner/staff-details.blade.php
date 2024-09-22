@@ -3,6 +3,17 @@
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <style>
+	.toast-success {
+		background-color: #6cc51d;
+		/* Set your custom color */
+	}
+
+	/* Error Message Background Color */
+	.toast-error {
+		background-color: #dc3545 !important;
+		/* Set your custom color */
+	}
+
 	.attendance-menu {
 		background-color: #fff;
 		border-radius: 8px;
@@ -160,28 +171,6 @@
 						<div class="me-auto pe-3">
 							<h4 class="text-black fs-20">Attendance Details</h4>
 							<p class="fs-13 mb-0 text-black">Monthly details</p>
-						</div>
-						<div class="dropdown mt-sm-0 mt-3">
-
-							<button type="button" class="btn btn-primary rounded border border-light dropdown-toggle"
-								data-bs-toggle="dropdown" aria-expanded="false">
-								Mark Present Today
-							</button>
-							<div class="dropdown-menu dropdown-menu-end">
-								<a class="dropdown-item" href="javascript:void(0);"
-									data-gym-id='{{$gymStaff->gym_id ?? ''}}' data-employee-id='{{$gymStaff->id ?? ''}}'
-									data-attendance-status='1' onclick="markStaffAttendance(this);">Present</a>
-
-								<a class="dropdown-item" href="javascript:void(0);"
-									data-gym-id='{{$gymStaff->gym_id ?? ''}}' data-employee-id='{{$gymStaff->id ?? ''}}'
-									data-attendance-status='0' onclick="markStaffAttendance(this);">Absent</a>
-
-								<a class="dropdown-item" href="javascript:void(0);"
-									data-gym-id='{{$gymStaff->gym_id ?? ''}}' data-employee-id='{{$gymStaff->id ?? ''}}'
-									data-attendance-status='.5' onclick="markStaffAttendance(this);">Half Day</a>
-							</div>
-
-
 						</div>
 					</div>
 					<div class="card-body">
@@ -647,6 +636,7 @@
 		// Fetch the attendance chart or any other data
 		fetchAttendanceChart(gymId, staffId);
 
+
 		// Hide the default information section
 		hideDefaultInfoSectionSection();
 
@@ -915,7 +905,8 @@
 		});
 	}
 
-	function attendanceDetails(data) {
+	function attendanceDetails(data, gymId) {
+
 		const daysContainer = document.querySelector(".days");
 		const nextBtn = document.querySelector(".next");
 		const prevBtn = document.querySelector(".prev");
@@ -925,6 +916,8 @@
 
 		let currentMonth = new Date().getMonth();
 		let currentYear = new Date().getFullYear();
+		let holidays = [];
+		let weekends = [];
 
 		function renderCalendar() {
 			const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
@@ -937,11 +930,14 @@
 			month.innerHTML = `${months[currentMonth]} ${currentYear}`;
 			let daysHtml = "";
 
+			// Days of previous month
 			for (let x = startDay; x > 0; x--) {
 				daysHtml += `<div class="day prev">${prevLastDay - x + 1}</div>`;
 			}
 
+			// Days of the current month
 			for (let i = 1; i <= lastDayDate; i++) {
+				let fullDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
 				let dayStatus = '';
 				if (data && ('day' + i) in data) {
 					switch (data['day' + i]) {
@@ -961,17 +957,94 @@
 							dayStatus = 'style="background-color: #f1f1fb;"';
 					}
 				}
-				daysHtml += `<div class="day" data-day="${i}" ${dayStatus} onclick="openAttendanceMenu(this, ${i})">${i}</div>`;
+
+				daysHtml += `<div class="day" data-day="${i}" data-date="${fullDate}" ${dayStatus} onclick="openAttendanceMenu(this, ${i})">${i}</div>`;
 			}
 
+			// Next month's days
 			for (let j = 1; j <= nextDays; j++) {
 				daysHtml += `<div class="day next">${j}</div>`;
 			}
 
 			daysContainer.innerHTML = daysHtml;
+
+			// After rendering, disable holidays and weekends
+			disableCalendarColumns(holidays, weekends);
+		}
+
+		// Fetch weekends and holidays for the gym
+		function fetchHolidaysAndWeekends(gymId) {
+			$.ajax({
+				url: '/getGymHolidaysAndWeekends/' + gymId,
+				method: 'GET',
+				success: function (response) {
+					if (response.status === 200) {
+						holidays = response.holidays;  // Array of holiday dates (YYYY-MM-DD format)
+						weekends = response.weekends;  // Array of weekend days (0 for Sunday, 6 for Saturday)
+						renderCalendar();  // Re-render the calendar with the updated holidays and weekends
+					}
+				},
+				error: function (error) {
+					console.error("Failed to fetch holidays and weekends:", error);
+				}
+			});
+		}
+
+		// Disable weekends and holidays on the calendar
+		function disableCalendarColumns(holidays, weekends) {
+			let days = document.querySelectorAll('.day');
+
+			// Create a mapping from day names to numbers
+			const dayMapping = {
+				'sunday': 0,
+				'monday': 1,
+				'tuesday': 2,
+				'wednesday': 3,
+				'thursday': 4,
+				'friday': 5,
+				'saturday': 6
+			};
+
+			// Convert weekend strings to their corresponding day numbers
+			let weekendNumbers = weekends.map(day => dayMapping[day]);
+
+			days.forEach(function (dayElement) {
+				let dayDate = dayElement.dataset.date;  // Assume date is stored as data-date="YYYY-MM-DD"
+				let dayOfWeek = new Date(dayDate).getDay(); // Get the day of the week (0 = Sunday, 6 = Saturday)
+
+				// Disable entire columns for weekends
+				if (weekendNumbers.includes(dayOfWeek)) {
+					disableColumn(dayOfWeek); // Call function to disable the entire column for this day
+				}
+
+				// Disable holidays
+				if (holidays.includes(dayDate)) {
+					dayElement.classList.add('disabled');
+					dayElement.style.pointerEvents = 'none';
+					dayElement.style.backgroundColor = '#f5a623'; // Custom color for holidays
+				}
+			});
+		}
+
+		// Function to disable entire column based on the weekday
+		function disableColumn(weekday) {
+			let days = document.querySelectorAll('.day');
+
+			days.forEach(function (dayElement) {
+				let dayDate = dayElement.dataset.date;
+				let dayOfWeek = new Date(dayDate).getDay();
+
+				// Disable all days in the same column (weekday)
+				if (dayOfWeek === weekday) {
+					dayElement.classList.add('disabled');
+					dayElement.style.pointerEvents = 'none';
+					dayElement.style.backgroundColor = '#ccc'; // Custom background for disabled column
+				}
+			});
 		}
 
 
+		// Event listeners for next, prev, and today buttons
 		nextBtn.addEventListener("click", () => {
 			currentMonth++;
 			if (currentMonth > 11) {
@@ -996,8 +1069,11 @@
 			renderCalendar();
 		});
 
-		renderCalendar();
+		gymId ={{$gymStaff->gym_id ?? ''}}
+			// Initial call to render the calendar and fetch holidays/weekends
+			fetchHolidaysAndWeekends(gymId);
 	}
+
 
 	function openAttendanceMenu(dayElement, day) {
 		$staffId = document.getElementById('staffId').value;
@@ -1009,10 +1085,10 @@
 		const attendanceMenu = document.createElement('div');
 		attendanceMenu.classList.add('attendance-menu');
 		attendanceMenu.innerHTML = `
-        <button class="dropdown-item" onclick="markDayAttendance(${day}, 1, {{$gymStaff->gym_id}} , $staffId)">Present</button>
-        <button class="dropdown-item" style="background-color: indianred;" onmouseover="this.style.backgroundColor='#b22222'" onmouseout="this.style.backgroundColor='indianred'" onclick="markDayAttendance(${day}, 0, {{$gymStaff->gym_id}}, $staffId)">Absent</button>
-        <button class="dropdown-item" style="background-color: burlywood;" onmouseover="this.style.backgroundColor='#de9b44'" onmouseout="this.style.backgroundColor='burlywood'" onclick="markDayAttendance(${day}, 0.5, {{$gymStaff->gym_id}}, $staffId)">Half Day</button>
-        <button class="dropdown-item" style="background-color: lightgray;" onmouseover="this.style.backgroundColor='#d3d3d3'" onmouseout="this.style.backgroundColor='lightgray'" onclick="markDayAttendance(${day}, null, {{$gymStaff->gym_id}}, $staffId)">Unmark</button>
+        <button class="dropdown-item" onclick="markDayAttendance(${day}, 1, {{$gymStaff->gym_id ?? ''}} , $staffId)">Present</button>
+        <button class="dropdown-item" style="background-color: indianred;" onmouseover="this.style.backgroundColor='#b22222'" onmouseout="this.style.backgroundColor='indianred'" onclick="markDayAttendance(${day}, 0, {{$gymStaff->gym_id ?? ''}}, $staffId)">Absent</button>
+        <button class="dropdown-item" style="background-color: burlywood;" onmouseover="this.style.backgroundColor='#de9b44'" onmouseout="this.style.backgroundColor='burlywood'" onclick="markDayAttendance(${day}, 0.5, {{$gymStaff->gym_id ?? ''}}, $staffId)">Half Day</button>
+        <button class="dropdown-item" style="background-color: lightgray;" onmouseover="this.style.backgroundColor='#d3d3d3'" onmouseout="this.style.backgroundColor='lightgray'" onclick="markDayAttendance(${day}, null, {{$gymStaff->gym_id ?? ''}}, $staffId)">Unmark</button>
     `;
 
 		document.body.appendChild(attendanceMenu);
@@ -1077,7 +1153,7 @@
 					"showMethod": "fadeIn",
 					"hideMethod": "fadeOut"
 				};
-				toastr.success("Attendance updated for day " + day);
+				toastr.success("Attendance updated for day " + day);	
 			},
 			error: function (error) {
 				console.error(error);
@@ -1093,12 +1169,7 @@
 	}
 
 </script>
-<!--**********************************
-            Content body end
-***********************************-->
 <script src="{{asset('js/plugins-init/staff-attendance-overview-chart.js')}}" type="text/javascript"></script>
-<!-- Toastr CSS -->
-
 <!-- Toastr JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
