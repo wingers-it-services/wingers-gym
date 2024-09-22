@@ -8,6 +8,8 @@ use App\Models\Designation;
 use App\Models\GymStaffAseet;
 use App\Models\GymStaffAttendance;
 use App\Models\GymStaffLeave;
+use App\Models\GymWeekend;
+use App\Models\Holiday;
 use App\Models\StaffDocument;
 use App\Traits\SessionTrait;
 use Carbon\Carbon;
@@ -76,14 +78,14 @@ class GymStaffController extends Controller
     {
         try {
             $request->validate([
-                "staff_id"     => 'required',
-                "full_name"    => 'required',
-                "email"        => 'required',
+                "staff_id" => 'required',
+                "full_name" => 'required',
+                "email" => 'required',
                 "phone_number" => 'required',
                 "joining_date" => 'required',
-                "salary"       => 'required',
-                "designation"  => 'required',
-                "blood_group"  => 'required'
+                "salary" => 'required',
+                "designation" => 'required',
+                "blood_group" => 'required'
             ]);
 
             $gym = Auth::guard('gym')->user();
@@ -110,15 +112,26 @@ class GymStaffController extends Controller
     {
         try {
             $request->validate([
-                "gymId"            => 'required',
-                "staffId"          => 'required',
-                "attendanceStatus" => 'required',
-                "day"              => 'required' // Ensure the day is valid
+                "gymId" => 'required',
+                "staffId" => 'required',
+                "attendanceStatus" => 'nullable', // Allow null to unmark attendance
+                "day" => 'required' // Ensure the day is valid
             ]);
 
             $now = Carbon::now();
             $year = $now->year;
             $month = $now->month;
+
+            // Prepare the data for the specific day
+            $attendanceData = [];
+            $attendanceField = 'day' . $request->day;
+
+            // If attendanceStatus is null, unmark the day (set it to null)
+            if (is_null($request->attendanceStatus)) {
+                $attendanceData[$attendanceField] = null;
+            } else {
+                $attendanceData[$attendanceField] = $request->attendanceStatus;
+            }
 
             // Save attendance for the specific day
             $gymAttendance = GymStaffAttendance::updateOrCreate(
@@ -128,9 +141,7 @@ class GymStaffController extends Controller
                     'month' => $month,
                     'year' => $year
                 ],
-                [
-                    'day' . $request->day => $request->attendanceStatus // Update the specific day
-                ]
+                $attendanceData
             );
 
             return response()->json(['status' => 200, 'data' => $gymAttendance], 200);
@@ -140,6 +151,25 @@ class GymStaffController extends Controller
         }
     }
 
+    public function getGymHolidaysAndWeekends($gymId)
+    {
+        try {
+            // Fetch holidays (date-wise)
+            $holidays = Holiday::where('gym_id', $gymId)->pluck('date')->toArray();
+
+            // Fetch weekends (day-wise)
+            $weekends = GymWeekend::where('gym_id', $gymId)->pluck('weekend_day')->toArray();
+
+            return response()->json([
+                'status' => 200,
+                'holidays' => $holidays, // Holidays array in 'YYYY-MM-DD' format
+                'weekends' => $weekends, // Weekends array (days of the week, e.g., 0 for Sunday, 6 for Saturday)
+            ], 200);
+        } catch (\Throwable $th) {
+            Log::error("[GymStaffController][getGymHolidaysAndWeekends] error " . $th->getMessage());
+            return response()->json(['status' => 500], 500);
+        }
+    }
 
 
 
@@ -147,7 +177,7 @@ class GymStaffController extends Controller
     {
         try {
             $request->validate([
-                "gymId"   => 'required',
+                "gymId" => 'required',
                 "staffId" => 'required'
             ]);
 
@@ -166,10 +196,10 @@ class GymStaffController extends Controller
                 return response()->json([
                     'status' => 200,
                     'data' => [
-                        "Absent"   => 0,
-                        "Halfday"  => 0,
+                        "Absent" => 0,
+                        "Halfday" => 0,
                         "WeekOff" => 0,
-                        "Present"  => 0,
+                        "Present" => 0,
                         "Unmarked" => 30
                     ]
                 ], 200);
@@ -177,7 +207,7 @@ class GymStaffController extends Controller
 
             $gym = $gym->toArray();
             $data = [
-                "Absent"  => 0,
+                "Absent" => 0,
                 "Halfday" => 0,
                 "WeekOff" => 0,
                 "Present" => 0,
@@ -204,8 +234,8 @@ class GymStaffController extends Controller
             }
             return response()->json([
                 'status' => 200,
-                'data'   => $data,
-                'gym'    => $gym
+                'data' => $data,
+                'gym' => $gym
             ], 200);
         } catch (\Throwable $th) {
             Log::error("[GymStaffController][addGymStaff] error " . $th->getMessage());
@@ -289,14 +319,14 @@ class GymStaffController extends Controller
     {
         try {
             $request->validate([
-                "staff_id"     => 'required',
-                "name"    => 'required',
-                "category"        => 'required',
+                "staff_id" => 'required',
+                "name" => 'required',
+                "category" => 'required',
                 "asset_tag" => 'required',
                 "allocation_date" => 'required',
-                "price"       => 'required',
-                "status"  => 'required',
-                "image"  => 'required',
+                "price" => 'required',
+                "status" => 'required',
+                "image" => 'required',
             ]);
 
             $gym = Auth::guard('gym')->user();
@@ -344,12 +374,12 @@ class GymStaffController extends Controller
     {
         try {
             $request->validate([
-                "staff_id"     => 'required',
-                "leave_type"   => 'required',
-                "start_date"   => 'required',
-                "end_date"     => 'required',
-                "reason"       => 'nullable',
-                "status"       => 'required'
+                "staff_id" => 'required',
+                "leave_type" => 'required',
+                "start_date" => 'required',
+                "end_date" => 'required',
+                "reason" => 'nullable',
+                "status" => 'required'
             ]);
 
             $gym = Auth::guard('gym')->user();
@@ -403,9 +433,9 @@ class GymStaffController extends Controller
     {
         try {
             $request->validate([
-                'document_name'  => 'required',
-                'file'      => 'required|mimes:jpeg,png,jpg,pdf',
-                'staff_id'  => 'required'
+                'document_name' => 'required',
+                'file' => 'required|mimes:jpeg,png,jpg,pdf',
+                'staff_id' => 'required'
             ]);
 
             $imagePath = null;
