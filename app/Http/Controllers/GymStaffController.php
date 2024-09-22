@@ -112,14 +112,25 @@ class GymStaffController extends Controller
             $request->validate([
                 "gymId"            => 'required',
                 "staffId"          => 'required',
-                "attendanceStatus" => 'required',
+                "attendanceStatus" => 'nullable', // Allow null to unmark attendance
                 "day"              => 'required' // Ensure the day is valid
             ]);
-
+    
             $now = Carbon::now();
             $year = $now->year;
             $month = $now->month;
-
+    
+            // Prepare the data for the specific day
+            $attendanceData = [];
+            $attendanceField = 'day' . $request->day;
+    
+            // If attendanceStatus is null, unmark the day (set it to null)
+            if (is_null($request->attendanceStatus)) {
+                $attendanceData[$attendanceField] = null;
+            } else {
+                $attendanceData[$attendanceField] = $request->attendanceStatus;
+            }
+    
             // Save attendance for the specific day
             $gymAttendance = GymStaffAttendance::updateOrCreate(
                 [
@@ -128,18 +139,16 @@ class GymStaffController extends Controller
                     'month' => $month,
                     'year' => $year
                 ],
-                [
-                    'day' . $request->day => $request->attendanceStatus // Update the specific day
-                ]
+                $attendanceData
             );
-
+    
             return response()->json(['status' => 200, 'data' => $gymAttendance], 200);
         } catch (\Throwable $th) {
             Log::error("[GymStaffController][markGymStaffAttendance] error " . $th->getMessage());
             return response()->json(['status' => 500], 500);
         }
     }
-
+    
 
 
 
