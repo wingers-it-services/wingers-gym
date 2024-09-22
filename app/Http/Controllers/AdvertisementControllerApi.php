@@ -22,12 +22,12 @@ class AdvertisementControllerApi extends Controller
                 ], 422);
             }
 
-
             return response()->json([
                 'status'        => 200,
                 'advertisement' => $advertisement,
                 'message'       => 'advertisement fetched successfully.',
             ], 200);
+            
         } catch (\Exception $e) {
             Log::error('[AdvertisementControllerApi][fetchAdvertisement] Error fetching advertisement details: ' . $e->getMessage());
             return response()->json([

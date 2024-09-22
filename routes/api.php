@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdvertisementControllerApi;
 use App\Http\Controllers\Api\UserBmiControllerApi;
+use App\Http\Controllers\DietAnalyticControllerApi;
 use App\Http\Controllers\EquipmentControllerApi;
 use App\Http\Controllers\FcmTokenControllerApi;
 use App\Http\Controllers\GoalControllerApi;
@@ -65,9 +66,15 @@ Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']
 
 Route::middleware('auth:api')->group(function () {
 
+    Route::get('/logout', [GymUserControllerApi::class, 'userLogout']);
+    
+    Route::post('/diet-anlytics', [DietAnalyticControllerApi::class, 'fetchUserDietAnalytic']);
+
     Route::get('/fetch-advertisement', [AdvertisementControllerApi::class, 'fetchAdvertisement']);
 
     Route::post('/response', [UserSubscriptionControllerApi::class, 'response']);
+    
+    Route::post('/workout-anlytics', [UserWorkoutAnalyticApi::class, 'fetchUserWorkoutAnalytic']);
 
     Route::post('/get-home-page-data', [HomeControllerApi::class, 'fetchAdvertisementAndAttendance']);
 

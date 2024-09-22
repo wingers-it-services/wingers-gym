@@ -381,7 +381,7 @@ class GymUserControllerApi extends Controller
     {
         try {
             // Validate the incoming request data
-           $request->validate([
+            $request->validate([
                 'firstname'    => 'required|string',
                 'lastname'     => 'required|string',
                 'gender'       => 'required|string',
@@ -421,12 +421,12 @@ class GymUserControllerApi extends Controller
                     'message' => 'User not authenticated',
                 ], 401);
             }
-    
+
             // Fetch related injuries, goals, and levels
             $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
             $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
             $levels = $user->levels()->get(['level_id', 'lebel']);         // Adjust fields as per your model
-            
+
             // Calculate user's age based on DOB (assuming 'dob' field exists in user table)
             $age = null;
             if ($user->dob) {
@@ -434,7 +434,7 @@ class GymUserControllerApi extends Controller
             }
 
             $user->age = $age;
-    
+
             return response()->json([
                 'status'   => 200,
                 'user'     => $user,
@@ -485,6 +485,35 @@ class GymUserControllerApi extends Controller
             return response()->json([
                 'status'  => 500,
                 'message' => 'An error occurred while updating email or phone number: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    
+
+    public function userLogout(Request $request)
+    {
+        try {
+            $user = auth()->user();
+            if ($user) {
+                // Revoke the user's current access token
+                $user->token()->revoke();
+
+                return response()->json([
+                    'status'  => 200,
+                    'message' => 'User logged out successfully.'
+                ], 200);
+            } else {
+                return response()->json([
+                    'status'  => 200,
+                    'message' => 'No user is currently authenticated.'
+                ], 200);
+            }
+        } catch (Exception $e) {
+            Log::error('[GymUserControllerApi][userLogout]Error logging out user: ' . $e->getMessage());
+            return response()->json([
+                'status'   => 500,
+                'message'  => 'An error occurred while logging out.'
             ], 500);
         }
     }
