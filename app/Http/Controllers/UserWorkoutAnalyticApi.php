@@ -13,16 +13,13 @@ class UserWorkoutAnalyticApi extends Controller
     public function fetchUserWorkoutAnalytic(Request $request)
     {
         try {
-    
+            // Validate gym_id presence and existence
             $request->validate([
                 'gym_id' => 'required|exists:gyms,id'
             ]);
     
             $currentMonth = Carbon::now()->month;
             $currentYear = Carbon::now()->year;
-    
-            // List of body parts to ensure consistency in the output
-            $bodyParts = ['shoulder', 'abs', 'leg', 'chest', 'back', 'biceps', 'triceps', 'forearm'];
     
             // Fetch workout analytics for the current month and year for percentage calculation
             $currentMonthAnalytics = WorkoutAnalytic::where('user_id', auth()->user()->id)
@@ -32,47 +29,60 @@ class UserWorkoutAnalyticApi extends Controller
                 ->get()
                 ->groupBy('targeted_body_part');
     
-            // Fetch workout analytics for all months based on 'month' and 'year' fields for allotted and completed sets calculation
+            // Fetch workout analytics for all months for allotted and completed sets calculation
             $allMonthAnalytics = WorkoutAnalytic::where('user_id', auth()->user()->id)
                 ->where('gym_id', $request->gym_id)
                 ->get()
                 ->groupBy(function ($item) {
-                    return $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT); // Group by year-month from fields
+                    return $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT); // Group by year-month
                 });
     
-            // Initialize percentages array for the current month with zero values
-            $percentages = array_fill_keys($bodyParts, 0);
+            // Initialize percentages array for the current month
+            $percentages = [];
     
-            // Initialize sets array for all months
+            // Loop through current month analytics for percentage calculation and custom response structure
+            foreach ($currentMonthAnalytics as $bodyPart => $data) {
+                $percentages[] = [
+                    'title' => ucfirst($bodyPart), // Use the actual dynamic targeted body part
+                    'subtitle' => "Hello " . strtolower($bodyPart), // Custom subtitle message
+                    'percentage' => round($data->avg('percentage'), 2), // Calculate and format percentage
+                ];
+            }
+    
+            // Initialize array for all month sets
             $sets = [];
     
-            // Loop through current month analytics for percentage calculation
-            foreach ($currentMonthAnalytics as $bodyPart => $data) {
-                $bodyPartKey = strtolower($bodyPart);
-                if (in_array($bodyPartKey, $bodyParts)) {
-                    $percentages[$bodyPartKey] = round($data->avg('percentage'), 2);
-                }
-            }
+            // Define a default color if not using a predefined map
+            $defaultColor = '#FFD700';
     
             // Loop through all month analytics to calculate allotted and completed sets month-wise
             foreach ($allMonthAnalytics as $monthYear => $data) {
-                // Initialize sets array for this month for each body part
-                $sets[$monthYear] = array_fill_keys($bodyParts, ['total_sets' => 0, 'total_sets_completed' => 0]);
+                // Split the monthYear into year and month parts for readability
+                [$year, $month] = explode('-', $monthYear);
+                $monthName = Carbon::createFromFormat('m', $month)->format('M'); // Convert month number to short month name (e.g., Jan, Feb)
     
-                // Loop through each body part for the current month
-                foreach ($data->groupBy('targeted_body_part') as $bodyPart => $bodyData) {
-                    $bodyPartKey = strtolower($bodyPart);
-                    if (in_array($bodyPartKey, $bodyParts)) {
-                        $sets[$monthYear][$bodyPartKey]['total_sets'] = $bodyData->sum('total_sets');
-                        $sets[$monthYear][$bodyPartKey]['total_sets_completed'] = $bodyData->sum('total_sets_completed');
-                    }
+                // Group by body parts to calculate sets for each body part in that month
+                $bodyPartData = $data->groupBy('targeted_body_part');
+                foreach ($bodyPartData as $bodyPart => $bodyData) {
+                    // Calculate total allotted and completed sets for the body part
+                    $totalAllotedSets = $bodyData->sum('total_sets');
+                    $totalCompletedSets = $bodyData->sum('total_sets_completed');
+    
+                    // Add the set data for this body part in this month
+                    $sets[] = [
+                        'month' => $monthName, // Month short name like Jan, Feb, etc.
+                        'body_part' => ucfirst($bodyPart), // Use the dynamic body part name
+                        'alloted_set' => $totalAllotedSets,
+                        'completed_set' => $totalCompletedSets,
+                        'color' => $defaultColor // You can define colors dynamically if needed
+                    ];
                 }
             }
     
             return response()->json([
                 'status' => 200,
-                'percentages' => $percentages,
-                'sets' => $sets,
+                'percentages' => $percentages, // Custom formatted body part percentages
+                'sets' => $sets,               // Custom sets data with dynamic body part names
                 'message' => 'Workout analytics fetched successfully.',
             ], 200);
         } catch (\Exception $e) {
@@ -83,5 +93,7 @@ class UserWorkoutAnalyticApi extends Controller
             ], 500);
         }
     }
+    
+    
     
 }
