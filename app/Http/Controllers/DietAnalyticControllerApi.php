@@ -16,48 +16,88 @@ class DietAnalyticControllerApi extends Controller
             $request->validate([
                 'gym_id' => 'required|exists:gyms,id'
             ]);
-
+    
+            $userId = auth()->user()->id;
+            $gymId = $request->gym_id;
             $currentMonth = Carbon::now()->month;
             $currentYear = Carbon::now()->year;
-
+    
             // Fetch diet analytics for the current month and year
-            $currentMonthDietAnalytics = DietAnalytic::where('user_id', auth()->user()->id)
-                ->where('gym_id', $request->gym_id)
+            $currentMonthDietAnalytics = DietAnalytic::where('user_id', $userId)
+                ->where('gym_id', $gymId)
                 ->where('month', $currentMonth)
                 ->where('year', $currentYear)
                 ->get();
-
-            // Initialize an array for current month's percentages
-            $currentMonthPercentages = [
-                'fats' => 0,
-                'carbs' => 0,
-                'protein' => 0,
-                'calories' => 0
+    
+            // Initialize percentages array with default values for the current month
+            $percentages = [
+                [
+                    'title' => 'carbs',
+                    'subtitle' => 'carbs',
+                    'percentage' => 0
+                ],
+                [
+                    'title' => 'fats',
+                    'subtitle' => 'fats defats',
+                    'percentage' => 0
+                ],
+                [
+                    'title' => 'protein',
+                    'subtitle' => 'protein',
+                    'percentage' => 0
+                ],
+                [
+                    'title' => 'calories',
+                    'subtitle' => 'calories',
+                    'percentage' => 0
+                ]
             ];
-
-            // If analytics are found, set the percentage values from the database
+    
+            // If current month's data is available, calculate the average percentages
             if ($currentMonthDietAnalytics->isNotEmpty()) {
-                $currentMonthPercentages = [
-                    'fats' => $currentMonthDietAnalytics->avg('fat_percentage'),
-                    'carbs' => $currentMonthDietAnalytics->avg('carb_percentage'),
-                    'protein' => $currentMonthDietAnalytics->avg('protein_percentage'),
-                    'calories' => $currentMonthDietAnalytics->avg('calories_percentage'),
+                $percentages = [
+                    [
+                        'title' => 'carbs',
+                        'subtitle' => 'carbs',
+                        'percentage' => round($currentMonthDietAnalytics->avg('carb_percentage'), 2)
+                    ],
+                    [
+                        'title' => 'fats',
+                        'subtitle' => 'fats defats',
+                        'percentage' => round($currentMonthDietAnalytics->avg('fat_percentage'), 2)
+                    ],
+                    [
+                        'title' => 'protein',
+                        'subtitle' => 'protein',
+                        'percentage' => round($currentMonthDietAnalytics->avg('protein_percentage'), 2)
+                    ],
+                    [
+                        'title' => 'calories',
+                        'subtitle' => 'calories',
+                        'percentage' => round($currentMonthDietAnalytics->avg('calories_percentage'), 2)
+                    ]
                 ];
             }
-
-            // Fetch diet analytics for all months based on 'month' and 'year' fields
-            $allMonthDietAnalytics = DietAnalytic::where('user_id', auth()->user()->id)
-                ->where('gym_id', $request->gym_id)
+    
+            // Fetch diet analytics for all months grouped by 'year-month'
+            $allMonthDietAnalytics = DietAnalytic::where('user_id', $userId)
+                ->where('gym_id', $gymId)
                 ->get()
                 ->groupBy(function ($item) {
                     return $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT); // Group by year-month
                 });
-
-            // Prepare array for all months data (total and consumed)
+    
+            // Prepare dynamic array for all months data (total and consumed values)
             $allMonthData = [];
-
+    
             foreach ($allMonthDietAnalytics as $monthYear => $data) {
-                $allMonthData[$monthYear] = [
+                // Extract year and month
+                [$year, $month] = explode('-', $monthYear);
+                $monthName = Carbon::createFromFormat('m', $month)->format('M'); // Convert month number to short month name (e.g., Jan)
+    
+                // Add data dynamically for each month
+                $allMonthData[] = [
+                    'month' => $monthName, // Month short name like Jan, Feb, etc.
                     'total_fats' => $data->sum('total_fats'),
                     'consumed_fats' => $data->sum('total_fats_consumed'),
                     'total_carbs' => $data->sum('total_carbs'),
@@ -66,13 +106,14 @@ class DietAnalyticControllerApi extends Controller
                     'consumed_protein' => $data->sum('total_protein_consumed'),
                     'total_calories' => $data->sum('total_calories'),
                     'consumed_calories' => $data->sum('total_calories_consumed'),
+                    'color' => '#FFD700' // You can add a logic for dynamic color if needed
                 ];
             }
-
+    
             return response()->json([
                 'status' => 200,
-                'currentMonthPercentages' => $currentMonthPercentages,
-                'allMonthData' => $allMonthData,
+                'percentages' => $percentages, // Dynamic current month percentages
+                'allMonthData' => $allMonthData, // Dynamic all months data
                 'message' => 'Diet analytics fetched successfully.',
             ], 200);
         } catch (\Exception $e) {
@@ -83,4 +124,5 @@ class DietAnalyticControllerApi extends Controller
             ], 500);
         }
     }
+    
 }
