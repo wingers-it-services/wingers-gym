@@ -25,43 +25,15 @@ class UserWorkoutAnalyticApi extends Controller
                 'gym_id' => 'required|exists:gyms,id'
             ]);
     
-            $currentMonth = Carbon::now()->month;
             $currentYear = Carbon::now()->year;
     
-            // Fetch workout analytics for the current month and year for percentage calculation
-            $currentMonthAnalytics = $this->workoutAnalytic->where('user_id', auth()->user()->id)
-                ->where('gym_id', $request->gym_id)
-                ->where('month', $currentMonth)
-                ->where('year', $currentYear)
-                ->get()
-                ->groupBy('targeted_body_part');
-    
-            // Return 422 if no data is found for the current month
-            if ($currentMonthAnalytics->isEmpty()) {
-                return response()->json([
-                    'status'  => 422,
-                    'message' => 'No workout analytics data found for the current month.',
-                ], 422);
-            }
-    
-            $percentages = [];
-    
-            // Loop through current month analytics for percentage calculation and custom response structure
-            foreach ($currentMonthAnalytics as $bodyPart => $data) {
-                $percentages[] = [
-                    'title'      => ucfirst($bodyPart), // Use the actual dynamic targeted body part
-                    'subtitle'   => "Hello " . strtolower($bodyPart), // Custom subtitle message
-                    'percentage' => round($data->avg('percentage'), 2), // Calculate and format percentage
-                ];
-            }
-    
+            // Fetch workout analytics for the entire year for percentage calculation
             $yearAnalytics = $this->workoutAnalytic->where('user_id', auth()->user()->id)
                 ->where('gym_id', $request->gym_id)
-                ->where('year', $currentYear) // Filter by the current year
+                ->where('year', $currentYear)
                 ->get()
                 ->groupBy('targeted_body_part'); // Group by targeted body part
     
-            // Return 422 if no yearly data is found
             if ($yearAnalytics->isEmpty()) {
                 return response()->json([
                     'status'  => 422,
@@ -69,6 +41,7 @@ class UserWorkoutAnalyticApi extends Controller
                 ], 422);
             }
     
+            $percentages = [];
             $sets = [];
     
             $months = [
@@ -86,30 +59,48 @@ class UserWorkoutAnalyticApi extends Controller
                 '12' => 'Dec'
             ];
     
-            // Loop through body part data and aggregate sets for each month
+            // Loop through each body part and calculate totals and percentages
             foreach ($yearAnalytics as $bodyPart => $data) {
-                // Initialize dynamic month-wise values for each body part
+                // Initialize totals for allotted and completed sets for the year
+                $totalAllottedSets = 0;
+                $totalCompletedSets = 0;
+    
                 $currentBodyPartData = [
-                    'body_part' => ucfirst($bodyPart), // Capitalize body part name
+                    'body_part' => ucfirst($bodyPart),
                 ];
     
-                // Loop through the data for this body part and assign sets to months dynamically
                 foreach ($months as $monthNum => $monthName) {
                     // Filter data for the current month
-                    $monthData = $data->where('month', (int)$monthNum); // Ensure month matches
+                    $monthData = $data->where('month', (int)$monthNum);
     
                     // Sum up the sets for the current month
-                    $totalAllotedSets = $monthData->sum('total_sets');
-                    $totalCompletedSets = $monthData->sum('total_sets_completed');
+                    $allottedSets = $monthData->sum('total_sets');
+                    $completedSets = $monthData->sum('total_sets_completed');
     
                     // Add this month's data to the body part array
                     $currentBodyPartData[$monthName . '_month'] = $monthName;
-                    $currentBodyPartData[$monthName . '_alloted_set'] = $totalAllotedSets;
-                    $currentBodyPartData[$monthName . '_completed_set'] = $totalCompletedSets;
+                    $currentBodyPartData[$monthName . '_alloted_set'] = $allottedSets;
+                    $currentBodyPartData[$monthName . '_completed_set'] = $completedSets;
+    
+                    // Accumulate yearly totals
+                    $totalAllottedSets += $allottedSets;
+                    $totalCompletedSets += $completedSets;
                 }
     
                 // Add the body part data to the sets array
                 $sets[] = $currentBodyPartData;
+    
+                // Calculate the percentage
+                $percentage = $totalAllottedSets > 0
+                    ? round(($totalCompletedSets / $totalAllottedSets) * 100, 2)
+                    : 0;
+    
+                // Add to percentages array
+                $percentages[] = [
+                    'title'      => ucfirst($bodyPart),
+                    'subtitle'   => "Hello " . strtolower($bodyPart),
+                    'percentage' => $percentage,
+                ];
             }
     
             return response()->json([
@@ -119,12 +110,15 @@ class UserWorkoutAnalyticApi extends Controller
                 'message'     => 'Workout analytics fetched successfully.',
             ], 200);
     
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('[UserWorkoutAnalyticApi][fetchUserWorkoutAnalytic] Error: ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
                 'message' => 'Error fetching workout analytics: ' . $e->getMessage(),
             ], 500);
         }
-    }    
+    }
+    
+    
+   
 }
