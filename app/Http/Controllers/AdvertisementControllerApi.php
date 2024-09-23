@@ -8,11 +8,20 @@ use Illuminate\Support\Facades\Log;
 
 class AdvertisementControllerApi extends Controller
 {
-    public function fetchAdvertisement(Request $request)
+
+    protected $advertisment;
+
+    public function __construct(
+        Advertisement $advertisment
+    ) {
+        $this->advertisment = $advertisment;
+    }
+
+    public function fetchAdvertisement()
     {
         try {
 
-            $advertisement = Advertisement::where('type','ads')->get();
+            $advertisement = $this->advertisment->where('type', 'ads')->get();
 
             if (!$advertisement) {
                 return response()->json([

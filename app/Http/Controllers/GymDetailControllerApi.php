@@ -39,12 +39,10 @@ class GymDetailControllerApi extends Controller
     
             $user = auth()->user();
     
-            // Fetch the gym details along with the user count and staff details
             $gymDetails = $this->gym
                 ->where('uuid', $request->uuid)
-                ->withCount('users') // Add users count
+                ->withCount('users') 
                 ->with(['staff' => function ($query) {
-                    // Include designation name with staff details
                     $query->with('designation:id,designation_name');
                 }])
                 ->first();
@@ -85,16 +83,12 @@ class GymDetailControllerApi extends Controller
             
             }
             
-            
-            // Calculate total years and review (dummy logic for now)
-            // Replace with actual logic if available
-            $review = 0;     // Replace with actual logic if available
-    
-            // Convert gymDetails to array and add custom fields
+            $review = 0;     
+
             $gymDetailsArray = array_merge($gymDetails->toArray(), [
                 'review'      => $review, 
                 'total_years' => $totalYears,    
-                'months' => $remainingMonths, 
+                'months'      => $remainingMonths, 
             ]);
     
             // Update staff data to include designation name instead of ID
@@ -109,6 +103,7 @@ class GymDetailControllerApi extends Controller
                 'gymDetails' => $gymDetailsArray,
                 'message'    => 'Gym details fetched successfully.',
             ], 200);
+            
         } catch (\Exception $e) {
             Log::error('[GymDetailControllerApi][fetchGymDetails] Error fetching gym details: ' . $e->getMessage());
             return response()->json([

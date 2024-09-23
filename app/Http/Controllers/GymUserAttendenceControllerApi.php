@@ -27,58 +27,9 @@ class GymUserAttendenceControllerApi extends Controller
         $this->gym = $gym;
     }
 
-    // public function markAttendance(Request $request)
-    // {
-    //     dd($request->all());
-    //     $request->validate([
-    //         'gym_user_id' => 'required|exists:gym_users,id',
-    //         'gym_id'      => 'required|exists:gyms,id',
-    //         'status'      => 'required'
-    //     ]);
-
-    //     $gymUserId = $request->input('gym_user_id');
-    //     $gymId = $request->input('gym_id');
-    //     $currentDay = Carbon::now()->day;
-    //     $currentMonth = Carbon::now()->month;
-    //     $currentYear = Carbon::now()->year;
-
-    //     $attendance = GymUserAttendence::firstOrNew([
-    //         'gym_user_id' => $gymUserId,
-    //         'gym_id'      => $gymId,
-    //         'month'       => $currentMonth,
-    //         'year'        => $currentYear,
-    //     ]);
-
-    //     $dayField = 'day' . $currentDay;
-    //     $attendance->$dayField = $request->status; // Mark as present
-
-    //     $attendance->save();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Attendance marked successfully',
-    //         'attendance' => $attendance,
-    //     ]);
-    // }
-
-    public function fetchUserAttendence(Request $request)
-    {
-        $request->validate([
-            'gym_id'      => 'required|exists:gyms,id',
-        ]);
-
-        $user = auth()->user();
-
-        $this->gymUserAttendence
-            ->where('gym_id', $request->gym_id)
-            ->where('user_id', $user->id)
-            ->get();
-    }
-
     public function getUserAttendance(Request $request)
     {
         try {
-            // Validate the request
             $request->validate([
                 'gym_id' => 'required|exists:gyms,id',
                 'month'  => 'required|integer|min:1|max:12',
@@ -192,7 +143,6 @@ class GymUserAttendenceControllerApi extends Controller
                 'message' => 'Attendance fetched successfully'
             ], 200);
         } catch (Throwable $e) {
-            // Handle exceptions and return a 500 error response
             Log::error('[GymUserAttendenceControllerApi][getUserAttendance]' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
@@ -205,7 +155,7 @@ class GymUserAttendenceControllerApi extends Controller
     {
         try {
             $request->validate([
-                'gym_uuid'      => 'required|exists:gyms,uuid'
+                'gym_uuid' => 'required|exists:gyms,uuid'
             ]);
 
             $user = auth()->user();
@@ -244,11 +194,10 @@ class GymUserAttendenceControllerApi extends Controller
 
             $attendance->save();
 
-            // Return success response
             return response()->json([
-                'status'  => 200,
+                'status'     => 200,
                 'attendence' => $attendance,
-                'message' => 'Attendance marked successfully',
+                'message'    => 'Attendance marked successfully',
             ], 200);
         } catch (Throwable $e) {
             Log::error('[GymUserAttendenceControllerApi][markAttendance]'.$e->getMessage());

@@ -24,8 +24,7 @@ class UserInquiryControllerApi extends Controller
             $request->validate([
                 'gym_id'      => 'required|exists:gyms,id',
                 'reason'      => 'required',
-                'description' => 'required',
-                'status'      => 'required'
+                'description' => 'required'
             ]);
 
             $request = $request->all();

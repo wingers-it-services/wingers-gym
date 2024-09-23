@@ -125,55 +125,11 @@ class UserSubscriptionControllerApi extends Controller
 
     public function initialisePaymentWithTest(array $data)
     {
-        $lastOrderId = UserSubscriptionPayment::latest('id')->value('id');
+        $lastOrderId = $this->userSubscriptionPayment->latest('id')->value('id');
         $newOrderId = ($lastOrderId == null) ? 'WITS1' :  'W1' . ($lastOrderId + 1);
         $amount = $data['totalprice']/100;
-
-        // $paymentData = [
-        //     'merchantId'            =>  'PGTESTPAYUAT',
-        //     'merchantTransactionId' =>  $newOrderId,
-        //     'merchantUserId'        =>  'MUID123',
-        //     'amount'                =>  $amount,
-        //     'redirectUrl'           => route('response'),
-        //     'redirectMode'          => 'POST',
-        //     'callbackUrl'           => route('response'),
-        //     'mobileNumber'          => $data['mobile'],
-        //     'paymentInstrument'     =>
-        //     [
-        //         'type' => 'PAY_PAGE',
-        //     ],
-        // ];
-
-        // $encode = base64_encode(json_encode($paymentData));
-
-
         $this->userSubscriptionPayment->newOrder($data);
     }
-
-    // public function purchaseSubscription(Request $request)
-    // {
-
-    //     try {
-    //         $request->validate([
-    //             'gym_id'          => 'required|exists:gyms,id',
-    //             'subscription_id' => 'required',
-    //             'amount'          => 'required',
-    //         ]);
-
-    //         $order = $this->userSubscriptionPayment->newOrder($request->all);
-    //         return response()->json([
-    //             'status'  => 200,
-    //             'order'   => $order,
-    //             'message' => 'Error purchasing subscriptions details: '
-    //         ], 200);
-    //     } catch (Throwable $e) {
-    //         Log::error('[UserSubscriptionControllerApi][purchaseSubscription]Error purchasing subscriptions: ' . $e->getMessage());
-    //         return response()->json([
-    //             'status'  => 500,
-    //             'message' => 'Error purchasing subscriptions details: ' . $e->getMessage()
-    //         ], 500);
-    //     }
-    // }
 
     public function phonePeCallback(Request $request)
     {
@@ -238,7 +194,7 @@ class UserSubscriptionControllerApi extends Controller
                 'start_immediately'     => 'required'
             ]);
 
-            $order = UserSubscriptionPayment::where('merchantId',  $request->merchantTransactionId)->first();
+            $order = $this->userSubscriptionPayment->where('merchantId',  $request->merchantTransactionId)->first();
             // $project = $this->project->find($order->project_id);
             if (!$order) {
                 return response()->json([
@@ -247,7 +203,7 @@ class UserSubscriptionControllerApi extends Controller
                 ], 404);
             }
 
-            $lastOrderId = UserSubscriptionPayment::latest('id')->value('id');
+            $lastOrderId = $this->userSubscriptionPayment->latest('id')->value('id');
             $orderId = $request->gym_id . 'WITSGYM' . ($lastOrderId + 1);
 
             if (!isset($order)) {

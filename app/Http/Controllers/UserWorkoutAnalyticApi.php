@@ -10,10 +10,17 @@ use Illuminate\Support\Facades\Log;
 
 class UserWorkoutAnalyticApi extends Controller
 {
+    protected $workoutAnalytic;
+
+    public function __construct(
+        WorkoutAnalytic $workoutAnalytic,
+    ) {
+        $this->workoutAnalytic = $workoutAnalytic;
+    }
+
     public function fetchUserWorkoutAnalytic(Request $request)
     {
         try {
-            // Validate gym_id presence and existence
             $request->validate([
                 'gym_id' => 'required|exists:gyms,id'
             ]);
@@ -22,36 +29,48 @@ class UserWorkoutAnalyticApi extends Controller
             $currentYear = Carbon::now()->year;
     
             // Fetch workout analytics for the current month and year for percentage calculation
-            $currentMonthAnalytics = WorkoutAnalytic::where('user_id', auth()->user()->id)
+            $currentMonthAnalytics = $this->workoutAnalytic->where('user_id', auth()->user()->id)
                 ->where('gym_id', $request->gym_id)
                 ->where('month', $currentMonth)
                 ->where('year', $currentYear)
                 ->get()
                 ->groupBy('targeted_body_part');
     
-                $percentages = [];
+            // Return 422 if no data is found for the current month
+            if ($currentMonthAnalytics->isEmpty()) {
+                return response()->json([
+                    'status'  => 422,
+                    'message' => 'No workout analytics data found for the current month.',
+                ], 422);
+            }
     
-                // Loop through current month analytics for percentage calculation and custom response structure
-                foreach ($currentMonthAnalytics as $bodyPart => $data) {
-                    $percentages[] = [
-                        'title' => ucfirst($bodyPart), // Use the actual dynamic targeted body part
-                        'subtitle' => "Hello " . strtolower($bodyPart), // Custom subtitle message
-                        'percentage' => round($data->avg('percentage'), 2), // Calculate and format percentage
-                    ];
-                }
-            // Fetch workout analytics for all months for allotted and completed sets calculation
-          
+            $percentages = [];
     
-                $yearAnalytics = WorkoutAnalytic::where('user_id', auth()->user()->id)
+            // Loop through current month analytics for percentage calculation and custom response structure
+            foreach ($currentMonthAnalytics as $bodyPart => $data) {
+                $percentages[] = [
+                    'title'      => ucfirst($bodyPart), // Use the actual dynamic targeted body part
+                    'subtitle'   => "Hello " . strtolower($bodyPart), // Custom subtitle message
+                    'percentage' => round($data->avg('percentage'), 2), // Calculate and format percentage
+                ];
+            }
+    
+            $yearAnalytics = $this->workoutAnalytic->where('user_id', auth()->user()->id)
                 ->where('gym_id', $request->gym_id)
                 ->where('year', $currentYear) // Filter by the current year
                 ->get()
                 ->groupBy('targeted_body_part'); // Group by targeted body part
     
-            // Initialize the sets array for storing grouped data by body part and months
+            // Return 422 if no yearly data is found
+            if ($yearAnalytics->isEmpty()) {
+                return response()->json([
+                    'status'  => 422,
+                    'message' => 'No workout analytics data found for the current year.',
+                ], 422);
+            }
+    
             $sets = [];
     
-            // Define the months array with month numbers for mapping later
             $months = [
                 '01' => 'Jan',
                 '02' => 'Feb',
@@ -93,22 +112,19 @@ class UserWorkoutAnalyticApi extends Controller
                 $sets[] = $currentBodyPartData;
             }
     
-    
             return response()->json([
-                'status' => 200,
-                'percentages' => $percentages, // Custom formatted body part percentages
-                'sets' => $sets,               // Custom sets data with dynamic body part names
-                'message' => 'Workout analytics fetched successfully.',
+                'status'      => 200,
+                'percentages' => $percentages,
+                'sets'        => $sets,
+                'message'     => 'Workout analytics fetched successfully.',
             ], 200);
+    
         } catch (\Exception $e) {
             Log::error('[UserWorkoutAnalyticApi][fetchUserWorkoutAnalytic] Error: ' . $e->getMessage());
             return response()->json([
-                'status' => 500,
+                'status'  => 500,
                 'message' => 'Error fetching workout analytics: ' . $e->getMessage(),
             ], 500);
         }
-    }
-    
-    
-    
+    }    
 }
