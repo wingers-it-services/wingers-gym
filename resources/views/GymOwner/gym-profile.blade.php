@@ -379,43 +379,53 @@
                                                             <table class="table table-bordered">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th>Allot Workout</th>
-                                                                        <th>Allot Diet</th>
-                                                                        <th>User Attendence</th>
-                                                                        <th>Workout Histry</th>
-                                                                        <th>Diet Histry</th>
+                                                                        <th>Cron Jobs Name</th>
+                                                                        <th>Action</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
+                                                                        <td>Allot Workout</td>
                                                                         <td>
                                                                             <form action="{{ route('runWorkoutCronJob') }}" method="get">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-primary">Workout</button>
+                                                                                <button type="submit" class="btn btn-primary">Run</button>
                                                                             </form>
                                                                         </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Allot Diet</td>
                                                                         <td>
                                                                             <form action="{{ route('runDietCronJob') }}" method="get">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-primary">Diet</button>
+                                                                                <button type="submit" class="btn btn-primary">Run</button>
                                                                             </form>
                                                                         </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>User Attendence</td>
                                                                         <td>
                                                                             <form action="{{ route('runAttendenceCronJob') }}" method="get">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-primary">Attendence</button>
+                                                                                <button type="submit" class="btn btn-primary">Run</button>
                                                                             </form>
                                                                         </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Workout Histry</td>
                                                                         <td>
                                                                             <form action="{{ route('runWorkoutHistryCronJob') }}" method="get">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-primary">Workout Histry</button>
+                                                                                <button type="submit" class="btn btn-primary">Run</button>
                                                                             </form>
                                                                         </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Diet Histry</td>
                                                                         <td>
                                                                             <form action="{{ route('runDietHistryCronJob') }}" method="get">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-primary">Diet Histry</button>
+                                                                                <button type="submit" class="btn btn-primary">Run</button>
                                                                             </form>
                                                                         </td>
                                                                     </tr>
