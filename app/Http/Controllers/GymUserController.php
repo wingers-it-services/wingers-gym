@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Designation;
 use App\Models\Diet;
+use App\Models\Goal;
+use App\Models\GoalUser;
 use App\Models\GymStaff;
 use App\Models\userBmi;
 use App\Models\Gym;
@@ -128,38 +130,39 @@ class GymUserController extends Controller
     {
         $gymUser = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
-
+        $goals = Goal::get();
         $gymStaff = GymStaff::join('designations', 'designations.id', 'gym_staffs.designation_id')
             ->where('gym_staffs.gym_id', $gymId)->get();
         $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
 
-        return view('GymOwner.add-gym-customer', compact('gymStaff', 'gymSubscriptions'));
+        return view('GymOwner.add-gym-customer', compact('gymStaff', 'gymSubscriptions', 'goals'));
     }
 
     public function addUserByGym(Request $request)
     {
         try {
             $validateData = $request->validate([
-                'firstname' => 'required',
-                'lastname' => 'required',
-                'email' => 'required',
-                'gender' => 'required',
-                'subscription_id' => 'required',
-                'blood_group' => 'nullable',
-                'joining_date' => 'required|date',
-                'address' => 'required',
-                'country' => 'required',
-                'state' => 'required',
-                'zip_code' => 'required',
-                'image' => 'nullable',
-                'subscription_end_date' => 'required',
+                'firstname'               => 'required',
+                'lastname'                => 'required',
+                'email'                   => 'required',
+                'gender'                  => 'required',
+                'subscription_id'         => 'required',
+                'blood_group'             => 'nullable',
+                'joining_date'            => 'required|date',
+                'address'                 => 'required',
+                'country'                 => 'required',
+                'state'                   => 'required',
+                'zip_code'                => 'required',
+                'image'                   => 'nullable',
+                'subscription_end_date'   => 'required',
                 'subscription_start_date' => 'required',
-                'coupon_id' => 'nullable',
-                'subscription_status' => 'nullable',
-                'staff_assign_id' => 'nullable',
-                'password' => 'required',
-                'phone_no' => 'required',
-                'dob' => 'required'
+                'coupon_id'               => 'nullable',
+                'subscription_status'     => 'nullable',
+                'staff_assign_id'         => 'nullable',
+                'password'                => 'required',
+                'phone_no'                => 'required',
+                'dob'                     => 'required',
+                'goal_id'                 => 'required|exists:goals,id'
             ]);
 
             $gymId = Auth::guard('gym')->user()->id;
@@ -208,25 +211,40 @@ class GymUserController extends Controller
 
                 // Associate the user with the gym
                 GymUserGym::create([
-                    'gym_id' => $gymId,
+                    'gym_id'  => $gymId,
                     'user_id' => $user->id
                 ]);
 
+
+                GoalUser::updateOrCreate(
+                    ['user_id' => $user->id],
+                    ['goal_id' => $request->goal_id]
+                );
+
                 // Update or create the user subscription history
                 UserSubscriptionHistory::create([
-                    'user_id' => $user->id,
-                    'subscription_id' => $request->subscription_id,
+                    'user_id'                 => $user->id,
+                    'subscription_id'         => $request->subscription_id,
                     'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
                     'subscription_start_date' => $request->subscription_start_date,
-                    'subscription_end_date' => $request->subscription_end_date,
-                    'status' => $user->subscription_status,
-                    'amount' => $request->amount, // Ensure this is part of the request or calculate it
-                    'coupon_id' => 2,
-                    'gym_id' => $gymId
+                    'subscription_end_date'   => $request->subscription_end_date,
+                    'status'                  => $user->subscription_status,
+                    'amount'                  => $request->amount, // Ensure this is part of the request or calculate it
+                    'coupon_id'               => 2,
+                    'gym_id'                  => $gymId
                 ]);
             } else {
                 // If no user_id, create a new user
                 $user = $this->userService->createUserAccount($validateData, $gymId);
+                if ($user) {
+                    $user = User::where('email', $validateData['email'])->first(); // Adjust the query as needed
+                }
+                if ($user && $request->filled('goal_id')) {
+                    GoalUser::create([
+                        'user_id' => $user->id,
+                        'goal_id' => $request->goal_id
+                    ]);
+                }
             }
 
             // Create the user account
@@ -236,17 +254,16 @@ class GymUserController extends Controller
 
             // Save to user_subscription_histories
             UserSubscriptionHistory::create([
-                'user_id' => $user->id,
-                'subscription_id' => $request->subscription_id,
+                'user_id'                 => $user->id,
+                'subscription_id'         => $request->subscription_id,
                 'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
                 'subscription_start_date' => $request->subscription_start_date,
-                'subscription_end_date' => $request->subscription_end_date,
-                'status' => $user->subscription_status,
-                'amount' => $request->amount, // Ensure this is part of the request or calculate it
-                'coupon_id' => 2,
-                'gym_id' => $gymId
+                'subscription_end_date'   => $request->subscription_end_date,
+                'status'                  => $user->subscription_status,
+                'amount'                  => $request->amount, // Ensure this is part of the request or calculate it
+                'coupon_id'               => 2,
+                'gym_id'                  => $gymId
             ]);
-
 
             return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Successfully');
         } catch (\Exception $e) {
@@ -304,31 +321,29 @@ class GymUserController extends Controller
             $user = $this->user->where('uuid', $uuid)->first();
 
             $request->validate([
-                'email' => 'required',
-                'gender' => 'required',
-                'blood_group' => 'nullable',
-                'address' => 'required',
-                'country' => 'required',
-                'state' => 'required',
-                'zip_code' => 'required',
-                'image' => 'nullable',
+                'email'           => 'required',
+                'gender'          => 'required',
+                'blood_group'     => 'nullable',
+                'address'         => 'required',
+                'country'         => 'required',
+                'state'           => 'required',
+                'zip_code'        => 'required',
+                'image'           => 'nullable',
                 'staff_assign_id' => 'nullable',
-                'password' => 'required',
-                'joining_date' => 'required'
+                'password'        => 'required',
+                'joining_date'    => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
             $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
 
             if (isset($request->image)) {
-                // Delete existing image only if a new one is provided
                 if ($user->image) {
                     $oldImagePath = public_path($user->image);
                     if (file_exists($oldImagePath)) {
                         unlink($oldImagePath);
                     }
                 }
-                // Upload the new image
             }
 
             $isProfileUpdated = $this->userService->createUserAccount($request->all(), $gymId);
@@ -347,14 +362,14 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "user_id" => 'required',
-                "exercise_name" => 'required',
-                "day" => 'required',
-                "sets" => 'required|integer|min:1',
-                "reps" => 'required|integer|min:1',
-                "weight" => 'required|numeric|min:0',
-                "workout_des" => 'required',
-                "workout_id" => 'required',
+                "user_id"            => 'required',
+                "exercise_name"      => 'required',
+                "day"                => 'required',
+                "sets"               => 'required|integer|min:1',
+                "reps"               => 'required|integer|min:1',
+                "weight"             => 'required|numeric|min:0',
+                "workout_des"        => 'required',
+                "workout_id"         => 'required',
                 "targeted_body_part" => 'required'
             ]);
 
@@ -375,18 +390,18 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "user_id" => 'required',
-                "meal_name" => 'required',
-                "calories" => 'required|integer|min:0',
-                "protein" => 'required|integer|min:0',
-                "carbs" => 'required|numeric|min:0',
-                "fats" => 'required|numeric|min:0',
-                "diet_id" => 'required',
-                "goal" => 'required',
-                "meal_type" => 'required',
-                "diet_description" => 'required',
+                "user_id"                      => 'required',
+                "meal_name"                    => 'required',
+                "calories"                     => 'required|integer|min:0',
+                "protein"                      => 'required|integer|min:0',
+                "carbs"                        => 'required|numeric|min:0',
+                "fats"                         => 'required|numeric|min:0',
+                "diet_id"                      => 'required',
+                "goal"                         => 'required',
+                "meal_type"                    => 'required',
+                "diet_description"             => 'required',
                 "alternative_diet_description" => 'required',
-                "day" => 'required'
+                "day"                          => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -406,14 +421,14 @@ class GymUserController extends Controller
         try {
             // Validate the incoming request data
             $validatedData = $request->validate([
-                'user_id' => 'required',
-                'workout_id' => 'required',
-                'day' => 'required',
-                'exercise_name' => 'required',
-                'sets' => 'required|integer|min:1',
-                'reps' => 'required|integer|min:1',
-                'weight' => 'required|numeric|min:0',
-                'workout_des' => 'required',
+                'user_id'            => 'required',
+                'workout_id'         => 'required',
+                'day'                => 'required',
+                'exercise_name'      => 'required',
+                'sets'               => 'required|integer|min:1',
+                'reps'               => 'required|integer|min:1',
+                'weight'             => 'required|numeric|min:0',
+                'workout_des'        => 'required',
                 'targeted_body_part' => 'required',
             ]);
 
@@ -432,18 +447,18 @@ class GymUserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'diet_id' => 'required',
-                'user_id' => 'required',
-                'meal_name' => 'required',
-                "calories" => 'required|integer|min:0',
-                "protein" => 'required|integer|min:0',
-                "carbs" => 'required|numeric|min:0',
-                "fats" => 'required|numeric|min:0',
-                "goal" => 'required',
-                "meal_type" => 'required',
-                "diet_description" => 'required',
+                'diet_id'                      => 'required',
+                'user_id'                      => 'required',
+                'meal_name'                    => 'required',
+                "calories"                     => 'required|integer|min:0',
+                "protein"                      => 'required|integer|min:0',
+                "carbs"                        => 'required|numeric|min:0',
+                "fats"                         => 'required|numeric|min:0',
+                "goal"                         => 'required',
+                "meal_type"                    => 'required',
+                "diet_description"             => 'required',
                 "alternative_diet_description" => 'required',
-                "day" => 'required'
+                "day"                          => 'required'
             ]);
 
             // Find the workout by ID
@@ -487,8 +502,8 @@ class GymUserController extends Controller
         try {
             $validatedData = $request->validate([
                 "trainer_id" => 'required',
-                "user_id" => 'required',
-                "status" => 'required'
+                "user_id"    => 'required',
+                "status"     => 'required'
             ]);
 
             $gymUser = Auth::guard('gym')->user();
@@ -526,26 +541,26 @@ class GymUserController extends Controller
 
         if ($existingSubscription) {
             return response()->json([
-                'status' => 'exists',
-                'message' => 'The user already has an existing subscription.',
+                'status'   => 'exists',
+                'message'  => 'The user already has an existing subscription.',
                 'end_date' => $existingSubscription->end_date
             ]);
         } else {
             // Create a new subscription
             $subscription = UserSubscriptionHistory::create([
-                'user_id' => $userId,
-                'subscription_id' => $request->subscription_id,
+                'user_id'                 => $userId,
+                'subscription_id'         => $request->subscription_id,
                 'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
-                'joining_date' => $request->joining_date,
-                'end_date' => $request->end_date,
-                'status' => 2,
-                'amount' => $request->amount, // Ensure this is part of the request or calculate it
-                'coupon_id' => 2,
+                'joining_date'            => $request->joining_date,
+                'end_date'                => $request->end_date,
+                'status'                  => 2,
+                'amount'                  => $request->amount, // Ensure this is part of the request or calculate it
+                'coupon_id'               => 2,
             ]);
 
             return response()->json([
-                'status' => 'created',
-                'message' => 'Subscription added successfully!',
+                'status'       => 'created',
+                'message'      => 'Subscription added successfully!',
                 'subscription' => $subscription
             ]);
         }
@@ -559,27 +574,27 @@ class GymUserController extends Controller
         // Update the subscription details in gym_users table
         User::where('user_id', $userId)->update([
             'subscription_id' => $request->subscription_id,
-            'joining_date' => $request->joining_date,
-            'end_date' => $request->end_date,
-            'amount' => $request->amount,
-            'status' => 2 // Assuming this status column exists in the gym_users table as well
+            'joining_date'    => $request->joining_date,
+            'end_date'        => $request->end_date,
+            'amount'          => $request->amount,
+            'status'          => 2 // Assuming this status column exists in the gym_users table as well
         ]);
 
         // Create a new entry in the UserSubscriptionHistory table
         $subscription = UserSubscriptionHistory::create([
-            'user_id' => $userId,
-            'subscription_id' => $request->subscription_id,
+            'user_id'                 => $userId,
+            'subscription_id'         => $request->subscription_id,
             'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
-            'joining_date' => $request->joining_date,
-            'end_date' => $request->end_date,
-            'status' => 2,
-            'amount' => $request->amount, // Ensure this is part of the request or calculate it
-            'coupon_id' => 2,
+            'joining_date'            => $request->joining_date,
+            'end_date'                => $request->end_date,
+            'status'                  => 2,
+            'amount'                  => $request->amount, // Ensure this is part of the request or calculate it
+            'coupon_id'               => 2,
         ]);
 
         return response()->json([
-            'status' => 'updated',
-            'message' => 'Subscription updated successfully!',
+            'status'       => 'updated',
+            'message'      => 'Subscription updated successfully!',
             'subscription' => $subscription
         ]);
     }
@@ -591,12 +606,12 @@ class GymUserController extends Controller
             $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
 
             $validatedData = $request->validate([
-                'user_id' => 'required',
-                'subscription_id' => 'required|exists:gym_subscriptions,id',
+                'user_id'                 => 'required',
+                'subscription_id'         => 'required|exists:gym_subscriptions,id',
                 'subscription_start_date' => 'required|date',
-                'amount' => 'required|numeric',
-                'subscription_end_date' => 'required|date',
-                'description' => 'required|string',
+                'amount'                  => 'required|numeric',
+                'subscription_end_date'   => 'required|date',
+                'description'             => 'required|string',
             ]);
 
             // Fetch the latest subscription history for the user
@@ -615,16 +630,16 @@ class GymUserController extends Controller
 
             // Create user subscription history
             $this->userSubscriptionHistory->create([
-                'gym_id' => $gymId,
+                'gym_id'                  => $gymId,
                 'original_transaction_id' => 1,
-                'user_id' => $validatedData['user_id'],
-                'subscription_id' => $subscription->id,
+                'user_id'                 => $validatedData['user_id'],
+                'subscription_id'         => $subscription->id,
                 'subscription_start_date' => $validatedData['subscription_start_date'],
-                'subscription_end_date' => $validatedData['subscription_end_date'],
-                'amount' => $validatedData['amount'],
-                'status' => 1, // Mark as active
-                'coupon_id' => 2,
-                'description' => $validatedData['description'],
+                'subscription_end_date'   => $validatedData['subscription_end_date'],
+                'amount'                  => $validatedData['amount'],
+                'status'                  => 1, // Mark as active
+                'coupon_id'               => 2,
+                'description'             => $validatedData['description'],
             ]);
 
             return redirect()->back()
@@ -680,8 +695,8 @@ class GymUserController extends Controller
 
         if ($bmi && $bodyMeasurement) {
             return response()->json([
-                'success' => true,
-                'bmi' => $bmi,
+                'success'         => true,
+                'bmi'             => $bmi,
                 'bodyMeasurement' => $bodyMeasurement,
             ]);
         } else {
@@ -721,15 +736,15 @@ class GymUserController extends Controller
 
         if ($diet) {
             return response()->json([
-                'image' => asset($diet->image),
-                'id' => $diet->id,
-                'calories' => $diet->calories,
-                'protein' => $diet->protein,
-                'carbs' => $diet->carbs,
-                'fats' => $diet->fats,
-                'diet' => $diet->diet,
+                'image'            => asset($diet->image),
+                'id'               => $diet->id,
+                'calories'         => $diet->calories,
+                'protein'          => $diet->protein,
+                'carbs'            => $diet->carbs,
+                'fats'             => $diet->fats,
+                'diet'             => $diet->diet,
                 'alternative_diet' => $diet->alternative_diet,
-                'goal' => $diet->goal
+                'goal'             => $diet->goal
                 // 'gender' => $diet->gender
             ]);
         } else {
@@ -785,7 +800,7 @@ class GymUserController extends Controller
         try {
             // Validate the status input
             $validatedData = $request->validate([
-                'status' => 'required|integer|in:0,1',
+                'status'     => 'required|integer|in:0,1',
                 'trainer_id' => 'required', // Ensure trainer_id is provided and valid
             ]);
 
@@ -892,7 +907,7 @@ class GymUserController extends Controller
     {
         try {
             $request->validate([
-                "gymId" => 'required',
+                "gymId"   => 'required',
                 "staffId" => 'required'
             ]);
 
@@ -902,18 +917,18 @@ class GymUserController extends Controller
 
             $gym = GymUserAttendence::where([
                 'gym_user_id' => $request->staffId,
-                'gym_id' => $request->gymId,
-                'month' => $month,
-                'year' => $year
+                'gym_id'      => $request->gymId,
+                'month'       => $month,
+                'year'        => $year
             ])->first();
 
             if (!$gym) {
                 return response()->json([
                     'status' => 200,
                     'data' => [
-                        "Absent" => 0,
-                        "Holiday" => 0,
-                        "Present" => 0,
+                        "Absent"   => 0,
+                        "Holiday"  => 0,
+                        "Present"  => 0,
                         "Unmarked" => 30
                     ]
                 ], 200);
@@ -921,9 +936,9 @@ class GymUserController extends Controller
 
             $gym = $gym->toArray();
             $data = [
-                "Absent" => 0,
-                "Holiday" => 0,
-                "Present" => 0,
+                "Absent"   => 0,
+                "Holiday"  => 0,
+                "Present"  => 0,
                 "Unmarked" => 0
             ];
 
@@ -944,9 +959,10 @@ class GymUserController extends Controller
             }
             return response()->json([
                 'status' => 200,
-                'data' => $data,
-                'gym' => $gym
+                'data'   => $data,
+                'gym'    => $gym
             ], 200);
+
         } catch (\Throwable $th) {
             Log::error("[GymStaffController][fetchUserAttendanceChart] error " . $th->getMessage());
             return response()->json(['status' => 500, 'data' => $gym], 500);
