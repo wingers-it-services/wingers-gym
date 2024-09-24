@@ -2,9 +2,6 @@
 @section('title', 'Dashboard')
 @section('content')
 
-<!--**********************************
-            Content body start
-        ***********************************-->
 <div class="content-body ">
 	<div class="container-fluid">
 		<div class="page-titles">
@@ -47,13 +44,11 @@
 						</div>
 					</div>
 				</div>
-
 				<div class="container">
 					<div class="row" id="user-cards-container">
 						<!-- User cards will be inserted here -->
 					</div>
 				</div>
-
 				<div id="user-details-form" class="col-xl-12" style="display: none;">
 					<div class="card">
 						<div class="card-body">
@@ -114,12 +109,11 @@
 										</div>
 										<div class="col-md-6 mb-3">
 											<label for="joining_date">Member Joining Date</label>
-											<input type="date" class="form-control" id="joining_date"
-												name="joining_date" required>
+											<input type="date" class="form-control" id="joining_date" name="joining_date" required>
 										</div>
 									</div>
 									<div class="row">
-										<div class="col-md-6 mb-3">
+										<div class="col-md-4 mb-3">
 											<label for="employee_id">Staff Assigned</label>
 											<select class="me-sm-2 form-control default" id="staff_assign_id"
 												name="staff_assign_id">
@@ -132,7 +126,7 @@
 											</div>
 										</div>
 
-										<div class="col-md-6 mb-3">
+										<div class="col-md-4 mb-3">
 											<label for="gender">Gender</label>
 											<select class="me-sm-2 form-control default-select" id="gender"
 												name="gender" required>
@@ -140,7 +134,20 @@
 												<option value="female">Female</option>
 												<option value="Other">Other</option>
 											</select>
-										</div>      
+										</div>    
+										
+										<div class="col-md-4 mb-3">
+											<label for="employee_id">Goal</label>
+											<select class="me-sm-2 form-control default" id="goal_id"
+												name="goal_id">
+												@foreach ($goals as $goal)
+												<option value="{{ $goal->id }}">{{ $goal->goal}}</option>
+												@endforeach
+											</select>
+											<div class="invalid-feedback">
+												Valid last name is required.
+											</div>
+										</div>
 									</div>
 
 									<div class="row">
@@ -161,8 +168,7 @@
 
 										<div class="col-md-6 mb-3">
 											<label for="dob">D.O.B</label>
-											<input type="date" class="form-control" id="dob"
-												name="dob" required>
+											<input type="date" class="form-control" id="dob" name="dob" required>
 										</div>
 									</div>
 
@@ -197,7 +203,6 @@
 						</div>
 					</div>
 				</div>
-
 				<div class="col-xl-12" id="sub-cards-container" style="display: none;">
 					<div class="card">
 						<div class="card-body">
@@ -250,10 +255,8 @@
 												<strong id="total_amount">₹0</strong>
 											</li>
 										</ul>
-
 									</div>
 								</div>
-
 								<div class="col-lg-6 order-lg-1">
 									<div class="col-xl-12 col-lg-12">
 										<h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -276,9 +279,7 @@
 </div>
 </div>
 </div>
-<!--**********************************
-            Content body end
-        ***********************************-->
+
 <script>
 	function togglePasswordVisibility() {
 		var passwordField = document.getElementById("password");
@@ -294,6 +295,7 @@
 			toggleIcon.classList.add('fa-eye-slash');
 		}
 	}
+
 	var loadFile = function(event) {
 		// var selected_image = document.getElementById('selected_image');
 
@@ -318,7 +320,6 @@
 	};
 	(function() {
 		'use strict'
-
 		// Fetch all the forms we want to apply custom Bootstrap validation styles to
 		var forms = document.querySelectorAll('.needs-validation')
 
@@ -488,10 +489,12 @@
 				const genderSelect = document.getElementById('gender');
 				const bloodGroupSelect = document.getElementById('blood_group');
 				const staffAssignSelect = document.getElementById('staff_assign_id');
+				const goalIdSelect = document.getElementById('goal_id');
 
 				genderSelect.value = '';
 				bloodGroupSelect.value = '';
 				staffAssignSelect.value = '';
+				goalIdSelect.value = '';
 			} else {
 				// Set user data if provided
 				document.getElementById('user_id').value = user.id || ''; // Set the user ID if exists
@@ -522,7 +525,6 @@
 				staffAssignSelect.value = user.staff_assign_id || '';
 			}
 		}
-
 	});
 </script>
 @include('CustomSweetAlert');
