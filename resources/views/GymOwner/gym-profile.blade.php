@@ -379,8 +379,8 @@
                                                             <table class="table table-bordered">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th>Cron Jobs</th>
-                                                                        <th>Run</th>
+                                                                        <th>Cron Jobs Name</th>
+                                                                        <th>Action</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -389,7 +389,7 @@
                                                                         <td>
                                                                             <form action="{{ route('runWorkoutCronJob') }}" method="get">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-primary">Workout</button>
+                                                                                <button type="submit" class="btn btn-primary">Run</button>
                                                                             </form>
                                                                         </td>
                                                                     </tr>
@@ -398,7 +398,7 @@
                                                                         <td>
                                                                             <form action="{{ route('runDietCronJob') }}" method="get">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-primary">Diet</button>
+                                                                                <button type="submit" class="btn btn-primary">Run</button>
                                                                             </form>
                                                                         </td>
                                                                     </tr>
@@ -407,7 +407,7 @@
                                                                         <td>
                                                                             <form action="{{ route('runAttendenceCronJob') }}" method="get">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-primary">Attendence</button>
+                                                                                <button type="submit" class="btn btn-primary">Run</button>
                                                                             </form>
                                                                         </td>
                                                                     </tr>
@@ -416,7 +416,7 @@
                                                                         <td>
                                                                             <form action="{{ route('runWorkoutHistryCronJob') }}" method="get">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-primary">Workout Histry</button>
+                                                                                <button type="submit" class="btn btn-primary">Run</button>
                                                                             </form>
                                                                         </td>
                                                                     </tr>
@@ -425,7 +425,7 @@
                                                                         <td>
                                                                             <form action="{{ route('runDietHistryCronJob') }}" method="get">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-primary">Diet Histry</button>
+                                                                                <button type="submit" class="btn btn-primary">Run</button>
                                                                             </form>
                                                                         </td>
                                                                     </tr>
