@@ -12,6 +12,8 @@ use App\Models\GymSubscription;
 use App\Models\GymUserAttendence;
 use App\Models\GymUserGym;
 use App\Models\GymUserSubscriptionsHistory;
+use App\Models\GymWeekend;
+use App\Models\Holiday;
 use App\Models\User;
 use App\Models\UserBodyMeasurement;
 use App\Models\UserWorkout;
@@ -121,8 +123,8 @@ class GymUserController extends Controller
     public function customersAttendance()
     {
         $gym = Auth::guard('gym')->user();
-        $gymStaffs = $this->user->where('gym_id', $gym->id)->get();
-        return view('GymOwner.customers-attendance', compact('gymStaffs'));
+        $gymUsers = $this->user->where('gym_id', $gym->id)->get();
+        return view('GymOwner.customers-attendance', compact('gymUsers'));
     }
 
     public function addGymUser()
@@ -863,25 +865,34 @@ class GymUserController extends Controller
         try {
             $request->validate([
                 "gymId" => 'required',
-                "staffId" => 'required',
-                "attendanceStatus" => 'required'
+                "userId" => 'required',
+                "attendanceStatus" => 'nullable',
+                "day" => 'required'
             ]);
 
             $now = Carbon::now();
             $year = $now->year;
             $month = $now->month;
-            $day = $now->day;
+
+               // Prepare the data for the specific day
+               $attendanceData = [];
+               $attendanceField = 'day' . $request->day;
+
+               // If attendanceStatus is null, unmark the day (set it to null)
+               if (is_null($request->attendanceStatus)) {
+                   $attendanceData[$attendanceField] = null;
+               } else {
+                   $attendanceData[$attendanceField] = $request->attendanceStatus;
+               }
 
             $gym = $this->gymUserAttendance->updateOrCreate(
                 [
-                    'gym_user_id' => $request->staffId,
+                    'gym_user_id' => $request->userId,
                     'gym_id' => $request->gymId,
                     'month' => $month,
                     'year' => $year
                 ],
-                [
-                    'day' . $day => $request->attendanceStatus
-                ]
+                    $attendanceData
             );
 
             return response()->json(['status' => 200, 'data' => $gym], 200);
@@ -891,12 +902,32 @@ class GymUserController extends Controller
         }
     }
 
+    public function getGymHolidaysAndWeekendsOnGymAttendance($gymId)
+    {
+        try {
+            // Fetch holidays (date-wise)
+            $holidays = Holiday::where('gym_id', $gymId)->pluck('date')->toArray();
+
+            // Fetch weekends (day-wise)
+            $weekends = GymWeekend::where('gym_id', $gymId)->pluck('weekend_day')->toArray();
+
+            return response()->json([
+                'status' => 200,
+                'holidays' => $holidays, // Holidays array in 'YYYY-MM-DD' format
+                'weekends' => $weekends, // Weekends array (days of the week, e.g., 0 for Sunday, 6 for Saturday)
+            ], 200);
+        } catch (\Throwable $th) {
+            Log::error("[GymStaffController][getGymHolidaysAndWeekends] error " . $th->getMessage());
+            return response()->json(['status' => 500], 500);
+        }
+    }
+
     public function fetchUserAttendanceChart(Request $request)
     {
         try {
             $request->validate([
                 "gymId" => 'required',
-                "staffId" => 'required'
+                "userId" => 'required'
             ]);
 
             $now = Carbon::now();
@@ -904,7 +935,7 @@ class GymUserController extends Controller
             $month = $now->month;
 
             $gym = GymUserAttendence::where([
-                'gym_user_id' => $request->staffId,
+                'gym_user_id' => $request->userId,
                 'gym_id' => $request->gymId,
                 'month' => $month,
                 'year' => $year

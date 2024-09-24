@@ -48,8 +48,9 @@ Route::get('/invoice', function () {
 Route::get('/gym-customers', [GymUserController::class, 'listGymUser'])->name('gymCustomerList');
 Route::get('/gym-customers-subscriptions', [GymUserController::class, 'listGymUserSubscriptions'])->name('gym-customers-subscriptions');
 Route::get('/customers-attendance', [GymUserController::class, 'customersAttendance']);
-Route::get('/mark-gym-user-attendance', [GymUserController::class, 'markGymUserAttendance'])->name('mark-gym-user-attendance');
+Route::post('/mark-gym-user-attendance', [GymUserController::class, 'markGymUserAttendance'])->name('mark-gym-user-attendance');
 Route::post('/fetch-user-attendance-chart', [GymUserController::class, 'fetchUserAttendanceChart'])->name('fetch-user-attendance-chart');
+Route::get('/getGymHolidaysAndWeekendsOnGymAttendance/{gym_id}', [GymUserController::class, 'getGymHolidaysAndWeekendsOnGymAttendance'])->name('getGymHolidaysAndWeekendsOnGymAttendance');
 
 
 Route::get('/customers-payment', function () {

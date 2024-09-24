@@ -814,7 +814,7 @@
                     <select name="status" class="form-select" onchange="this.form.submit()">
                         <option value="{{ \App\Enums\GymStaffDocumentStatusEnum::VERIFY }}" ${docs.status == 1 ? 'selected' : ''} >Verify</option>
                         <option value="{{ \App\Enums\GymStaffDocumentStatusEnum::NOTVERIFY }}" ${docs.status == 0 ? 'selected' : ''}>Not Verify</option>
-                      
+
                     </select>
                     <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                 </form>
@@ -1153,7 +1153,7 @@
 					"showMethod": "fadeIn",
 					"hideMethod": "fadeOut"
 				};
-				toastr.success("Attendance updated for day " + day);	
+				toastr.success("Attendance updated for day " + day);
 			},
 			error: function (error) {
 				console.error(error);
