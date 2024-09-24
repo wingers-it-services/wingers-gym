@@ -368,6 +368,63 @@
                                                         </div>
                                                         @endif
                                                     </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-12 d-flex justify-content-between align-items-center">
+                                                                <h4 class="text-primary">Run Cron</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="table-responsive" style="max-height: 291px; overflow-y: auto; margin-top: 10px;">
+                                                            <table class="table table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Allot Workout</th>
+                                                                        <th>Allot Diet</th>
+                                                                        <th>User Attendence</th>
+                                                                        <th>Workout Histry</th>
+                                                                        <th>Diet Histry</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <form action="{{ route('runWorkoutCronJob') }}" method="get">
+                                                                                @csrf
+                                                                                <button type="submit" class="btn btn-primary">Workout</button>
+                                                                            </form>
+                                                                        </td>
+                                                                        <td>
+                                                                            <form action="{{ route('runDietCronJob') }}" method="get">
+                                                                                @csrf
+                                                                                <button type="submit" class="btn btn-primary">Diet</button>
+                                                                            </form>
+                                                                        </td>
+                                                                        <td>
+                                                                            <form action="{{ route('runAttendenceCronJob') }}" method="get">
+                                                                                @csrf
+                                                                                <button type="submit" class="btn btn-primary">Attendence</button>
+                                                                            </form>
+                                                                        </td>
+                                                                        <td>
+                                                                            <form action="{{ route('runWorkoutHistryCronJob') }}" method="get">
+                                                                                @csrf
+                                                                                <button type="submit" class="btn btn-primary">Workout Histry</button>
+                                                                            </form>
+                                                                        </td>
+                                                                        <td>
+                                                                            <form action="{{ route('runDietHistryCronJob') }}" method="get">
+                                                                                @csrf
+                                                                                <button type="submit" class="btn btn-primary">Diet Histry</button>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+
                                                 </div>
 
                                                 <!-- Modal Structure -->
@@ -390,7 +447,6 @@
                                                                         <label for="holiday-date">Holiday Date</label>
                                                                         <input type="date" class="form-control" id="holiday-date" name="date" />
                                                                     </div>
-
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

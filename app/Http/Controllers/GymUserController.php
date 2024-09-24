@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Designation;
 use App\Models\Diet;
+use App\Models\Goal;
 use App\Models\GymStaff;
 use App\Models\userBmi;
 use App\Models\Gym;
@@ -129,11 +130,13 @@ class GymUserController extends Controller
         $gymUser = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
 
+        $goals = Goal::get();
+
         $gymStaff = GymStaff::join('designations', 'designations.id', 'gym_staffs.designation_id')
             ->where('gym_staffs.gym_id', $gymId)->get();
         $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
 
-        return view('GymOwner.add-gym-customer', compact('gymStaff', 'gymSubscriptions'));
+        return view('GymOwner.add-gym-customer', compact('gymStaff', 'gymSubscriptions', 'goals'));
     }
 
     public function addUserByGym(Request $request)
