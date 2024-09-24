@@ -39,8 +39,6 @@
                                                 Please enter a valid video link.
                                             </div>
                                         </div>
-
-
                                         <div class="col-md-6 mb-3">
                                             <label for="category">Category</label>
                                             <input type="text" class="form-control" name="category" id="category"
@@ -57,7 +55,7 @@
                                                 Product name is required.
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-4 mb-3">
                                             <label for="gender">Gender</label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="gender"
@@ -72,7 +70,7 @@
                                                 Please select a gender.
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-4 mb-3">
                                             <label for="gender">User Type</label>
                                             <div class="input-group">
                                                 <select class="me-sm-2 form-control default-select" id="user_type"
@@ -82,6 +80,26 @@
                                                     <option value="home">Home</option>
                                                 </select>
 
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please select a user type.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="gender">Targetted Boady Part</label>
+                                            <div class="input-group">
+                                                <select class="me-sm-2 form-control default-select" id="targeted_body_part" name="targeted_body_part">
+                                                    <option value="">Choose....</option>
+                                                    <option value="biceps">Biceps</option>
+                                                    <option value="leg">Leg</option>
+                                                    <option value="forearm">Forearm</option>
+                                                    <option value="tricep">Tricep</option>
+                                                    <option value="shoulder">Shoulder</option>
+                                                    <option value="chest">Chest</option>
+                                                    <option value="abs">Abs</option>
+                                                    <option value="back">Back</option>
+                                                    <option value="other">Other</option>
+                                                </select>
                                             </div>
                                             <div class="invalid-feedback">
                                                 Please select a user type.
@@ -209,6 +227,24 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="gender">Targetted Boady Part</label>
+                        <div class="input-group">
+                            <select class="me-sm-2 form-control default-select" id="edit_targeted_body_part" name="targeted_body_part">
+                                <option value="">Choose....</option>
+                                <option value="biceps">Biceps</option>
+                                <option value="leg">Leg</option>
+                                <option value="forearm">Forearm</option>
+                                <option value="tricep">Tricep</option>
+                                <option value="shoulder">Shoulder</option>
+                                <option value="chest">Chest</option>
+                                <option value="abs">Abs</option>
+                                <option value="back">Back</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="description">Description</label>
                         <textarea type="text" class="form-control" rows="4" id="edit_description" name="description"
                             required=""></textarea>
@@ -303,6 +339,7 @@
             const editImageInput = document.getElementById('edit_image');
             const currentImage = document.getElementById('current_image');
             const editGenderSelect = document.getElementById('edit_gender');
+            const editTargettedBoadySelect = document.getElementById('edit_targeted_body_part');
 
             editButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -314,9 +351,10 @@
                     document.getElementById('edit_name').value = workout.name;
                     document.getElementById('edit_category').value = workout.category;
                     document.getElementById('edit_description').value = workout.description;
-
+                    
                     // Set the selected option for the gender dropdown
                     editGenderSelect.value = workout.gender;
+                    editTargettedBoadySelect.value = workout.targeted_body_part;
 
                     // Force re-render of the select element
                     const parent = editGenderSelect.parentElement;

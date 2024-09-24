@@ -88,21 +88,22 @@ class UserInquiryControllerApi extends Controller
     {
         try {
 
-            $inquiryReasons = $this->inquiryReason->get();
+            $inquiryReasons = $this->inquiryReason->orderBy('id', 'desc')->get();
 
             if ($inquiryReasons->isEmpty()) {
                 return response()->json([
-                    'status'    => 422,
+                    'status'         => 422,
                     'inquiryReasons' => $inquiryReasons,
-                    'message'   => 'There is no inquiries reason'
+                    'message'        => 'There is no inquiries reason'
                 ], 200);
             }
 
             return response()->json([
-                'status'    => 200,
+                'status'         => 200,
                 'inquiryReasons' => $inquiryReasons,
-                'message'   => 'Inquiry reasons Fetch Successfully'
+                'message'        => 'Inquiry reasons Fetch Successfully'
             ], 200);
+            
         } catch (Exception $e) {
             Log::error('[UserInquiryControllerApi][fetchInquiryReason]Error fetching inquiry reasons: ' . $e->getMessage());
             return response()->json([
