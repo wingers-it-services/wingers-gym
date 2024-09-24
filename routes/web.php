@@ -15,6 +15,7 @@ use App\Http\Controllers\GymDesignationController;
 use App\Http\Controllers\GymGalleryController;
 use App\Http\Controllers\GymSheduleController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RunCronController;
 use App\Http\Controllers\WorkoutController;
 use App\Http\Middleware\EnsureGymTokenIsValid;
 use Illuminate\Support\Facades\Route;
@@ -97,6 +98,17 @@ Route::post('/register', [GymDetailController::class, 'registerGym'])->name('reg
 Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
 
 Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
+
+    Route::get('/run-workout-cron', [RunCronController::class, 'runWorkoutCronJob'])->name('runWorkoutCronJob');
+
+    Route::get('/run-diet-cron', [RunCronController::class, 'runDietCronJob'])->name('runDietCronJob');
+
+    Route::get('/run-attendence-cron', [RunCronController::class, 'runAttendenceCronJob'])->name('runAttendenceCronJob');
+
+    Route::get('/run-workout-histry-cron', [RunCronController::class, 'runWorkoutHistryCronJob'])->name('runWorkoutHistryCronJob');
+
+    Route::get('/run-diet-histry-cron', [RunCronController::class, 'runDietHistryCronJob'])->name('runDietHistryCronJob');
+
 
     Route::post('/add-gym-schedule', [GymSheduleController::class, 'addGymShedule'])->name('addGymShedule');
 
