@@ -26,8 +26,8 @@ class AppServiceProvider extends ServiceProvider
 
         $schedule->command('user:attendence')->monthlyOn(1, '00:00');
 
-        $schedule->command('user:delete-previous-day-workout')->dailyAt('23:59');
+        $schedule->command('user:delete-previous-day-workout')->dailyAt('00:01');
 
-        $schedule->command('user:delete-previous-day-diet')->dailyAt('23:59');
+        $schedule->command('user:delete-previous-day-diet')->dailyAt('00:01');
     }
 }

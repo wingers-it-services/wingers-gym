@@ -41,13 +41,14 @@ class WorkoutController extends Controller
             $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
             $validatedData = $request->validate([
-                'image'       => 'required',
-                'vedio_link'  => 'required',
-                'name'        => 'required',
-                'gender'      => 'required',
-                'category'    => 'required',
-                'description' => 'required',
-                'user_type'   => 'required',
+                'image'              => 'required',
+                'vedio_link'         => 'required',
+                'name'               => 'required',
+                'gender'             => 'required',
+                'category'           => 'required',
+                'description'        => 'required',
+                'user_type'          => 'required',
+                'targeted_body_part' => 'required'
             ]);
 
             $imagePath = null;
@@ -72,13 +73,14 @@ class WorkoutController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'workout_id'  => 'required',
-                'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'vedio_link'  => 'required',
-                'name'        => 'required',
-                'gender'      => 'required',
-                'category'    => 'required',
-                'description' => 'required',
+                'workout_id'         => 'required',
+                'image'              => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'vedio_link'         => 'required',
+                'name'               => 'required',
+                'gender'             => 'required',
+                'category'           => 'required',
+                'description'        => 'required',
+                'targeted_body_part' => 'required'
             ]);
 
             $workout = $this->workout->findOrFail($request->workout_id);
@@ -102,6 +104,7 @@ class WorkoutController extends Controller
             $workout->name = $validatedData['name'];
             $workout->gender = $validatedData['gender'];
             $workout->category = $validatedData['category'];
+            $workout->targeted_body_part = $validatedData['targeted_body_part'];
             $workout->description = $validatedData['description'];
             $workout->image = $imagePath; // Update image path
 

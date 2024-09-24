@@ -19,7 +19,8 @@ class Workout extends Model
         'gender',
         'category',
         'description',
-        'added_by'
+        'added_by',
+        'targeted_body_part'
     ];
 
     public function currentDayWorkouts()
@@ -31,14 +32,15 @@ class Workout extends Model
     {
         try {
             return $this->create([
-                'added_by'    => $addedBy,
-                'name'        => $workoutArray['name'],
-                'vedio_link'  => $workoutArray['vedio_link'],
-                'gender'      => $workoutArray['gender'],
-                'image'       => $imagePath,
-                'description' => $workoutArray['description'],
-                'category'    => $workoutArray['category'],
-                'user_type'   => $workoutArray['user_type']
+                'added_by'           => $addedBy,
+                'name'               => $workoutArray['name'],
+                'vedio_link'         => $workoutArray['vedio_link'],
+                'gender'             => $workoutArray['gender'],
+                'image'              => $imagePath,
+                'description'        => $workoutArray['description'],
+                'category'           => $workoutArray['category'],
+                'user_type'          => $workoutArray['user_type'],
+                'targeted_body_part' => $workoutArray['targeted_body_part']
             ]);
         } catch (\Throwable $e) {
             Log::error('[Workout][addWorkout] Error adding workout: ' . $e->getMessage());
