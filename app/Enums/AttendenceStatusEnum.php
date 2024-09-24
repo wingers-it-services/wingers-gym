@@ -12,10 +12,10 @@ enum AttendenceStatusEnum
     {
         return match ($status) {
             self::PRESENT => '#8fbc8f',
-            self::ABSENT => '#cd5c5c', 
+            self::ABSENT => '#cd5c5c',
             self::WEEKEND => '#808080',
             self::HOLIDAY => '#deb887',
-            default => '#FFFFFF',      
+            default => '#FFFFFF',
         };
     }
 }

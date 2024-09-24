@@ -1,6 +1,6 @@
 (function($) {
     "use strict"
-	
+
 document.addEventListener('DOMContentLoaded', function() {
 
 		/* initialize the external events
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		  title: eventEl.innerText.trim()
 		}
 	  }
-	 
+
 	});
 
 	//// the individual way to do it
@@ -32,14 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	/* initialize the calendar
 	-----------------------------------------------------------------*/
 
-	var calendarEl = document.getElementById('calendar');
+	var calendarEl = document.getElementById('calendar');  alert("Divyesh");
 	var calendar = new FullCalendar.Calendar(calendarEl, {
+
 	  headerToolbar: {
 		left: 'prev,next today',
 		center: 'title',
 		right: 'dayGridMonth,timeGridWeek,timeGridDay'
 	  },
-	  
+
 	  selectable: true,
 	  selectMirror: true,
 	  select: function(arg) {
@@ -54,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		calendar.unselect()
 	  },
-	  
+
 	  editable: true,
 	  droppable: true, // this allows things to be dropped onto the calendar
 	  drop: function(arg) {
