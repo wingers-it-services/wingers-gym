@@ -257,7 +257,7 @@
             var barColors = [
                 "indianred",
                 "grey",
-                "lightblue", // color for weekends
+                "lightblue", 
                 "darkseagreen",
                 "#f1f1fb"
             ];
