@@ -879,7 +879,7 @@
 
 				<li><a href="/subscription-list" class="ai-icon" aria-expanded="false">
 						<i class="fa-solid fa-indian-rupee-sign"></i>
-						<span class="nav-text">Plans</span>
+						<span class="nav-text">Subscriptions</span>
 					</a>
 				</li>
 
@@ -933,7 +933,7 @@
 						<span class="nav-text">Vendor</span>
 					</a>
 				</li>
-				<li>
+				{{-- <li>
 					<a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
 						<i class="fa-solid fa-shop"></i>
 						<span class="nav-text">Shop</span>
@@ -946,7 +946,7 @@
 						<li><a href="/coupon">Coupon</a></li>
 
 					</ul>
-				</li>
+				</li> --}}
 
 				<li>
 					<a href="/gym-gallery">

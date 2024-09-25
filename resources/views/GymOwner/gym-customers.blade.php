@@ -46,12 +46,12 @@
                                         <td class="py-2">{{ $user->joining_date }}</td>
                                         <td>
                                             <a class="dropdown-item" href="{{ route('showUserProfile', ['uuid' => $user->uuid]) }}">
-                                                <i class="fa fa-eye color-muted"></i>
+                                                <i class="fa fa-pencil color-muted"></i>
                                             </a>
                                         </td>
                                         <td>
                                             <a href="/update-gym-user/{{ $user->uuid }}" data-bs-toggle="tooltip" data-placement="top" title="Edit">
-                                                <i class="fa fa-pencil color-muted"></i>
+                                                <i class="fa fa-eye color-muted"></i>
                                             </a>
                                             &nbsp; &nbsp;
                                             <a onclick="confirmDelete('{{ $user->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close">
