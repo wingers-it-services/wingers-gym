@@ -96,7 +96,6 @@
                             <div class="card-header d-sm-flex d-block pb-0 border-0">
                                 <div class="me-auto pe-3">
                                     <h4 class="text-black fs-20">Subscriptions Plan List</h4>
-                                    <p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit amet, consectetur</p>
                                 </div>
 
                                 <div class="dropdown mt-sm-0 mt-3">

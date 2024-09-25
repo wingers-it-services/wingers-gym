@@ -226,41 +226,38 @@
         }
 
         function fetchAttendanceChart(gymId, userId) {
-            // Send an AJAX request to update the user's status
             $.ajax({
-                url: "/fetch-user-attendance-chart", // Define your update status route
+                url: "/fetch-user-attendance-chart",
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include the CSRF token in the headers
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 data: {
                     gymId: gymId,
                     userId: userId
                 },
                 success: function(response) {
-                    // Handle success response (if needed)
-                    console.log(response.data.Absent);
                     attendanceChart(response.data);
                     attendanceDetails(response.gym);
                 },
                 error: function(error) {
-                    // Handle error (if needed)
                     console.log(error);
                 }
             });
         }
 
         function attendanceChart(data) {
-            let attendanceChartStatus = Chart.getChart("attendanceChart"); // <canvas> id
-            if (attendanceChartStatus != undefined) {
-                attendanceChartStatus.destroy();
+            let chartStatus = Chart.getChart("attendanceChart"); // <canvas> id
+            if (chartStatus != undefined) {
+                chartStatus.destroy();
             }
 
-            var xValues = ["Absent", "Holiday", "Present", "Unmarked"];
-            var yValues = [data.Absent, data.Holiday, data.Present, data.Unmarked];
+            var xValues = ["Absent", "Holiday", "Weekend", "Present", "Unmarked"];
+            var yValues = [data.Absent, data.Holiday, data.Weekend, data.Present, data.Unmarked];
             var barColors = [
                 "indianred",
                 "grey",
+                "lightblue", // color for weekends
                 "darkseagreen",
                 "#f1f1fb"
             ];
@@ -280,99 +277,79 @@
                 }
             });
         }
+
         // Send an AJAX request to update the user's
 
-        function attendanceDetails(data) {
+        function attendanceDetails(data, gymId) {
             const daysContainer = document.querySelector(".days");
             const nextBtn = document.querySelector(".next");
             const prevBtn = document.querySelector(".prev");
             const todayBtn = document.querySelector(".today");
             const month = document.querySelector(".month");
-
-            const months = [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
+                "October", "November", "December"
             ];
 
-            const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-            const date = new Date();
-            let currentMonth = date.getMonth();
-            let currentYear = date.getFullYear();
+            let currentMonth = new Date().getMonth();
+            let currentYear = new Date().getFullYear();
             let holidays = [];
             let weekends = [];
 
-            const renderCalendar = () => {
-                date.setDate(1);
-                const firstDay = new Date(currentYear, currentMonth, 1);
-                const lastDay = new Date(currentYear, currentMonth + 1, 0);
-                const lastDayIndex = lastDay.getDay();
-                const lastDayDate = lastDay.getDate();
-                const prevLastDay = new Date(currentYear, currentMonth, 0);
-                const prevLastDayDate = prevLastDay.getDate();
-                const nextDays = 7 - lastDayIndex - 1;
+            function renderCalendar() {
+                const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+                const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+                const lastDayDate = lastDayOfMonth.getDate();
+                const prevLastDay = new Date(currentYear, currentMonth, 0).getDate();
+                const startDay = firstDayOfMonth.getDay();
+                const nextDays = 7 - lastDayOfMonth.getDay() - 1;
 
                 month.innerHTML = `${months[currentMonth]} ${currentYear}`;
-
-                let days = "";
-
+                let daysHtml = "";
 
 
-                for (let x = firstDay.getDay(); x > 0; x--) {
-                    days += `<div class="day prev">${prevLastDayDate - x + 1}</div>`;
+
+                // Days of previous month
+                for (let x = startDay; x > 0; x--) {
+                    daysHtml += `<div class="day prev">${prevLastDay - x + 1}</div>`;
                 }
 
                 for (let i = 1; i <= lastDayDate; i++) {
-                    let dayDate = new Date(currentYear, currentMonth, i).toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
-                    if (
-                        i === new Date().getDate() &&
-                        currentMonth === new Date().getMonth() &&
-                        currentYear === new Date().getFullYear()
-                    ) {
-                        days += `<div class="day today" data-date="${dayDate}">${i}</div>`;
-                    } else {
-                        if (data && ('day' + i) in data) {
-                            var dayStatus = '';
-                            switch (data['day' + i]) {
-                                case "0":
-                                    dayStatus = 'style="background-color: indianred;"';
-                                    break;
-                                case "1":
-                                    dayStatus = 'style="background-color: darkseagreen;"';
-                                    break;
-                                case "2":
-                                    dayStatus = 'style="background-color: grey;"';
-                                    break;
-                                default:
-                                    dayStatus = 'style="background-color: "#f1f1fb";"';
-                                    break;
-                            }
+                    let fullDate =
+                        `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+                    let dayStatus = '';
+                    if (data && ('day' + i) in data) {
+                        switch (data['day' + i]) {
+                            case "0":
+                                dayStatus = 'style="background-color: indianred;"';
+                                break;
+                            case "1":
+                                dayStatus = 'style="background-color: darkseagreen;"';
+                                break;
+                            case "2":
+                                dayStatus = 'style="background-color: grey;"';
+                                break;
+                            default:
+                                dayStatus = 'style="background-color: "#f1f1fb";"';
+                                break;
                         }
-                        days += `<div class="day" data-day="${i}" data-date="${dayDate}" ${dayStatus} onclick="openAttendanceMenu(this, ${i})">${i}</div>`;
                     }
+                    daysHtml +=
+                        `<div class="day" data-day="${i}" data-date="${fullDate}" ${dayStatus} onclick="openAttendanceMenu(this, ${i})">${i}</div>`;
                 }
+
 
 
                 for (let j = 1; j <= nextDays; j++) {
-                    days += `<div class="day next">${j} </div>`;
+                    daysHtml += `<div class="day next">${j} </div>`;
                 }
 
-                daysContainer.innerHTML = days;
+                daysContainer.innerHTML = daysHtml;
                 hideTodayBtn();
 
                 // After rendering, disable holidays and weekends
                 disableCalendarColumns(holidays, weekends);
-            };
+            }
+
 
             // Fetch weekends and holidays for the gym
             function fetchHolidaysAndWeekends(gymId) {
@@ -382,7 +359,8 @@
                     success: function(response) {
                         if (response.status === 200) {
                             holidays = response.holidays; // Array of holiday dates (YYYY-MM-DD format)
-                            weekends = response.weekends; // Array of weekend days (0 for Sunday, 6 for Saturday)
+                            weekends = response
+                                .weekends; // Array of weekend days (0 for Sunday, 6 for Saturday)
                             renderCalendar(); // Re-render the calendar with the updated holidays and weekends
                         }
                     },
@@ -413,7 +391,8 @@
                 days.forEach(function(dayElement) {
                     let dayDate = dayElement.dataset.date; // Assume date is stored as data-date="YYYY-MM-DD"
 
-                    let dayOfWeek = new Date(dayDate).getDay(); // Get the day of the week (0 = Sunday, 6 = Saturday)
+                    let dayOfWeek = new Date(dayDate)
+                        .getDay(); // Get the day of the week (0 = Sunday, 6 = Saturday)
 
                     // Disable entire columns for weekends
                     if (weekendNumbers.includes(dayOfWeek)) {
@@ -424,14 +403,13 @@
                     if (holidays.includes(dayDate)) {
                         dayElement.classList.add('disabled');
                         dayElement.style.pointerEvents = 'none';
-                        dayElement.style.backgroundColor = '#f5a623'; // Custom color for holidays
+                        dayElement.style.backgroundColor = '#6c757d'; // Custom color for holidays
                     }
                 });
             }
 
             // Function to disable entire column based on the weekday
             function disableColumn(weekday) {
-                console.log(weekday);
                 let days = document.querySelectorAll('.day');
 
                 days.forEach(function(dayElement) {
@@ -583,8 +561,8 @@
         }
     </script>
     <!--**********************************
-                                Content body end
-                    ***********************************-->
+                                                    Content body end
+                                        ***********************************-->
     <script src="{{ asset('js/plugins-init/staff-attendance-overview-chart.js') }}" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 

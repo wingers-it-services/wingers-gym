@@ -874,16 +874,16 @@ class GymUserController extends Controller
             $year = $now->year;
             $month = $now->month;
 
-               // Prepare the data for the specific day
-               $attendanceData = [];
-               $attendanceField = 'day' . $request->day;
+            // Prepare the data for the specific day
+            $attendanceData = [];
+            $attendanceField = 'day' . $request->day;
 
-               // If attendanceStatus is null, unmark the day (set it to null)
-               if (is_null($request->attendanceStatus)) {
-                   $attendanceData[$attendanceField] = null;
-               } else {
-                   $attendanceData[$attendanceField] = $request->attendanceStatus;
-               }
+            // If attendanceStatus is null, unmark the day (set it to null)
+            if (is_null($request->attendanceStatus)) {
+                $attendanceData[$attendanceField] = null;
+            } else {
+                $attendanceData[$attendanceField] = $request->attendanceStatus;
+            }
 
             $gym = $this->gymUserAttendance->updateOrCreate(
                 [
@@ -892,7 +892,7 @@ class GymUserController extends Controller
                     'month' => $month,
                     'year' => $year
                 ],
-                    $attendanceData
+                $attendanceData
             );
 
             return response()->json(['status' => 200, 'data' => $gym], 200);
@@ -934,6 +934,7 @@ class GymUserController extends Controller
             $year = $now->year;
             $month = $now->month;
 
+            // Fetch attendance for the user
             $gym = GymUserAttendence::where([
                 'gym_user_id' => $request->userId,
                 'gym_id' => $request->gymId,
@@ -941,49 +942,82 @@ class GymUserController extends Controller
                 'year' => $year
             ])->first();
 
+            // Fetch holidays
+            $holidays = Holiday::where('gym_id', $request->gymId)
+                ->whereYear('date', $year)
+                ->whereMonth('date', $month)
+                ->pluck('date')
+                ->toArray();
+
+            // Fetch weekends
+            $weekends = [];
+            $weekendDays = [0, 6]; // Sunday (0) and Saturday (6) as default weekends
+            for ($i = 1; $i <= Carbon::create($year, $month)->daysInMonth; $i++) {
+                $day = Carbon::create($year, $month, $i);
+                if (in_array($day->dayOfWeek, $weekendDays)) {
+                    $weekends[] = $day->toDateString();
+                }
+            }
+
+            // Prepare the default data in case no attendance is marked
             if (!$gym) {
                 return response()->json([
                     'status' => 200,
                     'data' => [
                         "Absent" => 0,
-                        "Holiday" => 0,
+                        "Holiday" => count($holidays),
+                        "Weekend" => count($weekends),
                         "Present" => 0,
-                        "Unmarked" => 30
-                    ]
+                        "Unmarked" => Carbon::create($year, $month)->daysInMonth - count($holidays) - count($weekends)
+                    ],
+                    'holidays' => $holidays,
+                    'weekends' => $weekends
                 ], 200);
             }
 
+            // Parse the attendance data and count presence, absence, and unmarked days
             $gym = $gym->toArray();
+
             $data = [
                 "Absent" => 0,
-                "Holiday" => 0,
+                "Holiday" => count($holidays),
+                "Weekend"  => count($weekends),
                 "Present" => 0,
                 "Unmarked" => 0
             ];
 
-            for ($i = 1; $i <= 31; $i++) {
-                switch ($gym['day' . $i]) {
-                    case 1:
-                        $data["Present"] += 1;
-                        break;
-                    case 2:
-                        $data["Holiday"] += 1;
-                        break;
-                    case null:
-                        $data["Unmarked"] += 1;
-                        break;
-                    default:
-                        $data["Absent"] += 1;
+            for ($i = 1; $i <= Carbon::create($year, $month)->daysInMonth; $i++) {
+                $day = Carbon::create($year, $month, $i)->toDateString();
+
+                if (in_array($day, $holidays)) {
+                    $data["Holiday"] += 1;
+                } elseif (in_array($day, $weekends)) {
+                    $data["Weekend"] += 1;
+                } else {
+                    $dayField = 'day' . $i;
+                    switch ($gym[$dayField]) {
+                        case 1:
+                            $data["Present"] += 1;
+                            break;
+                        case null:
+                            $data["Unmarked"] += 1;
+                            break;
+                        default:
+                            $data["Absent"] += 1;
+                    }
                 }
             }
+
             return response()->json([
                 'status' => 200,
                 'data' => $data,
-                'gym' => $gym
+                'gym' => $gym,
+                'holidays' => $holidays,
+                'weekends' => $weekends
             ], 200);
         } catch (\Throwable $th) {
             Log::error("[GymStaffController][fetchUserAttendanceChart] error " . $th->getMessage());
-            return response()->json(['status' => 500, 'data' => $gym], 500);
+            return response()->json(['status' => 500, 'data' => null], 500);
         }
     }
 }

@@ -1126,7 +1126,7 @@
 				const selectedDay = document.querySelector(`.day[data-day='${day}']`);
 				if (status === null) {
 					// Remove any background color when unmarked
-					selectedDay.style.backgroundColor = '#f1f1fb';
+					selectedDay.style.backgroundColor = '#fff';
 				} else {
 					switch (status) {
 						case 1:
