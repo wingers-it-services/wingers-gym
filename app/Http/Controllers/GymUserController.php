@@ -929,11 +929,11 @@ class GymUserController extends Controller
                 "gymId" => 'required',
                 "userId" => 'required'
             ]);
-
+    
             $now = Carbon::now();
             $year = $now->year;
             $month = $now->month;
-
+    
             // Fetch attendance for the user
             $gym = GymUserAttendence::where([
                 'gym_user_id' => $request->userId,
@@ -941,24 +941,32 @@ class GymUserController extends Controller
                 'month' => $month,
                 'year' => $year
             ])->first();
-
+    
             // Fetch holidays
             $holidays = Holiday::where('gym_id', $request->gymId)
                 ->whereYear('date', $year)
                 ->whereMonth('date', $month)
                 ->pluck('date')
                 ->toArray();
+    
+            // Fetch weekends dynamically from the gym_weekends table
+            $weekendDays = GymWeekend::where('gym_id', $request->gymId)
+                ->pluck('weekend_day')  // Assuming 'weekend_day' stores day names like 'Sunday', 'Saturday'
+                ->map(function ($day) {
+                    return Carbon::parse($day)->dayOfWeek; // Convert day names to Carbon's dayOfWeek integer
+                })
+                ->toArray();
 
-            // Fetch weekends
+    
+            // Fetch weekends for the given month based on gym-specific weekend days
             $weekends = [];
-            $weekendDays = [0, 6]; // Sunday (0) and Saturday (6) as default weekends
             for ($i = 1; $i <= Carbon::create($year, $month)->daysInMonth; $i++) {
                 $day = Carbon::create($year, $month, $i);
                 if (in_array($day->dayOfWeek, $weekendDays)) {
                     $weekends[] = $day->toDateString();
                 }
             }
-
+    
             // Prepare the default data in case no attendance is marked
             if (!$gym) {
                 return response()->json([
@@ -974,40 +982,31 @@ class GymUserController extends Controller
                     'weekends' => $weekends
                 ], 200);
             }
-
+    
             // Parse the attendance data and count presence, absence, and unmarked days
             $gym = $gym->toArray();
-
+    
             $data = [
                 "Absent" => 0,
                 "Holiday" => count($holidays),
-                "Weekend"  => count($weekends),
+                "Weekend" => count($weekends),
                 "Present" => 0,
                 "Unmarked" => 0
             ];
-
-            for ($i = 1; $i <= Carbon::create($year, $month)->daysInMonth; $i++) {
-                $day = Carbon::create($year, $month, $i)->toDateString();
-
-                if (in_array($day, $holidays)) {
-                    $data["Holiday"] += 1;
-                } elseif (in_array($day, $weekends)) {
-                    $data["Weekend"] += 1;
-                } else {
-                    $dayField = 'day' . $i;
-                    switch ($gym[$dayField]) {
-                        case 1:
-                            $data["Present"] += 1;
-                            break;
-                        case null:
-                            $data["Unmarked"] += 1;
-                            break;
-                        default:
-                            $data["Absent"] += 1;
-                    }
+    
+            for ($i = 1; $i <= 31; $i++) {
+                switch ($gym['day' . $i]) {
+                    case 1:
+                        $data["Present"] += 1;
+                        break;
+                    case null:
+                        $data["Unmarked"] += 1;
+                        break;
+                    default:
+                        $data["Absent"] += 1;
                 }
             }
-
+    
             return response()->json([
                 'status' => 200,
                 'data' => $data,
@@ -1020,4 +1019,5 @@ class GymUserController extends Controller
             return response()->json(['status' => 500, 'data' => null], 500);
         }
     }
+    
 }
