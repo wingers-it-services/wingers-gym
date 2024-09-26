@@ -825,11 +825,6 @@
 		});
 	}
 
-
-
-
-
-
 	function previewFile(input, previewId, iconId) {
 		const file = input.files[0];
 		const previewElement = document.getElementById(previewId);
@@ -855,6 +850,15 @@
 		}
 	}
 
+
+	const StaffAttendanceStatusEnum = {
+        PRESENT: {{ \App\Enums\StaffAttendanceStatusEnum::PRESENT }},
+        ABSENT: {{ \App\Enums\StaffAttendanceStatusEnum::ABSENT }},
+        WEEKEND: {{ \App\Enums\StaffAttendanceStatusEnum::WEEKEND }},
+        HOLIDAY: {{ \App\Enums\StaffAttendanceStatusEnum::HOLIDAY }},
+        HALFDAY: {{ \App\Enums\StaffAttendanceStatusEnum::HALFDAY }}
+
+    };
 
 
 	function fetchAttendanceChart(gymId, staffId) {
@@ -885,9 +889,9 @@
 			chartStatus.destroy(); // Destroy if chart exists
 		}
 
-		var xValues = ["Absent", "Halfday", "Week Off", "Present", "Unmarked"];
-		var yValues = [data.Absent, data.Halfday, data.WeekOff, data.Present, data.Unmarked];
-		var barColors = ["indianred", "burlywood", "grey", "darkseagreen", "#f1f1fb"];
+		var xValues = ["Absent", "Halfday", "Week Off","Holiday", "Present", "Unmarked"];
+		var yValues = [data.Absent, data.Halfday, data.Weekend, data.Holiday, data.Present, data.Unmarked];
+		var barColors = ["indianred", "burlywood", "grey", "lightblue","darkseagreen", "#f1f1fb"];
 
 		var attendanceChart = new Chart("attendanceChart", {
 			type: "doughnut",
@@ -967,6 +971,7 @@
 			}
 
 			daysContainer.innerHTML = daysHtml;
+			hideTodayBtn();
 
 			// After rendering, disable holidays and weekends
 			disableCalendarColumns(holidays, weekends);
@@ -1021,7 +1026,7 @@
 				if (holidays.includes(dayDate)) {
 					dayElement.classList.add('disabled');
 					dayElement.style.pointerEvents = 'none';
-					dayElement.style.backgroundColor = '#f5a623'; // Custom color for holidays
+					dayElement.style.backgroundColor = 'lightblue'; // Custom color for holidays
 				}
 			});
 		}
@@ -1069,6 +1074,18 @@
 			renderCalendar();
 		});
 
+		function hideTodayBtn() {
+			if (
+				currentMonth === new Date().getMonth() &&
+				currentYear === new Date().getFullYear()
+			) {
+				todayBtn.style.display = "none";
+			} else {
+				todayBtn.style.display = "flex";
+			}
+		}
+
+
 		gymId ={{$gymStaff->gym_id ?? ''}}
 			// Initial call to render the calendar and fetch holidays/weekends
 			fetchHolidaysAndWeekends(gymId);
@@ -1085,9 +1102,9 @@
 		const attendanceMenu = document.createElement('div');
 		attendanceMenu.classList.add('attendance-menu');
 		attendanceMenu.innerHTML = `
-        <button class="dropdown-item" onclick="markDayAttendance(${day}, 1, {{$gymStaff->gym_id ?? ''}} , $staffId)">Present</button>
-        <button class="dropdown-item" style="background-color: indianred;" onmouseover="this.style.backgroundColor='#b22222'" onmouseout="this.style.backgroundColor='indianred'" onclick="markDayAttendance(${day}, 0, {{$gymStaff->gym_id ?? ''}}, $staffId)">Absent</button>
-        <button class="dropdown-item" style="background-color: burlywood;" onmouseover="this.style.backgroundColor='#de9b44'" onmouseout="this.style.backgroundColor='burlywood'" onclick="markDayAttendance(${day}, 0.5, {{$gymStaff->gym_id ?? ''}}, $staffId)">Half Day</button>
+        <button class="dropdown-item" onclick="markDayAttendance(${day}, StaffAttendanceStatusEnum.PRESENT, {{$gymStaff->gym_id ?? ''}} , $staffId)">Present</button>
+        <button class="dropdown-item" style="background-color: indianred;" onmouseover="this.style.backgroundColor='#b22222'" onmouseout="this.style.backgroundColor='indianred'" onclick="markDayAttendance(${day}, StaffAttendanceStatusEnum.ABSENT, {{$gymStaff->gym_id ?? ''}}, $staffId)">Absent</button>
+        <button class="dropdown-item" style="background-color: burlywood;" onmouseover="this.style.backgroundColor='#de9b44'" onmouseout="this.style.backgroundColor='burlywood'" onclick="markDayAttendance(${day}, StaffAttendanceStatusEnum.HALFDAY, {{$gymStaff->gym_id ?? ''}}, $staffId)">Half Day</button>
         <button class="dropdown-item" style="background-color: lightgray;" onmouseover="this.style.backgroundColor='#d3d3d3'" onmouseout="this.style.backgroundColor='lightgray'" onclick="markDayAttendance(${day}, null, {{$gymStaff->gym_id ?? ''}}, $staffId)">Unmark</button>
     `;
 
@@ -1129,13 +1146,13 @@
 					selectedDay.style.backgroundColor = '#fff';
 				} else {
 					switch (status) {
-						case 1:
+						case StaffAttendanceStatusEnum.PRESENT:
 							selectedDay.style.backgroundColor = 'darkseagreen';
 							break;
-						case 0.5:
+						case StaffAttendanceStatusEnum.HALFDAY:
 							selectedDay.style.backgroundColor = 'burlywood';
 							break;
-						case 0:
+						case StaffAttendanceStatusEnum.ABSENT:
 							selectedDay.style.backgroundColor = 'indianred';
 							break;
 					}
