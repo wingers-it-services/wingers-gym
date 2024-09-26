@@ -25,17 +25,17 @@ class DietAnalyticControllerApi extends Controller
             $request->validate([
                 'gym_id' => 'required|exists:gyms,id'
             ]);
-    
+
             $userId = auth()->user()->id;
             $gymId = $request->gym_id;
             $currentYear = Carbon::now()->year;
-    
+
             // Fetch diet analytics for the current year
             $currentYearDietAnalytics = $this->dietAnalytic->where('user_id', $userId)
                 ->where('gym_id', $gymId)
                 ->where('year', $currentYear)
                 ->get();
-    
+
             // Check if the data is empty or null and return 422 response
             if ($currentYearDietAnalytics->isEmpty()) {
                 return response()->json([
@@ -43,7 +43,7 @@ class DietAnalyticControllerApi extends Controller
                     'message' => 'No diet analytics data available for the current year.'
                 ], 422);
             }
-    
+
             // Prepare default percentage array
             $percentages = [
                 [
@@ -67,17 +67,17 @@ class DietAnalyticControllerApi extends Controller
                     'percentage' => 0
                 ]
             ];
-    
+
             // Prepare dynamic array for all months data (total and consumed values)
             $allMonthData = [];
             $months = [];
-    
+
             foreach ($currentYearDietAnalytics as $data) {
                 $monthName = Carbon::createFromFormat('m', $data->month)->format('M'); // Convert month number to short month name
-    
+
                 // Initialize month data if not already done
                 if (!isset($months[$data->month])) {
-                    $months[$data->month] = [
+                    $months[$data->month] = [        
                         'total_fats'        => 0,
                         'consumed_fats'     => 0,
                         'total_carbs'       => 0,
@@ -89,7 +89,7 @@ class DietAnalyticControllerApi extends Controller
                         'color'             => '#FFD700',
                     ];
                 }
-    
+
                 // Sum up the totals and consumed values for each month
                 $months[$data->month]['total_fats'] += $data->total_fats;
                 $months[$data->month]['consumed_fats'] += $data->total_fats_consumed;
@@ -100,11 +100,12 @@ class DietAnalyticControllerApi extends Controller
                 $months[$data->month]['total_calories'] += $data->total_calories;
                 $months[$data->month]['consumed_calories'] += $data->total_calories_consumed;
             }
-    
+
             // Format month data for response
             foreach ($months as $month => $data) {
                 $monthName = Carbon::createFromFormat('m', $month)->format('M'); // Convert month number to short month name
                 $allMonthData[] = [
+                    'title'             => 'sdsdfds',
                     'month'             => $monthName,
                     'total_fats'        => $data['total_fats'],
                     'consumed_fats'     => $data['consumed_fats'],
@@ -117,7 +118,7 @@ class DietAnalyticControllerApi extends Controller
                     'color'             => $data['color']
                 ];
             }
-    
+
             // Calculate average percentages
             if ($currentYearDietAnalytics->isNotEmpty()) {
                 $percentages = [
@@ -143,9 +144,10 @@ class DietAnalyticControllerApi extends Controller
                     ]
                 ];
             }
-    
+
             return response()->json([
                 'status'       => 200,
+                'title'        => 'fgghhj',
                 'percentages'  => $percentages,
                 'allMonthData' => $allMonthData,
                 'message'      => 'Diet analytics fetched successfully for the year.',
@@ -157,5 +159,5 @@ class DietAnalyticControllerApi extends Controller
                 'message' => 'Error fetching diet analytics: ' . $e->getMessage(),
             ], 500);
         }
-    }   
+    }
 }
