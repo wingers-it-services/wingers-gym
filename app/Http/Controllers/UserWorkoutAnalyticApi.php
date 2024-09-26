@@ -66,6 +66,7 @@ class UserWorkoutAnalyticApi extends Controller
                 $totalCompletedSets = 0;
     
                 $currentBodyPartData = [
+                    'title' => ucfirst($bodyPart).' chart',
                     'body_part' => ucfirst($bodyPart),
                 ];
     
@@ -105,6 +106,7 @@ class UserWorkoutAnalyticApi extends Controller
     
             return response()->json([
                 'status'      => 200,
+                'title'       => 'title',
                 'percentages' => $percentages,
                 'sets'        => $sets,
                 'message'     => 'Workout analytics fetched successfully.',
