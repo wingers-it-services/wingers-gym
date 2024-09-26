@@ -885,6 +885,20 @@ class GymUserController extends Controller
                 $attendanceData[$attendanceField] = $request->attendanceStatus;
             }
 
+            // Check if the user already exists in the attendance table for the month
+            $existingUser = GymUserAttendence::where([
+                'gym_user_id' => $request->userId,
+                'gym_id' => $request->gymId,
+                'month' => $month,
+                'year' => $year
+            ])->first();
+
+            // If the user doesn't exist, store holidays and weekends
+            if (!$existingUser) {
+                // Store weekends and holidays in the attendance table
+                $this->storeHolidaysAndWeekends($request->gymId, $request->userId, $month, $year);
+            }
+
             $gym = $this->gymUserAttendance->updateOrCreate(
                 [
                     'gym_user_id' => $request->userId,
@@ -929,11 +943,11 @@ class GymUserController extends Controller
                 "gymId" => 'required',
                 "userId" => 'required'
             ]);
-    
+
             $now = Carbon::now();
             $year = $now->year;
             $month = $now->month;
-    
+
             // Fetch attendance for the user
             $gym = GymUserAttendence::where([
                 'gym_user_id' => $request->userId,
@@ -941,14 +955,14 @@ class GymUserController extends Controller
                 'month' => $month,
                 'year' => $year
             ])->first();
-    
+
             // Fetch holidays
             $holidays = Holiday::where('gym_id', $request->gymId)
                 ->whereYear('date', $year)
                 ->whereMonth('date', $month)
                 ->pluck('date')
                 ->toArray();
-    
+
             // Fetch weekends dynamically from the gym_weekends table
             $weekendDays = GymWeekend::where('gym_id', $request->gymId)
                 ->pluck('weekend_day')  // Assuming 'weekend_day' stores day names like 'Sunday', 'Saturday'
@@ -957,7 +971,7 @@ class GymUserController extends Controller
                 })
                 ->toArray();
 
-    
+
             // Fetch weekends for the given month based on gym-specific weekend days
             $weekends = [];
             for ($i = 1; $i <= Carbon::create($year, $month)->daysInMonth; $i++) {
@@ -966,7 +980,7 @@ class GymUserController extends Controller
                     $weekends[] = $day->toDateString();
                 }
             }
-    
+
             // Prepare the default data in case no attendance is marked
             if (!$gym) {
                 return response()->json([
@@ -982,10 +996,10 @@ class GymUserController extends Controller
                     'weekends' => $weekends
                 ], 200);
             }
-    
+
             // Parse the attendance data and count presence, absence, and unmarked days
             $gym = $gym->toArray();
-    
+
             $data = [
                 "Absent" => 0,
                 "Holiday" => count($holidays),
@@ -993,7 +1007,7 @@ class GymUserController extends Controller
                 "Present" => 0,
                 "Unmarked" => 0
             ];
-    
+
             for ($i = 1; $i <= 31; $i++) {
                 switch ($gym['day' . $i]) {
                     case 1:
@@ -1002,11 +1016,11 @@ class GymUserController extends Controller
                     case null:
                         $data["Unmarked"] += 1;
                         break;
-                    default:
+                    case 2:
                         $data["Absent"] += 1;
                 }
             }
-    
+
             return response()->json([
                 'status' => 200,
                 'data' => $data,
@@ -1019,5 +1033,69 @@ class GymUserController extends Controller
             return response()->json(['status' => 500, 'data' => null], 500);
         }
     }
-    
+
+    public function storeHolidaysAndWeekends($gymId, $userId, $month, $year)
+    {
+        try {
+
+            $holidays = Holiday::where('gym_id', $gymId)
+            ->whereYear('date', $year)
+            ->whereMonth('date', $month)
+            ->pluck('date')
+            ->toArray();
+
+            // Fetch weekends dynamically from the gym_weekends table
+            $weekendDays = GymWeekend::where('gym_id', $gymId)
+                ->pluck('weekend_day')  // Assuming 'weekend_day' stores day names like 'Sunday', 'Saturday'
+                ->map(function ($day) {
+                    return Carbon::parse($day)->dayOfWeek; // Convert day names to Carbon's dayOfWeek integer
+                })
+                ->toArray();
+
+            // Fetch weekends for the given month based on gym-specific weekend days
+            $weekends = [];
+            for ($i = 1; $i <= Carbon::create($year, $month)->daysInMonth; $i++) {
+                $day = Carbon::create($year, $month, $i);
+                if (in_array($day->dayOfWeek, $weekendDays)) {
+                    $weekends[] = $day->toDateString();
+                }
+            }
+
+            // Find or create a new attendance record for the user for the given month
+            $attendanceRecord = GymUserAttendence::firstOrCreate(
+                [
+                    'gym_id' => $gymId,
+                    'gym_user_id' => $userId,
+                    'month' => $month,
+                    'year' => $year
+                ]
+            );
+
+            // Prepare the weekend fields to update (e.g., 'day1', 'day2', ..., 'dayX')
+            $weekendAttendanceData = [];
+            foreach ($weekends as $weekendDate) {
+                $day = Carbon::parse($weekendDate)->day;
+                $attendanceField = 'day' . $day;
+                $weekendAttendanceData[$attendanceField] = \App\Enums\AttendenceStatusEnum::WEEKEND; // 3 is for WEEKEND status, adjust this as necessary
+            }
+
+            $holidaysAttendanceData = [];
+            foreach ($holidays as $holidayDate) {
+                $day = Carbon::parse($holidayDate)->day;
+                $attendanceField = 'day' . $day;
+                $holidaysAttendanceData[$attendanceField] = \App\Enums\AttendenceStatusEnum::HOLIDAY; 
+            }
+
+
+            // Update the attendance record with weekend days marked as '3'
+            $attendanceRecord->update($weekendAttendanceData);
+            $attendanceRecord->update($holidaysAttendanceData);
+
+            return response()->json(['message' => 'Weekends stored successfully in attendance table.'], 200);
+        } catch (\Exception $e) {
+            Log::error("[GymStaffController][storeHolidaysAndWeekends] error " . $e->getMessage());
+            return response()->json(['error' => 'Failed to store weekends in attendance table.'], 500);
+        }
+    }
+
 }
