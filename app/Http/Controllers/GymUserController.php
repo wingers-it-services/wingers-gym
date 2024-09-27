@@ -16,6 +16,7 @@ use App\Models\GymWeekend;
 use App\Models\Holiday;
 use App\Models\User;
 use App\Models\UserBodyMeasurement;
+use App\Models\UserSubscriptionPayment;
 use App\Models\UserWorkout;
 use App\Models\UserDiet;
 use App\Models\UsersTrainerHistry;
@@ -46,6 +47,7 @@ class GymUserController extends Controller
     protected $userSubscriptionHistory;
     protected $trainersHistory;
     protected $gymUserAttendance;
+    protected $customerPayments;
 
     public function __construct(
         User $user,
@@ -60,7 +62,8 @@ class GymUserController extends Controller
         GymSubscription $gymSubscription,
         UserSubscriptionHistory $userSubscriptionHistory,
         UsersTrainerHistry $trainersHistory,
-        GymUserAttendence $gymUserAttendance
+        GymUserAttendence $gymUserAttendance,
+        UserSubscriptionPayment $customerPayments
     ) {
         $this->user = $user;
         $this->gym = $gym;
@@ -76,6 +79,7 @@ class GymUserController extends Controller
         $this->trainersHistory = $trainersHistory;
         $this->trainersHistory = $trainersHistory;
         $this->gymUserAttendance = $gymUserAttendance;
+        $this->customerPayments = $customerPayments;
     }
 
     public function listGymUser()
@@ -139,6 +143,15 @@ class GymUserController extends Controller
         $gymSubscriptions = $this->gymSubscription->where('gym_id', $gymId)->get();
 
         return view('GymOwner.add-gym-customer', compact('gymStaff', 'gymSubscriptions', 'goals'));
+    }
+
+    public function viewCustomerPayment()
+    {
+        $gymUser = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
+        $customerPayments = $this->customerPayments->with('subscription')->where('gym_id', $gymId)->get();
+
+        return view('GymOwner.customers-payment', compact('customerPayments'));
     }
 
     public function addUserByGym(Request $request)
@@ -1039,10 +1052,10 @@ class GymUserController extends Controller
         try {
 
             $holidays = Holiday::where('gym_id', $gymId)
-            ->whereYear('date', $year)
-            ->whereMonth('date', $month)
-            ->pluck('date')
-            ->toArray();
+                ->whereYear('date', $year)
+                ->whereMonth('date', $month)
+                ->pluck('date')
+                ->toArray();
 
             // Fetch weekends dynamically from the gym_weekends table
             $weekendDays = GymWeekend::where('gym_id', $gymId)

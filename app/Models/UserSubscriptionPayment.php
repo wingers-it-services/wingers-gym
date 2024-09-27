@@ -41,6 +41,11 @@ class UserSubscriptionPayment extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function subscription()
+    {
+        return $this->belongsTo(GymSubscription::class, 'subscription_id');
+    }
+
     public function newOrder(array $orderData)
     {
         $lastOrderId = $this->latest('id')->value('id');
