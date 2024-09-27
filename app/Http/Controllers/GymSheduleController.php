@@ -3,20 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Enums\WeekDaysEnum;
+use App\Models\Gym;
 use App\Models\GymShedule;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+
 
 class GymSheduleController extends Controller
 {
 
+    protected $gym;
     protected $gymShedule;
 
-    public function __construct(GymShedule $gymShedule)
+    public function __construct(Gym $gym, GymShedule $gymShedule)
     {
         $this->gymShedule = $gymShedule;
+        $this->gym = $gym;
+    }
+
+    public function viewGymSchedule()
+    {
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
+        $gymShedule = $this->gymShedule->where('gym_id',$gymId);
+        return view('GymOwner.gym-calender', compact('gymShedule'));
     }
 
     public function addGymShedule(Request $request)
@@ -49,11 +62,16 @@ class GymSheduleController extends Controller
     {
         $schedules = GymShedule::all();  // Assuming GymSchedule model is used for schedule data
 
-        $data = $schedules->flatMap(function ($schedule) {
+        // Get the total number of weeks remaining in the current year dynamically
+        $currentDate = Carbon::now();
+        $endOfYear = Carbon::now()->endOfYear();
+        $remainingWeeks = $currentDate->diffInWeeks($endOfYear); // Weeks remaining until the end of the year
+
+        $data = $schedules->flatMap(function ($schedule) use ($remainingWeeks) {
             // Check if the schedule is recurring
             if ($schedule->is_recurring) {
                 // Generate occurrences for the next 4 weeks
-                return collect(range(0, 3))->map(function ($weekOffset) use ($schedule) {
+                return collect(range(0, $remainingWeeks))->map(function ($weekOffset) use ($schedule) {
                     // Get the next occurrence of the specified weekday
                     $nextDate = $this->getNextOccurrence($schedule->week_day, $weekOffset);
                     return [
@@ -65,10 +83,9 @@ class GymSheduleController extends Controller
                     ];
                 });
             } else {
-                // Non-recurring event is a "Conference"
                 return [
                     [
-                        'title' => 'Conference',
+                        'title' => $schedule->event_name,
                         'start' => $schedule->date . ' ' . $schedule->start_time,  // Combine date and time
                         'end' => $schedule->date . ' ' . $schedule->end_time, // Combine date and time
                         'className' => 'bg-danger',
@@ -93,10 +110,10 @@ class GymSheduleController extends Controller
             WeekDaysEnum::FRIDAY    => Carbon::FRIDAY,
             WeekDaysEnum::SATURDAY  => Carbon::SATURDAY,
         ];
-    
+
         // Get the next occurrence of the given weekday number, adjusted for week offset
         $date = Carbon::now()->addWeeks($weekOffset);
+
         return $date->next($weekDayMap[$weekDay])->toDateString();
     }
-    
 }

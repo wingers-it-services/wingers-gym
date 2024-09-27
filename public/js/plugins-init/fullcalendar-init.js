@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	/* initialize the calendar
 	-----------------------------------------------------------------*/
 
-	var calendarEl = document.getElementById('calendar');  alert("Divyesh");
+	var calendarEl = document.getElementById('calendar');
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 
 	  headerToolbar: {

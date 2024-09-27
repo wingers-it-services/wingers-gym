@@ -134,8 +134,8 @@
 												<option value="female">Female</option>
 												<option value="Other">Other</option>
 											</select>
-										</div>    
-										
+										</div>
+
 										<div class="col-md-4 mb-3">
 											<label for="employee_id">Goal</label>
 											<select class="me-sm-2 form-control default" id="goal_id"

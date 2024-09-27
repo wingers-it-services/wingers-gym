@@ -922,7 +922,7 @@
 					</ul>
 				</li>
 				<li>
-					<a href="/calendar">
+					<a href="/gym-schedule">
 						<i class="fa-solid fa-calendar-days"></i>
 						<span class="nav-text">GYM Schedule</span>
 					</a>

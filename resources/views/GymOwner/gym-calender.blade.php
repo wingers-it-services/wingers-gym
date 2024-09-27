@@ -4,20 +4,14 @@
 
 <div class="content-body ">
     <div class="container-fluid">
-        <div class="page-titles">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">App</a></li>
-                <li class="breadcrumb-item active"><a href="javascript:void(0)">Calerdar</a></li>
-            </ol>
-        </div>
         <div class="row">
             <div class="col-xl-3">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-intro-title">Calendar</h4>
-                        <div class="">
+                        <div class="row">
                             <div id="external-events" class="my-3">
-                                <p>Drag and drop your event or click in the calendar</p>
+                                <p>Click on the "Create Event" to add new event in the calender</p>
                                 <div class="external-event btn-primary light" data-class="bg-primary"><i class="fa fa-move"></i><span>New Theme Release</span></div>
                                 <div class="external-event btn-warning light" data-class="bg-warning"><i class="fa fa-move"></i>My Event</div>
                                 <div class="external-event btn-danger light" data-class="bg-danger"><i class="fa fa-move"></i>Meet manager</div>
@@ -31,7 +25,7 @@
                                 <label class="form-check-label" for="drop-remove">Remove After Drop</label>
                             </div>
                             <a href="javascript:void()" data-bs-toggle="modal" data-bs-target="#add-category" class="btn btn-primary btn-event w-100">
-                                <span class="align-middle"><i class="ti-plus me-2"></i></span> Create New
+                                <span class="align-middle"><i class="ti-plus me-2"></i></span> Create Event
                             </a>
                         </div>
                     </div>
@@ -89,7 +83,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="control-label">Date</label>
-                                        <input class="form-control form-white" type="date" name="date" id="date">             
+                                        <input class="form-control form-white" type="date" name="date" id="date">
                                         <div id="week_days_section" style="padding-top: 5%; display: none;">
                                         <label class="control-label">Week Day</label>
                                             @foreach(\App\Enums\WeekDaysEnum::getWeekDays() as $key => $day)
@@ -178,6 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             allDay: !event.start_time // If there's no time, it's an all-day event
                         });
                     });
+
 
                     // Pass the formatted events to FullCalendar
                     successCallback(events);

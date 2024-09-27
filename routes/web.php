@@ -111,6 +111,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/run-diet-histry-cron', [RunCronController::class, 'runDietHistryCronJob'])->name('runDietHistryCronJob');
 
 
+    Route::get('/gym-schedule', [GymSheduleController::class, 'viewGymSchedule']);
+
     Route::post('/add-gym-schedule', [GymSheduleController::class, 'addGymShedule'])->name('addGymShedule');
 
     Route::get('/fetch-gym-schedules', [GymSheduleController::class, 'fetchSchedule'])->name('fetchSchedule');
