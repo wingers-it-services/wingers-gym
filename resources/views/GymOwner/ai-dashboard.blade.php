@@ -126,7 +126,7 @@
 				<div class="card">
 					<div class="card-header flex-wrap pb-0 border-0">
 						<div class="me-auto pe-3 mb-2">
-							<h4 class="text-black fs-20">Map Location</h4>
+							<h4 class="text-black fs-20">User in Your City</h4>
 						</div>
 						<div id="map" class="map"></div>
 					</div>
@@ -135,42 +135,21 @@
 			<div class="col-xl-3 col-xxl-4 col-md-6">
 				<div class="card">
 					<div class="card-header border-0 pb-0">
-						<h4 class="text-black fs-20 mb-0">Workout Progress</h4>
-					</div>
-					<div class="card-body text-center">
-						<div id="radialBar"></div>
-						<p class="fs-14">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do </p>
-						<a href="workout-statistic.html" class="btn btn-outline-primary rounded">Set Target</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-xl-3 col-xxl-4 col-md-6">
-				<div class="card">
-					<div class="card-header border-0 pb-0">
-						<h4 class="text-black fs-20 mb-0">Duration Worked</h4>
+						<h4 class="text-black fs-20 mb-0">Promote Your Buisness</h4>
 					</div>
 					<div class="card-body">
 						<div class="media align-items-center border border-warning rounded p-3 mb-md-4 mb-3">
 							<div class="d-inline-block me-3 position-relative donut-chart-sale2">
-								<span class="donut2" data-peity='{ "fill": ["rgb(255, 148, 50)", "rgba(255, 255, 255, 1)"],   "innerRadius": 27, "radius": 10}'>6/8</span>
+								<span class="donut2" data-peity='{ "fill": ["rgb(230, 92, 79)", "rgba(255, 255, 255, 1)"],   "innerRadius": 27, "radius": 10}'>6/8</span>
 								<small class="text-primary">
-									<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<g clip-path="url(#clip6)">
-											<path d="M0.988926 17.074C0.328245 17.2006 -0.104616 17.8385 0.0219518 18.4992C0.133331 19.0814 0.644663 19.4864 1.21675 19.4864C1.29269 19.4864 1.37116 19.4788 1.4471 19.4636L6.45917 18.5017C6.74521 18.446 7.00087 18.2916 7.18313 18.0638L9.33478 15.3502L8.6159 14.9832C8.08432 14.7148 7.71471 14.2288 7.58815 13.639L5.55801 16.1982L0.988926 17.074Z" fill="#FF9432" />
-											<path d="M18.84 6.493C20.3135 6.493 21.508 5.29848 21.508 3.82496C21.508 2.35144 20.3135 1.15692 18.84 1.15692C17.3664 1.15692 16.1719 2.35144 16.1719 3.82496C16.1719 5.29848 17.3664 6.493 18.84 6.493Z" fill="#FF9432" />
-											<path d="M13.0179 3.15671C12.7369 2.86813 12.4762 2.75422 12.1902 2.75422C12.0863 2.75422 11.9826 2.76941 11.8712 2.79472L7.292 3.88067C6.65917 4.03002 6.26934 4.66539 6.41869 5.29569C6.54779 5.8374 7.02874 6.20192 7.56286 6.20192C7.65401 6.20192 7.74511 6.19179 7.83627 6.16901L11.7371 5.24507C11.9902 5.52605 13.2584 6.90057 13.4888 7.14358C11.8763 8.86996 10.2638 10.5938 8.65134 12.3202C8.62602 12.3481 8.60326 12.3759 8.58046 12.4037C8.10963 13.0036 8.25394 13.9453 8.96272 14.3022L13.9064 16.826L11.3396 20.985C10.9878 21.5571 11.165 22.3063 11.737 22.6607C11.937 22.7848 12.1572 22.843 12.3749 22.843C12.7825 22.843 13.1824 22.638 13.4128 22.2658L16.6732 16.9829C16.8529 16.6918 16.901 16.34 16.8073 16.0134C16.7137 15.6843 16.4884 15.411 16.1821 15.2565L12.8331 13.5529L16.3542 9.7863L19.0122 12.0392C19.2324 12.2265 19.5032 12.3176 19.7716 12.3176C20.0601 12.3176 20.3487 12.2113 20.574 12.0038L23.6242 9.16106C24.1002 8.71808 24.128 7.97386 23.685 7.49797C23.4521 7.24989 23.1382 7.12333 22.8243 7.12333C22.5383 7.12333 22.2497 7.22711 22.0244 7.43721L19.7412 9.56101C19.7386 9.56354 14.0178 4.1819 13.0179 3.15671Z" fill="#FF9432" />
-										</g>
-										<defs>
-											<clipPath id="clip6">
-												<rect width="24" height="24" fill="white" />
-											</clipPath>
-										</defs>
-									</svg>
+
+								 
+
+									<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg enable-background="new 0 0 512 512" id="Layer_1" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M257.1,507.9C119.2,507.9,7.9,395.4,8.5,255.5C9.1,116.9,120.9,4.8,259.6,6.2   c136,1.3,247,112.8,245.9,253.1C504.4,397.1,393.9,507.5,257.1,507.9z M257,25.9C132.9,25.5,29.3,126.6,28.1,254.5   c-1.3,130.3,102.8,232.4,226.4,233.7c125.9,1.3,230.7-100.6,231.3-229.2C486.5,129.4,384.3,25.9,257,25.9z" fill="#E65C4F"/><path d="M388.1,143c13.4-1.4,26,9.3,26.9,22.9c0.2,3.6,0,7.3,0,11c-1.2,0-2.1,0.8-3.1,1.5   c-11,7.9-21.9,15.7-32.9,23.6c-36.7,25.2-73.4,50.3-110,75.6c-3.8,2.6-8.1,4.6-11.1,8.3c-1.7,0.3-2.8-0.8-4-1.7   c-29.6-20.6-59.3-41.3-88.9-61.9c-10.1-7-20.1-14-31-21.5c0,2.7,0,4.5,0,6.3c0,28.6,0,57.3,0,85.9c0,25.3,0.1,50.6,0.2,75.9   c0,0.7-0.1,1.4-0.1,2.1c-16.6,3.2-30.7-4.7-34.4-19.4c-0.5-2.1-0.7-4.3-0.7-6.4c0-58.7,0.1-117.5-0.1-176.2   c-0.1-14.9,13.2-28.1,27.1-26c0.5,0.5,0.9,1,1.4,1.4c42.1,31.2,84.2,62.4,126.2,93.6c2.5,1.9,4,1.6,6.3-0.1   c26.2-19.4,52.5-38.7,78.7-58C355.1,167.7,371.6,155.3,388.1,143z" fill="#E65A4D"/><path d="M134.1,369c-0.1-25.3-0.1-50.6-0.2-75.9c0-28.6,0-57.3,0-85.9c0-1.8,0-3.5,0-6.3   c10.8,7.5,20.9,14.5,31,21.5c29.6,20.6,59.3,41.3,88.9,61.9c1.2,0.8,2.3,1.9,4,1.7c0.2,2.2,2.2,2.8,3.7,3.8   c34,23.6,68,47,101.9,70.8c4.3,3,9.3,5.2,12.6,9.6c-1,1.3-2.4,1-3.7,1c-78.8,0-157.6-0.1-236.4-0.1c0.7-1,1.4-1.9,2.1-2.9   c2.2-0.7,4.2-1.6,5-4c4.2-0.6,6.7-3.6,9.3-6.5c-3.6,1.5-7,3.1-9.5,6.3c-2.2,0.7-4.2,1.6-5,4C136.6,368.2,135.4,368.6,134.1,369z    M194,329c0.3,0,0.6,0,1,0c1.3-0.7,2.9-1,3-3c0.8,0,1.6-0.2,2-1c0.3-0.3,0.7-0.7,1-1c0.8,0,1.6-0.2,2-1c0.1-0.2,0.3-0.3,0.4-0.5   c-0.2,0.1-0.3,0.3-0.5,0.4c-0.8,0-1.6,0.2-2,1c-0.3,0.3-0.7,0.7-1,1c-0.8,0-1.6,0.2-2,1c-1.4,0-2.4,0.7-3,2   C194.6,328.3,194.3,328.6,194,329c-0.2,0.1-0.4,0.2-0.5,0.4C193.7,329.3,193.9,329.2,194,329z M188,333c0.8,0,1.6-0.2,2-1   c0.8-0.1,1.6-0.2,1.5-1.2c0-0.1-0.2-0.3-0.3-0.3c-1.1-0.1-1.2,0.7-1.3,1.5C189.1,332,188.4,332.1,188,333c-0.4,0.3-0.7,0.6-1.1,0.9   c-0.8,0-1.6,0.2-2,1c-0.3,0.3-0.7,0.7-1,1c-0.8,0-1.6,0.2-2,1c-1.4,0.1-2.4,0.7-3,2c-0.3,0.3-0.6,0.7-1,1c-0.1,0.2-0.3,0.3-0.4,0.5   c0.2-0.1,0.3-0.3,0.5-0.4c0.8,0,1.6-0.2,2-1c1.2-0.1,1.9-0.7,2-2c0.8,0,1.6-0.2,2-1c0.3-0.3,0.7-0.7,1-1c0.8,0,1.6-0.2,2-1   C187.4,333.7,187.7,333.4,188,333z M172,344c-0.8,0.1-1.6,0.2-1.5,1.3c0,0.1,0.2,0.3,0.3,0.3C171.8,345.6,171.9,344.8,172,344   c0.9,0.1,1.6-0.1,2.1-0.9c0.8-0.1,1.6-0.2,1.5-1.3c0-0.1-0.2-0.3-0.3-0.3c-1.1-0.1-1.2,0.7-1.3,1.5C173.1,343,172.4,343.2,172,344z    M158.9,352.9c-1.4,0.1-2.4,0.8-3,2c-0.7,0.2-1.6,0.3-1.5,1.3c0,0.1,0.2,0.3,0.3,0.3c1,0.1,1.2-0.7,1.4-1.5c1.4,0,2.8-0.2,3-2   c0.8,0,1.5-0.2,2-1c1.4-0.1,2.4-0.8,3-2c0.7-0.2,1.6-0.2,1.5-1.3c0-0.1-0.2-0.3-0.3-0.3c-1.1-0.1-1.2,0.7-1.3,1.5   c-1.4,0-2.8,0.1-3,2C160.1,352,159.4,352.2,158.9,352.9z M168.7,347.2c-0.1-0.3-0.1-0.7-0.3-0.8c-0.2-0.1-0.6,0-0.8,0.2   c-0.3,0.4-0.2,0.9,0.4,0.9C168.1,347.6,168.4,347.4,168.7,347.2z" fill="#E6E3D6"/><path d="M388.1,143c-16.5,12.3-33,24.6-49.6,36.9c-26.2,19.4-52.5,38.6-78.7,58c-2.4,1.8-3.8,2-6.3,0.1   c-42-31.3-84.1-62.4-126.2-93.6c-0.5-0.4-0.9-0.9-1.4-1.4c54.6,0,109.2-0.1,163.9-0.1C322.5,143,355.3,143,388.1,143z" fill="#F6F4EC"/><path d="M376,370c-3.3-4.4-8.3-6.6-12.6-9.6c-33.9-23.7-68-47.2-101.9-70.8c-1.4-1-3.4-1.6-3.7-3.8   c3-3.7,7.3-5.7,11.1-8.3c36.6-25.3,73.3-50.4,110-75.6c0,56.3,0,112.6,0.1,168.9C378,370.7,377,370.3,376,370z" fill="#B6B5AC"/><path d="M379.1,371c0-56.3,0-112.6-0.1-168.9c11-7.9,21.9-15.7,32.9-23.6c0.9-0.7,1.8-1.5,3.1-1.5   c0.1,18.5,0.2,36.9,0.2,55.4c0,36.1,0,72.2,0,108.3c0,2.5,0,5-0.1,7.5c-0.6,12.4-6.6,19.4-18.6,21.7   C390.7,371,384.9,371.7,379.1,371z" fill="#B13A30"/><path d="M138.1,368.1c-0.7,1-1.4,1.9-2.1,2.9c-0.7,0-1.3,0-2,0.1c0-0.7,0.1-1.4,0.1-2.1c1.3-0.4,2.5-0.7,3.8-1.1   C137.9,367.9,138.1,368.1,138.1,368.1z" fill="#C1C0B6"/><path d="M142.9,363.9c2.5-3.1,5.9-4.8,9.5-6.3c-2.6,2.9-5.1,5.9-9.3,6.5L142.9,363.9z" fill="#C1C0B6"/><path d="M143.1,364.1c-0.9,2.4-2.9,3.3-5,4c0,0-0.2-0.2-0.2-0.2c0.8-2.4,2.9-3.3,5-4   C142.9,363.9,143.1,364.1,143.1,364.1z" fill="#C1C0B6"/><path d="M198,326c-0.1,1.9-1.8,2.2-3,3c0-0.3,0-0.7,0-1C195.6,326.7,196.6,326,198,326C198,326,198,326,198,326z" fill="#C5C3B9"/><path d="M178.9,339c0.6-1.3,1.6-2,3-2l0.1,0.1c0,1.3-0.7,1.9-2,2C179.7,339,179.3,339,178.9,339z" fill="#C3C2B8"/><path d="M164.1,350.1c-0.6,1.3-1.6,1.9-3,2c0,0-0.1-0.1-0.1-0.1c0.2-1.9,1.6-2,3-2L164.1,350.1z" fill="#C1C0B6"/><path d="M155.9,354.9c0.6-1.2,1.6-1.9,3-2l0.1,0.2c-0.2,1.9-1.5,2-3,2L155.9,354.9z" fill="#C1C0B6"/><path d="M173.9,342.9c0.1-0.8,0.3-1.6,1.3-1.5c0.1,0,0.3,0.2,0.3,0.3c0,1.1-0.8,1.1-1.5,1.3L173.9,342.9z" fill="#C1C0B6"/><path d="M172,344.1c-0.1,0.8-0.2,1.6-1.3,1.5c-0.1,0-0.3-0.2-0.3-0.3C170.4,344.1,171.2,344.1,172,344.1   C172,344,172,344.1,172,344.1z" fill="#C1C0B6"/><path d="M168.7,347.2c-0.2,0.1-0.5,0.4-0.7,0.4c-0.5-0.1-0.7-0.5-0.4-0.9c0.1-0.2,0.6-0.3,0.8-0.2   C168.5,346.6,168.6,346.9,168.7,347.2z" fill="#C1C0B6"/><path d="M163.9,349.9c0.1-0.8,0.3-1.5,1.3-1.5c0.1,0,0.3,0.2,0.3,0.3c0.1,1.1-0.8,1.1-1.5,1.3   C164.1,350.1,163.9,349.9,163.9,349.9z" fill="#C1C0B6"/><path d="M156.1,355.1c-0.2,0.8-0.3,1.5-1.4,1.5c-0.1,0-0.3-0.2-0.3-0.3c-0.1-1.1,0.8-1.1,1.5-1.3   C155.9,354.9,156.1,355.1,156.1,355.1z" fill="#C1C0B6"/><path d="M190,332c0.1-0.8,0.2-1.6,1.3-1.5c0.1,0,0.3,0.2,0.3,0.3C191.6,331.9,190.8,331.9,190,332L190,332z" fill="#C3C2B8"/><path d="M201,324c0.4-0.8,1.2-1,2-1l0,0C202.6,323.8,201.9,324,201,324L201,324z" fill="#C5C3B9"/><path d="M200,325c-0.4,0.8-1.2,1-2,1c0,0-0.1-0.1-0.1-0.1C198.4,325.2,199.1,325,200,325C200,325,200,325,200,325z" fill="#C5C3B9"/><path d="M185,335c0.4-0.8,1.2-1,2-1c0,0,0.1,0.1,0.1,0.1C186.6,334.8,185.9,335,185,335C185,335.1,185,335,185,335z   " fill="#C3C2B8"/><path d="M182,337c0.4-0.8,1.2-1,2-1l0.1,0.1C183.6,336.9,182.9,337,182,337C182,337,182,337,182,337z" fill="#C3C2B8"/><path d="M178.9,339c0.4,0,0.8,0,1.1,0c-0.5,0.8-1.2,1-2,1c0,0-0.1-0.1-0.1-0.1C178.3,339.6,178.6,339.3,178.9,339z" fill="#C1C0B6"/><path d="M174,343c-0.4,0.8-1.2,1-2,1c0,0-0.1-0.1-0.1-0.1c0.4-0.8,1.2-1,2-1C173.9,342.9,174,343,174,343z" fill="#C1C0B6"/><path d="M158.9,352.9c0.4-0.8,1.2-1,2-1c0,0,0.1,0.1,0.1,0.1c-0.4,0.8-1.2,1-2,1   C159.1,353.1,158.9,352.9,158.9,352.9z" fill="#C1C0B6"/><path d="M190,332c-0.4,0.8-1.1,1-2,1L188,333C188.4,332.1,189.1,332,190,332C190,332,190,332,190,332z" fill="#C3C2B8"/><path d="M203,323c0.2-0.1,0.3-0.3,0.5-0.4C203.3,322.7,203.2,322.9,203,323C203,323,203,323,203,323z" fill="#C5C3B9"/><path d="M201,324c-0.3,0.3-0.7,0.7-1,1c0,0-0.1-0.1-0.1-0.1C200.3,324.6,200.6,324.3,201,324   C201,324,201,324,201,324z" fill="#C5C3B9"/><path d="M195,328c0,0.3,0,0.7,0,1c-0.3,0-0.6,0.1-1,0L194,329C194.3,328.6,194.6,328.3,195,328z" fill="#C3C2B8"/><path d="M194,329c-0.2,0.1-0.3,0.3-0.5,0.4C193.7,329.3,193.8,329.1,194,329C194,329,194,329,194,329z" fill="#C3C2B8"/><path d="M184,336c0.3-0.3,0.7-0.7,1-1c0,0,0.1,0.1,0.1,0.1C184.7,335.4,184.4,335.7,184,336   C184,336,184,336,184,336z" fill="#C3C2B8"/><path d="M178,340c-0.2,0.1-0.3,0.3-0.5,0.4C177.7,340.3,177.8,340.1,178,340C178,340,178,340,178,340z" fill="#C1C0B6"/><path d="M188,333c-0.3,0.3-0.7,0.7-1,1c0,0-0.1-0.1-0.1-0.1C187.3,333.6,187.6,333.3,188,333   C188,333,188,333,188,333z" fill="#C3C2B8"/></g></svg>
 								</small>
 							</div>
 							<div>
-								<h4 class="fs-18 text-black mb-0">Running</h4>
-								<span class="fs-14 text-warning">52 hours, 2min</span>
+								<h4 class="fs-18 text-black mb-0">Email Marketing</h4>
 							</div>
 						</div>
 						<div class="media align-items-center border border-info rounded p-3 mb-md-4 mb-3">
@@ -186,7 +165,7 @@
 								</small>
 							</div>
 							<div>
-								<h4 class="fs-18 text-black mb-0">Cycling</h4>
+								<h4 class="fs-18 text-black mb-0">SMS Marketing</h4>
 								<span class="fs-14 text-info">23 hours, 45min</span>
 							</div>
 						</div>
@@ -211,274 +190,342 @@
 								</small>
 							</div>
 							<div>
-								<h4 class="fs-18 text-black mb-0">Yoga</h4>
+								<h4 class="fs-18 text-black mb-0">WhatsApp Marketing</h4>
 								<span class="fs-14 text-secondary">16 hours, 2min</span>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-xl-9 col-xxl-8">
-				<div class="card">
-					<div class="card-header d-sm-flex d-block pb-0 border-0">
-						<div class="me-auto pe-3">
-							<h4 class="text-black fs-20">Calories Chart</h4>
-							<p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit amet, consectetur</p>
-						</div>
-						<div class="dropdown mt-sm-0 mt-3">
-							<button type="button" class="btn rounded border border-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-								Weekly
-							</button>
-							<div class="dropdown-menu dropdown-menu-end">
-								<a class="dropdown-item" href="javascript:void(0);">Link 1</a>
-								<a class="dropdown-item" href="javascript:void(0);">Link 2</a>
-								<a class="dropdown-item" href="javascript:void(0);">Link 3</a>
-							</div>
-						</div>
-					</div>
-					<div class="card-body">
-						<div id="chartTimeline"></div>
-					</div>
-				</div>
-			</div>
-			<div class="col-xl-12">
-				<div class="card">
-					<div class="card-header d-sm-flex d-block pb-0 border-0">
-						<div class="me-auto pe-3">
-							<h4 class="text-black fs-20">Featured Diet Menus</h4>
-							<p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit amet, consectetur</p>
-						</div>
-						<div class="card-action card-tabs mt-3 mt-sm-0 mt-3 mb-sm-0 mb-3 mt-sm-0 me-0 me-md-5">
-							<ul class="nav nav-tabs" role="tablist">
-								<li class="nav-item">
-									<a class="nav-link active" data-bs-toggle="tab" href="#Breakfast" role="tab">
-										Breakfast
-									</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#Lunch" role="tab">
-										Lunch
-									</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#Dinner" role="tab">
-										Dinner
-									</a>
-								</li>
-							</ul>
-						</div>
-						<a href="food-menu.html" class="btn btn-primary rounded d-none d-md-block">View More</a>
-					</div>
-					<div class="card-body">
-						<div class="tab-content">
-							<div class="tab-pane fade show active" id="Breakfast" role="tabpanel">
-								<div class="featured-menus owl-carousel">
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/3.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/3.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Ilham</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Sweet Orange Fruits with Lemon</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">176 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/1.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/1.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Andrew</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">568 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/1.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/1.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Andrew</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">568 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/2.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/2.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Chintya</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Chicken Egg with fresh tomatos</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">223 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="tab-pane fade" id="Lunch" role="tabpanel">
-								<div class="featured-menus owl-carousel">
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/1.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/1.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Andrew</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">568 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/3.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/3.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Ilham</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Sweet Orange Fruits with Lemon</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">176 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/2.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/2.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Chintya</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Chicken Egg with fresh tomatos</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">223 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/1.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/1.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Andrew</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">568 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="tab-pane fade" id="Dinner" role="tabpanel">
-								<div class="featured-menus owl-carousel">
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/1.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/1.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Andrew</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">568 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/2.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/2.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Chintya</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Chicken Egg with fresh tomatos</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">223 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/3.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/3.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Ilham</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Sweet Orange Fruits with Lemon</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">176 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<div class="items">
-										<div class="d-sm-flex p-3 border border-light rounded">
-											<a href="ecom-product-detail.html"><img class="me-4 food-image rounded" src="public/images/menus/1.png" alt="" width="160"></a>
-											<div>
-												<div class="d-flex align-items-center mb-2">
-													<img class="rounded-circle me-2 profile-image" src="public/images/testimonial/1.jpg" alt="" width="30">
-													<span class="fs-14 text-primary">Andrew</span>
-												</div>
-												<h6 class="fs-16 mb-4"><a href="ecom-product-detail.html" class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a></h6>
-												<ul>
-													<li class="mb-2"><i class="las la-clock scale5 me-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-													<li><i class="fa fa-star me-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">568 Reviews</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			<div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Fees Collection</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example4" class="display min-w850">
+                                <thead>
+                                    <tr>
+                                        <th>Roll No</th>
+                                        <th>Student Name</th>
+                                        <th>Invoice number</th>
+                                        <th>Fees Type </th>
+										<th>Payment Type </th>
+										<th>Status </th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>01</td>
+                                        <td>Tiger Nixon</td>
+                                        <td>#54605</td>
+                                        <td>Library</td>
+                                        <td>Cash</td>
+                                        <td><span class="badge light badge-success">Paid</span></td>
+                                        <td>2011/04/25</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>02</td>
+                                        <td>Garrett Winters</td>
+                                        <td>#54687</td>
+                                        <td>Library</td>
+                                        <td>Credit Card</td>
+                                        <td><span class="badge light badge-warning">Panding</span></td>
+										<td>2011/07/25</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>03</td>
+                                        <td>Ashton Cox</td>
+                                        <td>#35672</td>
+                                        <td>Tuition</td>
+                                        <td>Cash</td>
+                                        <td><span class="badge light badge-success">Paid</span></td>
+                                        <td>2009/01/12</td>
+										<td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>04</td>
+                                        <td>Cedric Kelly</td>
+                                        <td>#57984</td>
+                                        <td>Annual</td>
+										<td>Credit Card</td>
+                                        <td><span class="badge light badge-warning">Panding</span></td>
+                                        <td>2012/03/29</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>05</td>
+                                        <td>Airi Satou</td>
+                                        <td>#12453</td>
+                                        <td>Library</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-warning">Panding</span></td>
+                                        <td>2008/11/28</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>06</td>
+                                        <td>Brielle Williamson</td>
+                                        <td>#59723</td>
+                                        <td>Tuition</td>
+										<td>Cash</td>
+                                        <td><span class="badge light badge-success">Paid</span></td>
+                                        <td>2012/12/02</td>
+										<td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>07</td>
+                                        <td>Herrod Chandler</td>
+                                        <td>#98726</td>
+                                        <td>Tuition</td>
+										<td>Credit Card</td>
+                                        <td><span class="badge light badge-danger">Udpaid</span></td>
+                                        <td>2012/08/06</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>08</td>
+                                        <td>Rhona Davidson</td>
+                                        <td>#98721</td>
+                                        <td>Library</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-danger">Udpaid</span></td>
+                                        <td>2010/10/14</td>
+										<td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>09</td>
+                                        <td>Colleen Hurst</td>
+                                        <td>#54605</td>
+                                        <td>Annual</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-success">Paid</span></td>
+                                        <td>2009/09/15</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>10</td>
+                                        <td>Sonya Frost</td>
+                                        <td>#98734</td>
+                                        <td>Tuition</td>
+										<td>Credit Card</td>
+                                        <td><span class="badge light badge-danger">Udpaid</span></td>
+                                        <td>2008/12/13</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>11</td>
+                                        <td>Jena Gaines</td>
+                                        <td>#12457</td>
+                                        <td>Tuition</td>
+										<td>Cash</td>
+                                        <td><span class="badge light badge-danger">Udpaid</span></td>
+                                        <td>2008/12/19</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>12</td>
+                                        <td>Quinn Flynn</td>
+                                        <td>#36987</td>
+                                        <td>Library</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-warning">Panding</span></td>
+                                        <td>2013/03/03</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>13</td>
+                                        <td>Charde Marshall</td>
+                                        <td>#98756</td>
+                                        <td>Tuition</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-success">Paid</span></td>
+                                        <td>2008/10/16</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>14</td>
+                                        <td>Haley Kennedy</td>
+                                        <td>#98754</td>
+                                        <td>Library</td>
+										<td>Cash</td>
+                                        <td><span class="badge light badge-danger">Udpaid</span></td>
+                                        <td>2012/12/18</td>
+										<td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>15</td>
+                                        <td>Tatyana Fitzpatrick</td>
+                                        <td>#65248</td>
+                                        <td>Annual</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-danger">Udpaid</span></td>
+                                        <td>2010/03/17</td>
+										<td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>16</td>
+                                        <td>Michael Silva</td>
+                                        <td>#75943</td>
+                                        <td>Tuition</td>
+										<td>Credit Card</td>
+                                        <td><span class="badge light badge-success">Paid</span></td>
+										<td>2012/11/27</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>17</td>
+                                        <td>Paul Byrd</td>
+                                        <td>#87954</td>
+                                        <td>Library</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-warning">Panding</span></td>
+                                        <td>2010/06/09</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>18</td>
+                                        <td>Gloria Little</td>
+                                        <td>#98746</td>
+                                        <td>Tuition</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-success">Paid</span></td>
+                                        <td>2009/04/10</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>19</td>
+                                        <td>Bradley Greer</td>
+                                        <td>#98674</td>
+                                        <td>Annual</td>
+										<td>Cash</td>
+                                        <td><span class="badge light badge-danger">Udpaid</span></td>
+                                        <td>2012/10/13</td>
+										<td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>20</td>
+                                        <td>Dai Rios</td>
+                                        <td>#69875</td>
+                                        <td>Tuition</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-warning">Panding</span></td>
+                                        <td>2012/09/26</td>
+										<td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>21</td>
+                                        <td>Jenette Caldwell</td>
+                                        <td>#54678</td>
+                                        <td>Library</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-success">Paid</span></td>
+                                        <td>2011/09/03</td>
+										<td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>22</td>
+                                        <td>Yuri Berry</td>
+                                        <td>#98756</td>
+                                        <td>Tuition</td>
+										<td>Credit Card</td>
+                                        <td><span class="badge light badge-danger">Udpaid</span></td>
+                                        <td>2009/06/25</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>23</td>
+                                        <td>Caesar Vance</td>
+                                        <td>#86754</td>
+                                        <td>Tuition</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-success">Paid</span></td>
+                                        <td>2011/12/12</td>
+										<td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>24</td>
+                                        <td>Doris Wilder</td>
+                                        <td>#34251</td>
+                                        <td>Annual</td>
+										<td>Cash</td>
+                                        <td><span class="badge light badge-warning">Panding</span></td>
+                                        <td>2010/09/20</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>25</td>
+                                        <td>Angelica Ramos</td>
+                                        <td>#65874</td>
+                                        <td>Tuition</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-danger">Udpaid</span></td>
+                                        <td>2009/10/09</td>
+										<td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>26</td>
+                                        <td>Gavin Joyce</td>
+                                        <td>#54605</td>
+                                        <td>Female</td>
+										<td>Credit Card</td>
+                                        <td><span class="badge light badge-success">Paid</span></td>
+                                        <td>2010/12/22</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>27</td>
+                                        <td>Jennifer Chang</td>
+                                        <td>#54605</td>
+                                        <td>Tuition</td>
+										<td>Cheque</td>
+                                        <td><span class="badge light badge-warning">Panding</span></td>
+                                        <td>2010/11/14</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>28</td>
+                                        <td>Brenden Wagner</td>
+                                        <td>#45687</td>
+                                        <td>Library</td>
+										<td>Cheque</td>
+										<td><span class="badge light badge-danger">Udpaid</span></td>
+                                        <td>2011/06/07</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>29</td>
+                                        <td>Fiona Green</td>
+                                        <td>#23456</td>
+                                        <td>Tuition</td>
+										<td>Cash</td>
+                                        <td><span class="badge light badge-success">Paid</span></td>
+                                        <td>2010/03/11</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+										<td>30</td>
+                                        <td>Shou Itou</td>
+                                        <td>#54605</td>
+                                        <td>Annual</td>
+										<td>Credit Card</td>
+										<td><span class="badge light badge-warning">Panding</span></td>
+                                        <td>2011/08/14</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			
+			 
 		</div>
 	</div>
 </div>
