@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Bigdata\BigdataController;
 use App\Http\Controllers\DietController;
 use App\Http\Controllers\GymCouponController;
 use App\Http\Controllers\GymCustomerPaymentController;
@@ -327,3 +328,7 @@ Route::get('/delete-holiday/{id}', [GymDetailController::class, 'deleteHoliday']
 Route::post('/add-weekend', [GymDetailController::class, 'addWeekendsByGym']);
 
 Route::post('/update-gym-account', [GymDetailController::class, 'updateGymAccount']);
+
+Route::get('/view-upload-table', [BigdataController::class, 'uploadTableView'])->name('uploadTableView');
+
+Route::post('/view-upload', [BigdataController::class, 'uploadTableData'])->name('uploadTableData');

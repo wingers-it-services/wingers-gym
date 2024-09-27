@@ -109,6 +109,19 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'big_data' => [
+            'driver' => 'mysql',
+            'host' => env('BIG_DATA_DB_HOST', '127.0.0.1'),
+            'port' => env('BIG_DATA_DB_PORT', '3306'),
+            'database' => env('BIG_DATA_DB_DATABASE', 'big_data'),
+            'username' => env('BIG_DATA_DB_USERNAME', 'root'),
+            'password' => env('BIG_DATA_DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ]
     ],
 
     /*
@@ -144,7 +157,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [
