@@ -73,7 +73,6 @@ Route::middleware('auth:api')->group(function () {
     
     Route::get('/fetch-inquiry-reason', [UserInquiryControllerApi::class, 'fetchInquiryReason']);
    
-    
     Route::get('/logout', [GymUserControllerApi::class, 'userLogout']);
     
     Route::post('/diet-anlytics', [DietAnalyticControllerApi::class, 'fetchUserDietAnalytic']);
