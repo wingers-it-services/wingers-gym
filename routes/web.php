@@ -117,6 +117,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     /* dashboard */
     Route::get('/dashboard', [GymDetailController::class, 'showDashboard'])->name('dashboard');
+    Route::get('/ai-dashboard', [GymDetailController::class, 'showAiDashboard'])->name('ai-dashboard');
     Route::get('/logout', [GymDetailController::class, 'logoutGym'])->name('logout');
 
     // Route::get('/viewGymInfo', [AdminGymController::class, 'viewGymInfo']);

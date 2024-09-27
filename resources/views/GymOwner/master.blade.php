@@ -873,7 +873,7 @@
 					</a>
 					<ul aria-expanded="false">
 						<li><a href="/dashboard">Dashboard</a></li>
-						<li><a href="/dashboard">AI Dashboard<span class="badge badge-xs badge-danger ms-3">New</span></a></li>
+						<li><a href="/ai-dashboard">AI Dashboard<span class="badge badge-xs badge-danger ms-3">New</span></a></li>
 					</ul>
 				</li>
 
