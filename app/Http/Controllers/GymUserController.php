@@ -1083,7 +1083,7 @@ class GymUserController extends Controller
             foreach ($holidays as $holidayDate) {
                 $day = Carbon::parse($holidayDate)->day;
                 $attendanceField = 'day' . $day;
-                $holidaysAttendanceData[$attendanceField] = \App\Enums\AttendenceStatusEnum::HOLIDAY; 
+                $holidaysAttendanceData[$attendanceField] = \App\Enums\AttendenceStatusEnum::HOLIDAY;
             }
 
 
