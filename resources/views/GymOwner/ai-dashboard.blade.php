@@ -8,6 +8,7 @@
 		height: 400px;
 	}
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 <!--**********************************
             Content body start
 ***********************************-->
@@ -127,7 +128,7 @@
 						<div class="me-auto pe-3 mb-2">
 							<h4 class="text-black fs-20">Map Location</h4>
 						</div>
-						<div class="map"></div>
+						<div id="map" class="map"></div>
 					</div>
 				</div>
 			</div>
@@ -486,9 +487,7 @@
 ***********************************-->
 
 <!-- Required scripts goes here -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"
-	type="text/javascript"></script>
-<script type="text/javascript"></script>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 
 <script src="/js/google-map.js"></script>
 
