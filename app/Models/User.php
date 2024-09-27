@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\HasApiTokens;
 use Ramsey\Uuid\Uuid;
@@ -67,54 +68,108 @@ class User extends Authenticatable
         });
     }
 
+    // public function allotWorkouts($user)
+    // {
+    //     // Get today's day of the week (e.g., Monday, Tuesday)
+    //     $currentDay = Carbon::now()->format('l');
+
+    //     // Fetch the gym with gym_type = 'admin'
+    //     $gym = Gym::where('gym_type', 'admin')->first();
+
+    //     // Fetch user's goal ID from the goal_user table
+    //     $userGoal = GoalUser::where('user_id', $user->id)->first();
+
+    //     if ($userGoal) {
+    //         // Fetch workout IDs associated with the user's goal from goal_wise_workouts
+    //         $goalWorkouts = GoalWiseWorkouts::where('goal_id', $userGoal->goal_id)->pluck('workout_id');
+
+    //         // Fetch workouts added by the admin gym that match the goal
+    //         $workouts = Workout::whereIn('id', $goalWorkouts)
+    //             ->where('added_by', $gym->id)
+    //             ->get();
+
+    //         if ($workouts->isNotEmpty()) {
+    //             foreach ($workouts as $workout) {
+    //                 // Create a new entry in the UserWorkout table for each workout
+    //                 UserWorkout::create([
+    //                     'user_id'            => $user->id, // Use the passed user ID
+    //                     'workout_id'         => $workout->id,
+    //                     'day'                => $currentDay, // This could be different per workout
+    //                     'exercise_name'      => $workout->name,
+    //                     'sets'               => $workout->sets ?? 5, // Use workout sets or default to 5
+    //                     'reps'               => $workout->reps ?? 2, // Use workout reps or default to 2
+    //                     'weight'             => $workout->weight ?? 20, // Default weight
+    //                     'workout_des'        => $workout->description,
+    //                     'gym_id'             => $gym->id,
+    //                     'is_completed'       => 0, // By default, the workout is not completed
+    //                     'targeted_body_part' => $workout->targeted_body_part ?? 'Shoulder', // Default body part
+    //                 ]);
+    //             }
+    //             // Log success message
+    //             Log::info("Goal-based workouts for user ID {$user->id} have been allotted from gym admin.");
+    //         } else {
+    //             // Log warning if no workouts found for the user's goal
+    //             Log::warning("No workouts found for user goal ID {$userGoal->goal_id}.");
+    //         }
+    //     } else {
+    //         // Log warning if no goal found for the user
+    //         Log::warning("No goal found for user ID {$user->id}.");
+    //     }
+    // }
+
     public function allotWorkouts($user)
-    {
-        // Get today's day of the week (e.g., Monday, Tuesday)
-        $currentDay = Carbon::now()->format('l');
+{
+    // Get today's day of the week (e.g., Monday, Tuesday)
+    $currentDay = Carbon::now()->format('l');
 
-        // Fetch the gym with gym_type = 'admin'
-        $gym = Gym::where('gym_type', 'admin')->first();
+    // Fetch the gym with gym_type = 'admin'
+    $gym = Gym::where('gym_type', 'admin')->first();
 
-        // Fetch user's goal ID from the goal_user table
-        $userGoal = GoalUser::where('user_id', $user->id)->first();
+    // Fetch user's goal ID from the goal_user table
+    $userGoal = GoalUser::where('user_id', $user->id)->first();
 
-        if ($userGoal) {
-            // Fetch workout IDs associated with the user's goal from goal_wise_workouts
-            $goalWorkouts = GoalWiseWorkouts::where('goal_id', $userGoal->goal_id)->pluck('workout_id');
+    if ($userGoal) {
+        // Fetch workout IDs associated with the user's goal from goal_wise_workouts
+        $goalWorkouts = GoalWiseWorkouts::where('goal_id', $userGoal->goal_id)->pluck('workout_id');
 
-            // Fetch workouts added by the admin gym that match the goal
-            $workouts = Workout::whereIn('id', $goalWorkouts)
-                ->where('added_by', $gym->id)
-                ->get();
+        // Fetch workouts added by the admin gym that match the goal
+        $workouts = Workout::whereIn('id', $goalWorkouts)
+            ->where('added_by', $gym->id)
+            ->get();
 
-            if ($workouts->isNotEmpty()) {
-                foreach ($workouts as $workout) {
-                    // Create a new entry in the UserWorkout table for each workout
-                    UserWorkout::create([
-                        'user_id'            => $user->id, // Use the passed user ID
-                        'workout_id'         => $workout->id,
-                        'day'                => $currentDay, // This could be different per workout
-                        'exercise_name'      => $workout->name,
-                        'sets'               => $workout->sets ?? 5, // Use workout sets or default to 5
-                        'reps'               => $workout->reps ?? 2, // Use workout reps or default to 2
-                        'weight'             => $workout->weight ?? 20, // Default weight
-                        'workout_des'        => $workout->description,
-                        'gym_id'             => $gym->id,
-                        'is_completed'       => 0, // By default, the workout is not completed
-                        'targeted_body_part' => $workout->targeted_body_part ?? 'Shoulder', // Default body part
-                    ]);
-                }
-                // Log success message
-                Log::info("Goal-based workouts for user ID {$user->id} have been allotted from gym admin.");
-            } else {
-                // Log warning if no workouts found for the user's goal
-                Log::warning("No workouts found for user goal ID {$userGoal->goal_id}.");
+        if ($workouts->isNotEmpty()) {
+            foreach ($workouts as $workout) {
+                // Create a new entry in the UserWorkout table for each workout
+                UserWorkout::create([
+                    'user_id'            => $user->id, // Use the passed user ID
+                    'workout_id'         => $workout->id,
+                    'day'                => $currentDay, // This could be different per workout
+                    'exercise_name'      => $workout->name,
+                    'sets'               => $workout->sets ?? 5, // Use workout sets or default to 5
+                    'reps'               => $workout->reps ?? 2, // Use workout reps or default to 2
+                    'weight'             => $workout->weight ?? 20, // Default weight
+                    'workout_des'        => $workout->description,
+                    'gym_id'             => $gym->id,
+                    'is_completed'       => 0, // By default, the workout is not completed
+                    'targeted_body_part' => $workout->targeted_body_part ?? 'Shoulder', // Default body part
+                ]);
             }
+
+            // Log success message
+            Log::info("Goal-based workouts for user ID {$user->id} have been allotted from gym admin.");
+
+            // After allotting workouts, trigger the cron command for this user
+            Artisan::call('user:workout', ['user_id' => $user->id]);
         } else {
-            // Log warning if no goal found for the user
-            Log::warning("No goal found for user ID {$user->id}.");
+            // Log warning if no workouts found for the user's goal
+            Log::warning("No workouts found for user goal ID {$userGoal->goal_id}.");
         }
+    } else {
+        // Log warning if no goal found for the user
+        Log::warning("No goal found for user ID {$user->id}.");
     }
+}
+
 
 
     public function getImageAttribute()
@@ -251,6 +306,19 @@ class User extends Authenticatable
 
             if ($imagePath) {
                 $userProfileData['image'] = $imagePath;
+            }
+
+            
+            $adminGym = Gym::where('gym_type','admin')->first();
+
+            if ($adminGym) {
+                // Step 4: Insert the user and admin gym into gym_user_gym table
+                GymUserGym::create([
+                    'user_id' => $userProfile->id,
+                    'gym_id'  => $adminGym->id
+                ]);
+            } else {
+                Log::warning('[User][createUserProfile] No admin gym found.');
             }
 
             return [

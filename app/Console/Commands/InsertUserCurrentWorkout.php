@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use App\Models\CurrentDayWorkout;
@@ -13,14 +12,14 @@ class InsertUserCurrentWorkout extends Command
      *
      * @var string
      */
-    protected $signature = 'user:workout';
+    protected $signature = 'user:workout {user_id?}'; // Optional user_id argument
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'User Current Workouts Day Wise Added in curren_day_workouts table';
+    protected $description = 'Add current day workouts for all users or a specific user to the current_day_workouts table';
 
     /**
      * Execute the console command.
@@ -30,21 +29,36 @@ class InsertUserCurrentWorkout extends Command
         // Get the current day of the week (e.g., 'monday')
         $dayOfWeek = strtolower(now()->format('l'));
 
-        // Fetch the workouts assigned for the current day
-        $userWorkouts = UserWorkout::where('day', $dayOfWeek)->get();
+        // Check if a specific user ID is provided
+        $userId = $this->argument('user_id');
 
+        // Fetch workouts based on the provided user ID or for all users if no ID is provided
+        $query = UserWorkout::where('day', $dayOfWeek);
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+            $this->info("Processing workouts for user ID: {$userId} on {$dayOfWeek}");
+        } else {
+            $this->info("Processing workouts for all users on {$dayOfWeek}");
+        }
+
+        // Get the workouts for the day (filtered by user if applicable)
+        $userWorkouts = $query->get();
+
+        // Check if there are any workouts to process
         if ($userWorkouts->isEmpty()) {
             $this->info("No workouts found for {$dayOfWeek}");
             return false;
         }
 
+        // Process each workout and insert it into the CurrentDayWorkout table
         foreach ($userWorkouts as $userWorkout) {
             // Generate the initial details array
             $detailsArray = $this->generateInitialDetails($userWorkout->sets, $userWorkout->reps, $userWorkout->weight);
 
             // Convert the details array to JSON
             $detailsJson = json_encode($detailsArray);
-            
+
             // Insert the workout into the CurrentDayWorkout table
             CurrentDayWorkout::create([
                 'workout_id'         => $userWorkout->workout_id,
@@ -55,13 +69,23 @@ class InsertUserCurrentWorkout extends Command
                 'details'            => $detailsJson, // Store JSON-encoded details
             ]);
         }
-        $this->info("Workouts for {$dayOfWeek} have been successfully added to the CurrentDayWorkout table!");
+
+        // Output a success message
+        if ($userId) {
+            $this->info("Workouts for user ID {$userId} have been successfully added to the CurrentDayWorkout table!");
+        } else {
+            $this->info("Workouts for all users have been successfully added to the CurrentDayWorkout table!");
+        }
+
+        return true;
     }
 
     /**
      * Generate initial details for the specified number of sets.
      *
      * @param int $numSets
+     * @param int $numReps
+     * @param int $weight
      * @return array
      */
     private function generateInitialDetails($numSets, $numReps, $weight)
@@ -78,6 +102,7 @@ class InsertUserCurrentWorkout extends Command
                 ]
             ];
         }
+
         return $details;
     }
 }
