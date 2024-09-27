@@ -27,6 +27,7 @@ class BigdataController extends Controller
                 'file' => 'required|file|mimes:csv,txt',
             ]);
     
+            Log::info('Request data: ' . json_encode($request->all()));
             // Get table name and column details from request
             $table_name = $request->input('table_name');
             $input_columns = $request->input('column_names');
