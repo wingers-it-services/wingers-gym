@@ -51,11 +51,8 @@ Route::get('/customers-attendance', [GymUserController::class, 'customersAttenda
 Route::post('/mark-gym-user-attendance', [GymUserController::class, 'markGymUserAttendance'])->name('mark-gym-user-attendance');
 Route::post('/fetch-user-attendance-chart', [GymUserController::class, 'fetchUserAttendanceChart'])->name('fetch-user-attendance-chart');
 Route::get('/getGymHolidaysAndWeekendsOnGymAttendance/{gym_id}', [GymUserController::class, 'getGymHolidaysAndWeekendsOnGymAttendance'])->name('getGymHolidaysAndWeekendsOnGymAttendance');
+Route::get('/customers-payment', [GymUserController::class, 'viewCustomerPayment'])->name('customers-payment');
 
-
-Route::get('/customers-payment', function () {
-    return view('GymOwner.customers-payment');
-});
 Route::get('/coupon', function () {
     return view('GymOwner.coupon');
 });
