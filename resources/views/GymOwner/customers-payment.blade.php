@@ -14,7 +14,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table  id="example3" class="table table-sm mb-0">
+                            <table class="table table-sm mb-0">
                                 <thead>
                                     <tr>
                                         <th class="align-middle">
@@ -27,6 +27,7 @@
                                         <th class="align-middle pe-7">Subcription</th>
                                         <th class="align-middle text-end">Status</th>
                                         <th class="align-middle text-end">Amount</th>
+                                        <th class="align-middle text-end">Total</th>
                                         <th class="align-middle text-end">Action</th>
                                     </tr>
                                 </thead>
@@ -109,6 +110,7 @@
                                                         class="ms-1 fa fa-check"></span></span>
                                             </td>
                                             <td class="py-2 text-end">{{$payment->amount}}</td>
+                                            <td class="py-2 text-end">{{$payment->total}}</td>
                                             <td class="py-2 text-end">
                                                 <div class="dropdown text-sans-serif"><button
                                                         class="btn btn-primary tp-btn-light sharp" type="button"

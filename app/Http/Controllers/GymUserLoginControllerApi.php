@@ -49,17 +49,19 @@ class GymUserLoginControllerApi extends Controller
                 $user = $this->user->where('phone_no', $credentials['email_or_phone'])->first();
                 $inputType = 'phone number';
             }
-
-            $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
-            $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
-            $levels = $user->levels()->get(['level_id', 'lebel']);
-            // Check if the user exists
+            
             if (!$user) {
                 return response()->json([
                     'status'  => 401,
                     'message' => 'Invalid ' . $inputType . ', please try again.',
                 ], 401);
             }
+
+            $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
+            $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
+            $levels = $user->levels()->get(['level_id', 'lebel']);
+            // Check if the user exists
+
 
             // Check if the password is correct
             if ($credentials['password'] !== $user->password) {
@@ -134,7 +136,7 @@ class GymUserLoginControllerApi extends Controller
 
             $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
             $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
-            $levels = $user->levels()->get(['level_id', 'lebel']);  
+            $levels = $user->levels()->get(['level_id', 'lebel']);
             // If user is found, proceed with further checks
             if ($user) {
                 // Check if the user_type matches
