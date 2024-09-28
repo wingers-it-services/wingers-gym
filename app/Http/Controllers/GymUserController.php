@@ -149,8 +149,7 @@ class GymUserController extends Controller
     {
         $gymUser = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
-        $customerPayments = $this->customerPayments->with('subscription')->where('gym_id', $gymId)->get();
-
+        $customerPayments = $this->customerPayments->with('subscription')->where('gym_id', $gymId)->orderBy('created_at', 'desc')->get();
         return view('GymOwner.customers-payment', compact('customerPayments'));
     }
 
