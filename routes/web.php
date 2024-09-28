@@ -14,6 +14,7 @@ use App\Traits\SessionTrait;
 use App\Http\Controllers\GymDesignationController;
 use App\Http\Controllers\GymGalleryController;
 use App\Http\Controllers\GymSheduleController;
+use App\Http\Controllers\MaintenanceVendorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RunCronController;
 use App\Http\Controllers\WorkoutController;
@@ -91,11 +92,17 @@ Route::get('/terms-condition', function () {
 /* registerGym */
 Route::post('/register', [GymDetailController::class, 'registerGym'])->name('registerGym');
 
-
-
 Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
 
 Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
+
+    Route::get('/list-vendor', [MaintenanceVendorController::class, 'listVendor']);
+
+    Route::post('/add-maintenance-vendor', [MaintenanceVendorController::class, 'addMaintenanceVendor'])->name('addMaintenanceVendor');
+
+    Route::post('/update-maintenance-vendor', [MaintenanceVendorController::class, 'updateMaintenanceVendor'])->name('updateMaintenanceVendor');
+
+    Route::get('/delete-vendor/{uuid}', [MaintenanceVendorController::class, 'deleteMaintenanceVendor'])->name('deleteMaintenanceVendor');
 
     Route::get('/run-workout-cron', [RunCronController::class, 'runWorkoutCronJob'])->name('runWorkoutCronJob');
 

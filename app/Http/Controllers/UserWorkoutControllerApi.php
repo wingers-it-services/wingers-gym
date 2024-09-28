@@ -112,6 +112,7 @@ class UserWorkoutControllerApi extends Controller
             $workout->details = json_decode($workout->details, true);
 
             // Initialize counters
+            $totalSets = 0;
             $totalCompletedSets = 0;
             $totalTimeSeconds = 0; // Time in seconds
             $totalCompletedExercises = 0;
@@ -119,6 +120,7 @@ class UserWorkoutControllerApi extends Controller
             // Loop through workout details and calculate totals
             foreach ($workout->details as $sets) {
                 foreach ($sets as $set) {
+                    $totalSets++;
                     if ($set['status'] == 'completed') {
                         $totalCompletedSets++;
                         $totalCompletedExercises++;
@@ -139,6 +141,7 @@ class UserWorkoutControllerApi extends Controller
             return response()->json([
                 'status'                    => 200,
                 'workouts'                  => $workout,
+                'total_sets'                => $totalSets,
                 'total_completed_sets'      => $totalCompletedSets,
                 'total_time_taken'          => $totalTimeTaken,
                 'total_completed_exercises' => $totalCompletedExercises,

@@ -922,7 +922,7 @@
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="/admin/add-vendor">Add New Vendor</a></li>
-                    <li><a href="/admin/vendor-list">Vendor List</a></li>
+                    <li><a href="/admin/list-vendor">Vendor List</a></li>
 
                 </ul>
             </li>

@@ -260,7 +260,6 @@ class User extends Authenticatable
         return $this->belongsTo(GymSubscription::class, 'subscription_id');
     }
 
-
     public function trainerDetails()
     {
         // $trainer = GymStaff::
