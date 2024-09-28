@@ -918,7 +918,7 @@
 						<li><a href="/add-gym-user">Add New Member</a></li>
 						<li><a href="/gym-customers-subscriptions">User Subscription Reports</a></li>
 						<li><a href="/customers-attendance">Attendance</a></li>
-						<li><a href="/customers-payment">User Subscription History</a></li>
+						<li><a href="/customers-payment">User Payment History</a></li>
 					</ul>
 				</li>
 				<li>
