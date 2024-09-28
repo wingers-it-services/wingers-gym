@@ -1,10 +1,6 @@
  @extends('GymOwner.master')
- @section('title', 'Dashboard')
+ @section('title', 'Staff List')
  @section('content')
-
- <!--**********************************
-                        Content body start
-                    ***********************************-->
  <div class="content-body ">
      <div class="container-fluid">
          <div class="row">

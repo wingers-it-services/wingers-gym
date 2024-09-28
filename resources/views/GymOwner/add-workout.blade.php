@@ -1,14 +1,9 @@
 @extends('GymOwner.master')
-@section('title', 'Dashboard')
+@section('title', 'Workout')
 @section('content')
 
 <div class="content-body">
     <div class="container-fluid">
-        <div class="page-titles">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Workout</a></li>
-            </ol>
-        </div>
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">

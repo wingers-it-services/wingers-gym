@@ -19,7 +19,7 @@
                     <input type="hidden" name="uuid" id="editVendId">
                     <div class="form-group">
                         <label>Vendor Image</label>
-                        <input type="file" id="editImage" name="image" class="form-control" required>
+                        <input type="file" id="editImage" name="image" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Vendor Full Name</label>
@@ -196,7 +196,7 @@
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = '/list-vendor';
+                window.location.href = '/delete-vendor/' + uuid;
             }
         });
     }
