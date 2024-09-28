@@ -329,6 +329,6 @@ Route::post('/add-weekend', [GymDetailController::class, 'addWeekendsByGym']);
 
 Route::post('/update-gym-account', [GymDetailController::class, 'updateGymAccount']);
 
-Route::get('/view-upload-table', [BigdataController::class, 'uploadTableView'])->name('uploadTableView');
+Route::get('/csv-upload', [BigdataController::class, 'uploadTableView'])->name('uploadTableView');
 
 Route::post('/view-upload', [BigdataController::class, 'uploadTableData'])->name('uploadTableData');
