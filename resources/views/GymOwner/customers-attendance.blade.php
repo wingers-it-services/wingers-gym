@@ -1,5 +1,5 @@
 @extends('GymOwner.master')
-@section('title', 'Dashboard')
+@section('title', 'Customer Attendence')
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 

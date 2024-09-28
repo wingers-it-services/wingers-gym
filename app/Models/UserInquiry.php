@@ -29,6 +29,11 @@ class UserInquiry extends Model
         });
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 
     public function sendInquiry(array $inquiry)
     {
