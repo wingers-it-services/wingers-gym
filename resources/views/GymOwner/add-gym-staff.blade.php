@@ -1,5 +1,5 @@
 @extends('GymOwner.master')
-@section('title', 'Dashboard')
+@section('title', 'Add Staff')
 @section('content')
 
 <!--**********************************

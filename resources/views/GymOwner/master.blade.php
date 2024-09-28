@@ -928,7 +928,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="/vendor-list">
+					<a href="/list-vendor">
 						<i class="fa-solid fa-scale-unbalanced-flip"></i>
 						<span class="nav-text">Vendor</span>
 					</a>

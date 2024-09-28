@@ -25,52 +25,15 @@
                     <div class="card-body">
                         <div class="email-left-box generic-width px-0 mb-5">
                             <div class="mail-list rounded mt-4">
-                                <a href="/enquiry" class="list-group-item active"><i class="fa fa-inbox font-18 align-middle me-2"></i> Inbox <span class="badge badge-secondary badge-sm float-end">198</span> </a>
+                                @foreach($inquiries as $inquiry)
+                                <a href="#" class="list-group-item active"><i class="fa fa-inbox font-18 align-middle me-2"></i> {{$inquiry->reason}} <span class="badge badge-secondary badge-sm float-end">198</span> </a>
+                                @endforeach
                             </div>
                         </div>
                         <div class="email-right-box ms-0 ms-sm-4 ms-sm-0">
                             <div class="row">
                                 <div class="col-12">
                                     <div class="right-box-padding">
-                                        <div class="toolbar mb-4" role="toolbar">
-                                            <div class="btn-group mb-1">
-                                                <button type="button" class="btn btn-primary light px-3"><i class="fa fa-archive"></i></button>
-                                                <button type="button" class="btn btn-primary light px-3"><i class="fa fa-exclamation-circle"></i></button>
-                                                <button type="button" class="btn btn-primary light px-3"><i class="fa fa-trash"></i></button>
-                                            </div>
-                                            <div class="btn-group mb-1">
-                                                <button type="button" class="btn btn-primary light dropdown-toggle px-3" data-bs-toggle="dropdown">
-                                                    <i class="fa fa-folder"></i> <b class="caret m-l-5"></b>
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="javascript: void(0);">Social</a>
-                                                    <a class="dropdown-item" href="javascript: void(0);">Promotions</a>
-                                                    <a class="dropdown-item" href="javascript: void(0);">Updates</a>
-                                                    <a class="dropdown-item" href="javascript: void(0);">Forums</a>
-                                                </div>
-                                            </div>
-                                            <div class="btn-group mb-1">
-                                                <button type="button" class="btn btn-primary light dropdown-toggle px-3" data-bs-toggle="dropdown">
-                                                    <i class="fa fa-tag"></i> <b class="caret m-l-5"></b>
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="javascript: void(0);">Updates</a>
-                                                    <a class="dropdown-item" href="javascript: void(0);">Social</a>
-                                                    <a class="dropdown-item" href="javascript: void(0);">Promotions</a>
-                                                    <a class="dropdown-item" href="javascript: void(0);">Forums</a>
-                                                </div>
-                                            </div>
-                                            <div class="btn-group mb-1">
-                                                <button type="button" class="btn btn-primary light dropdown-toggle v" data-bs-toggle="dropdown">More <span class="caret m-l-5"></span>
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="javascript: void(0);">Mark as Unread</a>
-                                                    <a class="dropdown-item" href="javascript: void(0);">Add to Tasks</a>
-                                                    <a class="dropdown-item" href="javascript: void(0);">Add Star</a>
-                                                    <a class="dropdown-item" href="javascript: void(0);">Mute</a>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="read-content">
                                             <div class="media pt-3">
                                                 <img class="me-2 rounded" width="50" alt="image" src="https://fito.dexignzone.com/laravel/demo/images/avatar/1.jpg">
@@ -140,26 +103,26 @@
 
 <!-- Modal -->
 <div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="replyModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="replyModalLabel">Reply</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="message-text" class="col-form-label">Message:</label>
-          <textarea class="form-control" id="message-text" rows="5"></textarea>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="replyModalLabel">Reply</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="message-text" class="col-form-label">Message:</label>
+                    <textarea class="form-control" id="message-text" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send</button>
+            </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Send</button>
-      </div>
     </div>
-  </div>
 </div>
 
 @endsection

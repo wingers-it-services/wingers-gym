@@ -13,6 +13,7 @@ use App\Http\Controllers\UserBmiController;
 use App\Traits\SessionTrait;
 use App\Http\Controllers\GymDesignationController;
 use App\Http\Controllers\GymGalleryController;
+use App\Http\Controllers\GymInquiryController;
 use App\Http\Controllers\GymSheduleController;
 use App\Http\Controllers\MaintenanceVendorController;
 use App\Http\Controllers\ProductController;
@@ -60,9 +61,7 @@ Route::get('/coupon', function () {
 Route::get('/vendor-list', function () {
     return view('GymOwner.vendor-list');
 });
-Route::get('/enquiry', function () {
-    return view('GymOwner.enquiry');
-});
+
 Route::get('/inbox', function () {
     return view('GymOwner.inbox');
 });
@@ -95,6 +94,8 @@ Route::post('/register', [GymDetailController::class, 'registerGym'])->name('reg
 Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
 
 Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
+
+    Route::get('/enquiry',[GymInquiryController::class,'viewInquiry']);
 
     Route::get('/list-vendor', [MaintenanceVendorController::class, 'listVendor']);
 
