@@ -97,6 +97,8 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
     Route::get('/enquiry',[GymInquiryController::class,'viewInquiry']);
 
+    Route::get('/inquiry-details', [GymInquiryController::class, 'getDetails'])->name('inquiry.details');
+
     Route::get('/list-vendor', [MaintenanceVendorController::class, 'listVendor']);
 
     Route::post('/add-maintenance-vendor', [MaintenanceVendorController::class, 'addMaintenanceVendor'])->name('addMaintenanceVendor');

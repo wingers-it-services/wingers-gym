@@ -1,5 +1,5 @@
 @extends('GymOwner.master')
-@section('title', 'Dashboard')
+@section('title', 'Gym Customer Subscription')
 @section('content')
 
 <div class="content-body ">
