@@ -183,16 +183,22 @@
 										</div>
 									</div>
 									<div class="row">
-										<div class="col-md-5 mb-3">
+										<div class="col-md-6 mb-3">
 											<label for="country">Country</label>
 											<input type="text" class="form-control" id="country" name="country"
 												required="">
 										</div>
-										<div class="col-md-4 mb-3">
+										<div class="col-md-6 mb-3">
 											<label for="state">State</label>
 											<input type="text" class="form-control" id="state" name="state" required="">
 										</div>
-										<div class="col-md-3 mb-3">
+									</div>
+									<div class="row">
+										<div class="col-md-6 mb-3">
+											<label for="city">City</label>
+											<input type="text" class="form-control" id="city" name="city" required="">
+										</div>
+										<div class="col-md-6 mb-3">
 											<label for="zip_code">Zip</label>
 											<input type="text" class="form-control" id="zip_code" name="zip_code"
 												placeholder="" required="">
@@ -476,6 +482,7 @@
 				document.getElementById('address').value = '';
 				document.getElementById('country').value = '';
 				document.getElementById('state').value = '';
+				document.getElementById('city').value = '';
 				document.getElementById('zip_code').value = '';
 				document.getElementById('joining_date').value = '';
 				document.getElementById('password').value = '';
@@ -503,6 +510,7 @@
 				document.getElementById('address').value = user.address || '';
 				document.getElementById('country').value = user.country || '';
 				document.getElementById('state').value = user.state || '';
+				document.getElementById('city').value = user.city || '';
 				document.getElementById('zip_code').value = user.zip_code || '';
 				document.getElementById('joining_date').value = user.joining_date || '';
 				document.getElementById('password').value = user.password || '';

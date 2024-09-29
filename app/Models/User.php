@@ -37,6 +37,7 @@ class User extends Authenticatable
         'address',
         'country',
         'state',
+        'city',
         'zip_code',
         'phone_no',
         'password',
@@ -283,6 +284,7 @@ class User extends Authenticatable
                 'address'         => $addUser['address'],
                 'country'         => $addUser['country'],
                 'state'           => $addUser['state'],
+                'city'            => $addUser['city'],
                 'zip_code'        => $addUser['zip_code'],
                 'image'           => $imagePath,
             ]);
@@ -358,6 +360,11 @@ class User extends Authenticatable
                 'gym_id'               => $gym->id,
                 'password'             => $userDetail['password'],
                 'dob'                  => $userDetail['dob'],
+                'address'              => $userDetail['address']??null,
+                'country'              => $userDetail['country']??null,
+                'state'                => $userDetail['state']??null,
+                'city'                 => $userDetail['city']??null,
+                'zip_code'             => $userDetail['zip_code']??null,
                 'profile_status'       => GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED,
                 'is_email_verified'    => true,
                 'is_phone_no_verified' => true,
@@ -492,7 +499,12 @@ class User extends Authenticatable
                 'dob'             => $userDetail['dob'],
                 'height'          => $userDetail['height'],
                 'weight'          => $userDetail['weight'],
-                'days'            => $userDetail['days']
+                'days'            => $userDetail['days'],
+                'address'         => $userDetail['address'],
+                'country'         => $userDetail['country'],
+                'state'           => $userDetail['state'],
+                'city'            => $userDetail['city'],
+                'zip_code'        => $userDetail['zip_code']
             ]);
 
             if (isset($userDetail['remove_image']) && $userDetail['remove_image'] == 1) {
@@ -595,9 +607,9 @@ class User extends Authenticatable
                 'status'   => 200,
                 'message'  => 'Profile updated successfully',
                 'user'     => $userProfile,
-                'injuries'     => $injuries,
-                'goals'        => $goals,
-                'levels'       => $levels,
+                'injuries' => $injuries,
+                'goals'    => $goals,
+                'levels'   => $levels,
             ];
         } catch (Throwable $e) {
             Log::error('[User][updateUserProfile] Error while updating user profile: ' . $e->getMessage());

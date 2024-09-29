@@ -32,6 +32,7 @@ class UserService
             'address',
             'country',
             'state',
+            'city',
             'zip_code',
             'image',
             'end_date',

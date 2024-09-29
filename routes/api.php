@@ -25,7 +25,6 @@ use App\Http\Controllers\UserLevelControllerApi;
 use App\Http\Controllers\UserSubscriptionControllerApi;
 use App\Http\Controllers\UserWorkoutAnalyticApi;
 use App\Http\Controllers\UserWorkoutControllerApi;
-use App\Models\UserSubscriptionPayment;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/fetch-goal', [GoalControllerApi::class, 'fetchGoal'])->name('fetchGoal');

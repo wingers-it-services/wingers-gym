@@ -1,5 +1,5 @@
 @extends('GymOwner.master')
-@section('title','Dashboard')
+@section('title','Edet Member')
 @section('content')
 
 <!--**********************************
@@ -154,15 +154,21 @@
 										</div>
 									</div>
 									<div class="row">
-										<div class="col-md-5 mb-3">
+										<div class="col-md-6 mb-3">
 											<label for="country">Country</label>
 											<input type="text" class="form-control" id="country" name="country" value="{{$userDetail->country}}" required="">
 										</div>
-										<div class="col-md-4 mb-3">
+										<div class="col-md-6 mb-3">
 											<label for="state">State</label>
 											<input type="text" class="form-control" id="state" name="state" value="{{$userDetail->state}}" required="">
 										</div>
-										<div class="col-md-3 mb-3">
+									</div>
+									<div class="row">
+										<div class="col-md-6 mb-3">
+											<label for="city">City</label>
+											<input type="text" class="form-control" id="city" name="city" value="{{$userDetail->city}}" required="">
+										</div>
+										<div class="col-md-6 mb-3">
 											<label for="zip_code">Zip</label>
 											<input type="text" class="form-control" id="zip_code" name="zip_code" placeholder="" value="{{$userDetail->zip_code}}" required="">
 										</div>
