@@ -1,5 +1,5 @@
 @extends('GymOwner.master')
-@section('title', 'Gym Customer Subscription')
+@section('title', 'Dashboard')
 @section('content')
 
 <div class="content-body ">
@@ -36,21 +36,19 @@
                                                 <div class="media d-flex align-items-center">
                                                     <div class="avatar avatar-xl me-2">
                                                         <div class=""><img class="rounded-circle img-fluid"
-                                                                src="{{ $user->image }}" width="50" alt="image">
+                                                                src="{{ $user->users->image }}" width="50" alt="image">
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="py-2">{{ $user->firstname . ' ' . $user->lastname }}</td>
-                                            <td class="py-2">{{ $user->email }}</td>
-                                            <td class="py-2">{{ $user->phone_no }}</td>
-                                            <td class="py-2">{{ optional($user->subscription)->subscription_name ?? '--' }}
+                                            <td class="py-2">{{ $user->users->firstname . ' ' . $user->users->lastname }}</td>
+                                            <td class="py-2">{{ $user->users->email }}</td>
+                                            <td class="py-2">{{ $user->users->phone_no }}</td>
+                                            <td class="py-2">{{ $user->subscription->subscription_name ?? '--' }}
                                             </td>
                                             <td class="py-2">{{ $user->subscription_start_date }}</td>
                                             <td class="py-2">{{ $user->subscription_end_date }}</td>
                                             <td class="py-2">{{ $user->remaining_days }} Days</td>
-
-
                                         </tr>
                                     @endforeach
                                 </tbody>

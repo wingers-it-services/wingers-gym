@@ -28,7 +28,7 @@ class GymSheduleController extends Controller
     {
         $gym = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
-        $gymShedule = $this->gymShedule->where('gym_id',$gymId);
+        $gymShedule = $this->gymShedule->where('gym_id',$gymId)->get();
         return view('GymOwner.gym-calender', compact('gymShedule'));
     }
 

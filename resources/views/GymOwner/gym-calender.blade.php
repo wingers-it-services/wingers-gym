@@ -12,12 +12,16 @@
                         <div class="row">
                             <div id="external-events" class="my-3">
                                 <p>Click on the "Create Event" to add new event in the calender</p>
-                                <div class="external-event btn-primary light" data-class="bg-primary"><i class="fa fa-move"></i><span>New Theme Release</span></div>
-                                <div class="external-event btn-warning light" data-class="bg-warning"><i class="fa fa-move"></i>My Event</div>
+                                @foreach ($gymShedule as $schedule)
+                                
+                                <div class="external-event btn-primary light" data-class="bg-primary"><i class="fa fa-move"></i><span>{{$schedule->event_name}}</span></div>
+                                <!-- <div class="external-event btn-warning light" data-class="bg-warning"><i class="fa fa-move"></i>My Event</div>
                                 <div class="external-event btn-danger light" data-class="bg-danger"><i class="fa fa-move"></i>Meet manager</div>
                                 <div class="external-event btn-info light" data-class="bg-info"><i class="fa fa-move"></i>Create New theme</div>
                                 <div class="external-event btn-dark light" data-class="bg-dark"><i class="fa fa-move"></i>Project Launch</div>
-                                <div class="external-event btn-secondary light" data-class="bg-secondary"><i class="fa fa-move"></i>Meeting</div>
+                                <div class="external-event btn-secondary light" data-class="bg-secondary"><i class="fa fa-move"></i>Meeting</div> -->
+                                @endforeach
+
                             </div>
                             <!-- checkbox -->
                             <div class="checkbox form-check checkbox-event custom-checkbox pt-3 pb-5">
