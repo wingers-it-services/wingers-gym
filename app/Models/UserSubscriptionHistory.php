@@ -28,6 +28,11 @@ class UserSubscriptionHistory extends Model
         return $this->belongsTo(GymSubscription::class, 'subscription_id');
     }
 
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     protected static function boot()
     {
         parent::boot();

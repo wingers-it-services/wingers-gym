@@ -93,41 +93,32 @@ class GymUserController extends Controller
     {
         $gymUser = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
-        $users = $this->user->where('gym_id', $gymId)->get();
+        // Fetch users with their subscription data (including trashed)
+        $users = $this->userSubscriptionHistory->with([
+            'users', // Assuming 'users' is the name of a relationship
+            'subscription' => function ($query) {
+                $query->withTrashed();
+            }
+        ])->where('gym_id', $gymId)
+            ->where('status', '1') // Assuming status '1' means active
+            ->get();
 
-        // Fetch latest subscription history for each user
+        // Calculate remaining days for each subscription
         foreach ($users as $user) {
-            $latestSubscription = UserSubscriptionHistory::where('user_id', $user->id)
-                ->where('gym_id', $gymId)->where('status', '1')
-                ->orderBy('subscription_start_date', 'desc')
-                ->first();
-
-            if ($latestSubscription) {
-                $start_date = strtotime($latestSubscription->subscription_start_date);
-                $end_date = strtotime($latestSubscription->subscription_end_date);
-                $current_date = strtotime(date('Y-m-d'));
-
-                // Calculate the difference in days between the current date and the end date
-                $user->subscription_start_date = $latestSubscription->subscription_start_date;
-                $user->subscription_end_date = $latestSubscription->subscription_end_date;
-                $user->remaining_days = ($end_date - $current_date) / (60 * 60 * 24);
-                $user->subscription_id = $latestSubscription->subscription_id;
+            if ($user->subscription_end_date) {
+                $endDate = Carbon::parse($user->subscription_end_date);
+                $user->remaining_days = (int) now()->diffInDays($endDate, false); // Force integer cast
             } else {
-                // Handle the case where no subscription history is found
-                $user->subscription_start_date = "--";
-                $user->subscription_end_date = "--";
-                $user->remaining_days = "--";
-                $user->subscription_id = "--";
+                $user->remaining_days = null; // No end date, so no remaining days
             }
         }
-
         return view('GymOwner.gym-customers-subscriptions', compact('users'));
     }
 
     public function customersAttendance()
     {
         $gym = Auth::guard('gym')->user();
-        $gymUsers = $this->user->where('gym_id', $gym->id)->get();
+        $gymUsers = $gym->users;
         return view('GymOwner.customers-attendance', compact('gymUsers'));
     }
 
@@ -149,7 +140,12 @@ class GymUserController extends Controller
     {
         $gymUser = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
-        $customerPayments = $this->customerPayments->with('subscription')->where('gym_id', $gymId)->get();
+        $customerPayments = $this->customerPayments
+            ->with([
+                'subscription' => function ($query) {
+                    $query->withTrashed();
+                }
+            ])->where('gym_id', $gymId)->orderBy('created_at', 'desc')->get();
 
         return view('GymOwner.customers-payment', compact('customerPayments'));
     }
@@ -245,26 +241,27 @@ class GymUserController extends Controller
             } else {
                 // If no user_id, create a new user
                 $user = $this->userService->createUserAccount($validateData, $gymId);
+
+
+                // Create the user account
+                if ($user) {
+                    $user = User::where('email', $validateData['email'])->first(); // Adjust the query as needed
+                }
+
+                // Save to user_subscription_histories
+                UserSubscriptionHistory::create([
+                    'user_id' => $user->id,
+                    'subscription_id' => $request->subscription_id,
+                    'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
+                    'subscription_start_date' => $request->subscription_start_date,
+                    'subscription_end_date' => $request->subscription_end_date,
+                    'status' => $user->subscription_status,
+                    'amount' => $request->amount, // Ensure this is part of the request or calculate it
+                    'coupon_id' => 2,
+                    'gym_id' => $gymId
+                ]);
+
             }
-
-            // Create the user account
-            if ($user) {
-                $user = User::where('email', $validateData['email'])->first(); // Adjust the query as needed
-            }
-
-            // Save to user_subscription_histories
-            UserSubscriptionHistory::create([
-                'user_id' => $user->id,
-                'subscription_id' => $request->subscription_id,
-                'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
-                'subscription_start_date' => $request->subscription_start_date,
-                'subscription_end_date' => $request->subscription_end_date,
-                'status' => $user->subscription_status,
-                'amount' => $request->amount, // Ensure this is part of the request or calculate it
-                'coupon_id' => 2,
-                'gym_id' => $gymId
-            ]);
-
 
             return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Successfully');
         } catch (\Exception $e) {
@@ -625,7 +622,7 @@ class GymUserController extends Controller
             // Check if user already has an active subscription
             if ($userSubscription && $userSubscription->status == 1 && $userSubscription->subscription_end_date > now()) {
                 // If subscription is active, return an error message with SweetAlert
-                return redirect()->back()->with('status', 'error')->with('message', 'User is already in an active subscription until ' . $userSubscription->subscription_end_date);
+                return redirect()->back()->with('status', 'error')->with('message', 'User is already in an active subscription until  ' . Carbon::parse($userSubscription->subscription_end_date)->format('jS M Y'));
             }
 
             // Fetch subscription details
