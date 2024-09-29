@@ -163,6 +163,11 @@ class GymUserControllerApi extends Controller
                 'phone_no'  => 'required|digits:10|unique:gym_users,phone_no',
                 'lastname'  => 'required',
                 'gender'    => 'required',
+                'addres'    => 'required',
+                'country'   => 'required',
+                'state'     => 'required',
+                'city'      => 'required',
+                'zip_code'  => 'required',
                 'password'  => 'required',
                 'image'     => 'nullable',
                 'dob'       => 'required'
@@ -179,7 +184,12 @@ class GymUserControllerApi extends Controller
             $user = $response['user'];
             $token = $user->createToken('MyAppToken')->accessToken;
 
+            $age = null;
+            if ($user->dob) {
+                $age = Carbon::parse($user->dob)->age;
+            }
 
+            $user->age = $age;
             return response()->json([
                 'status'       => $response['status'],
                 'message'      => $response['message'],
@@ -386,6 +396,11 @@ class GymUserControllerApi extends Controller
                 'lastname'     => 'required|string',
                 'gender'       => 'required|string',
                 'dob'          => 'required|date',
+                'address'       => 'required',
+                'country'      => 'required',
+                'state'        => 'required',
+                'city'         => 'required',
+                'zip_code'     => 'required',
                 'height'       => 'required|numeric',
                 'weight'       => 'required|numeric',
                 'days'         => 'required|string',
@@ -396,7 +411,7 @@ class GymUserControllerApi extends Controller
                 'levels'       => 'array',
                 'levels.*'     => 'exists:user_lebels,id',
                 'image'        => 'nullable',
-                'remove_image'    => 'nullable|in:0,1',
+                'remove_image' => 'nullable|in:0,1',
             ]);
 
             $result = $this->user->updateUserProfile($request->all());
