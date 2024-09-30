@@ -350,6 +350,7 @@
 															</div>
 															<span class="upload-text">Upload Aadhar Card</span>
 															<div class="progress-bar" id="progress-bar-aadhar"></div>
+															<div class="error-message" id="error-aadhar" style="color: red; display: none;">Please upload a PDF file.</div>
 														</div>
 													</label>
 												</div>
@@ -538,68 +539,6 @@
 		}
 	}
 
-	// document.addEventListener("DOMContentLoaded", function () {
-	// 	const emailInput = document.getElementById("email");
-	// 	const phoneInput = document.getElementById("phone_number");
-	// 	const whatsPhoneInput = document.getElementById("whatsapp_no");
-	// 	const emailError = document.getElementById("emailError");
-	// 	const phoneError = document.getElementById("phoneError");
-	// 	const phoneError1 = document.getElementById("whatsphoneError");
-
-	// 	const dobInput = document.getElementById("dob");
-	// 	const dobError = document.getElementById("dobError");
-
-	// 	// Regular expression for validating email
-	// 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-	// 	// Regular expression for validating phone numbers
-	// 	const phoneRegex = /^(\(\+\d{1,3}\))?\d{3}\d{3}\d{4}$/;
-
-	// 	// Email Validation Event Listener
-	// 	emailInput.addEventListener("input", function () {
-	// 		if (emailRegex.test(emailInput.value)) {
-	// 			emailError.style.display = "none";
-	// 		} else {
-	// 			emailError.style.display = "block";
-	// 		}
-	// 	});
-
-	// 	// Phone Validation Event Listener
-	// 	phoneInput.addEventListener("input", function () {
-	// 		if (phoneRegex.test(phoneInput.value)) {
-	// 			phoneError.style.display = "none";
-	// 		} else {
-	// 			phoneError.style.display = "block";
-	// 		}
-	// 	});
-
-	// 	whatsPhoneInput.addEventListener("input", function () {
-	// 		if (phoneRegex.test(whatsPhoneInput.value)) {
-	// 			phoneError1.style.display = "none";
-	// 		} else {
-	// 			phoneError1.style.display = "block";
-	// 		}
-	// 	});
-
-	// 	dobInput.addEventListener("input", function () {
-	// 		const selectedDate = new Date(dobInput.value);
-	// 		const today = new Date();
-
-	// 		let age = today.getFullYear() - selectedDate.getFullYear();
-	// 		const monthDiff = today.getMonth() - selectedDate.getMonth();
-
-	// 		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate())) {
-	// 			age--;
-	// 		}
-
-	// 		if (age >= 18) {
-	// 			dobError.style.display = "none";
-	// 		} else {
-	// 			dobError.style.display = "block";
-	// 		}
-	// 	});
-	// });
-
 	document.addEventListener("DOMContentLoaded", function () {
 		const form = document.getElementById("myForm");
 
@@ -727,11 +666,6 @@
 
 	});
 
-	document.addEventListener('DOMContentLoaded', function () {
-
-		
-
-	});
 
 
 

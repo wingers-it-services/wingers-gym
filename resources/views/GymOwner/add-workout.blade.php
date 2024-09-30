@@ -18,9 +18,10 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="image">Workout Image</label>
-                                            <input type="file" class="form-control" id="image" name="image" required="">
+                                            <input type="file" class="form-control" id="image" name="image"
+                                                accept="image/*" required>
                                             <div class="invalid-feedback">
-                                                Product image is required.
+                                                Workout image is required.
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
@@ -31,23 +32,28 @@
                                                 style="display: none;">Please enter a valid video link (e.g.,
                                                 https://www.example.com).</small>
                                             <div class="invalid-feedback">
-                                                Please enter a valid video link.
+                                                video link is required.
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="category">Category</label>
                                             <input type="text" class="form-control" name="category" id="category"
                                                 required>
+                                            <small id="categoryError" class="text-danger" style="display: none;">Only
+                                                letters, spaces, and commas are allowed.</small>
+
                                             <div class="invalid-feedback">
-                                                Product name is required.
+                                                Category is required.
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="name">Workout Name</label>
                                             <input type="text" class="form-control" id="name" name="name" required>
+                                            <small id="workoutError" class="text-danger" style="display: none;">Only
+                                                letters, spaces are allowed.</small>
                                             <div class="invalid-feedback">
-                                                Product name is required.
+                                                Workout Name name is required.
                                             </div>
                                         </div>
                                         <div class="col-md-4 mb-3">
@@ -58,7 +64,6 @@
                                                     <option value="">Choose...</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
-
                                                 </select>
                                             </div>
                                             <div class="invalid-feedback">
@@ -83,7 +88,8 @@
                                         <div class="col-md-4 mb-3">
                                             <label for="gender">Targetted Boady Part</label>
                                             <div class="input-group">
-                                                <select class="me-sm-2 form-control default-select" id="targeted_body_part" name="targeted_body_part">
+                                                <select class="me-sm-2 form-control default-select"
+                                                    id="targeted_body_part" name="targeted_body_part">
                                                     <option value="">Choose....</option>
                                                     <option value="biceps">Biceps</option>
                                                     <option value="leg">Leg</option>
@@ -97,7 +103,7 @@
                                                 </select>
                                             </div>
                                             <div class="invalid-feedback">
-                                                Please select a user type.
+                                                Please select a Targetted Body part.
                                             </div>
                                         </div>
                                         <div class="col-md-12 mb-3">
@@ -105,7 +111,7 @@
                                             <textarea type="text" rows="25" class="form-control" id="description"
                                                 name="description" required=""></textarea>
                                             <div class="invalid-feedback">
-                                                Product name is required.
+                                                Description is required.
                                             </div>
                                         </div>
                                         <hr class="mb-4">
@@ -140,32 +146,32 @@
                         </thead>
                         <tbody>
                             @foreach ($workouts as $subscription)
-                            <tr>
-                                <td>
-                                    <img width="80"
-                                        src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
-                                        loading="lazy" alt="Profile Image">
-                                </td>
-                                <td>{{$subscription->category }}</td>
-                                <td>{{$subscription->name }}</td>
-                                <td>{{$subscription->gender }}</td>
-                                <td>
-                                    <a class="dropdown-item view-workout" href="javascript:void(0);"
-                                        data-bs-toggle="modal" data-bs-target="#viewModal"
-                                        data-workout="{{ json_encode($subscription) }}">
-                                        <i class="fa fa-eye color-muted"></i>
-                                    </a>
-                                </td>
-
-                                <td class="text-end">
-                                    <span> <a href="javascript:void(0);" class="me-4 edit-workout"
-                                            data-bs-toggle="tooltip" data-placement="top" title="Edit"
+                                <tr>
+                                    <td>
+                                        <img width="80"
+                                            src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
+                                            loading="lazy" alt="Profile Image">
+                                    </td>
+                                    <td>{{$subscription->category }}</td>
+                                    <td>{{$subscription->name }}</td>
+                                    <td>{{$subscription->gender }}</td>
+                                    <td>
+                                        <a class="dropdown-item view-workout" href="javascript:void(0);"
+                                            data-bs-toggle="modal" data-bs-target="#viewModal"
                                             data-workout="{{ json_encode($subscription) }}">
-                                            <i class="fa fa-pencil color-muted"></i></a>
-                                        <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
-                                            data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
-                                </td>
-                            </tr>
+                                            <i class="fa fa-eye color-muted"></i>
+                                        </a>
+                                    </td>
+
+                                    <td class="text-end">
+                                        <span> <a href="javascript:void(0);" class="me-4 edit-workout"
+                                                data-bs-toggle="tooltip" data-placement="top" title="Edit"
+                                                data-workout="{{ json_encode($subscription) }}">
+                                                <i class="fa fa-pencil color-muted"></i></a>
+                                            <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
+                                                data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -183,7 +189,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editDietForm" method="POST" action="update-workout" enctype="multipart/form-data">
+                <form id="editDietForm" method="POST" action="update-workout" enctype="multipart/form-data" class="needs-validation" novalidate>
                     @csrf
                     <input type="hidden" id="edit_workout_id" name="workout_id">
                     <div class="form-group text-center">
@@ -203,7 +209,7 @@
 
                     <div class="form-group">
                         <label for="category">Category</label>
-                        <input type="text" class="form-control" name="category" id="edit_category" required="">
+                        <input type="text" class="form-control" name="category" id="edit_category" required>
                     </div>
 
                     <div class="form-group">
@@ -224,7 +230,8 @@
                     <div class="form-group">
                         <label for="gender">Targetted Boady Part</label>
                         <div class="input-group">
-                            <select class="me-sm-2 form-control default-select" id="edit_targeted_body_part" name="targeted_body_part">
+                            <select class="me-sm-2 form-control default-select" id="edit_targeted_body_part"
+                                name="targeted_body_part">
                                 <option value="">Choose....</option>
                                 <option value="biceps">Biceps</option>
                                 <option value="leg">Leg</option>
@@ -292,12 +299,12 @@
 
 
 <script>
-    (function() {
+    (function () {
         'use strict';
         var forms = document.querySelectorAll('.needs-validation');
 
-        Array.prototype.slice.call(forms).forEach(function(form) {
-            form.addEventListener('submit', function(event) {
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
                 // Check form validity
                 if (!form.checkValidity()) {
                     event.preventDefault();
@@ -307,18 +314,45 @@
                 // Custom video link validation
                 const videoLinkInput = document.getElementById('vedio_link').value;
                 const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\/\w.-]*)*\/?$/;
-                const errorElement = document.getElementById('videoLinkError');
+                const errorElement1 = document.getElementById('videoLinkError');
                 let isVideoLinkValid = true;
 
                 if (!urlPattern.test(videoLinkInput)) {
-                    errorElement.style.display = 'block';
+                    errorElement1.style.display = 'block';
                     isVideoLinkValid = false;
                 } else {
-                    errorElement.style.display = 'none';
+                    errorElement1.style.display = 'none';
+                }
+
+
+                const categoryInput = document.getElementById('category').value;
+                const lettersAndCommasPattern = /^[A-Za-z\s,]+$/;
+                const errorElement2 = document.getElementById('categoryError');
+                let isCategoryValid = true;
+
+                // If the input doesn't match the pattern, show an error
+                if (!lettersAndCommasPattern.test(categoryInput)) {
+                    errorElement2.style.display = 'block';
+                    isCategoryValid = false;
+                } else {
+                    errorElement2.style.display = 'none';
+                }
+
+                const workoutInput = document.getElementById('name').value;
+                const lettersAndCommasPattern2 = /^[A-Za-z\s]+$/;
+                const errorElement3 = document.getElementById('workoutError');
+                let isWorkoutValid = true;
+
+                // If the input doesn't match the pattern, show an error
+                if (!lettersAndCommasPattern2.test(workoutInput)) {
+                    errorElement3.style.display = 'block';
+                    isWorkoutValid =false;
+                } else {
+                    errorElement3.style.display = 'none';
                 }
 
                 // If video link is invalid or the form is not valid, prevent form submission
-                if (!isVideoLinkValid || !form.checkValidity()) {
+                if (!isVideoLinkValid || !isCategoryValid || !isWorkoutValid || !form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
                 }
@@ -328,7 +362,7 @@
         });
     })();
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         function initializeEventListeners() {
             const editButtons = document.querySelectorAll('.edit-workout');
             const editImageInput = document.getElementById('edit_image');
@@ -337,7 +371,7 @@
             const editTargettedBoadySelect = document.getElementById('edit_targeted_body_part');
 
             editButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     document.getElementById('edit_workout_id').value = workout.id;
@@ -346,7 +380,7 @@
                     document.getElementById('edit_name').value = workout.name;
                     document.getElementById('edit_category').value = workout.category;
                     document.getElementById('edit_description').value = workout.description;
-                    
+
                     // Set the selected option for the gender dropdown
                     editGenderSelect.value = workout.gender;
                     editTargettedBoadySelect.value = workout.targeted_body_part;
@@ -363,11 +397,11 @@
 
             // Show a preview of the new image when selected
             if (editImageInput) {
-                editImageInput.addEventListener('change', function(event) {
+                editImageInput.addEventListener('change', function (event) {
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = function(e) {
+                        reader.onload = function (e) {
                             currentImage.src = e.target.result;
                         }
                         reader.readAsDataURL(file);
@@ -377,7 +411,7 @@
 
             // Handling view workout modal
             document.querySelectorAll('.view-workout').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     // Set the image src
@@ -424,7 +458,7 @@
         initializeEventListeners();
 
         // Reinitialize event listeners after DataTable redraw
-        $('#example3').on('draw.dt', function() {
+        $('#example3').on('draw.dt', function () {
             initializeEventListeners(); // Reattach event listeners
         });
     });
@@ -447,29 +481,55 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const viewModal = document.getElementById('viewModal');
         const modal = new bootstrap.Modal(viewModal);
 
         // Handle the close event to ensure the fade backdrop is removed
-        viewModal.addEventListener('hidden.bs.modal', function() {
+        viewModal.addEventListener('hidden.bs.modal', function () {
             document.body.classList.remove('modal-open'); // Ensure body class is removed
             document.body.style.overflow = ''; // Reset body overflow style
 
             // Remove modal backdrops
             const modalBackdrops = document.querySelectorAll('.modal-backdrop');
-            modalBackdrops.forEach(function(backdrop) {
+            modalBackdrops.forEach(function (backdrop) {
                 backdrop.remove(); // Remove the backdrop element
             });
         });
     });
 
-    document.getElementById('vedio_link').addEventListener('input', function() {
+    document.getElementById('vedio_link').addEventListener('input', function () {
         const videoLinkInput = this.value;
         const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\/\w.-]*)*\/?$/;
         const errorElement = document.getElementById('videoLinkError');
 
         if (!urlPattern.test(videoLinkInput)) {
+            errorElement.style.display = 'block';
+        } else {
+            errorElement.style.display = 'none';
+        }
+    });
+
+    document.getElementById('category').addEventListener('input', function () {
+        const categoryInput = this.value;
+        const lettersAndCommasPattern = /^[A-Za-z\s,]+$/;
+        const errorElement = document.getElementById('categoryError');
+
+        // If the input doesn't match the pattern, show an error
+        if (!lettersAndCommasPattern.test(categoryInput)) {
+            errorElement.style.display = 'block';
+        } else {
+            errorElement.style.display = 'none';
+        }
+    });
+
+    document.getElementById('name').addEventListener('input', function () {
+        const workoutInput = this.value;
+        const lettersAndCommasPattern = /^[A-Za-z\s]+$/;
+        const errorElement = document.getElementById('workoutError');
+
+        // If the input doesn't match the pattern, show an error
+        if (!lettersAndCommasPattern.test(workoutInput)) {
             errorElement.style.display = 'block';
         } else {
             errorElement.style.display = 'none';
