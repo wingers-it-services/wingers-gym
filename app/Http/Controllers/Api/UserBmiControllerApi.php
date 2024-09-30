@@ -113,4 +113,174 @@ class UserBmiControllerApi extends Controller
             return 0;
         }
     }
+
+    public function addUserBodyMeasurement(Request $request)
+    {
+        try {
+            $request->validate([
+                "chest"     => 'required',
+                "triceps"   => 'required',
+                "biceps"    => 'required',
+                "lats"      => 'required',
+                "shoulder"  => 'required',
+                "abs"       => 'required',
+                "forearms"  => 'required',
+                "traps"     => 'required',
+                "glutes"    => 'required',
+                "quads"     => 'required',
+                "hamstring" => 'required',
+                "calves"    => 'required',
+                "height"    => 'required',
+                "weight"    => 'required',
+                "bmi"       => 'required',
+                "month"     => 'required',
+                "gym_id"    => 'required|exists:gyms,id'
+            ]);
+            $user = auth()->user();
+            if (!$user) {
+                return response()->json([
+                    'status'  => 401,
+                    'message' => 'User not authenticated',
+                ], 401);
+            }
+            $userId = $user->id;
+            $gymId = $request->gym_id;
+
+            $user->update([
+                'height' => $request->height,
+                'weight' => $request->weight,
+            ]);
+
+            $bmi = $this->userBmi->createBmi($request->all(), $userId, $gymId);
+
+            // Create the body measurement record with the newly created bmi_id
+            $boadyMeasurement = $this->userBodyMeasurement->createBodyMeasurement($request->all(), $userId, $gymId, $bmi->id);
+
+            return response()->json([
+                'status'           => 200,
+                'bmi'              => $bmi,
+                'boadyMeasurement' => $boadyMeasurement,
+                'message'          => 'Bmi saved successfully'
+            ], 200);
+
+            return redirect()->back()->with('status', 'success')->with('message', 'Data saved successfully.');
+        } catch (\Throwable $e) {
+            Log::error("[UserBmiControllerApi][addUserBodyMeasurement] error " . $e->getMessage());
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Error adding bmi details: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateUserBmi(Request $request)
+    {
+        try {
+            // Validate the request data
+            $request->validate([
+                "chest"     => 'required|numeric',
+                "triceps"   => 'required|numeric',
+                "biceps"    => 'required|numeric',
+                "lats"      => 'required|numeric',
+                "shoulder"  => 'required|numeric',
+                "abs"       => 'required|numeric',
+                "forearms"  => 'required|numeric',
+                "traps"     => 'required|numeric',
+                "glutes"    => 'required|numeric',
+                "quads"     => 'required|numeric',
+                "hamstring" => 'required|numeric',
+                "calves"    => 'required|numeric',
+                "height"    => 'required|numeric',
+                "weight"    => 'required|numeric',
+                "bmi"       => 'required|numeric',
+                "month"     => 'required',
+                "gym_id"    => 'required|exists:gyms,id',
+                "bmi_id"    => 'required|exists:user_bmis,id'
+            ]);
+    
+            // Authenticate user
+            $user = auth()->user();
+            if (!$user) {
+                return response()->json([
+                    'status'  => 401,
+                    'message' => 'User not authenticated',
+                ], 401);
+            }
+    
+            $userId = $user->id;
+            $gymId = $request->gym_id;
+    
+            // Update user's height and weight
+            $user->update([
+                'height' => $request->height,
+                'weight' => $request->weight,
+            ]);
+    
+            // Fetch the existing BMI record using bmi_id, user_id, and gym_id
+            $bmi = $this->userBmi->where('user_id', $userId)
+                                 ->where('gym_id', $gymId)
+                                 ->where('id', $request->bmi_id)
+                                 ->first();
+    
+            if ($bmi) {
+                // Update existing BMI record
+                $bmi->update([
+                    'height' => $request->height,
+                    'weight' => $request->weight,
+                    'bmi'    => $request->bmi,
+                ]);
+            } else {
+                return response()->json([
+                    'status'  => 404,
+                    'message' => 'BMI record not found.',
+                ], 404);
+            }
+    
+            // Fetch the corresponding body measurement record using user_id, gym_id, and bmi_id
+            $bodyMeasurement = $this->userBodyMeasurement->where('user_id', $userId)
+                                                         ->where('gym_id', $gymId)
+                                                         ->where('bmi_id', $bmi->id)
+                                                         ->first();
+    
+            if ($bodyMeasurement) {
+                // Update the existing body measurement record
+                $bodyMeasurement->update([
+                    'chest'      => $request->chest,
+                    'triceps'    => $request->triceps,
+                    'biceps'     => $request->biceps,
+                    'lats'       => $request->lats,
+                    'shoulder'   => $request->shoulder,
+                    'abs'        => $request->abs,
+                    'forearms'   => $request->forearms,
+                    'traps'      => $request->traps,
+                    'glutes'     => $request->glutes,
+                    'quads'      => $request->quads,
+                    'hamstring'  => $request->hamstring,
+                    'calves'     => $request->calves
+                ]);
+            } else {
+                return response()->json([
+                    'status'  => 404,
+                    'message' => 'Body measurement record not found.',
+                ], 404);
+            }
+    
+            // Return success response with updated data
+            return response()->json([
+                'status'           => 200,
+                'bmi'              => $bmi,
+                'bodyMeasurement'  => $bodyMeasurement,
+                'message'          => 'BMI and body measurements updated successfully'
+            ], 200);
+            
+        } catch (\Throwable $e) {
+            // Log the error and return a 500 response with the error message
+            Log::error("[UserBmiControllerApi][updateUserBmi] error: " . $e->getMessage());
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Error updating BMI details: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
 }

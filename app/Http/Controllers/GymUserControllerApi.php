@@ -163,7 +163,7 @@ class GymUserControllerApi extends Controller
                 'phone_no'  => 'required|digits:10|unique:gym_users,phone_no',
                 'lastname'  => 'required',
                 'gender'    => 'required',
-                'addres'    => 'required',
+                'address'   => 'required',
                 'country'   => 'required',
                 'state'     => 'required',
                 'city'      => 'required',
@@ -390,7 +390,7 @@ class GymUserControllerApi extends Controller
     public function updateGymUserProfile(Request $request)
     {
         try {
-            // Validate the incoming request data
+            Log::info('[update]',$request->all());
             $request->validate([
                 'firstname'    => 'required|string',
                 'lastname'     => 'required|string',
@@ -503,8 +503,6 @@ class GymUserControllerApi extends Controller
             ], 500);
         }
     }
-
-    
 
     public function userLogout(Request $request)
     {

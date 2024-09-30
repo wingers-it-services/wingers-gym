@@ -66,20 +66,24 @@ Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']
 
 Route::middleware('auth:api')->group(function () {
 
+    Route::post('/add-user-bmi', [UserBmiControllerApi::class, 'addUserBodyMeasurement']);
+
+    Route::post('/update-user-bmi', [UserBmiControllerApi::class, 'updateUserBmi']);
+
     Route::post('/send-inquiry', [UserInquiryControllerApi::class, 'sendInquiry']);
 
-    Route::post('/fetch-inquiry', [UserInquiryControllerApi::class, 'fetchInquiry']);  
-    
+    Route::post('/fetch-inquiry', [UserInquiryControllerApi::class, 'fetchInquiry']);
+
     Route::get('/fetch-inquiry-reason', [UserInquiryControllerApi::class, 'fetchInquiryReason']);
-   
+
     Route::get('/logout', [GymUserControllerApi::class, 'userLogout']);
-    
+
     Route::post('/diet-anlytics', [DietAnalyticControllerApi::class, 'fetchUserDietAnalytic']);
 
     Route::get('/fetch-advertisement', [AdvertisementControllerApi::class, 'fetchAdvertisement']);
 
     Route::post('/response', [UserSubscriptionControllerApi::class, 'response']);
-    
+
     Route::post('/workout-anlytics', [UserWorkoutAnalyticApi::class, 'fetchUserWorkoutAnalytic']);
 
     Route::post('/get-home-page-data', [HomeControllerApi::class, 'fetchAdvertisementAndAttendance']);
