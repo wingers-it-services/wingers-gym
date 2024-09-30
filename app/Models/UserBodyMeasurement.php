@@ -34,7 +34,7 @@ class UserBodyMeasurement extends Model
     {
         try {
             // Create the body measurement record with the bmi_id
-            $this->create([
+            return  $this->create([
                 'gym_id' => $gymId,
                 'user_id' => $userId,
                 'bmi_id' => $bmiId, // Add the bmi_id here
