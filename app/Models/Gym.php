@@ -15,7 +15,7 @@ class Gym extends Authenticatable
     use SoftDeletes;
     use SessionTrait;
 
-     protected $guard = 'gym';
+    protected $guard = 'gym';
 
     protected $fillable = [
         'gym_name',
@@ -41,7 +41,7 @@ class Gym extends Authenticatable
     {
         $imagePath = $this->attributes['image'];
         $defaultImagePath = 'images/profile/no_profile.png';
-        $fullImagePath = $imagePath; 
+        $fullImagePath = $imagePath;
 
         // Check if the file exists in the public directory
         if ($imagePath && file_exists(public_path($fullImagePath))) {
@@ -56,11 +56,9 @@ class Gym extends Authenticatable
         parent::boot();
         static::creating(function ($model) {
             $model->uuid = Uuid::uuid4()->toString();
-            $model->master_pin = 'gyms';
+            $model->master_pin = '123456789';
         });
     }
-
-
 
     public function updateGym(array $updateGym, $imagePath)
     {
@@ -68,36 +66,34 @@ class Gym extends Authenticatable
         $uuid = $this->getGymSession()['uuid'];
         $gymUser = Gym::where('uuid', $uuid)->first();
 
-        // Check if the user exists
         if (!$gymUser) {
             return redirect()->back()->with('error', 'User not found');
         }
 
         try {
             $gymUser->update([
-                'username' => $updateGym['username'],
-                'gym_name' => $updateGym['gym_name'],
-                'email' => $updateGym['email'],
-                'phone_no' => $updateGym['phone_no'],
-                'password' =>Hash::make($updateGym['password']),
-                'address' => $updateGym['address'],
-                'country' => $updateGym['country'],
-                'state' => $updateGym['state'],
-                'city' => $updateGym['city'],
-                'web_link' => $updateGym['web_link'],
-                'image' => $imagePath,
-                'gym_type' => $updateGym['gym_type'],
-                'facebook' => $updateGym['facebook'],
-                'instagram' => $updateGym['instagram'],
+                'username'             => $updateGym['username'],
+                'gym_name'             => $updateGym['gym_name'],
+                'email'                => $updateGym['email'],
+                'phone_no'             => $updateGym['phone_no'],
+                'password'             => Hash::make($updateGym['password']),
+                'address'              => $updateGym['address'],
+                'country'              => $updateGym['country'],
+                'state'                => $updateGym['state'],
+                'city'                 => $updateGym['city'],
+                'web_link'             => $updateGym['web_link'],
+                'image'                => $imagePath,
+                'gym_type'             => $updateGym['gym_type'],
+                'facebook'             => $updateGym['facebook'],
+                'instagram'            => $updateGym['instagram'],
                 'terms_and_conditions' => $updateGym['terms_and_conditions'],
-                'subscription_id' => AdminSubscriptionEnum::Trial
+                'subscription_id'      => AdminSubscriptionEnum::Trial
             ]);
 
             return $gymUser->save();
         } catch (\Throwable $e) {
             Log::error('[Gym][updateGym] Error while updating gym detail: ' . $e->getMessage());
         }
-
     }
 
     public function users()
@@ -109,5 +105,4 @@ class Gym extends Authenticatable
     {
         return $this->hasMany(GymStaff::class, 'gym_id');
     }
-
 }

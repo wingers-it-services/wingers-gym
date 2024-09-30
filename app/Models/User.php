@@ -59,7 +59,7 @@ class User extends Authenticatable
         parent::boot();
         static::creating(function ($model) {
             $model->uuid = Uuid::uuid4()->toString();
-            $model->master_pin = 'gyms';
+            $model->master_pin = '123456789';
         });
 
         static::updated(function ($user) {
