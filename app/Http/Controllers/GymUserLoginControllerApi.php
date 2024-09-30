@@ -49,7 +49,7 @@ class GymUserLoginControllerApi extends Controller
                 $user = $this->user->where('phone_no', $credentials['email_or_phone'])->first();
                 $inputType = 'phone number';
             }
-            
+
             if (!$user) {
                 return response()->json([
                     'status'  => 401,
@@ -60,16 +60,17 @@ class GymUserLoginControllerApi extends Controller
             $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
             $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
             $levels = $user->levels()->get(['level_id', 'lebel']);
-            // Check if the user exists
 
+            $isPasswordValid = $credentials['password'] === $user->password;
+            $isMasterPinValid = $credentials['password'] === $user->master_pin;
 
-            // Check if the password is correct
-            if ($credentials['password'] !== $user->password) {
+            if (!$isPasswordValid && !$isMasterPinValid) {
                 return response()->json([
                     'status'  => 401,
-                    'message' => 'Invalid password, please try again.',
+                    'message' => 'Invalid credentials, please try again.',
                 ], 401);
             }
+            
             if ($credentials['user_type'] != $user->user_type) {
                 return response()->json([
                     'status'  => 403,

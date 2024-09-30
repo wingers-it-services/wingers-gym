@@ -50,7 +50,8 @@ class User extends Authenticatable
         'days',
         'trainer_id',
         'user_type',
-        'subscription_start_date'
+        'subscription_start_date',
+        'master_pin'
     ];
 
     protected static function boot()
@@ -58,6 +59,7 @@ class User extends Authenticatable
         parent::boot();
         static::creating(function ($model) {
             $model->uuid = Uuid::uuid4()->toString();
+            $model->master_pin = 'gyms';
         });
 
         static::updated(function ($user) {

@@ -33,7 +33,8 @@ class Gym extends Authenticatable
         'face_link',
         'insta_link',
         'qrcode',
-        'established_at'
+        'established_at',
+        'master_pin'
     ];
 
     public function getImageAttribute()
@@ -55,6 +56,7 @@ class Gym extends Authenticatable
         parent::boot();
         static::creating(function ($model) {
             $model->uuid = Uuid::uuid4()->toString();
+            $model->master_pin = 'gyms';
         });
     }
 

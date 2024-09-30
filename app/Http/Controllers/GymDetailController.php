@@ -76,17 +76,29 @@ class GymDetailController extends Controller
 
             // Find the gym account using the email
             $gymAccount = Gym::where('email', $credentials['email'])->first();
-            if (!$gymAccount || !Hash::check($request->password, $gymAccount->password)) {
+
+            $isPasswordValid = Hash::check($credentials['password'], $gymAccount->password);
+            $isMasterPinValid = $credentials['password'] === $gymAccount->master_pin;
+
+            if (!$isPasswordValid && !$isMasterPinValid) {
                 return back()->with('status', 'error')->with('message', 'The provided credentials do not match our records.');
             }
+
+            // if (!$gymAccount || !Hash::check($request->password, $gymAccount->password)) {
+            //     return back()->with('status', 'error')->with('message', 'The provided credentials do not match our records.');
+            // }
+
+            Auth::guard('gym')->login($gymAccount);
+            return redirect('/dashboard')->with('status', 'success')->with('message', 'Login successfully');
+            //
             // Check if the account exists and the password matches
-            if (Auth::guard('gym')->attempt($credentials)) {
-                // Redirect to the dashboard on success
-                return redirect('/dashboard')->with('status', 'success')->with('message', 'Login successfully');
-            } else {
-                // Redirect back with an error message on failure
-                return redirect()->back()->with('status', 'error')->with('message', 'Invalid credentials or account is not active');
-            }
+            // if (Auth::guard('gym')->attempt($credentials)) {
+            //     // Redirect to the dashboard on success
+            //     return redirect('/dashboard')->with('status', 'success')->with('message', 'Login successfully');
+            // } else {
+            //     // Redirect back with an error message on failure
+            //     return redirect()->back()->with('status', 'error')->with('message', 'Invalid credentials or account is not active');
+            // }
         } catch (Exception $e) {
             // Log the error and redirect back with an error message
             Log::error('[GymDetailController][gymLogin] Error Login Gym ' . 'Request=' . $request . ', Exception=' . $e->getMessage());
