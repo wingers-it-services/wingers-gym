@@ -22,12 +22,14 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <h4 class="mb-3">Add Diet</h4>
-                                <form name="myForm" method="POST" enctype="multipart/form-data" action="/add-gym-diet" class="needs-validation" novalidate>
+                                <form name="myForm" method="POST" enctype="multipart/form-data" action="/add-gym-diet"
+                                    class="needs-validation" novalidate>
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="image">Diet Image</label>
-                                            <input type="file" class="form-control" id="image" name="image" required>
+                                            <input type="file" class="form-control" id="image" name="image"
+                                                accept="image/*" required>
                                             <div class="invalid-feedback">
                                                 Diet image is required.
                                             </div>
@@ -35,6 +37,8 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="name">Diet Name</label>
                                             <input type="text" class="form-control" id="name" name="name" required>
+                                            <small id="dietError" class="text-danger" style="display: none;">Only
+                                                letters, spaces and comma are allowed.</small>
                                             <div class="invalid-feedback">
                                                 Diet name is required.
                                             </div>
@@ -43,6 +47,8 @@
                                             <label for="calories">Calories (in kcals)</label>
                                             <input type="number" class="form-control" id="calories" name="calories"
                                                 required>
+                                            <small class="error-message" id="caloriesError"
+                                                style="color: red; display: none;">Calories cannot be negative.</small>
                                             <div class="invalid-feedback">
                                                 Calories quantity is required.
                                             </div>
@@ -51,6 +57,8 @@
                                             <label for="protein">Protein (in grams)</label>
                                             <input type="number" class="form-control" id="protein" name="protein"
                                                 required>
+                                            <small class="error-message" id="proteinError"
+                                                style="color: red; display: none;">Protein cannot be negative.</small>
                                             <div class="invalid-feedback">
                                                 Protein name is required.
                                             </div>
@@ -58,6 +66,8 @@
                                         <div class="col-md-3 mb-3">
                                             <label for="carbs">Carbs (in grams) </label>
                                             <input type="number" class="form-control" id="carbs" name="carbs" required>
+                                            <small class="error-message" id="carbsError"
+                                                style="color: red; display: none;">Carbs cannot be negative.</small>
                                             <div class="invalid-feedback">
                                                 Carbs quantity is required.
                                             </div>
@@ -65,6 +75,8 @@
                                         <div class="col-md-3 mb-3">
                                             <label for="fats">Fats (in grams)</label>
                                             <input type="number" class="form-control" id="fats" name="fats" required>
+                                            <small class="error-message" id="fatsError"
+                                                style="color: red; display: none;">Fats cannot be negative.</small>
                                             <div class="invalid-feedback">
                                                 Fats quantity is required.
                                             </div>
@@ -127,6 +139,8 @@
                                             <label for="min_age">Min Age </label>
                                             <input type="number" class="form-control" id="min_age" name="min_age"
                                                 placeholder="" required>
+                                            <small id="minMaxError" class="text-danger" style="display: none;">Min Age
+                                                atleast 16.</small>
                                             <div class="invalid-feedback">
                                                 Min Age is required.
                                             </div>
@@ -136,6 +150,8 @@
                                             <label for="max_age">Max Age </label>
                                             <input type="number" class="form-control" id="max_age" name="max_age"
                                                 placeholder="" required>
+                                            <small id="MaxError" class="text-danger" style="display: none;">Max Age must
+                                                be greater than Min Age.</small>
                                             <div class="invalid-feedback">
                                                 Max Age is required.
                                             </div>
@@ -252,28 +268,30 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="edit_calories">Calories</label>
-                                <input type="number" class="form-control" id="edit_calories" name="calories" required>
+                                <input type="number" class="form-control" id="edit_calories" name="calories" min="0"
+                                    required>
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="edit_protein">Protein</label>
-                                <input type="number" class="form-control" id="edit_protein" name="protein" required>
+                                <input type="number" class="form-control" id="edit_protein" name="protein" min="0"
+                                    required>
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="edit_carbs">Carbs</label>
-                                <input type="number" class="form-control" id="edit_carbs" name="carbs" required>
+                                <input type="number" class="form-control" id="edit_carbs" name="carbs" min="0" required>
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="edit_fats">Fats</label>
-                                <input type="number" class="form-control" id="edit_fats" name="fats" required>
+                                <input type="number" class="form-control" id="edit_fats" name="fats" min="0" required>
                             </div>
                         </div>
                     </div>
@@ -382,6 +400,25 @@
                     if (!form.checkValidity()) {
                         event.preventDefault()
                         event.stopPropagation()
+                    }
+
+                    const dietInput = document.getElementById('name').value;
+                    const lettersAndCommasPattern = /^[A-Za-z\s,]+$/;
+                    const errorElement = document.getElementById('dietError');
+                    let isDietValid = true;
+
+                    // If the input doesn't match the pattern, show an error
+                    if (!lettersAndCommasPattern.test(dietInput)) {
+                        errorElement.style.display = 'block';
+                        isDietValid = false;
+                    } else {
+                        errorElement.style.display = 'none';
+                    }
+
+
+                    if (!isDietValid || !form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
                     }
 
                     form.classList.add('was-validated')
@@ -495,6 +532,138 @@
             }
         });
     }
+
+    document.getElementById('name').addEventListener('input', function () {
+        const dietInput = this.value;
+        const lettersAndCommasPattern = /^[A-Za-z\s,]+$/;
+        const errorElement = document.getElementById('dietError');
+
+        // If the input doesn't match the pattern, show an error
+        if (!lettersAndCommasPattern.test(dietInput)) {
+            errorElement.style.display = 'block';
+        } else {
+            errorElement.style.display = 'none';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const minAgeInput = document.getElementById('min_age');
+        const maxAgeInput = document.getElementById('max_age');
+        const errorMinAgeElement = document.getElementById('minMaxError'); // For min age error
+        const errorMaxAgeElement = document.getElementById('MaxError'); // For max age error
+
+        // Add input event listeners for validation
+        [minAgeInput, maxAgeInput].forEach(function (input) {
+            input.addEventListener('input', function () {
+                // Validate Min Age (ensure it's not less than 16)
+                if (input === minAgeInput && this.value < 16) {
+                    errorMinAgeElement.style.display = 'block';
+                    errorMinAgeElement.innerHTML = 'Min age must be 16 or greater';
+                }
+                // Validate Max Age (ensure it's not negative)
+                else if (input === maxAgeInput && this.value < 0) {
+                    errorMaxAgeElement.style.display = 'block';
+                    errorMaxAgeElement.innerHTML = 'Max age cannot be negative';
+                }
+                // Ensure Max Age is greater than Min Age
+                else if (input === maxAgeInput && parseInt(this.value) <= parseInt(minAgeInput.value)) {
+                    errorMaxAgeElement.style.display = 'block';
+                    errorMaxAgeElement.innerHTML = 'Max age must be greater than Min age';
+                }
+                else {
+                    // Hide the errors when values are valid
+                    errorMinAgeElement.style.display = 'none';
+                    errorMaxAgeElement.style.display = 'none';
+                }
+            });
+        });
+
+        document.querySelector('form').addEventListener('submit', function (event) {
+            let isValid = true; // Track validity status
+
+            // Validate Min Age
+            if (minAgeInput.value < 16) {
+                event.preventDefault(); // Prevent form submission
+                errorMinAgeElement.style.display = 'block';
+                errorMinAgeElement.innerHTML = 'Min age must be 16 or greater';
+                isValid = false;
+            } else {
+                minAgeInput.setCustomValidity('');
+            }
+
+            // Validate Max Age
+            if (maxAgeInput.value < 0) {
+                event.preventDefault(); // Prevent form submission
+                errorMaxAgeElement.style.display = 'block';
+                errorMaxAgeElement.innerHTML = 'Max age cannot be negative';
+                isValid = false;
+            } else {
+                maxAgeInput.setCustomValidity('');
+            }
+
+            // Check if Max Age is greater than Min Age
+            if (parseInt(maxAgeInput.value) <= parseInt(minAgeInput.value)) {
+                event.preventDefault(); // Prevent form submission
+                errorMaxAgeElement.style.display = 'block';
+                errorMaxAgeElement.innerHTML = 'Max age must be greater than Min age';
+                isValid = false;
+            } else {
+                maxAgeInput.setCustomValidity('');
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const calorieInput = document.getElementById('calories');
+        const proteinInput = document.getElementById('protein');
+        const carbsInput = document.getElementById('carbs');
+        const fatsInput = document.getElementById('fats');
+
+        // Function to validate inputs
+        function validateInput(input, errorElement) {
+            const value = parseFloat(input.value);
+            if (value < 0) {
+                errorElement.style.display = 'block'; // Show error message
+            } else {
+                errorElement.style.display = 'none'; // Hide error message
+            }
+        }
+
+        // Add input event listeners for all fields
+        calorieInput.addEventListener('input', function () {
+            validateInput(this, document.getElementById('caloriesError'));
+        });
+
+        proteinInput.addEventListener('input', function () {
+            validateInput(this, document.getElementById('proteinError'));
+        });
+
+        carbsInput.addEventListener('input', function () {
+            validateInput(this, document.getElementById('carbsError'));
+        });
+
+        fatsInput.addEventListener('input', function () {
+            validateInput(this, document.getElementById('fatsError'));
+        });
+
+        // Validate on form submission
+        document.querySelector('form').addEventListener('submit', function (event) {
+            let isValid = true; // Track validity status
+
+            // Validate all fields on form submission
+            [calorieInput, proteinInput, carbsInput, fatsInput].forEach(function (input) {
+                const errorElement = document.getElementById(input.name + 'Error');
+                if (parseFloat(input.value) < 0) {
+                    event.preventDefault(); // Prevent form submission
+                    errorElement.style.display = 'block'; // Show error message
+                    isValid = false;
+                } else {
+                    errorElement.style.display = 'none'; // Hide error message
+                }
+            });
+        });
+    });
+
 </script>
 
 @include('CustomSweetAlert');
