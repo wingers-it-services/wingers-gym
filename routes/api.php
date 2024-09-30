@@ -66,6 +66,8 @@ Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']
 
 Route::middleware('auth:api')->group(function () {
 
+    Route::post('/add-user-lat-long', [GymUserControllerApi::class, 'addLatLong']);
+
     Route::post('/add-user-bmi', [UserBmiControllerApi::class, 'addUserBodyMeasurement']);
 
     Route::post('/update-user-bmi', [UserBmiControllerApi::class, 'updateUserBmi']);

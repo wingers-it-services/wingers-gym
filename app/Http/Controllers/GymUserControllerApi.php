@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\GymUserAccountStatusEnum;
 use App\Models\InjuryUser;
 use App\Models\User;
+use App\Models\UserLatitudeAndLongitude;
 use App\Services\OtpService;
 use App\Services\UserService;
 use App\Traits\errorResponseTrait;
@@ -21,17 +22,20 @@ class GymUserControllerApi extends Controller
     protected $user;
     protected $userService;
     protected $injuryUser;
+    protected $userLatitudeAndLongitude;
 
     public function __construct(
         OtpService $otpService,
         User $user,
         UserService $userService,
-        InjuryUser $injuryUser
+        InjuryUser $injuryUser,
+        UserLatitudeAndLongitude $userLatitudeAndLongitude
     ) {
         $this->otpService = $otpService;
         $this->user = $user;
         $this->userService = $userService;
         $this->injuryUser = $injuryUser;
+        $this->userLatitudeAndLongitude = $userLatitudeAndLongitude;
     }
 
     /**
@@ -390,7 +394,7 @@ class GymUserControllerApi extends Controller
     public function updateGymUserProfile(Request $request)
     {
         try {
-            Log::info('[update]',$request->all());
+            Log::info('[update]', $request->all());
             $request->validate([
                 'firstname'    => 'required|string',
                 'lastname'     => 'required|string',
@@ -527,6 +531,42 @@ class GymUserControllerApi extends Controller
             return response()->json([
                 'status'   => 500,
                 'message'  => 'An error occurred while logging out.'
+            ], 500);
+        }
+    }
+
+    public function addLatLong(Request $request)
+    {
+        try {
+            $request->validate([
+                'latitude'  => 'required',
+                'longitude' => 'required',
+            ]);
+
+            $userId = auth()->id();
+
+            $latLongData = $request->all();
+
+            // Call the addLatLongDetails method from the relevant model (e.g., UserLocation)
+            $result = $this->userLatitudeAndLongitude->addLatLongDetails($latLongData, $userId);
+
+            if ($result) {
+                return response()->json([
+                    'status'  => 200,
+                    'message' => 'Latitude and longitude added or updated successfully',
+                    'data'    => $result
+                ], 200);
+            } else {
+                return response()->json([
+                    'status'  => 500,
+                    'message' => 'Failed to add or update latitude and longitude'
+                ], 500);
+            }
+        } catch (\Throwable $e) {
+            Log::error('[GymUserControllerApi][addLatLong] Error: ' . $e->getMessage());
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Server error: ' . $e->getMessage(),
             ], 500);
         }
     }

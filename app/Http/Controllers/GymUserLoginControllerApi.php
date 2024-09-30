@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\GymUserAccountStatusEnum;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -70,7 +71,7 @@ class GymUserLoginControllerApi extends Controller
                     'message' => 'Invalid credentials, please try again.',
                 ], 401);
             }
-            
+
             if ($credentials['user_type'] != $user->user_type) {
                 return response()->json([
                     'status'  => 403,
@@ -79,7 +80,12 @@ class GymUserLoginControllerApi extends Controller
             }
 
             $token = $user->createToken('MyAppToken')->accessToken;
+            $age = null;
+            if ($user->dob) {
+                $age = Carbon::parse($user->dob)->age;
+            }
 
+            $user->age = $age;
             if ($user->profile_status !== GymUserAccountStatusEnum::USER_INJURY_DETAIL) {
                 return response()->json([
                     'status'       => 200,
@@ -151,6 +157,12 @@ class GymUserLoginControllerApi extends Controller
                 // Generate token for the user
                 $token = $user->createToken('API Token')->accessToken;
 
+                $age = null;
+                if ($user->dob) {
+                    $age = Carbon::parse($user->dob)->age;
+                }
+
+                $user->age = $age;
                 // Check if the user's profile status is complete
                 if ($user->profile_status == GymUserAccountStatusEnum::USER_INJURY_DETAIL) {
                     return response()->json([
