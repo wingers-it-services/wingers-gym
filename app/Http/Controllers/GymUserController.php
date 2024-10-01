@@ -205,6 +205,7 @@ class GymUserController extends Controller
 
                 // Update the user data, but only include 'image' if a new image was uploaded
                 $updateData = $validateData;
+                // unset($updateData['profile_status']);
                 if ($request->hasFile('image')) {
                     $updateData['image'] = $imagePath;
                 }
@@ -345,8 +346,8 @@ class GymUserController extends Controller
                 }
                 // Upload the new image
             }
-
-            $isProfileUpdated = $this->userService->createUserAccount($request->all(), $gymId);
+            $updatedData = $request->except(['profile_status']);
+            $isProfileUpdated = $this->userService->createUserAccount($updatedData, $gymId);
 
             if ($isProfileUpdated) {
                 return redirect()->back()->with('status', 'success')->with('message', 'User updated successfully.');
