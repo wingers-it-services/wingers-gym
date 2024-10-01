@@ -57,9 +57,11 @@ class UserService
                 $userData[$field] = $enteredUserData[$field];
             }
         }
-
+        if (isset($enteredUserData['profile_status'])) {
+            $userData['profile_status'] = GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED;
+        }
         $userData['subscription_status'] = GymSubscriptionStatusEnum::ACTIVE;
-        $userData['profile_status'] = GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED;
+        // $userData['profile_status'] = GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED;
         $userData['user_type'] = UserTypeEnum::GYMUSER;
 
         $user = $this->user->updateOrCreate(
