@@ -38,8 +38,12 @@
                         <div class="row no-gutters">
                             <div class="col-xl-12">
                                 <div class="auth-form">
+                                    <div class="text-center mb-4">
+                                        <img src="{{asset('images/logo.png')}}" alt="Register"
+                                            style="width: 350px; max-width: 100%; height: auto;">
+                                    </div>
                                     <h4 class="text-center mb-4">Sign up your account</h4>
-                                    <form id="log_in" method="post" action="/register" class="needs-validation"
+                                    <form id="log_in" method="post" action="/register" enctype="multipart/form-data" class="needs-validation"
                                         novalidate>
                                         @csrf
                                         <div class="form-group">
@@ -77,6 +81,14 @@
                                                 <i class="fa fa-eye" id="eye" style="display:none;"></i>
                                             </span>
 
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="mb-1" for="gym_documents"><strong>Gym Document</strong></label>
+                                            <input type="file" class="form-control" id="gym_document" name="gym_document" accept=".pdf, .jpg, .jpeg" required>
+                                            <div class="invalid-feedback">
+                                                Gym Documents (PDF or image) are required.
+                                            </div>
                                         </div>
 
                                         <div class="text-center mt-4">

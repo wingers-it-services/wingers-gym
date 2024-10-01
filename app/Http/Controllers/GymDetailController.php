@@ -119,7 +119,8 @@ class GymDetailController extends Controller
             $request->validate([
                 'gym_name' => 'required',
                 'email'    => 'required|unique:gyms,email',
-                'password' => 'required'
+                'password' => 'required',
+                'gym_document' => 'required'
             ]);
 
             $gymUser = $this->gymService->createGymAccount($request->all());

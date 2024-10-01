@@ -36,7 +36,7 @@
                                                 <div class="media d-flex align-items-center">
                                                     <div class="avatar avatar-xl me-2">
                                                         <div class=""><img class="rounded-circle img-fluid"
-                                                                src="{{ $user->users->image }}" width="50" alt="image">
+                                                                src="{{ $user->users->image ?? asset('images/profile/no_profile.png') }}" width="50" alt="image">
                                                         </div>
                                                     </div>
                                                 </div>
