@@ -39,14 +39,18 @@
                         <div class="row no-gutters">
                             <div class="col-xl-12">
                                 <div class="auth-form">
+                                    <div class="text-center mb-4">
+                                        <img src="{{asset('images/logo.png')}}" alt="Register"
+                                            style="width: 350px; max-width: 100%; height: auto;">
+                                    </div>
                                     <h4 class="text-center mb-4">Sign in your account</h4>
                                     <form class="form" id="log_in" method="POST" action="{{route('gymLogin')}}"
                                         class="needs-validation" novalidate>
                                         @csrf
                                         <div class="form-group">
                                             <label class="mb-1"><strong>Email</strong></label>
-                                            <input type="email" class="form-control" id="email" name="email" placeholder="Email"
-                                                required>
+                                            <input type="email" class="form-control" id="email" name="email"
+                                                placeholder="Email" required>
                                             <small id="emailError" class="text-danger" style="display:none;">
                                                 Please enter a valid email address.
                                             </small>
@@ -147,32 +151,32 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const passwordInput = document.getElementById('password');
-            const passwordError = document.getElementById('passwordError');
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     const passwordInput = document.getElementById('password');
+        //     const passwordError = document.getElementById('passwordError');
 
-            passwordInput.addEventListener('input', function () {
-                if (passwordInput.value.length < 8) {
-                    passwordError.style.display = 'block';
-                    passwordError.innerHTML = 'Password must be at least 8 characters long.';
-                } else {
-                    passwordError.style.display = 'none';
-                }
-            });
+        //     passwordInput.addEventListener('input', function () {
+        //         if (passwordInput.value.length < 8) {
+        //             passwordError.style.display = 'block';
+        //             passwordError.innerHTML = 'Password must be at least 8 characters long.';
+        //         } else {
+        //             passwordError.style.display = 'none';
+        //         }
+        //     });
 
-            document.querySelector('form').addEventListener('submit', function (event) {
-                let isValid = true; // Track validity status
+        //     document.querySelector('form').addEventListener('submit', function (event) {
+        //         let isValid = true; // Track validity status
 
-                if (passwordInput.value.length < 8) {
-                    event.preventDefault(); // Prevent form submission
-                    passwordError.style.display = 'block';
-                    passwordError.innerHTML = 'Password must be at least 8 characters long.'; // Show error message
-                    isValid = false;
-                } else {
-                    passwordError.style.display = 'none';
-                }
-            });
-        });
+        //         if (passwordInput.value.length < 8) {
+        //             event.preventDefault(); // Prevent form submission
+        //             passwordError.style.display = 'block';
+        //             passwordError.innerHTML = 'Password must be at least 8 characters long.'; // Show error message
+        //             isValid = false;
+        //         } else {
+        //             passwordError.style.display = 'none';
+        //         }
+        //     });
+        // });
 
         document.addEventListener('DOMContentLoaded', function () {
             const emailInput = document.getElementById('email');

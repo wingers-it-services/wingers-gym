@@ -40,7 +40,8 @@ class GymService
             'face_link',
             'insta_link',
             'qrcode',
-            'phone_no'
+            'phone_no',
+            'gym_document'
         ];
 
         $gymData = [];
@@ -63,6 +64,12 @@ class GymService
         if (isset($gymData["image"])) {
             $this->uploadAdminProfilePicture($gym, $enteredGymData["image"]);
         }
+
+        // Upload Gym Document
+        if (isset($gymData["gym_document"])) {
+            $this->uploadGymDocument($gym, $enteredGymData["gym_document"]);
+        }
+
 
         $qrCodeId = $gym->uuid; // Customize this URL as needed
 
@@ -94,7 +101,7 @@ class GymService
     {
         if ($gym->image) {
             $imagePath = $gym->image;
-            
+
             if ($gym->image) {
                 $existingImagePath = public_path($gym->image);
                 if (file_exists($existingImagePath)) {
@@ -114,4 +121,33 @@ class GymService
 
         return $gym;
     }
+
+    public function uploadGymDocument(Gym $gym, UploadedFile $document): Gym
+    {
+        // Delete old document if it exists
+        if ($gym->gym_document) {
+            $existingDocPath = public_path($gym->gym_document);
+            if (file_exists($existingDocPath)) {
+                unlink($existingDocPath); // Delete old document
+            }
+        }
+
+        // Prepend gym name to the original document name
+        $gymName = str_replace(' ', '_', $gym->gym_name); // Replace spaces with underscores for the file name
+        $originalFilename = $document->getClientOriginalName();
+        $filename = time() . '_' . $gymName . '_' . $originalFilename;
+
+        // Set document path
+        $documentPath = 'gym_documents/' . $filename;
+
+        // Move the uploaded document to the gym_documents folder
+        $document->move(public_path('gym_documents/'), $filename);
+
+        // Update the gym document path in the database
+        $gym->gym_document = $documentPath;
+        $gym->save();
+
+        return $gym;
+    }
+
 }
