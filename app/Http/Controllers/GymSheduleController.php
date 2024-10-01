@@ -60,7 +60,9 @@ class GymSheduleController extends Controller
 
     public function fetchSchedule(Request $request)
     {
-        $schedules = GymShedule::all();  // Assuming GymSchedule model is used for schedule data
+        $gym = Auth::guard('gym')->user();
+        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
+        $schedules = GymShedule::where('gym_id', $gymId)->get();  // Assuming GymSchedule model is used for schedule data
 
         // Get the total number of weeks remaining in the current year dynamically
         $currentDate = Carbon::now();
