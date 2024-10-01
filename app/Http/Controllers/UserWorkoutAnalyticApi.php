@@ -106,7 +106,7 @@ class UserWorkoutAnalyticApi extends Controller
     
             return response()->json([
                 'status'      => 200,
-                'title'       => 'title',
+                'title'       => 'Yearly Workout Progress',
                 'percentages' => $percentages,
                 'sets'        => $sets,
                 'message'     => 'Workout analytics fetched successfully.',

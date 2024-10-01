@@ -15,6 +15,7 @@ use App\Http\Controllers\GymUserTrainerControllerApi;
 use App\Http\Controllers\HomeControllerApi;
 use App\Http\Controllers\HomeUserLoginControllerApi;
 use App\Http\Controllers\LocationControllerApi;
+use App\Http\Controllers\MixAnalyticsControllerApi;
 use App\Http\Controllers\ReelControllerApi;
 use App\Http\Controllers\SiteSettingControllerApi;
 use App\Http\Controllers\SupplimentControllerApi;
@@ -65,6 +66,8 @@ Route::post('/add-user-injuries', [GymUserControllerApi::class, 'addUserInjuries
 Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
 
 Route::middleware('auth:api')->group(function () {
+
+    Route::post('/fetch-user-mix-analytics', [MixAnalyticsControllerApi::class, 'fetchUserMixAnalytic']);
 
     Route::post('/add-user-lat-long', [GymUserControllerApi::class, 'addLatLong']);
 
