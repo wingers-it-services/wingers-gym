@@ -51,8 +51,19 @@ class InsertUserCurrentWorkout extends Command
             return false;
         }
 
-        // Process each workout and insert it into the CurrentDayWorkout table
+        // Process each workout and insert it into the CurrentDayWorkout table if not already present
         foreach ($userWorkouts as $userWorkout) {
+            // Check if the workout already exists in the CurrentDayWorkout table for today
+            $existingWorkout = CurrentDayWorkout::where('workout_id', $userWorkout->workout_id)
+                ->whereDate('created_at', now()->toDateString()) // Check for today's date
+                ->where('user_id', $userWorkout->user_id)
+                ->exists();
+
+            if ($existingWorkout) {
+                $this->info("Workout for user ID {$userWorkout->user_id} is already added for today.");
+                continue; // Skip this iteration if the workout already exists
+            }
+
             // Generate the initial details array
             $detailsArray = $this->generateInitialDetails($userWorkout->sets, $userWorkout->reps, $userWorkout->weight);
 
@@ -79,6 +90,7 @@ class InsertUserCurrentWorkout extends Command
 
         return true;
     }
+
 
     /**
      * Generate initial details for the specified number of sets.

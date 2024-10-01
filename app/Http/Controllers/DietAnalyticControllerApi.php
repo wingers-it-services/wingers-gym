@@ -105,7 +105,7 @@ class DietAnalyticControllerApi extends Controller
             foreach ($months as $month => $data) {
                 $monthName = Carbon::createFromFormat('m', $month)->format('M'); // Convert month number to short month name
                 $allMonthData[] = [
-                    'title'             => 'sdsdfds',
+                    'title'             => $monthName.' Diet',
                     'month'             => $monthName,
                     'total_fats'        => $data['total_fats'],
                     'consumed_fats'     => $data['consumed_fats'],
@@ -147,7 +147,7 @@ class DietAnalyticControllerApi extends Controller
 
             return response()->json([
                 'status'       => 200,
-                'title'        => 'fgghhj',
+                'title'        => 'Yearly Diet Progress',
                 'percentages'  => $percentages,
                 'allMonthData' => $allMonthData,
                 'message'      => 'Diet analytics fetched successfully for the year.',

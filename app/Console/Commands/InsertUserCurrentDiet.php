@@ -37,6 +37,17 @@ class InsertUserCurrentDiet extends Command
             $this->info("No diets found for {$dayOfWeek}");
         } else {
             foreach ($userDiets as $userDiet) {
+                // Check if the diet already exists in the CurrentDayDiet table for today
+                $existingDiet = CurrentDayDiet::where('diet_id', $userDiet->diet_id)
+                    ->whereDate('created_at', now()->toDateString()) // Check for today's date
+                    ->where('user_id', $userDiet->user_id)
+                    ->exists();
+
+                if ($existingDiet) {
+                    $this->info("Diet for user ID {$userDiet->user_id} is already added for today.");
+                    continue; // Skip this iteration if the diet already exists
+                }
+
                 // Prepare the details array for all meals
                 $detailsArray = [
                     'meal_name'                    => $userDiet->meal_name,
@@ -56,10 +67,9 @@ class InsertUserCurrentDiet extends Command
                 CurrentDayDiet::create([
                     'diet_id'        => $userDiet->diet_id,
                     'user_diet_id'   => $userDiet->id,
-                    'user_diet_id'   => $userDiet->id,
                     'gym_id'         => $userDiet->gym_id,
                     'user_id'        => $userDiet->user_id,
-                    'details'        => $detailsJson, 
+                    'details'        => $detailsJson,
                     'total_fats'     => $userDiet->fats,
                     'total_carbs'    => $userDiet->carbs,
                     'total_protein'  => $userDiet->protein,
@@ -69,4 +79,5 @@ class InsertUserCurrentDiet extends Command
             $this->info("Diets for {$dayOfWeek} have been successfully added to the CurrentDayDiet table!");
         }
     }
+
 }
