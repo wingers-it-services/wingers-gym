@@ -29,8 +29,7 @@
                                             <input type="text" class="form-control" id="vedio_link" name="vedio_link"
                                                 placeholder="Enter a valid video link" required>
                                             <small id="videoLinkError" class="form-text text-danger"
-                                                style="display: none;">Please enter a valid video link (e.g.,
-                                                https://www.example.com).</small>
+                                                style="display: none;">Please enter a valid video link.</small>
                                             <div class="invalid-feedback">
                                                 video link is required.
                                             </div>
@@ -121,11 +120,8 @@
                                 </form>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
-
             </div>
         </div>
         <div class="card">
@@ -189,7 +185,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editDietForm" method="POST" action="update-workout" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <form id="editDietForm" method="POST" action="update-workout" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="edit_workout_id" name="workout_id">
                     <div class="form-group text-center">
@@ -220,7 +216,7 @@
                     <div class="form-group">
                         <label for="gender">Gender</label>
                         <div class="input-group">
-                            <select class="me-sm-2 form-control default-select" id="edit_gender" name="gender">
+                            <select class="me-sm-2 form-control" id="edit_gender" name="gender">
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                             </select>
@@ -230,7 +226,7 @@
                     <div class="form-group">
                         <label for="gender">Targetted Boady Part</label>
                         <div class="input-group">
-                            <select class="me-sm-2 form-control default-select" id="edit_targeted_body_part"
+                            <select class="me-sm-2 form-control" id="edit_targeted_body_part"
                                 name="targeted_body_part">
                                 <option value="">Choose....</option>
                                 <option value="biceps">Biceps</option>
@@ -313,7 +309,7 @@
 
                 // Custom video link validation
                 const videoLinkInput = document.getElementById('vedio_link').value;
-                const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\/\w.-]*)*\/?$/;
+                const urlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|vimeo\.com)\/.+$/;
                 const errorElement1 = document.getElementById('videoLinkError');
                 let isVideoLinkValid = true;
 
@@ -500,7 +496,7 @@
 
     document.getElementById('vedio_link').addEventListener('input', function () {
         const videoLinkInput = this.value;
-        const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\/\w.-]*)*\/?$/;
+        const urlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|vimeo\.com)\/.+$/;
         const errorElement = document.getElementById('videoLinkError');
 
         if (!urlPattern.test(videoLinkInput)) {

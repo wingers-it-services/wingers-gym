@@ -301,7 +301,6 @@
                             <div class="col-md-6">
                                 <label for="edit_gender">Gender</label>
                                 <select class="form-control" id="edit_gender" name="gender" required>
-                                    <option value="">Choose...</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                 </select>
@@ -309,7 +308,6 @@
                             <div class="col-md-6">
                                 <label for="edit_meal">Meal Type</label>
                                 <select class="form-control" id="edit_meal" name="meal_type" required>
-                                    <option value="">Choose...</option>
                                     <option value="Vegetarian">Vegetarian</option>
                                     <option value="Non-Vegetarian">Non-Vegetarian </option>
                                     <option value="Lacto-vegetarian">Lacto-vegetarian</option>
@@ -339,7 +337,6 @@
                     <div class="form-group">
                         <label for="edit_goal">Goal</label>
                         <select class="form-control" id="edit_goal" name="goal" required>
-                            <option value="">Choose Goal</option>
                             <option value="Weight Gain">Weight Gain</option>
                             <option value="Fit">Fit</option>
                             <option value="Weight Loss">Weight Loss</option>

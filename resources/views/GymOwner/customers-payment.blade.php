@@ -24,6 +24,7 @@
                                             </div>
                                         </th>
                                         <th class="align-middle">Order</th>
+                                        <th class="align-middle pe-7">Date</th>
                                         <th class="align-middle pe-7">Subcription</th>
                                         <th class="align-middle text-end">Status</th>
                                         <th class="align-middle text-end">Amount</th>
@@ -104,6 +105,7 @@
                                                 <strong class="text-primary">{{$payment->name}}</strong><br><a
                                                     href="mailto:ricky@example.com">{{$payment->mobile}}</a>
                                             </td>
+                                            <td class="py-2">{{$payment->created_at}}</td>
                                             <td class="py-2">{{$payment->subscription->subscription_name}}</td>
                                             <td class="py-2 text-end"><span
                                                     class="badge badge-success badge-sm light">{{$payment->response_code}}<span

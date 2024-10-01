@@ -120,7 +120,6 @@ class GymDetailController extends Controller
                 'gym_name' => 'required',
                 'email'    => 'required|unique:gyms,email',
                 'password' => 'required',
-                'gym_document' => 'required'
             ]);
 
             $gymUser = $this->gymService->createGymAccount($request->all());
@@ -145,11 +144,11 @@ class GymDetailController extends Controller
                 "city_id" => 'required',
                 "state_id" => 'required',
                 "country_id" => 'required',
-                "web_link" => 'required',
+                "web_link" => 'nullable',
                 "gym_type" => 'required',
                 "face_link" => 'nullable',
                 "insta_link" => 'nullable',
-                "image" => 'nullable'
+                "image" => 'nullable',
             ]);
 
             // Collect the form data, including the image if present

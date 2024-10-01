@@ -35,7 +35,6 @@ class WorkoutController extends Controller
 
     public function addWorkout(Request $request)
     {
-
         try {
             $gym = Auth::guard('gym')->user();
             $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
@@ -85,7 +84,6 @@ class WorkoutController extends Controller
 
             $workout = $this->workout->findOrFail($request->workout_id);
 
-            $imagePath = $workout->image; // Default to existing image path
 
             if ($request->hasFile('image')) {
                 if ($workout->image) {
@@ -98,6 +96,8 @@ class WorkoutController extends Controller
                 $filename = time() . '_' . $imagefile->getClientOriginalName();
                 $imagePath = 'workout_images/' . $filename;
                 $imagefile->move(public_path('workout_images/'), $filename);
+                $workout->image = $imagePath; // Update image path
+
             }
 
             $workout->vedio_link = $validatedData['vedio_link'];
@@ -106,7 +106,6 @@ class WorkoutController extends Controller
             $workout->category = $validatedData['category'];
             $workout->targeted_body_part = $validatedData['targeted_body_part'];
             $workout->description = $validatedData['description'];
-            $workout->image = $imagePath; // Update image path
 
             $workout->save();
 

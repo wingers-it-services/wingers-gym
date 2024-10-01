@@ -35,7 +35,8 @@ class Gym extends Authenticatable
         'qrcode',
         'established_at',
         'master_pin',
-        'gym_document'
+        'gym_document',
+        'owner_identity_document'
     ];
 
     public function getImageAttribute()

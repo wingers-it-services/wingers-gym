@@ -42,7 +42,7 @@
                                         <td class="py-2">{{ $user->firstname . ' ' . $user->lastname }}</td>
                                         <td class="py-2">{{ $user->email }}</td>
                                         <td class="py-2">{{ $user->phone_no }}</td>
-                                        <td class="py-2">{{ $user->joining_date }}</td>
+                                        <td class="py-2">{{ \Carbon\Carbon::parse($user->joining_date)->format('jS M Y') }}</td>
                                         <td>
                                             <a class="dropdown-item" href="{{ route('showUserProfile', ['uuid' => $user->uuid]) }}">
                                                 <i class="fa fa-pencil color-muted"></i>
