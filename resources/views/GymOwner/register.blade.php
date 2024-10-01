@@ -82,15 +82,6 @@
                                             </span>
 
                                         </div>
-
-                                        <div class="form-group">
-                                            <label class="mb-1" for="gym_documents"><strong>Gym Document</strong></label>
-                                            <input type="file" class="form-control" id="gym_document" name="gym_document" accept=".pdf, .jpg, .jpeg" required>
-                                            <div class="invalid-feedback">
-                                                Gym Documents (PDF or image) are required.
-                                            </div>
-                                        </div>
-
                                         <div class="text-center mt-4">
                                             <button type="submit" class="btn btn-primary btn-block">Sign me up</button>
                                         </div>

@@ -95,7 +95,9 @@ class GymUserController extends Controller
         $gymId = $this->gym->where('uuid', $gymUser->uuid)->first()->id;
         // Fetch users with their subscription data (including trashed)
         $users = $this->userSubscriptionHistory->with([
-            'users', // Assuming 'users' is the name of a relationship
+            'users' => function ($query) {
+                $query->withTrashed();
+            }, // Assuming 'users' is the name of a relationship
             'subscription' => function ($query) {
                 $query->withTrashed();
             }

@@ -97,7 +97,7 @@
                                         </p>
                                     </div>
                                     <div class="new-account mt-3">
-                                        <p><a class="text-primary" href='/admin/admin-login'>Admin LOgin</a></p>
+                                        <p><a class="text-primary" href='/admin/admin-login'>Admin Login</a></p>
                                     </div>
                                 </div>
                             </div>
@@ -151,32 +151,32 @@
             }
         }
 
-        // document.addEventListener('DOMContentLoaded', function () {
-        //     const passwordInput = document.getElementById('password');
-        //     const passwordError = document.getElementById('passwordError');
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordInput = document.getElementById('password');
+            const passwordError = document.getElementById('passwordError');
 
-        //     passwordInput.addEventListener('input', function () {
-        //         if (passwordInput.value.length < 8) {
-        //             passwordError.style.display = 'block';
-        //             passwordError.innerHTML = 'Password must be at least 8 characters long.';
-        //         } else {
-        //             passwordError.style.display = 'none';
-        //         }
-        //     });
+            passwordInput.addEventListener('input', function () {
+                if (passwordInput.value.length < 8) {
+                    passwordError.style.display = 'block';
+                    passwordError.innerHTML = 'Password must be at least 8 characters long.';
+                } else {
+                    passwordError.style.display = 'none';
+                }
+            });
 
-        //     document.querySelector('form').addEventListener('submit', function (event) {
-        //         let isValid = true; // Track validity status
+            document.querySelector('form').addEventListener('submit', function (event) {
+                let isValid = true; // Track validity status
 
-        //         if (passwordInput.value.length < 8) {
-        //             event.preventDefault(); // Prevent form submission
-        //             passwordError.style.display = 'block';
-        //             passwordError.innerHTML = 'Password must be at least 8 characters long.'; // Show error message
-        //             isValid = false;
-        //         } else {
-        //             passwordError.style.display = 'none';
-        //         }
-        //     });
-        // });
+                if (passwordInput.value.length < 8) {
+                    event.preventDefault(); // Prevent form submission
+                    passwordError.style.display = 'block';
+                    passwordError.innerHTML = 'Password must be at least 8 characters long.'; // Show error message
+                    isValid = false;
+                } else {
+                    passwordError.style.display = 'none';
+                }
+            });
+        });
 
         document.addEventListener('DOMContentLoaded', function () {
             const emailInput = document.getElementById('email');

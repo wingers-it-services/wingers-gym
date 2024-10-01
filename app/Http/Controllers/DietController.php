@@ -95,8 +95,6 @@ class DietController extends Controller
 
             $diet = $this->diet->findOrFail($request->diet_id);
 
-            $imagePath = $diet->image; // Default to existing image path
-
             if ($request->hasFile('image')) {
                 if ($diet->image) {
                     $existingImagePath = public_path($diet->image);
@@ -108,25 +106,24 @@ class DietController extends Controller
                 $filename = time() . '_' . $imagefile->getClientOriginalName();
                 $imagePath = 'diet_images/' . $filename;
                 $imagefile->move(public_path('diet_images/'), $filename);
+                $diet->image = $imagePath; // Update image path
             }
 
-            $diet->update([
-                'name' => $validatedData['name'],
-                'gender' => $validatedData['gender'],
-                'diet' => $validatedData['diet'],
-                'alternative_diet' => $validatedData['alternative_diet'],
-                'min_age' => $validatedData['min_age'],
-                'max_age' => $validatedData['max_age'],
-                'goal' => $validatedData['goal'],
-                'image' => $imagePath,
-                'calories' => $validatedData['calories'],
-                'protein' => $validatedData['protein'],
-                'carbs' => $validatedData['carbs'],
-                'fats' => $validatedData['fats'],
-                'meal_type' => $validatedData['meal_type'],
+            $diet->name = $validatedData['name'];
+            $diet->gender = $validatedData['gender'];
+            $diet->diet = $validatedData['diet'];
+            $diet->alternative_diet = $validatedData['alternative_diet'];
+            $diet->min_age = $validatedData['min_age'];
+            $diet->max_age = $validatedData['max_age'];
+            $diet->calories = $validatedData['calories'];
+            $diet->protein = $validatedData['protein'];
+            $diet->carbs = $validatedData['carbs'];
+            $diet->fats = $validatedData['fats'];
+            $diet->meal_type = $validatedData['meal_type'];
+            $diet->goal = $validatedData['goal'];
 
-            ]);
-
+            $diet->save();
+        
             return redirect()->back()->with('status', 'success')->with('message', 'Diet updated successfully.');
         } catch (Exception $e) {
             Log::error('[DietController][updateDiet] Error updating diet ' . $e->getMessage());

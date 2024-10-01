@@ -41,7 +41,8 @@ class GymService
             'insta_link',
             'qrcode',
             'phone_no',
-            'gym_document'
+            'gym_document',
+            'owner_identity_document'
         ];
 
         $gymData = [];
@@ -69,6 +70,12 @@ class GymService
         if (isset($gymData["gym_document"])) {
             $this->uploadGymDocument($gym, $enteredGymData["gym_document"]);
         }
+
+        // Upload Owner Identity Document
+        if (isset($gymData["owner_identity_document"])) {
+            $this->uploadOwnerIdentityDocument($gym, $enteredGymData["owner_identity_document"]);
+        }
+
 
 
         $qrCodeId = $gym->uuid; // Customize this URL as needed
@@ -149,5 +156,34 @@ class GymService
 
         return $gym;
     }
+
+    public function uploadOwnerIdentityDocument(Gym $gym, UploadedFile $document): Gym
+    {
+        // Delete old owner identity document if it exists
+        if ($gym->owner_identity_document) {
+            $existingDocPath = public_path($gym->owner_identity_document);
+            if (file_exists($existingDocPath)) {
+                unlink($existingDocPath); // Delete old document
+            }
+        }
+
+        // Prepend gym name to the original document name
+        $gymName = str_replace(' ', '_', $gym->gym_name); // Replace spaces with underscores for the file name
+        $originalFilename = $document->getClientOriginalName();
+        $filename = time() . '_' . $gymName . '_owner_identity_' . $originalFilename;
+
+        // Set document path for the owner identity document
+        $documentPath = 'gym_documents/' . $filename;
+
+        // Move the uploaded document to the gym_documents folder
+        $document->move(public_path('gym_documents/'), $filename);
+
+        // Update the gym owner identity document path in the database
+        $gym->owner_identity_document = $documentPath;
+        $gym->save();
+
+        return $gym;
+    }
+
 
 }
