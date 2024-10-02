@@ -97,7 +97,7 @@
 									<a class="nav-link" href="#wizard_Payment"> <span>3</span></a>
 								</li>
 							</ul>
-							<form name="myForm" method="post" enctype="multipart/form-data" class="needs-validation"
+							<form id="myForm" method="post" enctype="multipart/form-data" class="needs-validation"
 								action="/gym-staff" novalidate>
 								@csrf
 								<div class="tab-content">
@@ -123,6 +123,9 @@
 														<input class="form-control form-control-sm" id="staff_photo"
 															name="staff_photo" onchange="loadFile(event)"
 															accept="image/*" type="file" required>
+														<div class="invalid-feedback">
+															Staff Image is required.
+														</div>
 													</div>
 												</div>
 											</div>
@@ -135,10 +138,12 @@
 												<div class="form-group">
 													<label class="text-label">Employee Id<span
 															class="required">*</span></label>
-													<input type="number" name="staff_id" class="form-control"
+													<input type="number" id="staff_id" name="staff_id" class="form-control"
 														placeholder="123" required>
+														<small id="employee-error" class="text-danger"
+														style="display: none;">Enter a valid Employee Id.</small>
 													<div class="invalid-feedback">
-														Staff image is required.
+														Employee Id is required.
 													</div>
 												</div>
 											</div>
@@ -146,8 +151,10 @@
 												<div class="form-group">
 													<label class="text-label">Full Name<span
 															class="required">*</span></label>
-													<input type="text" name="full_name" class="form-control"
-														placeholder="Montana" required>
+													<input type="text" id="full_name" name="full_name"
+														class="form-control" placeholder="Montana" required>
+													<small id="nameError" class="text-danger"
+														style="display: none;">Only letters are allowed.</small>
 													<div class="invalid-feedback">
 														Staff Full Name is required.
 													</div>
@@ -172,6 +179,8 @@
 															class="required">*</span></label>
 													<input type="text" class="form-control" id="experience"
 														name="experience" placeholder="Experience" required>
+													<small id="experienceError" class="text-danger"
+														style="display: none;">Please enter a valid Experience.</small>
 													<div class="invalid-feedback">
 														Staff Experience is required.
 													</div>
@@ -196,7 +205,7 @@
 													<label class="text-label">Phone Number<span
 															class="required">*</span></label>
 													<input type="number" name="phone_number" id="phone_number"
-														class="form-control" placeholder="(+1)408-657-9007" required>
+														class="form-control" placeholder="(+91)4086579007" required>
 													<small id="phoneError" class="text-danger"
 														style="display: none;">Please enter a valid phone
 														number.</small>
@@ -223,7 +232,7 @@
 													<label class="text-label">Whatsapp Number<span
 															class="required">*</span></label>
 													<input type="number" name="whatsapp_no" id="whatsapp_no"
-														class="form-control" placeholder="(+1)408-657-9007">
+														class="form-control" placeholder="(+91)4086579007">
 													<small id="whatsphoneError" class="text-danger"
 														style="display: none;">Please enter a valid whatsapp
 														number.</small>
@@ -239,6 +248,9 @@
 															class="required">*</span></label>
 													<input type="date" name="joining_date" id="joining_date"
 														class="form-control" required>
+													<small id="joiningDateError" class="text-danger"
+														style="display: none;"> Staff Joining Date must be today or a
+														future date.</small>
 													<div class="invalid-feedback">
 														Staff Joining Date is required.
 													</div>
@@ -248,8 +260,10 @@
 												<div class="form-group">
 													<label class="text-label">Salary<span
 															class="required">*</span></label>
-													<input type="text" name="salary" id="salary" placeholder="10000"
+													<input type="number" name="salary" id="salary" placeholder="10000"
 														class="form-control" required>
+													<small id="salaryError" class="text-danger"
+														style="display: none;">Please enter a valid salary.</small>
 													<div class="invalid-feedback">
 														Staff Salary is required.
 													</div>
@@ -261,7 +275,7 @@
 															class="required">*</span></label>
 													<select class="me-sm-2 form-control default-select" id="blood_group"
 														name="blood_group" required>
-														<option value="">Choose...</option>
+														<option value="">Choose Blood Group</option>
 														<option value="A+">A+</option>
 														<option value="A-">A-</option>
 														<option value="B+">B+</option>
@@ -281,8 +295,8 @@
 													<label class="text-label">Designation<span
 															class="required">*</span></label>
 													<select class="me-sm-2 form-control default-select" id="designation"
-														name="designation">
-														<option value="" selected>Choose...</option>
+														name="designation" required>
+														<option value="" selected>Choose Designation</option>
 														@foreach($designations as $designation)
 															<option value="{{ $designation->id }}"
 																data-is-commission-based="{{ $designation->is_commission_based }}">
@@ -301,6 +315,11 @@
 															class="required">*</span></label>
 													<input type="number" name="fees" id="fees" placeholder="10000"
 														class="form-control">
+													<small id="fees-error" style="color: red; display: none;">Enter a
+														valid fees</small>
+													<div class="invalid-feedback">
+														Fees is required.
+													</div>
 												</div>
 											</div>
 											<div class="col-lg-4 mb-2" id="staff-commission-field">
@@ -310,8 +329,11 @@
 													<input type="number" name="staff_commission" id="staff_commission"
 														placeholder="20" class="form-control" step="0.01" max="100">
 													<small id="staff-commission-error"
-														style="color: red; display: none;">Staff commission cannot be
-														greater than 100%</small>
+														style="color: red; display: none;">Enter valid Staff
+														Commission</small>
+													<div class="invalid-feedback">
+														Staff Commission is required.
+													</div>
 												</div>
 											</div>
 											<div class="col-lg-4 mb-2" id="gym-commission-field">
@@ -343,14 +365,17 @@
 													<label for="mailclient11" class="upload-container"
 														id="upload-container-aadhar">
 														<input type="file" name="aadhaar_card" id="mailclient11" hidden
-															onchange="handleFileUpload(this, 'aadhar')" required>
+															onchange="handleFileUpload(this, 'aadhar')" accept=".pdf, .jpg, .jpeg" required>
 														<div class="upload-box" id="upload-box-aadhar">
 															<div class="icon-container">
 																<i class="fas fa-upload icon"></i>
 															</div>
 															<span class="upload-text">Upload Aadhar Card</span>
 															<div class="progress-bar" id="progress-bar-aadhar"></div>
-															<div class="error-message" id="error-aadhar" style="color: red; display: none;">Please upload a PDF file.</div>
+															<div class="error-message" id="error-aadhaar_card"
+																style="color: red; display: none;">Please upload a PDF
+																file.</div>
+
 														</div>
 													</label>
 												</div>
@@ -360,13 +385,17 @@
 													<label for="mailclient12" class="upload-container"
 														id="upload-container-pan">
 														<input type="file" name="pan_card" id="mailclient12" hidden
-															onchange="handleFileUpload(this, 'pan')" required>
+															onchange="handleFileUpload(this, 'pan')"  accept=".pdf, .jpg, .jpeg" required>
 														<div class="upload-box" id="upload-box-pan">
 															<div class="icon-container">
 																<i class="fas fa-upload icon"></i>
 															</div>
 															<span class="upload-text">Upload Pan Card</span>
 															<div class="progress-bar" id="progress-bar-pan"></div>
+															<div class="error-message" id="error-pan_card"
+																style="color: red; display: none;">Please upload a PDF
+																file.</div>
+
 														</div>
 													</label>
 												</div>
@@ -376,13 +405,17 @@
 													<label for="mailclient13" class="upload-container"
 														id="upload-container-cheque">
 														<input type="file" name="cancel_cheque" id="mailclient13" hidden
-															onchange="handleFileUpload(this, 'cheque')" required>
+															onchange="handleFileUpload(this, 'cheque')" accept=".pdf, .jpg, .jpeg" required>
 														<div class="upload-box" id="upload-box-cheque">
 															<div class="icon-container">
 																<i class="fas fa-upload icon"></i>
 															</div>
 															<span class="upload-text">Upload Cancel Cheque</span>
 															<div class="progress-bar" id="progress-bar-cheque"></div>
+															<div class="error-message" id="error-cancel_cheque"
+																style="color: red; display: none;">Please upload a PDF
+																file.</div>
+
 														</div>
 													</label>
 												</div>
@@ -392,13 +425,16 @@
 													<label for="mailclient14" class="upload-container"
 														id="upload-container-other">
 														<input type="file" name="other" id="mailclient14" hidden
-															onchange="handleFileUpload(this, 'other')" required>
+															onchange="handleFileUpload(this, 'other')" accept=".pdf, .jpg, .jpeg" required>
 														<div class="upload-box" id="upload-box-other">
 															<div class="icon-container">
 																<i class="fas fa-upload icon"></i>
 															</div>
 															<span class="upload-text">Upload Other Document</span>
 															<div class="progress-bar" id="progress-bar-other"></div>
+															<div class="error-message" id="error-other"
+																style="color: red; display: none;">Please upload a PDF
+																file.</div>
 														</div>
 													</label>
 												</div>
@@ -542,15 +578,96 @@
 	document.addEventListener("DOMContentLoaded", function () {
 		const form = document.getElementById("myForm");
 
+		const nameInput = document.getElementById("full_name");
 		const emailInput = document.getElementById("email");
 		const phoneInput = document.getElementById("phone_number");
 		const whatsPhoneInput = document.getElementById("whatsapp_no");
 		const dobInput = document.getElementById("dob");
+		const feesInput = document.getElementById("fees");
+		const staffCommissionInput = document.getElementById("staff_commission");
+		const experienceInput = document.getElementById("experience");
+		const salaryInput = document.getElementById("salary");
+		const employeeInput =document.getElementById("staff_id");
 
+		const joiningDateInput = document.getElementById("joining_date");
+		const joiningDateError = document.getElementById("joiningDateError");
+		const salaryError = document.getElementById("salaryError");
+		const experienceError = document.getElementById("experienceError");
+		const nameError = document.getElementById("nameError");
 		const emailError = document.getElementById("emailError");
 		const phoneError = document.getElementById("phoneError");
 		const phoneError1 = document.getElementById("whatsphoneError");
 		const dobError = document.getElementById("dobError");
+		const staffCommissionError = document.getElementById("staff-commission-error");
+		const feesError = document.getElementById("fees-error");
+		const employeeError =document.getElementById("employee-error");
+
+
+		// //Function to get today's date in 'YYYY - MM - DD' format
+		// function getTodayDate() {
+		// 	const today = new Date();
+		// 	const year = today.getFullYear();
+		// 	const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-indexed
+		// 	const day = today.getDate().toString().padStart(2, '0');
+		// 	return `${year}-${month}-${day}`;
+		// }
+
+		// // Set minimum date to today (prevents selecting past dates)
+		// const today = getTodayDate();
+		// joiningDateInput.setAttribute('min', today);
+
+		// Real-time validation for fees
+		feesInput.addEventListener("input", function () {
+			const feesValue = parseFloat(feesInput.value);
+			if (feesValue <= 0 || isNaN(feesValue)) {
+				feesError.style.display = "block";
+			} else {
+				feesError.style.display = "none";
+			}
+		});
+
+		employeeInput.addEventListener("input", function () {
+			const employeeValue = parseFloat(employeeInput.value);
+			if (employeeValue <= 0 || isNaN(employeeValue)) {
+				employeeError.style.display = "block";
+			} else {
+				employeeError.style.display = "none";
+			}
+		});
+
+
+		// Real-time validation for staff commission
+		staffCommissionInput.addEventListener("input", function () {
+			const staffCommissionValue = parseFloat(staffCommissionInput.value);
+			if (staffCommissionValue <= 0 || staffCommissionValue > 100 || isNaN(staffCommissionValue)) {
+				staffCommissionError.style.display = "block";
+			} else {
+				staffCommissionError.style.display = "none";
+			}
+		});
+
+		salaryInput.addEventListener("input", function () {
+			const salaryValue = parseFloat(salaryInput.value);
+			if (salaryValue <= 0 || isNaN(salaryInput.value)) {
+				salaryError.style.display = "block";
+			} else {
+				salaryError.style.display = "none";
+			}
+		});
+
+		experienceInput.addEventListener("input", function () {
+			const experienceValue = parseFloat(experienceInput.value);
+			if (experienceValue <= 0 || isNaN(salaryInput.value)) {
+				experienceError.style.display = "block";
+			} else {
+				experienceError.style.display = "none";
+			}
+		});
+
+		function isValidName(fullname) {
+			const namePattern = /^[A-Za-z\s]+$/;
+			return namePattern.test(fullname);
+		}
 
 		// Helper function to validate email format
 		function isValidEmail(email) {
@@ -578,6 +695,14 @@
 		}
 
 		// Real-time validation for email
+		nameInput.addEventListener("input", function () {
+			if (!isValidName(nameInput.value)) {
+				nameError.style.display = 'block';
+			} else {
+				nameError.style.display = 'none';
+			}
+		});
+
 		emailInput.addEventListener("input", function () {
 			if (!isValidEmail(emailInput.value)) {
 				emailError.style.display = "block";
@@ -617,6 +742,67 @@
 		// Form validation on submit
 		form.addEventListener("submit", function (event) {
 			let isFormValid = true;
+
+			const experienceValue = parseFloat(experienceInput.value);
+			if (experienceValue <= 0 || isNaN(experienceValue)) {
+				experienceError.style.display = "block";
+				experienceInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				experienceError.style.display = "none";
+				experienceInput.classList.remove("is-invalid");
+			}
+
+			const salaryValue = parseFloat(salaryInput.value);
+			if (salaryValue <= 0 || isNaN(salaryValue)) {
+				salaryError.style.display = "block";
+				salaryInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				salaryError.style.display = "none";
+				salaryInput.classList.remove("is-invalid");
+			}
+
+			// Validate fees
+			const feesValue = parseFloat(feesInput.value);
+			if (feesValue <= 0 || isNaN(feesValue)) {
+				feesError.style.display = "block";
+				feesInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				feesError.style.display = "none";
+				feesInput.classList.remove("is-invalid");
+			}
+
+			// Validate staff commission
+			const staffCommissionValue = parseFloat(staffCommissionInput.value);
+			if (staffCommissionValue <= 0 || staffCommissionValue > 100 || isNaN(staffCommissionValue)) {
+				staffCommissionError.style.display = "block";
+				staffCommissionInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				staffCommissionError.style.display = "none";
+				staffCommissionInput.classList.remove("is-invalid");
+			}
+
+			const employeeValue = parseFloat(employeeInput.value);
+			if (employeeValue <= 0 || isNaN(employeeValue)) {
+				employeeError.style.display = "block";
+				employeeInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				employeeError.style.display = "none";
+				employeeInput.classList.remove("is-invalid");
+			}
+
+			if (!isValidName(nameInput.value)) {
+				nameError.style.display = "block";
+				nameInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				nameError.style.display = "none";
+				nameInput.classList.remove("is-invalid");
+			}
 
 			// Email validation on submit
 			if (!isValidEmail(emailInput.value)) {
@@ -664,6 +850,45 @@
 			}
 		});
 
+	});
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const requiredFiles = ['aadhaar_card', 'pan_card', 'cancel_cheque']; // IDs of required file inputs
+		const otherFile = 'other'; // ID of the optional file input
+		const fileInputs = {
+			'aadhaar_card': 'mailclient11',
+			'pan_card': 'mailclient12',
+			'cancel_cheque': 'mailclient13',
+			'other': 'mailclient14'
+		};
+		const errorMessage = document.getElementById("error-aadhar");
+
+		// Function to validate file inputs before submission
+		function validateFileInputs() {
+			let isValid = true;
+
+			// Loop through the required files and check if they are empty
+			requiredFiles.forEach(fileType => {
+				const fileInput = document.getElementById(fileInputs[fileType]);
+				const errorMessage = document.getElementById(`error-${fileType}`);
+				if (!fileInput.files.length) {
+					errorMessage.style.display = 'block';  // Show error message
+					errorMessage.textContent = `Please upload ${fileType.replace('_', ' ')}.`;
+					isValid = false;
+				} else {
+					errorMessage.style.display = 'none';  // Hide error message if file is selected
+				}
+			});
+
+			return isValid;
+		}
+
+		// Handle form submission
+		document.querySelector('form').addEventListener('submit', function (event) {
+			if (!validateFileInputs()) {
+				event.preventDefault(); // Stop form submission if validation fails
+			}
+		});
 	});
 
 
