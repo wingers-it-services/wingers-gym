@@ -895,6 +895,51 @@
 					</a>
 				</li>
 
+				@if(Auth::guard('gym')->check() && Auth::guard('gym')->user()->gym_type == 'admin')
+				<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
+						<i class="fa fa-pie-chart" aria-hidden="true"></i>
+						<span class="nav-text">Action</span>
+					</a>
+					<ul aria-expanded="">
+						<li>
+							<a href="/list-injuries" class="ai-icon" aria-expanded="false">
+								<i class="fa-solid fa-egg"></i>
+								<span class="nav-text">Add Injury Type</span>
+							</a>
+						</li>
+
+						<li>
+							<a href="#" class="ai-icon" aria-expanded="false">
+								<i class="fa-solid fa-egg"></i>
+								<span class="nav-text">Add Goal</span>
+							</a>
+						</li>
+
+						<li>
+							<a href="#" class="ai-icon" aria-expanded="false">
+								<i class="fa-solid fa-egg"></i>
+								<span class="nav-text">Add Labale</span>
+							</a>
+						</li>
+
+						<li>
+							<a href="#" class="ai-icon" aria-expanded="false">
+								<i class="fa-solid fa-egg"></i>
+								<span class="nav-text">Goal Wise Workout</span>
+							</a>
+						</li>
+
+						<li>
+							<a href="#" class="ai-icon" aria-expanded="false">
+								<i class="fa-solid fa-egg"></i>
+								<span class="nav-text">Goal Wise Diet</span>
+							</a>
+						</li>
+					</ul>
+				</li>
+				@endif
+
+
 				<li><a class="has-arrow ai-icon" href="/gym-staff" aria-expanded="false">
 						<i class="fa fa-address-card-o" aria-hidden="true"></i>
 						<span class="nav-text">Gym Staff</span>

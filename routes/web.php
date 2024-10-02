@@ -16,6 +16,7 @@ use App\Http\Controllers\GymDesignationController;
 use App\Http\Controllers\GymGalleryController;
 use App\Http\Controllers\GymInquiryController;
 use App\Http\Controllers\GymSheduleController;
+use App\Http\Controllers\InjuryController;
 use App\Http\Controllers\MaintenanceVendorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RunCronController;
@@ -95,6 +96,14 @@ Route::post('/register', [GymDetailController::class, 'registerGym'])->name('reg
 Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
 
 Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
+
+    Route::get('/list-injuries', [InjuryController::class, 'viewAddInjury'])->name('viewAddInjury');
+
+    Route::post('/add-injury', [InjuryController::class, 'addInjury'])->name('addInjury');
+
+    Route::post('/update-injury', [InjuryController::class, 'updateInjury'])->name('updateInjury');
+
+    Route::get('/delete-injury/{uuid}', [InjuryController::class, 'deleteInjury'])->name('deleteInjury');
 
     Route::get('/enquiry', [GymInquiryController::class, 'viewInquiry']);
 
