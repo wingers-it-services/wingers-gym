@@ -75,8 +75,9 @@ Route::get('/enquiry-read', function () {
     return view('GymOwner.enquiry-read');
 });
 Route::get('/gym-faq', function () {
-    return view('GymOwner.gym-faq');
+    return view('faq');
 });
+
 /* GymOwner register */
 Route::get('/register', function () {
     return view('GymOwner.register');
@@ -99,7 +100,13 @@ Route::post('/register', [GymDetailController::class, 'registerGym'])->name('reg
 
 Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
 
-Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
+Route::group(['middleware' => ['auth:gym']], function()  {
+
+    Route::get('/faq', function () {
+        return view('GymOwner.gym-faq');
+    });
+
+    Route::get('/gym-logout',[GymDetailController::class,'logout'])->name('gym.logout');
 
     Route::get('/list-goal-wise-diets', [GoalWiseDietController::class, 'viewGoalWiseDiet'])->name('viewGoalWiseDiet');
 
@@ -257,9 +264,7 @@ Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
     Route::get('/calendar', function () {
         return view('GymOwner.gym-calender');
     });
-    Route::get('/faq', function () {
-        return view('GymOwner.faq');
-    });
+  
     Route::get('/addFaq', function () {
         return view('GymOwner.addFaq');
     });

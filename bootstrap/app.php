@@ -25,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->append(EnsureGymTokenIsValid::class);
+        $middleware->alias(['auth.gym' => EnsureGymTokenIsValid::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -13,7 +13,7 @@ class GoogleAuthenticatorController extends Controller
 
     public function setupGoogleAuthenticator(Request $request)
     {
-        $gym = Auth::guard('gym')->user(); 
+        $gym = Auth::guard('gym')->user();
 
         $google2fa = new Google2FA();
 
@@ -26,8 +26,8 @@ class GoogleAuthenticatorController extends Controller
         }
 
         $qrCodeImage = $google2fa->getQRCodeUrl(
-            'Wingers Gym', 
-            $gym->email, 
+            'Wingers Gym',
+            $gym->email,
             $secretKey
         );
 
@@ -38,7 +38,9 @@ class GoogleAuthenticatorController extends Controller
 
     public function showForgotPasswordForm()
     {
-        return view('GymGoogleAuthenticator.forgot-password');
+        $status = null;
+        $message = null;
+        return view('GymGoogleAuthenticator.forgot-password', compact('status', 'message'));
     }
 
     public function verifyGoogleAuthenticatorForPasswordReset(Request $request)
@@ -51,7 +53,7 @@ class GoogleAuthenticatorController extends Controller
         $gym = Gym::where('email', $request->email)->first();
 
         if (!$gym) {
-            return back()->with('status','error')->with('message', 'No user found with this email.');
+            return back()->with('status', 'error')->with('message', 'No user found with this email.');
         }
 
         $google2fa = new Google2FA();
@@ -60,15 +62,17 @@ class GoogleAuthenticatorController extends Controller
         if ($valid) {
             return redirect()->route('gym.show-reset-password-form')->with('email', $gym->email);
         } else {
-            return back()->with('atatus','error')->with('message','Invalid code.'.$request->google_authenticator_code);
+            return back()->with('atatus', 'error')->with('message', 'Invalid code.' . $request->google_authenticator_code);
         }
     }
 
     public function showResetPasswordForm(Request $request)
     {
-        $gym = Auth::guard('gym')->user(); 
+        $status = null;
+        $message = null;
+        $gym = Auth::guard('gym')->user();
         $email = $gym->email;
-        return view('GymGoogleAuthenticator.reset-password', compact('email'));
+        return view('GymGoogleAuthenticator.reset-password', compact('email','status','message'));
     }
 
     public function resetPassword(Request $request)
