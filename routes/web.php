@@ -18,6 +18,7 @@ use App\Http\Controllers\GymGalleryController;
 use App\Http\Controllers\GymInquiryController;
 use App\Http\Controllers\GymSheduleController;
 use App\Http\Controllers\InjuryController;
+use App\Http\Controllers\LebelController;
 use App\Http\Controllers\MaintenanceVendorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RunCronController;
@@ -97,6 +98,14 @@ Route::post('/register', [GymDetailController::class, 'registerGym'])->name('reg
 Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
 
 Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
+
+    Route::get('/list-lebels', [LebelController::class, 'viewAddLebel'])->name('viewAddLebel');
+
+    Route::post('/add-lebel', [LebelController::class, 'addLebel'])->name('addLebel');
+
+    Route::post('/update-lebel', [LebelController::class, 'updateLebel'])->name('updateLebel');
+
+    Route::get('/delete-lebel/{uuid}', [LebelController::class, 'deleteLebel'])->name('deleteLebel');
 
     Route::get('/list-goals', [GoalController::class, 'viewAddGoal'])->name('viewAddGoal');
 
