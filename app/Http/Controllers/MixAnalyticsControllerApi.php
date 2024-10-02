@@ -69,10 +69,10 @@ class MixAnalyticsControllerApi extends Controller
                 '12' => 'Dec'
             ];
 
-            // Process workout analytics
             $sets = [];
             $workoutPercentages = [];
 
+            // Process workout analytics if available
             if ($yearAnalytics->isNotEmpty()) {
                 foreach ($yearAnalytics as $bodyPart => $data) {
                     $totalAllottedSets = 0;
@@ -111,83 +111,82 @@ class MixAnalyticsControllerApi extends Controller
                 }
             }
 
-            // Process diet analytics
-            $dietPercentages = [
-                [
-                    'title'      => 'carbs',
-                    'subtitle'   => 'carbs',
-                    'percentage' => round($currentYearDietAnalytics->avg('carb_percentage'), 2) ?? 0
-                ],
-                [
-                    'title'      => 'fats',
-                    'subtitle'   => 'fats',
-                    'percentage' => round($currentYearDietAnalytics->avg('fat_percentage'), 2) ?? 0
-                ],
-                [
-                    'title'      => 'protein',
-                    'subtitle'   => 'protein',
-                    'percentage' => round($currentYearDietAnalytics->avg('protein_percentage'), 2) ?? 0
-                ],
-                [
-                    'title'      => 'calories',
-                    'subtitle'   => 'calories',
-                    'percentage' => round($currentYearDietAnalytics->avg('calories_percentage'), 2) ?? 0
-                ]
-            ];
-
-            // Prepare diet analytics data for all months
+            // Process diet analytics if available
+            $dietPercentages = [];
             $dietAllMonthData = [];
-            $dietMonths = [];
-            foreach ($currentYearDietAnalytics as $data) {
-                $monthName = Carbon::createFromFormat('m', $data->month)->format('M'); // Convert month number to short month name
 
-                // Initialize month data if not already done
-                if (!isset($months[$data->month])) {
-                    $dietMonths[$data->month] = [
-                        'total_fats'        => 0,
-                        'consumed_fats'     => 0,
-                        'total_carbs'       => 0,
-                        'consumed_carbs'    => 0,
-                        'total_protein'     => 0,
-                        'consumed_protein'  => 0,
-                        'total_calories'    => 0,
-                        'consumed_calories' => 0,
-                        'color'             => '#FFD700',
-                    ];
+            if ($currentYearDietAnalytics->isNotEmpty()) {
+                $dietPercentages = [
+                    [
+                        'title'      => 'carbs',
+                        'subtitle'   => 'carbs',
+                        'percentage' => round($currentYearDietAnalytics->avg('carb_percentage'), 2) ?? 0
+                    ],
+                    [
+                        'title'      => 'fats',
+                        'subtitle'   => 'fats',
+                        'percentage' => round($currentYearDietAnalytics->avg('fat_percentage'), 2) ?? 0
+                    ],
+                    [
+                        'title'      => 'protein',
+                        'subtitle'   => 'protein',
+                        'percentage' => round($currentYearDietAnalytics->avg('protein_percentage'), 2) ?? 0
+                    ],
+                    [
+                        'title'      => 'calories',
+                        'subtitle'   => 'calories',
+                        'percentage' => round($currentYearDietAnalytics->avg('calories_percentage'), 2) ?? 0
+                    ]
+                ];
+
+                $dietMonths = [];
+                foreach ($currentYearDietAnalytics as $data) {
+                    if (!isset($dietMonths[$data->month])) {
+                        $dietMonths[$data->month] = [
+                            'total_fats'        => 0,
+                            'consumed_fats'     => 0,
+                            'total_carbs'       => 0,
+                            'consumed_carbs'    => 0,
+                            'total_protein'     => 0,
+                            'consumed_protein'  => 0,
+                            'total_calories'    => 0,
+                            'consumed_calories' => 0,
+                            'color'             => '#FFD700',
+                        ];
+                    }
+
+                    $dietMonths[$data->month]['total_fats'] += $data->total_fats;
+                    $dietMonths[$data->month]['consumed_fats'] += $data->total_fats_consumed;
+                    $dietMonths[$data->month]['total_carbs'] += $data->total_carbs;
+                    $dietMonths[$data->month]['consumed_carbs'] += $data->total_carbs_consumed;
+                    $dietMonths[$data->month]['total_protein'] += $data->total_protein;
+                    $dietMonths[$data->month]['consumed_protein'] += $data->total_protein_consumed;
+                    $dietMonths[$data->month]['total_calories'] += $data->total_calories;
+                    $dietMonths[$data->month]['consumed_calories'] += $data->total_calories_consumed;
                 }
 
-                // Sum up the totals and consumed values for each month
-                $dietMonths[$data->month]['total_fats'] += $data->total_fats;
-                $dietMonths[$data->month]['consumed_fats'] += $data->total_fats_consumed;
-                $dietMonths[$data->month]['total_carbs'] += $data->total_carbs;
-                $dietMonths[$data->month]['consumed_carbs'] += $data->total_carbs_consumed;
-                $dietMonths[$data->month]['total_protein'] += $data->total_protein;
-                $dietMonths[$data->month]['consumed_protein'] += $data->total_protein_consumed;
-                $dietMonths[$data->month]['total_calories'] += $data->total_calories;
-                $dietMonths[$data->month]['consumed_calories'] += $data->total_calories_consumed;
+                foreach ($dietMonths as $month => $data) {
+                    $monthName = Carbon::createFromFormat('m', $month)->format('M');
+                    $dietAllMonthData[] = [
+                        'title'             => $monthName . ' Diet',
+                        'month'             => $monthName,
+                        'total_fats'        => $data['total_fats'],
+                        'consumed_fats'     => $data['consumed_fats'],
+                        'total_carbs'       => $data['total_carbs'],
+                        'consumed_carbs'    => $data['consumed_carbs'],
+                        'total_protein'     => $data['total_protein'],
+                        'consumed_protein'  => $data['consumed_protein'],
+                        'total_calories'    => $data['total_calories'],
+                        'consumed_calories' => $data['consumed_calories'],
+                        'color'             => $data['color']
+                    ];
+                }
             }
 
-            // Format month data for response
-            foreach ($dietMonths as $month => $data) {
-                $monthName = Carbon::createFromFormat('m', $month)->format('M'); // Convert month number to short month name
-                $dietAllMonthData[] = [
-                    'title'             => $monthName.' Diet',
-                    'month'             => $monthName,
-                    'total_fats'        => $data['total_fats'],
-                    'consumed_fats'     => $data['consumed_fats'],
-                    'total_carbs'       => $data['total_carbs'],
-                    'consumed_carbs'    => $data['consumed_carbs'],
-                    'total_protein'     => $data['total_protein'],
-                    'consumed_protein'  => $data['consumed_protein'],
-                    'total_calories'    => $data['total_calories'],
-                    'consumed_calories' => $data['consumed_calories'],
-                    'color'             => $data['color']
-                ];
-            }
-
+            // Return the response with available data
             return response()->json([
                 'status' => 200,
-                'title'=>'Yearly Analytic',
+                'title' => 'Yearly Analytic',
                 'message' => 'Analytics fetched successfully for the year.',
                 'percentages' => array_merge($dietPercentages, $workoutPercentages),
                 'workout_sets' => $sets,

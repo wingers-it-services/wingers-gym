@@ -19,7 +19,7 @@
     <meta property="og:description" content="Laravel | Page Login">
     <meta property="og:image" content="../social-image.png">
     <meta name="format-detection" content="telephone=no">
-    <title>Login </title>
+    <title>Forget Password</title>
 
     <!-- Mobile Specific -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,8 +43,8 @@
                                         <img src="{{asset('images/logo.png')}}" alt="Register"
                                             style="width: 350px; max-width: 100%; height: auto;">
                                     </div>
-                                    <h4 class="text-center mb-4">Sign in your account</h4>
-                                    <form class="form" id="log_in" method="POST" action="{{route('gymLogin')}}"
+                                    <h4 class="text-center mb-4"> Verify Code</h4>
+                                    <form class="form" id="log_in" method="POST" action="{{ route('gym.verify-google-authenticator') }}"
                                         class="needs-validation" novalidate>
                                         @csrf
                                         <div class="form-group">
@@ -59,45 +59,20 @@
                                             </div>
                                         </div>
                                         <div class="form-group position-relative">
-                                            <label class="mb-1"><strong>Password</strong></label>
-                                            <input type="password" class="form-control" id="password" name="password"
-                                                placeholder="Password" required>
+                                            <label class="mb-1"><strong>Enter Code</strong></label>
+                                            <input type="text" class="form-control" id="google_authenticator_code" name="google_authenticator_code"
+                                                placeholder="Enter Code" required>
                                             <div class="invalid-feedback">
-                                                Password is required.
-                                            </div>
-                                            <small id="passwordError" class="text-danger" style="display:none;">
-                                                Password must be at least 8 characters long.
-                                            </small>
-                                            <span class="show-pass eye" id="togglePassword"
-                                                onclick="togglePasswordVisibility()">
-                                                <i class="fa fa-eye-slash" id="eye-slash"></i>
-                                                <i class="fa fa-eye" id="eye" style="display:none;"></i>
-                                            </span>
-
-                                        </div>
-                                        <div class="row d-flex justify-content-between mt-4 mb-2">
-                                            <div class="form-group">
-                                                <div class="form-check custom-checkbox ms-1">
-                                                    <input type="checkbox" class="form-check-input"
-                                                        id="basic_checkbox_1">
-                                                    <label class="form-check-label" for="basic_checkbox_1">Remember my
-                                                        preference</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <a href="/gym/forgot-password">Forgot Password?</a>
+                                                Code is required.
                                             </div>
                                         </div>
                                         <div class="text-center">
-                                            <button type="submit" class="btn btn-primary btn-block">Sign Me In</button>
+                                            <button type="submit" class="btn btn-primary btn-block">Verify Code</button>
                                         </div>
                                     </form>
                                     <div class="new-account mt-3">
-                                        <p>Don't have an account? <a class="text-primary" href='/register'>Sign up</a>
+                                        <p>Back To <a class="text-primary" href='/'>Login</a>
                                         </p>
-                                    </div>
-                                    <div class="new-account mt-3">
-                                        <p><a class="text-primary" href='/admin/admin-login'>Admin Login</a></p>
                                     </div>
                                 </div>
                             </div>
@@ -107,16 +82,11 @@
             </div>
         </div>
     </div>
-    <!--**********************************
-    Scripts
-***********************************-->
-    <!-- Required vendors -->
-
-    <!-- <script src="{{asset('vendor/global/global.min.js')}}" type="text/javascript"></script> -->
     <script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/custom.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/deznav-init.js')}}" type="text/javascript"></script>
-    <script>
+</body>
+<script>
         (function () {
             'use strict'
             var forms = document.querySelectorAll('.needs-validation')
@@ -134,49 +104,6 @@
                     }, false)
                 })
         })()
-
-        function togglePasswordVisibility() {
-            var passwordField = document.getElementById("password");
-            var eyeSlash = document.getElementById("eye-slash");
-            var eye = document.getElementById("eye");
-
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-                eyeSlash.style.display = "none";
-                eye.style.display = "inline";
-            } else {
-                passwordField.type = "password";
-                eyeSlash.style.display = "inline";
-                eye.style.display = "none";
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const passwordInput = document.getElementById('password');
-            const passwordError = document.getElementById('passwordError');
-
-            passwordInput.addEventListener('input', function () {
-                if (passwordInput.value.length < 8) {
-                    passwordError.style.display = 'block';
-                    passwordError.innerHTML = 'Password must be at least 8 characters long.';
-                } else {
-                    passwordError.style.display = 'none';
-                }
-            });
-
-            document.querySelector('form').addEventListener('submit', function (event) {
-                let isValid = true; // Track validity status
-
-                if (passwordInput.value.length < 8) {
-                    event.preventDefault(); // Prevent form submission
-                    passwordError.style.display = 'block';
-                    passwordError.innerHTML = 'Password must be at least 8 characters long.'; // Show error message
-                    isValid = false;
-                } else {
-                    passwordError.style.display = 'none';
-                }
-            });
-        });
 
         document.addEventListener('DOMContentLoaded', function () {
             const emailInput = document.getElementById('email');
@@ -218,7 +145,6 @@
     </script>
 
 
-</body>
-{{-- Custom sweetAlert --}}
 @include('CustomSweetAlert');
+
 </html>
