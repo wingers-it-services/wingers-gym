@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,16 +17,17 @@ class EnsureGymTokenIsValid
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Retrieve the uuid from session
-        $uuid = Session::get('uuid');
+        // Retrieve the authenticated gym user
+        $gym = Auth::guard('gym')->user();
     
-        // If no uuid exists in the session, redirect to the login route
-        // if (!$uuid) {
-        //     return redirect()->route('login'); // Make sure 'login' is the name of your login route
-        // }
+        // If the gym user is not authenticated, redirect to the gym logout route
+        if (!$gym && !$request->is('login')) {
+            return redirect()->route('login');
+        }
     
-        // Proceed with the request if session contains uuid
+        // Proceed with the request if the gym user is authenticated
         return $next($request);
     }
+    
     
 }

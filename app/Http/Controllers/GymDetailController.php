@@ -291,4 +291,19 @@ class GymDetailController extends Controller
             return redirect()->back()->with('status', 'error')->with('message', 'Error updating weekends: ' . $e->getMessage());
         }
     }
+
+    public function logout(Request $request)
+    {
+        // Logout the gym user
+        Auth::guard('gym')->logout();
+
+        // Invalidate the session
+        $request->session()->invalidate();
+
+        // Regenerate CSRF token
+        $request->session()->regenerateToken();
+
+        // Redirect to the gym login page or wherever you need
+        return redirect('/')->with('status','success')->with('message', 'Logged out successfully.');
+    }
 }
