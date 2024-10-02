@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DietController;
+use App\Http\Controllers\GoogleAuthenticatorController;
 use App\Http\Controllers\GymCouponController;
 use App\Http\Controllers\GymCustomerPaymentController;
 use App\Http\Controllers\GymStaffController;
@@ -95,7 +96,7 @@ Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLo
 
 Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
 
-    Route::get('/enquiry',[GymInquiryController::class,'viewInquiry']);
+    Route::get('/enquiry', [GymInquiryController::class, 'viewInquiry']);
 
     Route::get('/inquiry-details', [GymInquiryController::class, 'getDetails'])->name('inquiry.details');
 
@@ -334,3 +335,20 @@ Route::get('/delete-holiday/{id}', [GymDetailController::class, 'deleteHoliday']
 Route::post('/add-weekend', [GymDetailController::class, 'addWeekendsByGym']);
 
 Route::post('/update-gym-account', [GymDetailController::class, 'updateGymAccount']);
+
+
+Route::get('gym/setup-google-authenticator', [GoogleAuthenticatorController::class, 'setupGoogleAuthenticator'])
+    ->name('gym.setup-google-authenticator')
+    ->middleware('auth:gym');
+
+Route::get('gym/forgot-password', [GoogleAuthenticatorController::class, 'showForgotPasswordForm'])
+    ->name('gym.forgot-password');
+
+Route::post('gym/verify-google-authenticator', [GoogleAuthenticatorController::class, 'verifyGoogleAuthenticatorForPasswordReset'])
+    ->name('gym.verify-google-authenticator');
+
+Route::get('gym/reset-password', [GoogleAuthenticatorController::class, 'showResetPasswordForm'])
+    ->name('gym.show-reset-password-form');
+
+Route::post('gym/reset-password', [GoogleAuthenticatorController::class, 'resetPassword'])
+    ->name('gym.reset-password');
