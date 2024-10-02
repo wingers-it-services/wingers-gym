@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DietController;
+use App\Http\Controllers\FcmTokenControllerApi;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\GoalWiseDietController;
 use App\Http\Controllers\GoalWiseWorkoutController;
@@ -394,3 +395,5 @@ Route::get('gym/reset-password', [GoogleAuthenticatorController::class, 'showRes
 
 Route::post('gym/reset-password', [GoogleAuthenticatorController::class, 'resetPassword'])
     ->name('gym.reset-password');
+
+Route::get('/send-notification', [FcmTokenControllerApi::class, 'sendNotification'])->name('sendNotification');
