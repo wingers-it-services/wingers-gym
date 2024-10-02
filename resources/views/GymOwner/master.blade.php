@@ -916,7 +916,7 @@
 						</li>
 
 						<li>
-							<a href="#" class="ai-icon" aria-expanded="false">
+							<a href="/list-lebels" class="ai-icon" aria-expanded="false">
 								<i class="fa-solid fa-egg"></i>
 								<span class="nav-text">Add Lebel</span>
 							</a>
