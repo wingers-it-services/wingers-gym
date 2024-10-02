@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DietController;
 use App\Http\Controllers\GoalController;
+use App\Http\Controllers\GoalWiseDietController;
 use App\Http\Controllers\GoalWiseWorkoutController;
 use App\Http\Controllers\GoogleAuthenticatorController;
 use App\Http\Controllers\GymCouponController;
@@ -99,6 +100,10 @@ Route::post('/register', [GymDetailController::class, 'registerGym'])->name('reg
 Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
 
 Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
+
+    Route::get('/list-goal-wise-diets', [GoalWiseDietController::class, 'viewGoalWiseDiet'])->name('viewGoalWiseDiet');
+
+    Route::post('/add-goal-wise-diet', [GoalWiseDietController::class, 'addGoalWiseDiet'])->name('addGoalWiseDiet');
 
     Route::get('/list-goal-wise-workouts', [GoalWiseWorkoutController::class, 'viewGoalWiseWorkout'])->name('viewGoalWiseWorkout');
 
