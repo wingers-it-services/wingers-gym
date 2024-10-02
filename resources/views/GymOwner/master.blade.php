@@ -909,7 +909,7 @@
 						</li>
 
 						<li>
-							<a href="#" class="ai-icon" aria-expanded="false">
+							<a href="/list-goals" class="ai-icon" aria-expanded="false">
 								<i class="fa-solid fa-egg"></i>
 								<span class="nav-text">Add Goal</span>
 							</a>
@@ -918,7 +918,7 @@
 						<li>
 							<a href="#" class="ai-icon" aria-expanded="false">
 								<i class="fa-solid fa-egg"></i>
-								<span class="nav-text">Add Labale</span>
+								<span class="nav-text">Add Lebel</span>
 							</a>
 						</li>
 
