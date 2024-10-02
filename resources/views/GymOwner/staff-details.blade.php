@@ -274,7 +274,7 @@
 														aria-label="Close"></button>
 												</div>
 												<form action="{{route('addStaffDocuments')}}" method="POST"
-													enctype="multipart/form-data" enctype="multipart/form-data">
+													enctype="multipart/form-data" class="needs-validation" novalidate>
 													@csrf
 													<div class="modal-body">
 														<!-- Hidden field for staff ID -->
@@ -285,18 +285,25 @@
 															<label for="document_name" class="form-label">File
 																Name</label>
 															<input type="text" class="form-control" id="document_name"
-																name="document_name">
+																name="document_name" required>
+															<div class="invalid-feedback">
+																Document Name is required.
+															</div>
 														</div>
 
 														<!-- Aadhar Card Upload -->
 														<div class="mb-3">
 															<label for="file" class="form-label">Choose File</label>
 															<input type="file" class="form-control" id="file"
-																name="file"
-																onchange="previewFile(this, 'aadhaarCardPreview')">
+																name="file" accept=".pdf, .jpg, .jpeg"
+																onchange="previewFile(this, 'aadhaarCardPreview')"
+																required>
 															<img id="aadhaarCardPreview" class="img-preview mt-2"
 																src="#" alt="Aadhar Card Preview"
 																style="display: none; max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;">
+															<div class="invalid-feedback">
+																Document file is required.
+															</div>
 														</div>
 													</div>
 
@@ -355,8 +362,9 @@
 													<button type="button" class="btn-close" data-bs-dismiss="modal"
 														aria-label="Close"></button>
 												</div>
-												<form action="/add-staff-asset" method="POST"
-													enctype="multipart/form-data" enctype="multipart/form-data">
+												<form id="assetsForm" action="/add-staff-asset" method="POST"
+													enctype="multipart/form-data" enctype="multipart/form-data"
+													class="needs-validation" novalidate>
 													@csrf
 													<div class="modal-body">
 														<input type="hidden" class="form-control staffId" id="staffId"
@@ -365,28 +373,46 @@
 															<label for="assetName" class="form-label">Asset Name</label>
 															<input type="text" class="form-control" id="assetName"
 																name="name" required>
+															<div class="invalid-feedback">
+																Asset Name is required.
+															</div>
 														</div>
 														<div class="mb-3">
 															<label for="assetCategory" class="form-label">Asset
 																Category</label>
 															<input type="text" class="form-control" id="assetCategory"
 																name="category" required>
+															<div class="invalid-feedback">
+																Asset Category is required.
+															</div>
 														</div>
 														<div class="mb-3">
 															<label for="assetTag" class="form-label">Asset Tag</label>
 															<input type="text" class="form-control" id="assetTag"
 																name="asset_tag" required>
+															<div class="invalid-feedback">
+																Asset Tag is required.
+															</div>
 														</div>
 														<div class="mb-3">
 															<label for="dateOfAllocation" class="form-label">Date Of
 																Allocation</label>
 															<input type="date" class="form-control"
 																id="dateOfAllocation" name="allocation_date" required>
+															<div class="invalid-feedback">
+																Date Of Allocation is required.
+															</div>
 														</div>
 														<div class="mb-3">
 															<label for="price" class="form-label">Price</label>
 															<input type="number" class="form-control" id="price"
 																name="price" required>
+															<small id="priceError"
+																style="color: red; display: none;">Enter valid
+																Price</small>
+															<div class="invalid-feedback">
+																Price is required.
+															</div>
 														</div>
 														<div class="mb-3">
 															<label for="status" class="form-label">Status</label>
@@ -403,12 +429,18 @@
 																	value="{{ \App\Enums\GymStaffAssetStatusEnum::RETIRED }}">
 																	Retired</option>
 															</select>
+															<div class="invalid-feedback">
+																Status is required.
+															</div>
 														</div>
 														<div class="mb-3">
 															<label for="assetImage" class="form-label">Asset
 																Image</label>
 															<input type="file" class="form-control" id="assetImage"
-																name="image">
+																name="image" required>
+															<div class="invalid-feedback">
+																Asset Image is required.
+															</div>
 														</div>
 													</div>
 													<div class="modal-footer">
@@ -473,7 +505,8 @@
 													<button type="button" class="btn-close" data-bs-dismiss="modal"
 														aria-label="Close"></button>
 												</div>
-												<form action="/add-staff-leave" method="POST">
+												<form id="leaveForm" action="/add-staff-leave" method="POST"
+													class="needs-validation" novalidate>
 													@csrf
 													<div class="modal-body">
 														<input type="hidden" class="form-control staffId" id="staffId"
@@ -489,6 +522,9 @@
 																	<option value="Vacation">Vacation</option>
 																	<option value="Unpaid Leave">Unpaid Leave</option>
 																</select>
+																<div class="invalid-feedback">
+																	Choose a Leave Type.
+																</div>
 															</div>
 														</div>
 														<div class="mb-3">
@@ -496,17 +532,34 @@
 																Date</label>
 															<input type="date" class="form-control" id="start_date"
 																name="start_date" required>
+															<small id="start_date_error"
+																style="color: red; display: none;">
+																Start Date must be today or later.
+															</small>
+															<div class="invalid-feedback">
+																Start Date is required.
+															</div>
 														</div>
 														<div class="mb-3">
 															<label for="end_date" class="form-label">End Date</label>
 															<input type="date" class="form-control" id="end_date"
 																name="end_date" required>
+															<small id="end_date_error"
+																style="color: red; display: none;">
+																End Date must be after the Start Date.
+															</small>
+															<div class="invalid-feedback">
+																End Date is required.
+															</div>
 														</div>
 														<div class="mb-3">
 															<label for="reason" class="form-label">Reason for
 																Leave</label>
 															<textarea class="form-control" id="reason" name="reason"
 																rows="3" required></textarea>
+															<div class="invalid-feedback">
+																Reason is required.
+															</div>
 														</div>
 														<div class="mb-3">
 															<div class="form-group">
@@ -525,6 +578,9 @@
 																		value="{{ \App\Enums\LeaveStatusEnum::PENDING }}">
 																		Pending</option>
 																</select>
+																<div class="invalid-feedback">
+																	Choose a Leave Status.
+																</div>
 															</div>
 														</div>
 													</div>
@@ -600,10 +656,25 @@
 
 
 <script>
+
 	(function () {
 		hideEmployeeDetailsSection();
-	})();
 
+		'use strict'
+		var forms = document.querySelectorAll('.needs-validation')
+
+		Array.prototype.slice.call(forms)
+			.forEach(function (form) {
+				form.addEventListener('submit', function (event) {
+					if (!form.checkValidity()) {
+						event.preventDefault()
+						event.stopPropagation()
+					}
+
+					form.classList.add('was-validated')
+				}, false)
+			})
+	})()
 
 	function hideEmployeeDetailsSection() {
 		document.getElementById('employee-details-section').style.display = "none";
@@ -852,11 +923,11 @@
 
 
 	const StaffAttendanceStatusEnum = {
-        PRESENT: {{ \App\Enums\StaffAttendanceStatusEnum::PRESENT }},
-        ABSENT: {{ \App\Enums\StaffAttendanceStatusEnum::ABSENT }},
-        WEEKEND: {{ \App\Enums\StaffAttendanceStatusEnum::WEEKEND }},
-        HOLIDAY: {{ \App\Enums\StaffAttendanceStatusEnum::HOLIDAY }},
-        HALFDAY: {{ \App\Enums\StaffAttendanceStatusEnum::HALFDAY }}
+		PRESENT: {{ \App\Enums\StaffAttendanceStatusEnum::PRESENT }},
+		ABSENT: {{ \App\Enums\StaffAttendanceStatusEnum::ABSENT }},
+		WEEKEND: {{ \App\Enums\StaffAttendanceStatusEnum::WEEKEND }},
+		HOLIDAY: {{ \App\Enums\StaffAttendanceStatusEnum::HOLIDAY }},
+		HALFDAY: {{ \App\Enums\StaffAttendanceStatusEnum::HALFDAY }}
 
     };
 
@@ -889,9 +960,9 @@
 			chartStatus.destroy(); // Destroy if chart exists
 		}
 
-		var xValues = ["Absent", "Halfday", "Week Off","Holiday", "Present", "Unmarked"];
+		var xValues = ["Absent", "Halfday", "Week Off", "Holiday", "Present", "Unmarked"];
 		var yValues = [data.Absent, data.Halfday, data.Weekend, data.Holiday, data.Present, data.Unmarked];
-		var barColors = ["indianred", "burlywood", "grey", "lightblue","darkseagreen", "#f1f1fb"];
+		var barColors = ["indianred", "burlywood", "grey", "lightblue", "darkseagreen", "#f1f1fb"];
 
 		var attendanceChart = new Chart("attendanceChart", {
 			type: "doughnut",
@@ -1184,6 +1255,91 @@
 			existingMenu.remove();
 		}
 	}
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const form = document.getElementById("assetsForm");
+
+		const priceInput = document.getElementById("price");
+
+		const priceError = document.getElementById("priceError");
+
+		priceInput.addEventListener("input", function () {
+			const priceValue = parseFloat(priceInput.value);
+			if (priceValue <= 0 || isNaN(priceValue)) {
+				priceError.style.display = "block";
+			} else {
+				priceError.style.display = "none";
+			}
+		});
+
+		// Form validation on submit
+		form.addEventListener("submit", function (event) {
+			let isFormValid = true;
+
+			const experienceValue = parseFloat(experienceInput.value);
+			if (experienceValue <= 0 || isNaN(experienceValue)) {
+				experienceError.style.display = "block";
+				experienceInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				experienceError.style.display = "none";
+				experienceInput.classList.remove("is-invalid");
+			}
+			// Prevent form submission if any field is invalid
+			if (!isFormValid) {
+				event.preventDefault(); // Stop form from submitting
+			}
+		});
+
+	});
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const leaveForm = document.getElementById("leaveForm");
+		const startDateInput = document.getElementById("start_date");
+		const endDateInput = document.getElementById("end_date");
+
+		const startDateError = document.getElementById("start_date_error");
+		const endDateError = document.getElementById("end_date_error");
+
+		function validateDates() {
+			const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+			const startDateValue = startDateInput.value;
+			const endDateValue = endDateInput.value;
+			let isValid = true;
+
+			// Start Date validation (must be today or later)
+			if (startDateValue && startDateValue < today) {
+				startDateError.style.display = "block";
+				isValid = false;
+			} else {
+				startDateError.style.display = "none";
+			}
+
+			// End Date validation (must be after or on the same day as Start Date)
+			if (startDateValue && endDateValue && endDateValue < startDateValue) {
+				endDateError.style.display = "block";
+				isValid = false;
+			} else {
+				endDateError.style.display = "none";
+			}
+
+			return isValid;
+		}
+
+		// Validate on date change
+		startDateInput.addEventListener("change", validateDates);
+		endDateInput.addEventListener("change", validateDates);
+
+		// Validate on form submission
+		leaveForm.addEventListener('submit', function (event) {
+			if (!validateDates()) {
+				event.preventDefault(); // Stop form submission if validation fails
+			}
+		});
+	});
+
+
+
 
 </script>
 <script src="{{asset('js/plugins-init/staff-attendance-overview-chart.js')}}" type="text/javascript"></script>

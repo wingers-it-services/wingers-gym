@@ -10,8 +10,8 @@
 				<li class="breadcrumb-item active"><a href="javascript:void(0)">New Member Details</a></li>
 			</ol>
 		</div>
-		<form class="needs-validation" novalidate="" action="/add-user-by-gym" method="POST"
-			enctype="multipart/form-data">
+		<form id="userForm" class="needs-validation" action="/add-user-by-gym" method="POST"
+			enctype="multipart/form-data" novalidate>
 			@csrf
 			<div class="row">
 				<div class="col-xl-12">
@@ -23,15 +23,24 @@
 										<div class="col-md-6 mb-3">
 											<label for="email">Email</label>
 											<input type="email" name="email" class="form-control" id="email">
+											<small id="emailError" class="text-danger" style="display: none;">Please
+												enter a valid email
+												address.</small>
 											<div class="invalid-feedback">
-												Please enter a valid email address for shipping updates.
+												Email is required.
 											</div>
 										</div>
 
 										<div class="col-md-6 mb-3">
 											<label for="phone_no">Phone Number</label>
-											<input type="text" class="form-control" name="phone_no" id="phone_no"
+											<input type="number" class="form-control" name="phone_no" id="phone_no"
 												placeholder="" required>
+											<small id="phoneError" class="text-danger" style="display: none;">Please
+												enter a valid phone
+												number.</small>
+											<div class="invalid-feedback">
+												Phone Number is required.
+											</div>
 										</div>
 
 										<div class="col-md-12 mb-12">
@@ -80,8 +89,10 @@
 											<label for="firstName">First Name</label>
 											<input type="text" class="form-control" id="firstname" name="firstname"
 												placeholder="" required="">
+											<small id="firstError" class="text-danger" style="display: none;">Only
+												Letters are allowed.</small>
 											<div class="invalid-feedback">
-												Valid first name is required.
+												First Name is required.
 											</div>
 										</div>
 
@@ -89,8 +100,10 @@
 											<label for="lastname">Last Name</label>
 											<input type="text" class="form-control" id="lastname" name="lastname"
 												placeholder="" required="">
+											<small id="lastError" class="text-danger" style="display: none;">Only
+												Letters are allowed.</small>
 											<div class="invalid-feedback">
-												Valid first name is required.
+												Last Name is required
 											</div>
 										</div>
 
@@ -105,11 +118,24 @@
 													<i class="fa fa-eye-slash"></i>
 													<i class="fa fa-eye"></i>
 												</span>
+												<small id="passwordError" class="text-danger" style="display:none;">
+													Password must be at least 8 characters long.
+												</small>
+												<div class="invalid-feedback">
+													Password is required.
+												</div>
 											</div>
 										</div>
 										<div class="col-md-6 mb-3">
 											<label for="joining_date">Member Joining Date</label>
-											<input type="date" class="form-control" id="joining_date" name="joining_date" required>
+											<input type="date" class="form-control" id="joining_date"
+												name="joining_date" required>
+											<small id="joiningDateError" class="text-danger" style="display: none;">
+												Staff Joining Date must be today or a
+												future date.</small>
+											<div class="invalid-feedback" required>
+												Joining Date is required.
+											</div>
 										</div>
 									</div>
 									<div class="row">
@@ -118,11 +144,11 @@
 											<select class="me-sm-2 form-control default" id="staff_assign_id"
 												name="staff_assign_id">
 												@foreach ($gymStaff as $staff)
-												<option value="{{ $staff->id }}">{{ $staff->designation_name}}</option>
+													<option value="{{ $staff->id }}">{{ $staff->designation_name}}</option>
 												@endforeach
 											</select>
 											<div class="invalid-feedback">
-												Valid last name is required.
+												Staff Assigned is required.
 											</div>
 										</div>
 
@@ -134,18 +160,20 @@
 												<option value="female">Female</option>
 												<option value="Other">Other</option>
 											</select>
+											<div class="invalid-feedback">
+												Choose a gender.
+											</div>
 										</div>
 
 										<div class="col-md-4 mb-3">
 											<label for="employee_id">Goal</label>
-											<select class="me-sm-2 form-control default" id="goal_id"
-												name="goal_id">
+											<select class="me-sm-2 form-control default" id="goal_id" name="goal_id">
 												@foreach ($goals as $goal)
-												<option value="{{ $goal->id }}">{{ $goal->goal}}</option>
+													<option value="{{ $goal->id }}">{{ $goal->goal}}</option>
 												@endforeach
 											</select>
 											<div class="invalid-feedback">
-												Valid last name is required.
+												Choose a goal.
 											</div>
 										</div>
 									</div>
@@ -164,11 +192,19 @@
 												<option value="O+">O+</option>
 												<option value="O-">O-</option>
 											</select>
+											<div class="invalid-feedback">
+												Choose a Blood Group .
+											</div>
 										</div>
 
 										<div class="col-md-6 mb-3">
 											<label for="dob">D.O.B</label>
 											<input type="date" class="form-control" id="dob" name="dob" required>
+											<small id="dobError" class="text-danger" style="display: none;">You
+												must be at least 14 years old.</small>
+											<div class="invalid-feedback" required>
+												D.O.B is required.
+											</div>
 										</div>
 									</div>
 
@@ -178,7 +214,7 @@
 											<textarea type="text" class="form-control" id="address" name="address"
 												required=""></textarea>
 											<div class="invalid-feedback">
-												Please enter your member address.
+												Address is required.
 											</div>
 										</div>
 									</div>
@@ -187,21 +223,42 @@
 											<label for="country">Country</label>
 											<input type="text" class="form-control" id="country" name="country"
 												required="">
+											<small id="countryError" class="text-danger" style="display: none;">Only
+												Letters are allowed.</small>
+											<div class="invalid-feedback">
+												Country is required.
+											</div>
 										</div>
 										<div class="col-md-6 mb-3">
 											<label for="state">State</label>
 											<input type="text" class="form-control" id="state" name="state" required="">
+											<small id="stateError" class="text-danger" style="display: none;">Only
+												Letters are allowed.</small>
+											<div class="invalid-feedback">
+												State is required.
+											</div>
 										</div>
+
 									</div>
 									<div class="row">
 										<div class="col-md-6 mb-3">
 											<label for="city">City</label>
 											<input type="text" class="form-control" id="city" name="city" required="">
+											<small id="cityError" class="text-danger" style="display: none;">Only
+												Letters are allowed.</small>
+											<div class="invalid-feedback">
+												City is required.
+											</div>
 										</div>
 										<div class="col-md-6 mb-3">
 											<label for="zip_code">Zip</label>
-											<input type="text" class="form-control" id="zip_code" name="zip_code"
+											<input type="number" class="form-control" id="zip_code" name="zip_code"
 												placeholder="" required="">
+											<small id="zipError" class="text-danger" style="display: none;">zip code
+												must be 6 digit long.</small>
+											<div class="invalid-feedback">
+												Zip is required.
+											</div>
 										</div>
 									</div>
 								</div>
@@ -221,24 +278,33 @@
 										<ul class="list-group mb-3">
 											<div class="col-md-12 mb-3">
 												<select class="me-sm-2 form-control default-select" id="subscription_id"
-													name="subscription_id">
+													name="subscription_id" required>
 													<option value="" data-description="" data-amount=""
 														data-validity="">-- Select Subscription --</option>
 													@foreach ($gymSubscriptions as $subscription)
-													<option value="{{ $subscription->id }}"
-														data-description="{{ $subscription->description }}"
-														data-amount="{{ $subscription->amount }}"
-														data-validity="{{ $subscription->validity }}">
-														{{ $subscription->subscription_name }}
-													</option>
+														<option value="{{ $subscription->id }}"
+															data-description="{{ $subscription->description }}"
+															data-amount="{{ $subscription->amount }}"
+															data-validity="{{ $subscription->validity }}">
+															{{ $subscription->subscription_name }}
+														</option>
 													@endforeach
 												</select>
+												<div class="invalid-feedback">
+													Choose a Subscription.
+												</div>
 											</div>
 
 											<div class="col-md-12 mb-3">
 												<label for="subscription_start_date">Subscription Joining Date</label>
 												<input type="date" class="form-control" id="subscription_start_date"
 													name="subscription_start_date" required>
+												<small id="subjoiningDateError" class="text-danger"
+													style="display: none;">
+													Subscription Joining Date must be after User Joining Date.</small>
+												<div class="invalid-feedback">
+													Subscription Joining Date.
+												</div>
 											</div>
 
 											<li class="list-group-item d-flex justify-content-between lh-condensed">
@@ -287,6 +353,24 @@
 </div>
 
 <script>
+	(function () {
+		'use strict'
+		var forms = document.querySelectorAll('.needs-validation')
+
+		Array.prototype.slice.call(forms)
+			.forEach(function (form) {
+				form.addEventListener('submit', function (event) {
+					if (!form.checkValidity()) {
+						event.preventDefault()
+						event.stopPropagation()
+					}
+
+					form.classList.add('was-validated')
+				}, false)
+			})
+	})()
+
+
 	function togglePasswordVisibility() {
 		var passwordField = document.getElementById("password");
 		var toggleIcon = document.getElementById("togglePassword");
@@ -302,14 +386,14 @@
 		}
 	}
 
-	var loadFile = function(event) {
+	var loadFile = function (event) {
 		// var selected_image = document.getElementById('selected_image');
 
 		var input = event.target;
 		var image = document.getElementById('selected_image');
 		if (input.files && input.files[0]) {
 			var reader = new FileReader();
-			reader.onload = function(e) {
+			reader.onload = function (e) {
 				image.src = e.target.result;
 			}
 			reader.readAsDataURL(input.files[0]);
@@ -324,15 +408,15 @@
 		}
 
 	};
-	(function() {
+	(function () {
 		'use strict'
 		// Fetch all the forms we want to apply custom Bootstrap validation styles to
 		var forms = document.querySelectorAll('.needs-validation')
 
 		// Loop over them and prevent submission
 		Array.prototype.slice.call(forms)
-			.forEach(function(form) {
-				form.addEventListener('submit', function(event) {
+			.forEach(function (form) {
+				form.addEventListener('submit', function (event) {
 					if (!form.checkValidity()) {
 						event.preventDefault()
 						event.stopPropagation()
@@ -343,7 +427,7 @@
 			})
 	})()
 
-	document.getElementById('subscription_id').addEventListener('change', function() {
+	document.getElementById('subscription_id').addEventListener('change', function () {
 		var selectedOption = this.options[this.selectedIndex];
 		var description = selectedOption.getAttribute('data-description');
 		var amount = selectedOption.getAttribute('data-amount');
@@ -360,7 +444,7 @@
 		}
 	});
 
-	document.getElementById('subscription_start_date').addEventListener('change', function() {
+	document.getElementById('subscription_start_date').addEventListener('change', function () {
 		var selectedOption = document.getElementById('subscription_id').options[document.getElementById('subscription_id').selectedIndex];
 		var validity = selectedOption.getAttribute('data-validity');
 
@@ -384,20 +468,24 @@
 		}
 	}
 
-	document.addEventListener('DOMContentLoaded', function() {
+	document.addEventListener('DOMContentLoaded', function () {
 		const button = document.getElementById('continue');
 		const userDetailsFormContainer = document.getElementById('user-details-form');
 		const userCardsContainer = document.getElementById('user-cards-container');
 		const subDetailContainer = document.getElementById('sub-cards-container');
 
-		button.addEventListener('click', function() {
+		button.addEventListener('click', function () {
 			const email = document.getElementById('email').value;
 			const phone_no = document.getElementById('phone_no').value;
+			const emailInput = document.getElementById("email");
+			const phoneInput = document.getElementById("phone_no");
 
 			if (email || phone_no) {
 				fetchUserDetails(email, phone_no);
 			} else {
-				alert('Please enter either email or phone number.');
+				emailInput.classList.add("is-invalid");
+				phoneInput.classList.add("is-invalid");
+
 			}
 		});
 
@@ -442,7 +530,7 @@
             `;
 
 				// Add click event listener to the card
-				card.addEventListener('click', function() {
+				card.addEventListener('click', function () {
 					autofillForm(user);
 					userDetailsFormContainer.style.display = 'block'; // Show form when a card is clicked
 					subDetailContainer.style.display = 'block'; // Show form when a card is clicked
@@ -534,6 +622,286 @@
 			}
 		}
 	});
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const form = document.getElementById("userForm");
+
+		const emailInput = document.getElementById("email");
+		const phoneInput = document.getElementById("phone_no");
+		const firstInput = document.getElementById("firstname");
+		const lastInput = document.getElementById("lastname");
+		const passwordInput = document.getElementById("password");
+		const joiningDateInput = document.getElementById("joining_date");
+		const subjoiningDateInput = document.getElementById("subscription_start_date");
+		const dobInput = document.getElementById("dob");
+		const countryInput = document.getElementById("country");
+		const stateInput = document.getElementById("state");
+		const cityInput = document.getElementById("city");
+		const zipInput = document.getElementById("zip_code");
+
+		const emailError = document.getElementById("emailError");
+		const phoneError = document.getElementById("phoneError");
+		const firstError = document.getElementById("firstError");
+		const lastError = document.getElementById("lastError");
+		const passwordError = document.getElementById("passwordError");
+		const joiningDateError = document.getElementById("joiningDateError");
+		const subjoiningDateError = document.getElementById("subjoiningDateError");
+		const dobError = document.getElementById("dobError");
+		const countryError = document.getElementById("countryError");
+		const stateError = document.getElementById("stateError");
+		const cityError = document.getElementById("cityError");
+		const zipError = document.getElementById("zipError");
+
+
+		// Helper function to validate email format
+		function isValidEmail(email) {
+			const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+			return emailPattern.test(email);
+		}
+
+		// Helper function to validate phone format
+		function isValidPhone(phone) {
+			const phonePattern = /^\d{10}$/; // for 10-digit phone numbers
+			return phonePattern.test(phone);
+		}
+
+		function isValidName(fullname) {
+			const namePattern = /^[A-Za-z\s]+$/;
+			return namePattern.test(fullname);
+		}
+
+		emailInput.addEventListener("input", function () {
+			if (!isValidEmail(emailInput.value)) {
+				emailError.style.display = "block";
+			} else {
+				emailError.style.display = "none";
+			}
+		});
+
+		// Real-time validation for phone
+		phoneInput.addEventListener("input", function () {
+			if (!isValidPhone(phoneInput.value)) {
+				phoneError.style.display = "block";
+			} else {
+				phoneError.style.display = "none";
+			}
+		});
+
+		firstInput.addEventListener("input", function () {
+			if (!isValidName(firstInput.value)) {
+				firstError.style.display = 'block';
+			} else {
+				firstError.style.display = 'none';
+			}
+		});
+
+		lastInput.addEventListener("input", function () {
+			if (!isValidName(lastInput.value)) {
+				lastError.style.display = 'block';
+			} else {
+				lastError.style.display = 'none';
+			}
+		});
+
+		countryInput.addEventListener("input", function () {
+			if (!isValidName(countryInput.value)) {
+				countryError.style.display = 'block';
+			} else {
+				countryError.style.display = 'none';
+			}
+		});
+
+		stateInput.addEventListener("input", function () {
+			if (!isValidName(stateInput.value)) {
+				stateError.style.display = 'block';
+			} else {
+				stateError.style.display = 'none';
+			}
+		});
+
+		cityInput.addEventListener("input", function () {
+			if (!isValidName(cityInput.value)) {
+				cityError.style.display = 'block';
+			} else {
+				cityError.style.display = 'none';
+			}
+		});
+
+		passwordInput.addEventListener('input', function () {
+			if (passwordInput.value.length < 8) {
+				passwordError.style.display = 'block';
+			} else {
+				passwordError.style.display = 'none';
+			}
+		});
+
+		zipInput.addEventListener('input', function () {
+			const zipValue = zipInput.value;
+
+			// Check if zip code is exactly 6 digits long and is numeric
+			if (zipValue.length !== 6 || isNaN(zipValue)) {
+				zipError.style.display = 'block';  // Show the error message
+			} else {
+				zipError.style.display = 'none';   // Hide the error message
+			}
+		});
+
+		function isValidDOB(dob) {
+			const today = new Date();
+			const birthDate = new Date(dob);
+			const age = today.getFullYear() - birthDate.getFullYear();
+			const monthDifference = today.getMonth() - birthDate.getMonth();
+
+			// Check if the user hasn't had their birthday this year yet
+			if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+				return age - 1 >= 14;
+			}
+			return age >= 14;
+		}
+
+		dobInput.addEventListener("change", function () {
+			if (!isValidDOB(dobInput.value)) {
+				dobError.style.display = "block";
+			} else {
+				dobError.style.display = "none";
+			}
+		});
+
+		function validateDates() {
+			const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+			const startDateValue = joiningDateInput.value;
+			const endDateValue = subjoiningDateInput.value;
+			let isValid = true;
+
+			// Start Date validation (must be today or later)
+			if (startDateValue && startDateValue < today) {
+				joiningDateError.style.display = "block";
+				isValid = false;
+			} else {
+				joiningDateError.style.display = "none";
+			}
+
+			// End Date validation (must be after or on the same day as Start Date)
+			if (startDateValue && endDateValue && endDateValue < startDateValue) {
+				subjoiningDateError.style.display = "block";
+				isValid = false;
+			} else {
+				subjoiningDateError.style.display = "none";
+			}
+
+			return isValid;
+		}
+
+		// Form validation on submit
+		form.addEventListener("submit", function (event) {
+			let isFormValid = true;
+
+			// Email validation on submit
+			if (!isValidEmail(emailInput.value)) {
+				emailError.style.display = "block";
+				emailInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				emailError.style.display = "none";
+				emailInput.classList.remove("is-invalid");
+			}
+
+			// Phone validation on submit
+			if (!isValidPhone(phoneInput.value)) {
+				phoneError.style.display = "block";
+				phoneInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				phoneError.style.display = "none";
+				phoneInput.classList.remove("is-invalid");
+			}
+
+			if (!isValidName(firstInput.value)) {
+				firstError.style.display = "block";
+				firstInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				firstError.style.display = "none";
+				firstInput.classList.remove("is-invalid");
+			}
+
+			if (!isValidName(lastInput.value)) {
+				lastError.style.display = "block";
+				lastInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				lastError.style.display = "none";
+				lastInput.classList.remove("is-invalid");
+			}
+
+			if (!isValidName(countryInput.value)) {
+				countryError.style.display = "block";
+				countryInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				countryError.style.display = "none";
+				countryInput.classList.remove("is-invalid");
+			}
+
+			if (!isValidName(stateInput.value)) {
+				stateError.style.display = "block";
+				stateInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				stateError.style.display = "none";
+				stateInput.classList.remove("is-invalid");
+			}
+
+			if (!isValidName(cityInput.value)) {
+				cityError.style.display = "block";
+				cityInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				cityError.style.display = "none";
+				cityInput.classList.remove("is-invalid");
+			}
+
+			const zipValue = zipInput.value;
+			// Check if zip code is exactly 6 digits long and is numeric
+			if (zipValue.length !== 6 || isNaN(zipValue)) {
+				zipError.style.display = 'block';  // Show the error message
+				zipInput.classList.add("is-invalid");
+			} else {
+				zipError.style.display = 'none';   // Hide the error message
+				zipInput.classList.remove("is-invalid");
+			}
+
+			const passwordValue = passwordInput.value;
+			if (passwordInput.value.length < 8) {
+				passwordError.style.display = 'block';
+				passwordInput.classList.add("is-invalid");
+				isFormValid = false;
+			} else {
+				passwordError.style.display = 'none';
+				passwordInput.classList.remove("is-invalid");
+			}
+
+			if (!isAtLeast14YearsOld(dobInput.value)) {
+				dobError.style.display = "block";
+				dobInput.classList.add("is-invalid");
+				event.preventDefault(); // Prevent form submission if the DOB is invalid
+			} else {
+				dobError.style.display = "none";
+				dobInput.classList.remove("is-invalid");
+			}
+
+			// Date validation
+			if (!validateDates()) {
+				isFormValid = false;
+			}
+
+			// Prevent form submission if any field is invalid
+			if (!isFormValid) {
+				event.preventDefault(); // Stop form from submitting
+			}
+		});
+	});
+
 </script>
 @include('CustomSweetAlert');
 @endsection
