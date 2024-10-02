@@ -401,10 +401,7 @@
                                                                     Your browser does not support the video tag.
                                                                 </video>
                                                             </div>
-                                                            <div id="workoutGender"
-                                                                style="display:none; margin-top: 10px;"></div>
-                                                            <div id="workoutCategory"
-                                                                style="display:none; margin-top: 10px;"></div>
+                                                           
                                                             <div id="workoutDescription"
                                                                 style="display:none; margin-top: 10px;"></div>
                                                         </div>

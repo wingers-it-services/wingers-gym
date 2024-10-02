@@ -930,7 +930,7 @@
 						</li>
 
 						<li>
-							<a href="#" class="ai-icon" aria-expanded="false">
+							<a href="/list-goal-wise-diets" class="ai-icon" aria-expanded="false">
 								<i class="fa-solid fa-egg"></i>
 								<span class="nav-text">Goal Wise Diet</span>
 							</a>

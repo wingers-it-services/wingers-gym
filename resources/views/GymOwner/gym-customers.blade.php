@@ -34,7 +34,7 @@
                                         <td>
                                             <div class="media d-flex align-items-center">
                                                 <div class="avatar avatar-xl me-2">
-                                                    <div class=""><img class="rounded-circle img-fluid" src="{{ $user->image }}" width="50" alt="image">
+                                                    <div class=""><img class="rounded-circle img-fluid" src="{{ $user->image }}" style="height: 50px; width: 50px;" alt="image">
                                                     </div>
                                                 </div>
                                             </div>
