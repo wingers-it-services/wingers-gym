@@ -923,7 +923,7 @@
 						</li>
 
 						<li>
-							<a href="#" class="ai-icon" aria-expanded="false">
+							<a href="/list-goal-wise-workouts" class="ai-icon" aria-expanded="false">
 								<i class="fa-solid fa-egg"></i>
 								<span class="nav-text">Goal Wise Workout</span>
 							</a>
