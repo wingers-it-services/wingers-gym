@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DietController;
+use App\Http\Controllers\GoalController;
 use App\Http\Controllers\GoogleAuthenticatorController;
 use App\Http\Controllers\GymCouponController;
 use App\Http\Controllers\GymCustomerPaymentController;
@@ -96,6 +97,14 @@ Route::post('/register', [GymDetailController::class, 'registerGym'])->name('reg
 Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
 
 Route::middleware([EnsureGymTokenIsValid::class])->group(function () {
+
+    Route::get('/list-goals', [GoalController::class, 'viewAddGoal'])->name('viewAddGoal');
+
+    Route::post('/add-goal', [GoalController::class, 'addGoal'])->name('addGoal');
+
+    Route::post('/update-goal', [GoalController::class, 'updateGoal'])->name('updateGoal');
+
+    Route::get('/delete-goal/{uuid}', [GoalController::class, 'deleteGoal'])->name('deleteGoal');
 
     Route::get('/list-injuries', [InjuryController::class, 'viewAddInjury'])->name('viewAddInjury');
 
