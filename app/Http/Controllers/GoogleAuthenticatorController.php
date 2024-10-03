@@ -62,7 +62,7 @@ class GoogleAuthenticatorController extends Controller
         if ($valid) {
             return redirect()->route('gym.show-reset-password-form')->with('email', $gym->email);
         } else {
-            return back()->with('atatus', 'error')->with('message', 'Invalid code.' . $request->google_authenticator_code);
+            return back()->with('status', 'error')->with('message', 'Invalid code.' . $request->google_authenticator_code);
         }
     }
 
@@ -85,12 +85,12 @@ class GoogleAuthenticatorController extends Controller
         $gym = Gym::where('email', $request->email)->first();
 
         if (!$gym) {
-            return back()->withErrors(['email' => 'No user found with this email.']);
+            return redirect()->back()->with('status','error')->with('message','No user found with this email.');
         }
 
         $gym->password = bcrypt($request->password);
         $gym->save();
 
-        return redirect('/')->with('status', 'Password reset successfully!');
+        return redirect('/')->with('status','success')->with('message', 'Password reset successfully!');
     }
 }
