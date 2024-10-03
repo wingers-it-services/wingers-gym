@@ -1,12 +1,138 @@
-<form method="POST" action="{{ route('gym.reset-password') }}">
-    @csrf
-    <input type="hidden" name="email" value="{{ $email }}">
+<!DOCTYPE html>
+<html lang="en" class="h-100">
 
-    <label for="password">New Password</label>
-    <input type="password" name="password" id="password" required>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="ZY4pR8wIEdrTLWxVivLo4lvqoE0UPbxm6RtBU20w">
+    <meta name="author" content="DexignZone">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reset Password</title>
+    <link rel="icon" type="image/png" href="{{asset('images/favicon.png')}}">
+    <link href="{{asset('css/style.css')}}" rel="stylesheet">
+</head>
 
-    <label for="password_confirmation">Confirm Password</label>
-    <input type="password" name="password_confirmation" id="password_confirmation" required>
+<body class="h-100">
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+                                    <div class="text-center mb-4">
+                                        <img src="{{asset('images/logo.png')}}" alt="Register" style="width: 350px; max-width: 100%; height: auto;">
+                                    </div>
+                                    <h4 class="text-center mb-4">Reset Password</h4>
+                                    <form class="form" id="log_in" method="POST" action="{{ route('gym.reset-password') }}" class="needs-validation" novalidate>
+                                        @csrf
+                                        <input type="hidden" name="email" value="{{ $email }}">
+                                        
+                                        <div class="form-group position-relative">
+                                            <label class="mb-1"><strong>Password</strong></label>
+                                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                                            <div class="invalid-feedback">
+                                                Password is required.
+                                            </div>
+                                            <small id="passwordError" class="text-danger" style="display:none;">Password must be at least 8 characters long.</small>
+                                            <span class="show-pass eye" id="togglePassword" onclick="togglePassword('password', 'eye-slash', 'eye')">
+                                                <i class="fa fa-eye-slash" id="eye-slash"></i>
+                                                <i class="fa fa-eye" id="eye" style="display:none;"></i>
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="form-group position-relative">
+                                            <label class="mb-1"><strong>Confirm Password</strong></label>
+                                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
+                                            <div class="invalid-feedback">
+                                                Password is required.
+                                            </div>
+                                            <small id="passwordError" class="text-danger" style="display:none;">Password must be at least 8 characters long.</small>
+                                            <span class="show-pass eye" id="togglePasswordConfirm" onclick="togglePassword('password_confirmation', 'confirm-eye-slash', 'confirm-eye')">
+                                                <i class="fa fa-eye-slash" id="confirm-eye-slash"></i>
+                                                <i class="fa fa-eye" id="confirm-eye" style="display:none;"></i>
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary btn-block">Reset Password</button>
+                                        </div>
+                                    </form>
+                                    
+                                    <div class="new-account mt-3">
+                                        <p>Back To <a class="text-primary" href='/'>Login</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('js/custom.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('js/deznav-init.js')}}" type="text/javascript"></script>
+</body>
 
-    <button type="submit">Reset Password</button>
-</form>
+<script>
+    function togglePassword(fieldId, eyeSlashId, eyeId) {
+        var field = document.getElementById(fieldId);
+        var eyeSlash = document.getElementById(eyeSlashId);
+        var eye = document.getElementById(eyeId);
+        
+        if (field.type === "password") {
+            field.type = "text";
+            eyeSlash.style.display = "none";
+            eye.style.display = "inline";
+        } else {
+            field.type = "password";
+            eyeSlash.style.display = "inline";
+            eye.style.display = "none";
+        }
+    }
+
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })();
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const passwordInput = document.getElementById('password');
+        const passwordError = document.getElementById('passwordError');
+
+        passwordInput.addEventListener('input', function () {
+            if (passwordInput.value.length < 8) {
+                passwordError.style.display = 'block';
+                passwordError.innerHTML = 'Password must be at least 8 characters long.';
+            } else {
+                passwordError.style.display = 'none';
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function (event) {
+            if (passwordInput.value.length < 8) {
+                event.preventDefault();
+                passwordError.style.display = 'block';
+                passwordError.innerHTML = 'Password must be at least 8 characters long.';
+            }
+        });
+    });
+</script>
+
+@include('CustomSweetAlert');
+
+</html>

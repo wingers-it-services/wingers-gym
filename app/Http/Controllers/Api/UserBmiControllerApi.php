@@ -19,7 +19,9 @@ class UserBmiControllerApi extends Controller
     use errorResponseTrait;
     protected $userBmi;
     protected $userBodyMeasurement;
-    public function __construct(userBmi $userBmi, UserBodyMeasurement $userBodyMeasurement)
+    public function __construct(
+        userBmi $userBmi, 
+        UserBodyMeasurement $userBodyMeasurement)
     {
         $this->userBmi = $userBmi;
         $this->userBodyMeasurement = $userBodyMeasurement;
@@ -30,7 +32,10 @@ class UserBmiControllerApi extends Controller
         try {
             $request->validate(['gym_id' => 'required|numeric|exists:gyms,id']);
 
-            $bmis = $this->userBmi->where('user_id', auth()->id())->where('gym_id', $request->input('gym_id'))->get();
+            $bmis = $this->userBmi->where('user_id', auth()->id())
+            ->where('gym_id', $request->input('gym_id'))
+            ->orderBy('created_at', 'desc')
+            ->get();
 
             if ($bmis->isEmpty()) {
                 return $this->errorResponse('Error while fetching user BMIs', 'User BMI list is empty', 422);

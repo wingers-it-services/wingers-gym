@@ -949,7 +949,9 @@
                     <form id="editWorkoutForm" method="POST" action="/update-user-workout">
                         @csrf
                         <input type="hidden" id="edit_user_id" name="user_id" value="{{$userDetail->id}}">
-                        <input type="hidden" id="edit_workout_id" name="workout_id">
+                        <input type="hidden" id="edit_workout_id" name="workout_id"> 
+                         <input type="hidden" id="edit_user_workout_id" name="id">
+                      
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-6">
@@ -1498,7 +1500,8 @@
             button.addEventListener('click', function() {
                 const workout = JSON.parse(this.dataset.workout);
 
-                document.getElementById('edit_workout_id').value = workout.id;
+                document.getElementById('edit_user_workout_id').value = workout.id;
+                document.getElementById('edit_workout_id').value = workout.workout_id;
                 document.getElementById('edit_exercise_name').value = workout.exercise_name;
                 document.getElementById('edit_day').value = workout.day;
                 document.getElementById('edit_sets').value = workout.sets;

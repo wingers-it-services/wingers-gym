@@ -435,7 +435,7 @@ class GymUserController extends Controller
                 'targeted_body_part' => 'required',
             ]);
 
-            $workout = $this->workout->findOrFail($request->workout_id);
+            $workout = $this->workout->findOrFail($request->id);
             $workout->update($validatedData);
 
             // Redirect back with a success message
