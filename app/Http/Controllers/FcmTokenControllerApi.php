@@ -54,9 +54,9 @@ class FcmTokenControllerApi extends Controller
 
     public function sendNotification()
     {
-        $tokens = ['fy6Gp5bkT-e39UVJtBnQXR:APA91bHc_Q1oGVh_oVz3ST2x3VbKJr-5D-jhFrDk42uIefGlQsy_DH46hgevAWhi2pr9-wrLHU8F7zpj7dQDlyyGFQ7bahpvIFSezSJOn-Z_BGKLF_1Mrmwb613DN_m2_ND7DwoJOAvz'];
         $title = "Breaking News";
         $message = "Here is the Notification from server.";
-        $this->notificationService->sendNotification($tokens, $title, $message, null);
+        $response = $this->notificationService->sendNotification($title, $message, null);
+        return response()->json($response);
     }
 }
