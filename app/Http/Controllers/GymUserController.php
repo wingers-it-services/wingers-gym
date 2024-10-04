@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\GymSubscriptionStatusEnum;
 use App\Models\Designation;
 use App\Models\Diet;
 use App\Models\Goal;
@@ -178,6 +179,12 @@ class GymUserController extends Controller
                 'dob' => 'required'
             ]);
 
+
+            $today = Carbon::today();  // This sets the date to today without the time part
+            $subscriptionStartDate = Carbon::parse($request->subscription_start_date);
+
+            $status = ($subscriptionStartDate->greaterThanOrEqualTo($today)) ? GymSubscriptionStatusEnum::ACTIVE : GymSubscriptionStatusEnum::INACTIVE;
+
             $gymId = Auth::guard('gym')->user()->id;
 
             if ($request->filled('user_id')) {
@@ -228,7 +235,6 @@ class GymUserController extends Controller
                     'gym_id' => $gymId,
                     'user_id' => $user->id
                 ]);
-
                 // Update or create the user subscription history
                 UserSubscriptionHistory::create([
                     'user_id' => $user->id,
@@ -236,34 +242,42 @@ class GymUserController extends Controller
                     'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
                     'subscription_start_date' => $request->subscription_start_date,
                     'subscription_end_date' => $request->subscription_end_date,
-                    'status' => $user->subscription_status,
+                    'status' => $status,
                     'amount' => $request->amount, // Ensure this is part of the request or calculate it
                     'coupon_id' => 2,
                     'gym_id' => $gymId
                 ]);
             } else {
                 // If no user_id, create a new user
-                $user = $this->userService->createUserAccount($validateData, $gymId);
+                $userCreated = $this->userService->createUserAccount($validateData, $gymId);
 
 
                 // Create the user account
-                if ($user) {
+                if ($userCreated) {
+                    $adminGym = $this->gym->where('gym_type', 'admin')->first();
                     $user = User::where('email', $validateData['email'])->first(); // Adjust the query as needed
+                    GymUserGym::firstOrCreate([
+                        'user_id' => $user->id,
+                        'gym_id' => $gymId,
+                    ]);
+                    GymUserGym::firstOrCreate([
+                        'user_id' => $user->id,
+                        'gym_id' => $adminGym->id, // Home gym ID
+                    ]);
+
+                    // Save to user_subscription_histories
+                    UserSubscriptionHistory::create([
+                        'user_id' => $user->id,
+                        'subscription_id' => $request->subscription_id,
+                        'original_transaction_id' => 1, // Adjust as necessary
+                        'subscription_start_date' => $request->subscription_start_date,
+                        'subscription_end_date' => $request->subscription_end_date,
+                        'status' => $status,
+                        'amount' => $request->amount, // Ensure this is part of the request or calculate it
+                        'coupon_id' => 2,
+                        'gym_id' => $gymId
+                    ]);
                 }
-
-                // Save to user_subscription_histories
-                UserSubscriptionHistory::create([
-                    'user_id' => $user->id,
-                    'subscription_id' => $request->subscription_id,
-                    'original_transaction_id' => 1, // Assuming you have this value, or you may need to adjust
-                    'subscription_start_date' => $request->subscription_start_date,
-                    'subscription_end_date' => $request->subscription_end_date,
-                    'status' => $user->subscription_status,
-                    'amount' => $request->amount, // Ensure this is part of the request or calculate it
-                    'coupon_id' => 2,
-                    'gym_id' => $gymId
-                ]);
-
             }
 
             return redirect()->route('gymCustomerList')->with('status', 'success')->with('message', 'User Added Successfully');
@@ -674,8 +688,8 @@ class GymUserController extends Controller
 
     public function fetchWorkoutDetails(Request $request)
     {
-        $exerciseName = $request->input('exercise_name');
-        $workout = Workout::where('name', $exerciseName)->first();
+        $exerciseId = $request->input('workout_id');
+        $workout = Workout::find($exerciseId);;
 
         if ($workout) {
             return response()->json([
