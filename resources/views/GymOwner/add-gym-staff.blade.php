@@ -177,7 +177,7 @@
 												<div class="form-group">
 													<label class="text-label">Experience (in Years)<span
 															class="required">*</span></label>
-													<input type="text" class="form-control" id="experience"
+													<input type="number" class="form-control" id="experience"
 														name="experience" placeholder="Experience" required>
 													<small id="experienceError" class="text-danger"
 														style="display: none;">Please enter a valid Experience.</small>
@@ -657,7 +657,7 @@
 
 		experienceInput.addEventListener("input", function () {
 			const experienceValue = parseFloat(experienceInput.value);
-			if (experienceValue <= 0 || isNaN(salaryInput.value)) {
+			if (experienceValue < 0 || isNaN(salaryInput.value)) {
 				experienceError.style.display = "block";
 			} else {
 				experienceError.style.display = "none";
@@ -744,7 +744,7 @@
 			let isFormValid = true;
 
 			const experienceValue = parseFloat(experienceInput.value);
-			if (experienceValue <= 0 || isNaN(experienceValue)) {
+			if (experienceValue < 0 || isNaN(experienceValue)) {
 				experienceError.style.display = "block";
 				experienceInput.classList.add("is-invalid");
 				isFormValid = false;
@@ -763,27 +763,27 @@
 				salaryInput.classList.remove("is-invalid");
 			}
 
-			// Validate fees
-			const feesValue = parseFloat(feesInput.value);
-			if (feesValue <= 0 || isNaN(feesValue)) {
-				feesError.style.display = "block";
-				feesInput.classList.add("is-invalid");
-				isFormValid = false;
-			} else {
-				feesError.style.display = "none";
-				feesInput.classList.remove("is-invalid");
-			}
+			// // Validate fees
+			// const feesValue = parseFloat(feesInput.value);
+			// if (feesValue <= 0 || isNaN(feesValue)) {
+			// 	feesError.style.display = "block";
+			// 	feesInput.classList.add("is-invalid");
+			// 	isFormValid = false;
+			// } else {
+			// 	feesError.style.display = "none";
+			// 	feesInput.classList.remove("is-invalid");
+			// }
 
-			// Validate staff commission
-			const staffCommissionValue = parseFloat(staffCommissionInput.value);
-			if (staffCommissionValue <= 0 || staffCommissionValue > 100 || isNaN(staffCommissionValue)) {
-				staffCommissionError.style.display = "block";
-				staffCommissionInput.classList.add("is-invalid");
-				isFormValid = false;
-			} else {
-				staffCommissionError.style.display = "none";
-				staffCommissionInput.classList.remove("is-invalid");
-			}
+			// // Validate staff commission
+			// const staffCommissionValue = parseFloat(staffCommissionInput.value);
+			// if (staffCommissionValue <= 0 || staffCommissionValue > 100 || isNaN(staffCommissionValue)) {
+			// 	staffCommissionError.style.display = "block";
+			// 	staffCommissionInput.classList.add("is-invalid");
+			// 	isFormValid = false;
+			// } else {
+			// 	staffCommissionError.style.display = "none";
+			// 	staffCommissionInput.classList.remove("is-invalid");
+			// }
 
 			const employeeValue = parseFloat(employeeInput.value);
 			if (employeeValue <= 0 || isNaN(employeeValue)) {

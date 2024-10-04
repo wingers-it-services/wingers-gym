@@ -545,8 +545,8 @@
 
                                     <div id="account-settings" class="tab-pane fade">
                                         <br>
-                                        <form action="/update-gym-account" method="POST" enctype="multipart/form-data"
-                                            class="needs-validation" novalidate>
+                                        <form id="updateProfile" action="/update-gym-account" method="POST"
+                                            enctype="multipart/form-data" class="needs-validation" novalidate>
                                             @csrf
                                             <div class="card mb-4" style="max-width: 600px; margin: 0 auto;">
                                                 <div class="card-body text-center">
@@ -573,8 +573,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-md-6">
-                                                    <label>Gym Name <span
-                                                    class="required">*</span></label>
+                                                    <label>Gym Name <span class="required">*</span></label>
                                                     <input type="text" name="gym_name" placeholder="Email"
                                                         value="{{$gym->gym_name	}}" class="form-control" required>
                                                     <div class="invalid-feedback">
@@ -582,8 +581,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <label>Username <span
-                                                    class="required">*</span></label>
+                                                    <label>Username <span class="required">*</span></label>
                                                     <input type="text" name="username" value="{{$gym->username}}"
                                                         class="form-control" required>
                                                     <div class="invalid-feedback">
@@ -599,10 +597,12 @@
                                                 </div>
 
                                                 <div class="form-group col-md-6">
-                                                    <label>Phone <span
-                                                    class="required">*</span></label>
-                                                    <input type="text" name="phone_no" placeholder="Phone"
+                                                    <label>Phone <span class="required">*</span></label>
+                                                    <input type="text" id="phone_no" name="phone_no" placeholder="Phone"
                                                         value="{{$gym->phone_no}}" class="form-control" required>
+                                                    <small id="phoneError" class="text-danger"
+                                                        style="display: none;">Please enter a valid 10-digit phone
+                                                        number.</small>
                                                     <div class="invalid-feedback">
                                                         Phone are required.
                                                     </div>
@@ -610,8 +610,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-md-6">
-                                                    <label>Gym Type <span
-                                                    class="required">*</span></label>
+                                                    <label>Gym Type <span class="required">*</span></label>
                                                     <select name="gym_type" class="form-control" required>
                                                         <option value="">Select Gym Type</option>
                                                         <option value="Male" {{ $gym->gym_type == 'Male' ? 'selected' : '' }}>Male</option>
@@ -624,14 +623,18 @@
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label>Facebook Link</label>
-                                                    <input type="text" name="face_link" placeholder="Facebook Link"
-                                                        value="{{$gym->face_link}}" class="form-control">
+                                                    <input type="text" id="face_link" name="face_link"
+                                                        placeholder="Facebook Link" value="{{$gym->face_link}}"
+                                                        class="form-control">
+                                                    <small id="facebookError" style="display:none; color: red;">Please
+                                                        enter a valid Facebook URL (e.g.,
+                                                        https://www.facebook.com/username).</small>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label class="mb-1" for="gym_documents">Gym Document <span
-                                                    class="required">*</span></label>
+                                                            class="required">*</span></label>
                                                     <input type="file" class="form-control" id="gym_document"
                                                         name="gym_document" accept=".pdf, .jpg, .jpeg"
                                                         @if(!$gym->gym_document) required @endif>
@@ -640,16 +643,14 @@
                                                     </div>
                                                     <!-- Display the current gym document filename if it exists -->
                                                     @if($gym->gym_document)
-                                                        <small class="text-muted"> <a
-                                                                href="{{ asset($gym->gym_document) }}"
+                                                        <small class="text-muted"> <a href="{{ asset($gym->gym_document) }}"
                                                                 target="_blank">{{ basename($gym->gym_document) }}</a></small>
                                                     @endif
                                                 </div>
 
                                                 <div class="form-group col-md-6">
                                                     <label class="mb-1" for="owner_identity_document">Owner Identity
-                                                        Document <span
-                                                        class="required">*</span></label>
+                                                        Document <span class="required">*</span></label>
                                                     <input type="file" class="form-control" id="owner_identity_document"
                                                         name="owner_identity_document" accept=".pdf, .jpg, .jpeg"
                                                         @if(!$gym->owner_identity_document) required @endif>
@@ -668,18 +669,26 @@
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label>Website Link</label>
-                                                    <input type="text" name="web_link" placeholder="Web Link"
-                                                        value="{{$gym->web_link}}" class="form-control">
+                                                    <input type="text" id="web_link" name="web_link"
+                                                        placeholder="Web Link" value="{{$gym->web_link}}"
+                                                        class="form-control">
+                                                    <small class="error-message" id="websiteError"
+                                                        style="color: red; display: none;">Please enter a valid Website
+                                                        URL (e.g., https://www.example.com).</small>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label>Instagram Link</label>
-                                                    <input type="text" name="insta_link" placeholder="Insta Link"
-                                                        value="{{$gym->insta_link}}" class="form-control">
+                                                    <input type="text" id="insta_link" name="insta_link"
+                                                        placeholder="Insta Link" value="{{$gym->insta_link}}"
+                                                        class="form-control">
+                                                    <small class="error-message" id="instagramError"
+                                                        style="color: red; display: none;">Please enter a valid
+                                                        Instagram URL (e.g.,
+                                                        https://www.instagram.com/username).</small>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label>Address <span
-                                                class="required">*</span></label>
+                                                <label>Address <span class="required">*</span></label>
                                                 <textarea name="address" placeholder="Apartment, studio, or floor"
                                                     class="form-control" required>{{$gym->address}}</textarea>
                                                 <div class="invalid-feedback">
@@ -688,8 +697,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-md-4">
-                                                    <label>City <span
-                                                    class="required">*</span></label>
+                                                    <label>City <span class="required">*</span></label>
                                                     <input name="city_id" type="text" class="form-control"
                                                         value="{{$gym->city_id}}" required>
                                                     <div class="invalid-feedback">
@@ -697,8 +705,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4">
-                                                    <label>State <span
-                                                    class="required">*</span></label>
+                                                    <label>State <span class="required">*</span></label>
                                                     <input name="state_id" type="text" class="form-control"
                                                         value="{{$gym->state_id}}" required>
                                                     <div class="invalid-feedback">
@@ -706,8 +713,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4">
-                                                    <label>Country <span
-                                                    class="required">*</span></label>
+                                                    <label>Country <span class="required">*</span></label>
                                                     <input name="country_id" type="text" class="form-control"
                                                         value="{{$gym->country_id}}" required>
                                                     <div class="invalid-feedback">
@@ -797,6 +803,143 @@
             reader.readAsDataURL(imageFile);
         }
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("updateProfile");
+
+        const phoneInput = document.getElementById("phone_no");
+
+        const phoneError = document.getElementById("phoneError");
+
+        const facebookInput = document.getElementById("face_link");
+        const facebookError = document.getElementById("facebookError");
+
+        const websiteInput = document.getElementById("web_link");
+        const websiteError = document.getElementById("websiteError");
+
+        const instagramInput = document.getElementById("insta_link");
+        const instagramError = document.getElementById("instagramError");
+
+
+
+        // Helper function to validate phone format
+        function isValidPhone(phone) {
+            const phonePattern = /^\d{10}$/; // for 10-digit phone numbers
+            return phonePattern.test(phone);
+        }
+
+        // Helper function to validate general URL format
+        function isValidURL(url) {
+            const urlPattern = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\S*)?$/;
+            return urlPattern.test(url);
+        }
+
+        // Specific Facebook URL validation
+        function isValidFacebook(url) {
+            const facebookPattern = /^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9(\.\?)?]/;
+            return facebookPattern.test(url);
+        }
+
+        // Specific Instagram URL validation
+        function isValidInstagram(url) {
+            const instagramPattern = /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9(\.\?)?]/;
+            return instagramPattern.test(url);
+        }
+
+
+        // Real-time validation for phone
+        phoneInput.addEventListener("input", function () {
+            if (!isValidPhone(phoneInput.value)) {
+                phoneError.style.display = "block";
+            } else {
+                phoneError.style.display = "none";
+            }
+        });
+
+
+        // Real-time validation for Facebook Link
+        facebookInput.addEventListener("input", function () {
+            if (!isValidFacebook(facebookInput.value)) {
+                facebookError.style.display = "block";
+            } else {
+                facebookError.style.display = "none";
+            }
+        });
+
+        // Real-time validation for Website Link
+        websiteInput.addEventListener("input", function () {
+            if (!isValidURL(websiteInput.value)) {
+                websiteError.style.display = "block";
+            } else {
+                websiteError.style.display = "none";
+            }
+        });
+
+        // Real-time validation for Instagram Link
+        instagramInput.addEventListener("input", function () {
+            if (!isValidInstagram(instagramInput.value)) {
+                instagramError.style.display = "block";
+            } else {
+                instagramError.style.display = "none";
+            }
+        });
+
+
+
+        // Form validation on submit
+        form.addEventListener("submit", function (event) {
+            let isFormValid = true;
+
+            // Phone validation on submit
+            if (!isValidPhone(phoneInput.value)) {
+                phoneError.style.display = "block";
+                phoneInput.classList.add("is-invalid");
+                isFormValid = false;
+            } else {
+                phoneError.style.display = "none";
+                phoneInput.classList.remove("is-invalid");
+            }
+
+            // // Facebook link validation on submit
+            // if (!isValidFacebook(facebookInput.value)) {
+            //     facebookError.style.display = "block";
+            //     facebookInput.classList.add("is-invalid");
+            //     isFormValid = false;
+            // } else {
+            //     facebookError.style.display = "none";
+            //     facebookInput.classList.remove("is-invalid");
+            // }
+
+            // // Website link validation on submit
+            // if (!isValidURL(websiteInput.value)) {
+            //     websiteError.style.display = "block";
+            //     websiteInput.classList.add("is-invalid");
+            //     isFormValid = false;
+            // } else {
+            //     websiteError.style.display = "none";
+            //     websiteInput.classList.remove("is-invalid");
+            // }
+
+            // // Instagram link validation on submit
+            // if (!isValidInstagram(instagramInput.value)) {
+            //     instagramError.style.display = "block";
+            //     instagramInput.classList.add("is-invalid");
+            //     isFormValid = false;
+            // } else {
+            //     instagramError.style.display = "none";
+            //     instagramInput.classList.remove("is-invalid");
+            // }
+
+
+            // Prevent form submission if any field is invalid
+            if (!isFormValid) {
+                event.preventDefault(); // Stop form from submitting
+            }
+        });
+    });
+
+
+
 </script>
 
 @include('CustomSweetAlert');

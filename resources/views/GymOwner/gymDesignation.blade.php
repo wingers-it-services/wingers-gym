@@ -58,7 +58,7 @@
 								<div class="form-group">
 									<div class="row align-items-center">
 										<div class="col-auto">
-											<label>Assigned to Member:</label>
+											<label>Assignable to Member:</label>
 										</div>
 										<div class="col-auto">
 											<div class="form-check form-check-inline">
