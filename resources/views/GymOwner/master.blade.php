@@ -902,6 +902,12 @@
 					</a>
 					<ul aria-expanded="">
 						<li>
+							<a href="#" class="ai-icon" aria-expanded="false">
+								<i class="fa-solid fa-egg"></i>
+								<span class="nav-text">Gym List</span>
+							</a>
+						</li>
+						<li>
 							<a href="/list-injuries" class="ai-icon" aria-expanded="false">
 								<i class="fa-solid fa-egg"></i>
 								<span class="nav-text">Add Injury Type</span>
