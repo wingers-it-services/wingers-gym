@@ -141,33 +141,37 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($workouts as $subscription)
-                                <tr>
-                                    <td>
-                                        <img width="80"
-                                            src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
-                                            loading="lazy" alt="Profile Image">
-                                    </td>
-                                    <td>{{$subscription->category }}</td>
-                                    <td>{{$subscription->name }}</td>
-                                    <td>{{$subscription->gender }}</td>
-                                    <td>
-                                        <a class="dropdown-item view-workout" href="javascript:void(0);"
-                                            data-bs-toggle="modal" data-bs-target="#viewModal"
-                                            data-workout="{{ json_encode($subscription) }}">
-                                            <i class="fa fa-eye color-muted"></i>
-                                        </a>
-                                    </td>
+                            @foreach ($workouts as $workout)
+                            <tr>
+                                <td>
+                                    <img width="80"
+                                        src="{{ $workout->image ? asset($workout->image) : asset('images/profile/17.jpg') }}"
+                                        loading="lazy" alt="Profile Image">
+                                </td>
+                                <td>{{$workout->category }}</td>
+                                <td>{{$workout->name }}</td>
+                                <td>{{$workout->gender }}</td>
+                                <td>
+                                    <a class="dropdown-item view-workout" href="javascript:void(0);"
+                                        data-bs-toggle="modal" data-bs-target="#viewModal"
+                                        data-workout="{{ json_encode($workout) }}">
+                                        <i class="fa fa-eye color-muted"></i>
+                                    </a>
+                                </td>
 
-                                    <td class="text-end">
-                                        <span> <a href="javascript:void(0);" class="me-4 edit-workout"
-                                                data-bs-toggle="tooltip" data-placement="top" title="Edit"
-                                                data-workout="{{ json_encode($subscription) }}">
-                                                <i class="fa fa-pencil color-muted"></i></a>
-                                            <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
-                                                data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
-                                    </td>
-                                </tr>
+                                <td class="text-end">
+                                    @if($workout->is_editable)
+                                    <span> <a href="javascript:void(0);" class="me-4 edit-workout"
+                                            data-bs-toggle="tooltip" data-placement="top" title="Edit"
+                                            data-workout="{{ json_encode($workout) }}">
+                                            <i class="fa fa-pencil color-muted"></i></a>
+                                        <a onclick="confirmDelete('{{ $workout->uuid }}')" data-bs-toggle="tooltip"
+                                            data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
+                                    @else
+                                    <span class="text-muted">Not Editable</span>
+                                    @endif
+                                </td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -295,12 +299,12 @@
 
 
 <script>
-    (function () {
+    (function() {
         'use strict';
         var forms = document.querySelectorAll('.needs-validation');
 
-        Array.prototype.slice.call(forms).forEach(function (form) {
-            form.addEventListener('submit', function (event) {
+        Array.prototype.slice.call(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
                 // Check form validity
                 if (!form.checkValidity()) {
                     event.preventDefault();
@@ -342,7 +346,7 @@
                 // If the input doesn't match the pattern, show an error
                 if (!lettersAndCommasPattern2.test(workoutInput)) {
                     errorElement3.style.display = 'block';
-                    isWorkoutValid =false;
+                    isWorkoutValid = false;
                 } else {
                     errorElement3.style.display = 'none';
                 }
@@ -358,7 +362,7 @@
         });
     })();
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         function initializeEventListeners() {
             const editButtons = document.querySelectorAll('.edit-workout');
             const editImageInput = document.getElementById('edit_image');
@@ -367,7 +371,7 @@
             const editTargettedBoadySelect = document.getElementById('edit_targeted_body_part');
 
             editButtons.forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     document.getElementById('edit_workout_id').value = workout.id;
@@ -393,11 +397,11 @@
 
             // Show a preview of the new image when selected
             if (editImageInput) {
-                editImageInput.addEventListener('change', function (event) {
+                editImageInput.addEventListener('change', function(event) {
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = function (e) {
+                        reader.onload = function(e) {
                             currentImage.src = e.target.result;
                         }
                         reader.readAsDataURL(file);
@@ -407,7 +411,7 @@
 
             // Handling view workout modal
             document.querySelectorAll('.view-workout').forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     // Set the image src
@@ -454,7 +458,7 @@
         initializeEventListeners();
 
         // Reinitialize event listeners after DataTable redraw
-        $('#example3').on('draw.dt', function () {
+        $('#example3').on('draw.dt', function() {
             initializeEventListeners(); // Reattach event listeners
         });
     });
@@ -477,24 +481,24 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const viewModal = document.getElementById('viewModal');
         const modal = new bootstrap.Modal(viewModal);
 
         // Handle the close event to ensure the fade backdrop is removed
-        viewModal.addEventListener('hidden.bs.modal', function () {
+        viewModal.addEventListener('hidden.bs.modal', function() {
             document.body.classList.remove('modal-open'); // Ensure body class is removed
             document.body.style.overflow = ''; // Reset body overflow style
 
             // Remove modal backdrops
             const modalBackdrops = document.querySelectorAll('.modal-backdrop');
-            modalBackdrops.forEach(function (backdrop) {
+            modalBackdrops.forEach(function(backdrop) {
                 backdrop.remove(); // Remove the backdrop element
             });
         });
     });
 
-    document.getElementById('vedio_link').addEventListener('input', function () {
+    document.getElementById('vedio_link').addEventListener('input', function() {
         const videoLinkInput = this.value;
         const urlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|vimeo\.com)\/.+$/;
         const errorElement = document.getElementById('videoLinkError');
@@ -506,7 +510,7 @@
         }
     });
 
-    document.getElementById('category').addEventListener('input', function () {
+    document.getElementById('category').addEventListener('input', function() {
         const categoryInput = this.value;
         const lettersAndCommasPattern = /^[A-Za-z\s,]+$/;
         const errorElement = document.getElementById('categoryError');
@@ -519,7 +523,7 @@
         }
     });
 
-    document.getElementById('name').addEventListener('input', function () {
+    document.getElementById('name').addEventListener('input', function() {
         const workoutInput = this.value;
         const lettersAndCommasPattern = /^[A-Za-z\s]+$/;
         const errorElement = document.getElementById('workoutError');

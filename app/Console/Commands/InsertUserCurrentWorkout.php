@@ -57,6 +57,7 @@ class InsertUserCurrentWorkout extends Command
             $existingWorkout = CurrentDayWorkout::where('workout_id', $userWorkout->workout_id)
                 ->whereDate('created_at', now()->toDateString()) // Check for today's date
                 ->where('user_id', $userWorkout->user_id)
+                ->where('gym_id', $userWorkout->gym_id)
                 ->exists();
 
             if ($existingWorkout) {

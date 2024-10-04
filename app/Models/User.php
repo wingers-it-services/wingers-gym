@@ -176,12 +176,6 @@ class User extends Authenticatable
 
     public function allotDiet($user)
     {
-        // Check if the user type is 'home'
-        if ($user->user_type != UserTypeEnum::HOMEUSER) {
-            Log::info("User is not a home user, skipping diet allotment for user ID {$user->id}");
-            return;
-        }
-
         // Get today's day of the week (e.g., Monday, Tuesday)
         $currentDay = Carbon::now()->format('l');
 

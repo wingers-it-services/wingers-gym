@@ -41,6 +41,7 @@ class InsertUserCurrentDiet extends Command
                 $existingDiet = CurrentDayDiet::where('diet_id', $userDiet->diet_id)
                     ->whereDate('created_at', now()->toDateString()) // Check for today's date
                     ->where('user_id', $userDiet->user_id)
+                    ->where('gym_id', $userDiet->gym_id)
                     ->exists();
 
                 if ($existingDiet) {

@@ -28,11 +28,30 @@ class DietController extends Controller
     public function viewDiet()
     {
         $gym = Auth::guard('gym')->user();
-        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
-        $admin = $this->gym->where('gym_type', 'admin')->first();
-        $diets = $this->diet->where('gym_id', $gymId)->orWhere('added_by', $admin->id)->get();
+        if ($gym->gym_type == 'admin') {
+            $diets = $this->diet->get();
+
+            foreach ($diets as $diet) {
+                $diet->is_editable = true;
+            }
+        } else {
+            $admin = $this->gym->where('gym_type', 'admin')->first();
+
+            $diets = $this->diet->where('added_by', $gym->id)->orWhere('added_by', $admin->id)->get();
+            foreach ($diets as $diet) {
+                $addedByGym = Gym::find($diet->added_by);
+                if ($addedByGym && $addedByGym->gym_type == 'admin') {
+                    $diet->is_editable = false;
+                } else {
+                    $diet->is_editable = true;
+                }
+            }
+        }
         return view('GymOwner.add-diet', compact('diets'));
     }
+
+
+
 
     public function addDiet(Request $request)
     {
@@ -123,7 +142,7 @@ class DietController extends Controller
             $diet->goal = $validatedData['goal'];
 
             $diet->save();
-        
+
             return redirect()->back()->with('status', 'success')->with('message', 'Diet updated successfully.');
         } catch (Exception $e) {
             Log::error('[DietController][updateDiet] Error updating diet ' . $e->getMessage());

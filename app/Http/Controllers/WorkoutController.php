@@ -24,14 +24,36 @@ class WorkoutController extends Controller
         $this->workout = $workout;
         $this->gym = $gym;
     }
+    
     public function viewWorkout()
     {
         $gym = Auth::guard('gym')->user();
-        $admin = $this->gym->where('gym_type', 'admin')->first();
-        $workouts = $this->workout->where('added_by', $gym->id)->orWhere('added_by', $admin->id)->get();
+    
+        if ($gym->gym_type == 'admin') {
+            $workouts = $this->workout->get(); 
 
+            foreach ($workouts as $workout) {
+                $workout->is_editable = true; 
+            }
+        } else {
+            $admin = $this->gym->where('gym_type', 'admin')->first();
+            $workouts = $this->workout
+                ->where('added_by', $gym->id)
+                ->orWhere('added_by', $admin->id)
+                ->get();
+    
+            foreach ($workouts as $workout) {
+                $addedByGym = Gym::find($workout->added_by);
+                if ($addedByGym && $addedByGym->gym_type == 'admin') {
+                    $workout->is_editable = false; 
+                } else {
+                    $workout->is_editable = true; 
+                }
+            }
+        }
+    
         return view('GymOwner.add-workout', compact('workouts'));
-    }
+    } 
 
     public function addWorkout(Request $request)
     {
