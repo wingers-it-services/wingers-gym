@@ -12,8 +12,8 @@
                             <div class="col-lg-12">
                                 <h4 class="mb-3">Add Workout</h4>
                                 <hr>
-                                <form name="myForm" method="POST" enctype="multipart/form-data" class="needs-validation"
-                                    action="/add-gym-workout" novalidate>
+                                <form id="addWorkoutForm" method="POST" enctype="multipart/form-data"
+                                    class="needs-validation" action="/add-gym-workout" novalidate>
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
@@ -29,7 +29,8 @@
                                             <input type="text" class="form-control" id="vedio_link" name="vedio_link"
                                                 placeholder="Enter a valid video link" required>
                                             <small id="videoLinkError" class="form-text text-danger"
-                                                style="display: none;">Please enter a valid video link.</small>
+                                                style="display: none;">Please enter a valid video link (eg.
+                                                https://youtu.be/abcdefghijk)</small>
                                             <div class="invalid-feedback">
                                                 video link is required.
                                             </div>
@@ -185,11 +186,12 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit Diet</h5>
+                <h5 class="modal-title">Edit Workout</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editDietForm" method="POST" action="update-workout" enctype="multipart/form-data">
+                <form id="editDietForm" class="needs-validation" method="POST" action="update-workout"
+                    enctype="multipart/form-data" novalidate>
                     @csrf
                     <input type="hidden" id="edit_workout_id" name="workout_id">
                     <div class="form-group text-center">
@@ -205,16 +207,34 @@
                     <div class="form-group">
                         <label for="vedio_link">Video Link</label>
                         <input type="text" class="form-control" id="edit_vedio_link" name="vedio_link" placeholder="">
+                        <small id="editVideoLinkError" class="form-text text-danger" style="display: none;">Please enter a
+                            valid video link (eg.
+                            https://youtu.be/abcdefghijk)</small>
+                        <div class="invalid-feedback">
+                            video link is required.
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="category">Category</label>
                         <input type="text" class="form-control" name="category" id="edit_category" required>
+                        <small id="editCategoryError" class="text-danger" style="display: none;">Only
+                            letters, spaces, and commas are allowed.</small>
+
+                        <div class="invalid-feedback">
+                            Category is required.
+                        </div>
+
                     </div>
 
                     <div class="form-group">
                         <label for="name">Workout Name</label>
                         <input type="text" class="form-control" id="edit_name" name="name" required="">
+                        <small id="editWorkoutError" class="text-danger" style="display: none;">Only
+                            letters, spaces are allowed.</small>
+                        <div class="invalid-feedback">
+                            Workout Name name is required.
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -224,14 +244,16 @@
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                             </select>
+                            <div class="invalid-feedback">
+                                Please select a gender.
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="gender">Targetted Boady Part</label>
                         <div class="input-group">
-                            <select class="me-sm-2 form-control" id="edit_targeted_body_part"
-                                name="targeted_body_part">
+                            <select class="me-sm-2 form-control" id="edit_targeted_body_part" name="targeted_body_part">
                                 <option value="">Choose....</option>
                                 <option value="biceps">Biceps</option>
                                 <option value="leg">Leg</option>
@@ -243,6 +265,9 @@
                                 <option value="back">Back</option>
                                 <option value="other">Other</option>
                             </select>
+                            <div class="invalid-feedback">
+                                Please select a Targetted Body part.
+                            </div>
                         </div>
                     </div>
 
@@ -250,6 +275,9 @@
                         <label for="description">Description</label>
                         <textarea type="text" class="form-control" rows="4" id="edit_description" name="description"
                             required=""></textarea>
+                        <div class="invalid-feedback">
+                            Description is required.
+                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Update</button>
@@ -299,68 +327,22 @@
 
 
 <script>
-    (function() {
-        'use strict';
-        var forms = document.querySelectorAll('.needs-validation');
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
 
-        Array.prototype.slice.call(forms).forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-                // Check form validity
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
 
-                // Custom video link validation
-                const videoLinkInput = document.getElementById('vedio_link').value;
-                const urlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|vimeo\.com)\/.+$/;
-                const errorElement1 = document.getElementById('videoLinkError');
-                let isVideoLinkValid = true;
-
-                if (!urlPattern.test(videoLinkInput)) {
-                    errorElement1.style.display = 'block';
-                    isVideoLinkValid = false;
-                } else {
-                    errorElement1.style.display = 'none';
-                }
-
-
-                const categoryInput = document.getElementById('category').value;
-                const lettersAndCommasPattern = /^[A-Za-z\s,]+$/;
-                const errorElement2 = document.getElementById('categoryError');
-                let isCategoryValid = true;
-
-                // If the input doesn't match the pattern, show an error
-                if (!lettersAndCommasPattern.test(categoryInput)) {
-                    errorElement2.style.display = 'block';
-                    isCategoryValid = false;
-                } else {
-                    errorElement2.style.display = 'none';
-                }
-
-                const workoutInput = document.getElementById('name').value;
-                const lettersAndCommasPattern2 = /^[A-Za-z\s]+$/;
-                const errorElement3 = document.getElementById('workoutError');
-                let isWorkoutValid = true;
-
-                // If the input doesn't match the pattern, show an error
-                if (!lettersAndCommasPattern2.test(workoutInput)) {
-                    errorElement3.style.display = 'block';
-                    isWorkoutValid = false;
-                } else {
-                    errorElement3.style.display = 'none';
-                }
-
-                // If video link is invalid or the form is not valid, prevent form submission
-                if (!isVideoLinkValid || !isCategoryValid || !isWorkoutValid || !form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-
-                form.classList.add('was-validated');
-            }, false);
-        });
-    })();
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
 
     document.addEventListener('DOMContentLoaded', function() {
         function initializeEventListeners() {
@@ -498,42 +480,198 @@
         });
     });
 
-    document.getElementById('vedio_link').addEventListener('input', function() {
-        const videoLinkInput = this.value;
-        const urlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|vimeo\.com)\/.+$/;
-        const errorElement = document.getElementById('videoLinkError');
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("addWorkoutForm");
 
-        if (!urlPattern.test(videoLinkInput)) {
-            errorElement.style.display = 'block';
-        } else {
-            errorElement.style.display = 'none';
+        const vedioInput = document.getElementById("vedio_link");
+
+        const vedioError = document.getElementById("videoLinkError");
+
+        const categoryInput = document.getElementById("category");
+        const categoryError = document.getElementById("categoryError");
+
+        const workoutInput = document.getElementById("name");
+        const workoutError = document.getElementById("workoutError");
+
+        // Helper function to validate phone format
+        function isVedioLink(video) {
+            const urlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com\/(embed\/|watch\?v=)|youtu\.be\/|vimeo\.com\/).+$/;
+            return urlPattern.test(video);
         }
+
+        // Helper function to validate phone format
+        function isCategoryValid(category) {
+            const lettersAndCommasPattern = /^[A-Za-z\s,]+$/;
+            return lettersAndCommasPattern.test(category);
+        }
+
+        // Helper function to validate phone format
+        function isWorkoutValid(workout) {
+            const lettersAndCommasPattern = /^[A-Za-z\s]+$/;
+            return lettersAndCommasPattern.test(workout);
+        }
+
+
+        // Real-time validation for phone
+        vedioInput.addEventListener("input", function () {
+            if (!isVedioLink(vedioInput.value)) {
+                vedioError.style.display = "block";
+            } else {
+                vedioError.style.display = "none";
+            }
+        });
+
+        // Real-time validation for category
+        categoryInput.addEventListener("input", function () {
+            if (!isCategoryValid(categoryInput.value)) {
+                categoryError.style.display = "block";
+            } else {
+                categoryError.style.display = "none";
+            }
+        });
+
+        workoutInput.addEventListener("input", function () {
+            if (!isWorkoutValid(workoutInput.value)) {
+                workoutError.style.display = "block";
+            } else {
+                workoutError.style.display = "none";
+            }
+        });
+
+        // Form validation on submit
+        form.addEventListener("submit", function (event) {
+            let isFormValid = true;
+
+            // Video link validation on submit
+            if (!isVedioLink(vedioInput.value)) {
+                vedioError.style.display = "block";
+                vedioInput.classList.add("is-invalid");
+                isFormValid = false;
+            } else {
+                vedioError.style.display = "none";
+                vedioInput.classList.remove("is-invalid");
+            }
+
+            if (!isCategoryValid(categoryInput.value)) {
+                categoryError.style.display = "block";
+                categoryInput.classList.add("is-invalid");
+                isFormValid = false;
+            } else {
+                categoryError.style.display = "none";
+                categoryInput.classList.remove("is-invalid");
+            }
+
+            if (!isWorkoutValid(workoutInput.value)) {
+                workoutError.style.display = "block";
+                workoutInput.classList.add("is-invalid");
+                isFormValid = false;
+            } else {
+                workoutError.style.display = "none";
+                workoutInput.classList.remove("is-invalid");
+            }
+
+            // Prevent form submission if any field is invalid
+            if (!isFormValid) {
+                event.preventDefault(); // Stop form from submitting
+            }
+        });
     });
 
-    document.getElementById('category').addEventListener('input', function() {
-        const categoryInput = this.value;
-        const lettersAndCommasPattern = /^[A-Za-z\s,]+$/;
-        const errorElement = document.getElementById('categoryError');
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("editDietForm");
 
-        // If the input doesn't match the pattern, show an error
-        if (!lettersAndCommasPattern.test(categoryInput)) {
-            errorElement.style.display = 'block';
-        } else {
-            errorElement.style.display = 'none';
+        const editVedioInput = document.getElementById("edit_vedio_link");
+
+        const editVideoLinkError = document.getElementById("editVideoLinkError");
+
+        const editCategoryInput = document.getElementById("edit_category");
+        const editCategoryError = document.getElementById("editCategoryError");
+
+        const editWorkoutInput = document.getElementById("edit_name");
+        const editWorkoutError = document.getElementById("editWorkoutError");
+
+        // Helper function to validate phone format
+        function isVedioLink(video) {
+            const urlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com\/(embed\/|watch\?v=)|youtu\.be\/|vimeo\.com\/).+$/;
+            return urlPattern.test(video);
         }
-    });
 
-    document.getElementById('name').addEventListener('input', function() {
-        const workoutInput = this.value;
-        const lettersAndCommasPattern = /^[A-Za-z\s]+$/;
-        const errorElement = document.getElementById('workoutError');
-
-        // If the input doesn't match the pattern, show an error
-        if (!lettersAndCommasPattern.test(workoutInput)) {
-            errorElement.style.display = 'block';
-        } else {
-            errorElement.style.display = 'none';
+        // Helper function to validate phone format
+        function isCategoryValid(category) {
+            const lettersAndCommasPattern = /^[A-Za-z\s,]+$/;
+            return lettersAndCommasPattern.test(category);
         }
+
+        // Helper function to validate phone format
+        function isWorkoutValid(workout) {
+            const lettersAndCommasPattern = /^[A-Za-z\s]+$/;
+            return lettersAndCommasPattern.test(workout);
+        }
+
+
+        // Real-time validation for phone
+        editVedioInput.addEventListener("input", function () {
+            if (!isVedioLink(editVedioInput.value)) {
+                editVideoLinkError.style.display = "block";
+            } else {
+                editVideoLinkError.style.display = "none";
+            }
+        });
+
+        // Real-time validation for category
+        editCategoryInput.addEventListener("input", function () {
+            if (!isCategoryValid(editCategoryInput.value)) {
+                editCategoryError.style.display = "block";
+            } else {
+                editCategoryError.style.display = "none";
+            }
+        });
+
+        editWorkoutInput.addEventListener("input", function () {
+            if (!isWorkoutValid(editWorkoutInput.value)) {
+                editWorkoutError.style.display = "block";
+            } else {
+                editWorkoutError.style.display = "none";
+            }
+        });
+
+        // Form validation on submit
+        form.addEventListener("submit", function (event) {
+            let isFormValid = true;
+
+            // Video link validation on submit
+            if (!isVedioLink(editVedioInput.value)) {
+                editVideoLinkError.style.display = "block";
+                editVedioInput.classList.add("is-invalid");
+                isFormValid = false;
+            } else {
+                editVideoLinkError.style.display = "none";
+                editVedioInput.classList.remove("is-invalid");
+            }
+
+            if (!isCategoryValid(editCategoryInput.value)) {
+                editCategoryError.style.display = "block";
+                editCategoryInput.classList.add("is-invalid");
+                isFormValid = false;
+            } else {
+                editCategoryError.style.display = "none";
+                editCategoryInput.classList.remove("is-invalid");
+            }
+
+            if (!isWorkoutValid(editWorkoutInput.value)) {
+                editWorkoutError.style.display = "block";
+                editWorkoutInput.classList.add("is-invalid");
+                isFormValid = false;
+            } else {
+                editWorkoutError.style.display = "none";
+                editWorkoutInput.classList.remove("is-invalid");
+            }
+
+            // Prevent form submission if any field is invalid
+            if (!isFormValid) {
+                event.preventDefault(); // Stop form from submitting
+            }
+        });
     });
 </script>
 @include('CustomSweetAlert');

@@ -267,7 +267,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="edit_calories">Calories</label>
+                                <label for="edit_calories">Calories (in kcals)</label>
                                 <input type="number" class="form-control" id="edit_calories" name="calories" min="0"
                                     required>
                             </div>
@@ -275,7 +275,7 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="edit_protein">Protein</label>
+                                <label for="edit_protein">Protein (in grams)</label>
                                 <input type="number" class="form-control" id="edit_protein" name="protein" min="0"
                                     required>
                             </div>
@@ -283,14 +283,14 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="edit_carbs">Carbs</label>
+                                <label for="edit_carbs">Carbs (in grams)</label>
                                 <input type="number" class="form-control" id="edit_carbs" name="carbs" min="0" required>
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="edit_fats">Fats</label>
+                                <label for="edit_fats">Fats (in grams)</label>
                                 <input type="number" class="form-control" id="edit_fats" name="fats" min="0" required>
                             </div>
                         </div>
@@ -619,7 +619,7 @@
         // Function to validate inputs
         function validateInput(input, errorElement) {
             const value = parseFloat(input.value);
-            if (value < 0) {
+            if (value <= 0) {
                 errorElement.style.display = 'block'; // Show error message
             } else {
                 errorElement.style.display = 'none'; // Hide error message
@@ -650,7 +650,7 @@
             // Validate all fields on form submission
             [calorieInput, proteinInput, carbsInput, fatsInput].forEach(function (input) {
                 const errorElement = document.getElementById(input.name + 'Error');
-                if (parseFloat(input.value) < 0) {
+                if (parseFloat(input.value) <= 0) {
                     event.preventDefault(); // Prevent form submission
                     errorElement.style.display = 'block'; // Show error message
                     isValid = false;

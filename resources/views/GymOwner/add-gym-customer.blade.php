@@ -408,24 +408,6 @@
 		}
 
 	};
-	(function () {
-		'use strict'
-		// Fetch all the forms we want to apply custom Bootstrap validation styles to
-		var forms = document.querySelectorAll('.needs-validation')
-
-		// Loop over them and prevent submission
-		Array.prototype.slice.call(forms)
-			.forEach(function (form) {
-				form.addEventListener('submit', function (event) {
-					if (!form.checkValidity()) {
-						event.preventDefault()
-						event.stopPropagation()
-					}
-
-					form.classList.add('was-validated')
-				}, false)
-			})
-	})()
 
 	document.getElementById('subscription_id').addEventListener('change', function () {
 		var selectedOption = this.options[this.selectedIndex];
@@ -754,9 +736,9 @@
 
 			// Check if the user hasn't had their birthday this year yet
 			if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-				return age - 1 >= 14;
+				return age - 1 >= 16;
 			}
-			return age >= 14;
+			return age >= 16;
 		}
 
 		dobInput.addEventListener("change", function () {
@@ -767,19 +749,35 @@
 			}
 		});
 
+		// joiningDateInput.addEventListener("change", function () {
+		// 	if (!validateDates(joiningDateInput.value)) {
+		// 		joiningDateError.style.display = "block";
+		// 	} else {
+		// 		joiningDateError.style.display = "none";
+		// 	}
+		// });
+
+		subjoiningDateInput.addEventListener("change", function () {
+			if (!validateDates(subjoiningDateInput.value)) {
+				subjoiningDateError.style.display = "block";
+			} else {
+				subjoiningDateError.style.display = "none";
+			}
+		});
+
 		function validateDates() {
 			const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
 			const startDateValue = joiningDateInput.value;
 			const endDateValue = subjoiningDateInput.value;
 			let isValid = true;
 
-			// Start Date validation (must be today or later)
-			if (startDateValue && startDateValue < today) {
-				joiningDateError.style.display = "block";
-				isValid = false;
-			} else {
-				joiningDateError.style.display = "none";
-			}
+			// // Start Date validation (must be today or later)
+			// if (startDateValue && startDateValue < today) {
+			// 	joiningDateError.style.display = "block";
+			// 	isValid = false;
+			// } else {
+			// 	joiningDateError.style.display = "none";
+			// }
 
 			// End Date validation (must be after or on the same day as Start Date)
 			if (startDateValue && endDateValue && endDateValue < startDateValue) {
@@ -866,6 +864,7 @@
 			if (zipValue.length !== 6 || isNaN(zipValue)) {
 				zipError.style.display = 'block';  // Show the error message
 				zipInput.classList.add("is-invalid");
+				isFormValid = false;
 			} else {
 				zipError.style.display = 'none';   // Hide the error message
 				zipInput.classList.remove("is-invalid");
@@ -881,10 +880,10 @@
 				passwordInput.classList.remove("is-invalid");
 			}
 
-			if (!isAtLeast14YearsOld(dobInput.value)) {
+			if (!isValidDOB(dobInput.value)) {
 				dobError.style.display = "block";
 				dobInput.classList.add("is-invalid");
-				event.preventDefault(); // Prevent form submission if the DOB is invalid
+				isFormValid = false;
 			} else {
 				dobError.style.display = "none";
 				dobInput.classList.remove("is-invalid");

@@ -403,7 +403,7 @@ class GymUserController extends Controller
                 "goal" => 'required',
                 "meal_type" => 'required',
                 "diet_description" => 'required',
-                "alternative_diet_description" => 'required',
+                "alternative_diet_description" => 'nullable',
                 "day" => 'required'
             ]);
 

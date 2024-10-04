@@ -14,31 +14,46 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="/update-gym-subscription">
+                <form id="updatePlan" class="needs-validation" method="POST" action="/update-gym-subscription" novalidate>
                     @csrf
                     <input type="hidden" name="uuid" id="editSubId">
                     <div class="form-group">
                         <label>Subscription Name</label>
                         <input type="text" id="editName" name="subscription_name" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Subscription Name is required.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Validity (in months)</label>
                         <input type="number" name="validity" id="editValidity" min="0" max="1000" class="form-control"
                             required>
+                        <div class="invalid-feedback">
+                            Validity (Min 1 month) is required and must be between 1 and 12.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Subscription Price</label>
                         <input type="number" name="amount" id="editPrice" class="form-control" name="" min="0"
                             required />
+                        <div class="invalid-feedback">
+                            Subscription Price is required.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Plan Start Date</label>
                         <input type="date" name="start_date" id="editStartDate" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Subscription Start Date is required.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Plan Description</label>
                         <textarea type="text" rows="10" name="description" id="editDescription" class="form-control"
                             required></textarea>
+                        <div class="invalid-feedback">
+                            Subscription Description is required.
+                        </div>
                     </div>
                     <button class="btn btn-primary">Update</button>
                 </form>
@@ -75,7 +90,7 @@
                                     <label>Validity (in months)</label>
                                     <input type="number" name="validity" min="1" max="12" class="form-control" required>
                                     <div class="invalid-feedback">
-                                    Validity (Min 1 month) is required and must be between 1 and 12.
+                                        Validity (Min 1 month) is required and must be between 1 and 12.
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -234,6 +249,42 @@
         const validity = document.getElementById('validity');
         const amount = document.getElementById('amount');
         const startDate = document.getElementById('start_date');
+        let isValid = true;
+
+        // Check if validity is at least 1
+        if (validity.value < 1 || validity.value > 12) {
+            validity.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            validity.classList.remove('is-invalid');
+        }
+
+        // Check if subscription price is positive
+        if (amount.value < 1) {
+            amount.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            amount.classList.remove('is-invalid');
+        }
+
+        // Check if start date is selected
+        if (!startDate.value) {
+            startDate.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            startDate.classList.remove('is-invalid');
+        }
+
+        // Prevent form submission if validation fails
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+
+    document.getElementById('updatePlan').addEventListener('submit', function (e) {
+        const validity = document.getElementById('editValidity');
+        const amount = document.getElementById('editPrice');
+        const startDate = document.getElementById('editStartDate');
         let isValid = true;
 
         // Check if validity is at least 1
