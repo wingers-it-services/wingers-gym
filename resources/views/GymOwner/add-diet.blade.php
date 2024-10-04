@@ -200,33 +200,37 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($diets as $subscription)
-                                <tr>
-                                    <td>
-                                        <img width="80"
-                                            src="{{ $subscription->image ? asset($subscription->image) : asset('images/profile/17.jpg') }}"
-                                            loading="lazy" alt="Profile Image">
-                                    </td>
-                                    <td>{{$subscription->name }}</td>
-                                    <td>{{$subscription->gender }}</td>
-                                    <td>{{$subscription->goal }}</td>
-                                    <td>{{$subscription->min_age }} - {{ $subscription->max_age }}</td>
-                                    <td class="text-end">
-                                        <a class="dropdown-item view-workout" href="javascript:void(0);"
-                                            data-bs-toggle="modal" data-bs-target="#d"
-                                            data-workout="{{ json_encode($subscription) }}">
-                                            <i class="fa fa-eye color-muted"></i>
+                            @foreach ($diets as $diet)
+                            <tr>
+                                <td>
+                                    <img width="80"
+                                        src="{{ $diet->image ? asset($diet->image) : asset('images/profile/17.jpg') }}"
+                                        loading="lazy" alt="Profile Image">
+                                </td>
+                                <td>{{$diet->name }}</td>
+                                <td>{{$diet->gender }}</td>
+                                <td>{{$diet->goal }}</td>
+                                <td>{{$diet->min_age }} - {{ $diet->max_age }}</td>
+                                <td class="text-end">
+                                    <a class="dropdown-item view-workout" href="javascript:void(0);"
+                                        data-bs-toggle="modal" data-bs-target="#d"
+                                        data-workout="{{ json_encode($diet) }}">
+                                        <i class="fa fa-eye color-muted"></i>
+                                    </a>
+                                </td>
+                                <td class="text-end">
+                                    @if($diet->is_editable)
+                                    <span><a href="javascript:void(0);" class="me-4 edit-book-button"
+                                            data-bs-toggle="modal" data-bs-target="#editSuscription"
+                                            data-book='@json($diet)'><i class="fa fa-pencil color-muted"></i>
                                         </a>
-                                    </td>
-                                    <td class="text-end">
-                                        <span><a href="javascript:void(0);" class="me-4 edit-book-button"
-                                                data-bs-toggle="modal" data-bs-target="#editSuscription"
-                                                data-book='@json($subscription)'><i class="fa fa-pencil color-muted"></i>
-                                            </a>
-                                            <a onclick="confirmDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip"
-                                                data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
-                                    </td>
-                                </tr>
+                                        <a onclick="confirmDelete('{{ $diet->uuid }}')" data-bs-toggle="tooltip"
+                                            data-placement="top" title="Close"><i class="fas fa-trash"></i></a></span>
+                                    @else
+                                    <span class="text-muted">Not Editable</span>
+                                    @endif
+                                </td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -386,14 +390,13 @@
 
 
 <script>
-
-    (function () {
+    (function() {
         'use strict'
         var forms = document.querySelectorAll('.needs-validation')
 
         Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
+            .forEach(function(form) {
+                form.addEventListener('submit', function(event) {
                     if (!form.checkValidity()) {
                         event.preventDefault()
                         event.stopPropagation()
@@ -423,7 +426,7 @@
             })
     })()
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Function to initialize event listeners for edit and view buttons
         function initializeEventListeners() {
             // Edit Diet Modal
@@ -435,7 +438,7 @@
 
 
             editButtons.forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     const diet = JSON.parse(this.getAttribute('data-book'));
 
                     document.getElementById('edit_diet_id').value = diet.id;
@@ -458,11 +461,11 @@
 
             // Show a preview of the new image when selected
             if (editImageInput) {
-                editImageInput.addEventListener('change', function (event) {
+                editImageInput.addEventListener('change', function(event) {
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = function (e) {
+                        reader.onload = function(e) {
                             currentImage.src = e.target.result;
                         }
                         reader.readAsDataURL(file);
@@ -472,7 +475,7 @@
 
             // View Workout Modal
             document.querySelectorAll('.view-workout').forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     const workout = JSON.parse(this.getAttribute('data-workout'));
 
                     // Set the image src
@@ -508,7 +511,7 @@
         initializeEventListeners();
 
         // Reinitialize event listeners after DataTable redraw (or similar events)
-        $('#example3').on('draw.dt', function () {
+        $('#example3').on('draw.dt', function() {
             initializeEventListeners(); // Reattach event listeners
         });
     });
@@ -530,7 +533,7 @@
         });
     }
 
-    document.getElementById('name').addEventListener('input', function () {
+    document.getElementById('name').addEventListener('input', function() {
         const dietInput = this.value;
         const lettersAndCommasPattern = /^[A-Za-z\s,]+$/;
         const errorElement = document.getElementById('dietError');
@@ -543,15 +546,15 @@
         }
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const minAgeInput = document.getElementById('min_age');
         const maxAgeInput = document.getElementById('max_age');
         const errorMinAgeElement = document.getElementById('minMaxError'); // For min age error
         const errorMaxAgeElement = document.getElementById('MaxError'); // For max age error
 
         // Add input event listeners for validation
-        [minAgeInput, maxAgeInput].forEach(function (input) {
-            input.addEventListener('input', function () {
+        [minAgeInput, maxAgeInput].forEach(function(input) {
+            input.addEventListener('input', function() {
                 // Validate Min Age (ensure it's not less than 16)
                 if (input === minAgeInput && this.value < 16) {
                     errorMinAgeElement.style.display = 'block';
@@ -566,8 +569,7 @@
                 else if (input === maxAgeInput && parseInt(this.value) <= parseInt(minAgeInput.value)) {
                     errorMaxAgeElement.style.display = 'block';
                     errorMaxAgeElement.innerHTML = 'Max age must be greater than Min age';
-                }
-                else {
+                } else {
                     // Hide the errors when values are valid
                     errorMinAgeElement.style.display = 'none';
                     errorMaxAgeElement.style.display = 'none';
@@ -575,7 +577,7 @@
             });
         });
 
-        document.querySelector('form').addEventListener('submit', function (event) {
+        document.querySelector('form').addEventListener('submit', function(event) {
             let isValid = true; // Track validity status
 
             // Validate Min Age
@@ -610,7 +612,7 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const calorieInput = document.getElementById('calories');
         const proteinInput = document.getElementById('protein');
         const carbsInput = document.getElementById('carbs');
@@ -627,28 +629,28 @@
         }
 
         // Add input event listeners for all fields
-        calorieInput.addEventListener('input', function () {
+        calorieInput.addEventListener('input', function() {
             validateInput(this, document.getElementById('caloriesError'));
         });
 
-        proteinInput.addEventListener('input', function () {
+        proteinInput.addEventListener('input', function() {
             validateInput(this, document.getElementById('proteinError'));
         });
 
-        carbsInput.addEventListener('input', function () {
+        carbsInput.addEventListener('input', function() {
             validateInput(this, document.getElementById('carbsError'));
         });
 
-        fatsInput.addEventListener('input', function () {
+        fatsInput.addEventListener('input', function() {
             validateInput(this, document.getElementById('fatsError'));
         });
 
         // Validate on form submission
-        document.querySelector('form').addEventListener('submit', function (event) {
+        document.querySelector('form').addEventListener('submit', function(event) {
             let isValid = true; // Track validity status
 
             // Validate all fields on form submission
-            [calorieInput, proteinInput, carbsInput, fatsInput].forEach(function (input) {
+            [calorieInput, proteinInput, carbsInput, fatsInput].forEach(function(input) {
                 const errorElement = document.getElementById(input.name + 'Error');
                 if (parseFloat(input.value) <= 0) {
                     event.preventDefault(); // Prevent form submission
@@ -660,7 +662,6 @@
             });
         });
     });
-
 </script>
 
 @include('CustomSweetAlert');
