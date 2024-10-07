@@ -28,7 +28,7 @@ class GymSheduleController extends Controller
     {
         $gym = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
-        $gymShedule = $this->gymShedule->where('gym_id',$gymId)->get();
+        $gymShedule = $this->gymShedule->where('gym_id', $gymId)->get();
         return view('GymOwner.gym-calender', compact('gymShedule'));
     }
 
@@ -36,14 +36,14 @@ class GymSheduleController extends Controller
     {
         try {
             $validated = $request->validate([
-                'event_name'   => 'required|string|max:255',
-                'date'         => 'required_if:is_recurring,0', // For non-recurring
-                'week_days'    => 'required_if:is_recurring,1|array', // For recurring
-                'week_days.*'  => 'integer|between:1,7',
-                'start_time'   => 'required|date_format:H:i',
-                'end_time'     => 'required|date_format:H:i|after:start_time',
+                'event_name' => 'required|string|max:255',
+                'date' => 'required_if:is_recurring,0', // For non-recurring
+                'week_days' => 'required_if:is_recurring,1|array', // For recurring
+                'week_days.*' => 'integer|between:1,7',
+                'start_time' => 'required|date_format:H:i',
+                'end_time' => 'required|date_format:H:i|after:start_time',
                 'is_recurring' => 'required|boolean',
-                'description'  => 'required|string',
+                'description' => 'required|string',
             ]);
 
             $this->gymShedule->addShedule($request->all());
@@ -51,7 +51,7 @@ class GymSheduleController extends Controller
             return redirect()->back()->with('status', 'success')->with('message', 'Schedule added successfully.');
         } catch (Exception $e) {
             Log::error("[GymSheduleController][addGymShedule] error " . $e->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', 'Error while adding schedule.');
+            return redirect()->back()->with('status', 'error')->with('message', 'Error while adding schedule.'. $e->getMessage());
         }
     }
 
@@ -104,18 +104,31 @@ class GymSheduleController extends Controller
     {
         // Use the enum constants to map the weekdays
         $weekDayMap = [
-            WeekDaysEnum::SUNDAY    => Carbon::SUNDAY,
-            WeekDaysEnum::MONDAY    => Carbon::MONDAY,
-            WeekDaysEnum::TUESDAY   => Carbon::TUESDAY,
+            WeekDaysEnum::SUNDAY => Carbon::SUNDAY,
+            WeekDaysEnum::MONDAY => Carbon::MONDAY,
+            WeekDaysEnum::TUESDAY => Carbon::TUESDAY,
             WeekDaysEnum::WEDNESDAY => Carbon::WEDNESDAY,
-            WeekDaysEnum::THURSDAY  => Carbon::THURSDAY,
-            WeekDaysEnum::FRIDAY    => Carbon::FRIDAY,
-            WeekDaysEnum::SATURDAY  => Carbon::SATURDAY,
+            WeekDaysEnum::THURSDAY => Carbon::THURSDAY,
+            WeekDaysEnum::FRIDAY => Carbon::FRIDAY,
+            WeekDaysEnum::SATURDAY => Carbon::SATURDAY,
         ];
 
         // Get the next occurrence of the given weekday number, adjusted for week offset
         $date = Carbon::now()->addWeeks($weekOffset);
 
         return $date->next($weekDayMap[$weekDay])->toDateString();
+    }
+
+    public function deleteSchedule($id)
+    {
+        // Fetch the specific schedule by its ID
+        $schedule = GymShedule::find($id);
+
+        if ($schedule) {
+            $schedule->delete(); // Call delete() on a single model instance
+            return response()->json(['success' => true, 'message' => 'Event deleted successfully.']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Event not found.'], 404);
+        }
     }
 }

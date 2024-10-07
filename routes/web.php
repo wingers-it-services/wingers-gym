@@ -169,13 +169,12 @@ Route::group(['middleware' => ['auth:gym']], function()  {
     Route::post('/add-gym-schedule', [GymSheduleController::class, 'addGymShedule'])->name('addGymShedule');
 
     Route::get('/fetch-gym-schedules', [GymSheduleController::class, 'fetchSchedule'])->name('fetchSchedule');
+    Route::get('/delete-gym-schedules/{id}', [GymSheduleController::class, 'deleteSchedule']);
 
     /* dashboard */
     Route::get('/dashboard', [GymDetailController::class, 'showDashboard'])->name('dashboard');
     Route::get('/ai-dashboard', [GymDetailController::class, 'showAiDashboard'])->name('ai-dashboard');
     Route::get('/logout', [GymDetailController::class, 'logoutGym'])->name('logout');
-
-    // Route::get('/viewGymInfo', [AdminGymController::class, 'viewGymInfo']);
 
 
 
