@@ -62,9 +62,7 @@ Route::post('/fetch-user-attendance-chart', [GymUserController::class, 'fetchUse
 Route::get('/getGymHolidaysAndWeekendsOnGymAttendance/{gym_id}', [GymUserController::class, 'getGymHolidaysAndWeekendsOnGymAttendance'])->name('getGymHolidaysAndWeekendsOnGymAttendance');
 Route::get('/customers-payment', [GymUserController::class, 'viewCustomerPayment'])->name('customers-payment');
 
-Route::get('/coupon', function () {
-    return view('GymOwner.coupon');
-});
+
 Route::get('/vendor-list', function () {
     return view('GymOwner.vendor-list');
 });
@@ -242,9 +240,9 @@ Route::group(['middleware' => ['auth:gym']], function()  {
     Route::post('/update-user-subscription/{userId}', [GymUserController::class, 'updateSubscription'])->name('update-user-subscription');
 
     Route::get('/gym-coupon', [GymCouponController::class, 'listGymCoupons'])->name('listGymCoupons');
-    Route::post('/gym-coupon', [GymCouponController::class, 'addGymCoupon']);
-    Route::get('/gymCouponView', [GymCouponController::class, 'viewGymCoupon'])->name('viewGymCoupon');
-    Route::post('/updateGymCoupon', [GymCouponController::class, 'updateGymCoupon'])->name('updateGymCoupon');
+    Route::post('/add-gym-coupon', [GymCouponController::class, 'addGymCoupon']);
+    Route::post('/update-gym-coupon', [GymCouponController::class, 'updateGymCoupon'])->name('updateGymCoupon');
+    Route::get('/delete-gym-coupon/{uuid}', [GymCouponController::class, 'deleteGymCoupon'])->name('delete-gym-coupon');
 
     Route::post('/updateGym', [GymDetailController::class, 'updateGym'])->name('updateGym');
 

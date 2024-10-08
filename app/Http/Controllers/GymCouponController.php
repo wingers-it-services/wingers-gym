@@ -28,27 +28,27 @@ class GymCouponController extends Controller
         $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
         $coupons = $this->gymCoupon->where('gym_id', $gymId)->get();
-        return view('GymOwner.GymCoupon.createListGymCoupon', compact('coupons'));
+        return view('GymOwner.gym-coupon', compact('coupons'));
     }
 
     public function addGymCoupon(Request $request)
     {
-        // dd($request->all());
         try {
             $validatedData = $request->validate([
-                "name" => 'required',
-                "from" => 'required',
-                "to" => 'required',
-                "amount" => 'required',
-                "discount" => 'required',
-                "type" => 'required',
-                "max_amount" => 'required'
+                "coupon_code" => 'required',
+                "description" => 'required',
+                "discount_type" => 'required',
+                "start_date" => 'required',
+                "end_date" => 'required',
+                "status" => 'required'
             ]);
 
-            // dd($validatedData);
-            $this->gymCoupon->addCoupon($validatedData);
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
-            return redirect()->route('listGymCoupons')->with('success', 'Data saved successfully.');
+            $this->gymCoupon->addCoupon($validatedData, $gymId);
+
+            return redirect()->route('listGymCoupons')->with('status', 'success')->with('message', 'Data saved successfully.');
         } catch (\Throwable $th) {
             Log::error("[GymCouponController][addGymCoupon] error " . $th->getMessage());
             return redirect()->back()->with('error', $th->getMessage());
@@ -66,25 +66,33 @@ class GymCouponController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "uuid" => 'required',
-                "name" => 'required',
-                "from" => 'required',
-                "to" => 'required',
-                "amount" => 'required',
-                "discount" => 'required',
-                "type" => 'required',
-                "max_amount" => 'required'
+                "coupon_id" => 'required',
+                "coupon_code" => 'required',
+                "description" => 'required',
+                "discount_type" => 'required',
+                "start_date" => 'required',
+                "end_date" => 'required|after:start_date',
+                "status" => 'required'
             ]);
-            $uuid=$request->uuid;
+            $coupon_id = $request->coupon_id;
 
-            $isCouponUpdated=$this->gymCoupon->updateCoupon($validatedData, $uuid);
+            $isCouponUpdated = $this->gymCoupon->updateCoupon($validatedData, $coupon_id);
             if (!$isCouponUpdated) {
                 return redirect()->back()->with('status', 'error')->with('message', 'error while updating coupon.');
             }
-            return redirect()->route('listGymCoupons')->with('status', 'success')->with('message', 'coupon Updated successfully.');
+            return redirect()->back()->with('status', 'success')->with('message', 'coupon Updated successfully.');
         } catch (Throwable $th) {
             Log::error("[GymCouponController][updateGymCoupon] error " . $th->getMessage());
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
+
+    public function deleteGymCoupon($uuid)
+    {
+        $coupon = $this->gymCoupon->where('uuid', $uuid)->firstOrFail();
+        $coupon->delete();
+
+        return redirect()->back()->with('status', 'success')->with('message', 'Coupon Succesfully Deleted!');
+    }
 }
+

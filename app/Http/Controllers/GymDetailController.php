@@ -101,7 +101,7 @@ class GymDetailController extends Controller
         try {
             // Validate the incoming request
             $request->validate([
-                'email'    => 'required|email',
+                'email' => 'required|email',
                 'password' => 'required'
             ]);
 
@@ -206,7 +206,7 @@ class GymDetailController extends Controller
         try {
             $request->validate([
                 'gym_name' => 'required',
-                'email'    => 'required|unique:gyms,email',
+                'email' => 'required|unique:gyms,email',
                 'password' => 'required',
             ]);
 
@@ -311,7 +311,7 @@ class GymDetailController extends Controller
     {
         try {
             $request->validate([
-                'holiday_name'    => 'required',
+                'holiday_name' => 'required',
                 'date' => 'required'
             ]);
 
@@ -339,7 +339,7 @@ class GymDetailController extends Controller
     {
         try {
             $validateData = $request->validate([
-                'weekend_day'    => 'required|array',
+                'weekend_day' => 'required|array',
             ]);
 
             // Get the currently authenticated gym

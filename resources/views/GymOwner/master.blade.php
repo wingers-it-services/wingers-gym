@@ -940,6 +940,12 @@
 							</a>
 						</li>
 						<li>
+							<a href="/gym-coupon" class="ai-icon" aria-expanded="false">
+								<i class="fa-solid fa-egg"></i>
+								<span class="nav-text">Add Coupon</span>
+							</a>
+						</li>
+						<li>
 							<a href="/list-injuries" class="ai-icon" aria-expanded="false">
 								<i class="fa-solid fa-egg"></i>
 								<span class="nav-text">Add Injury Type</span>
