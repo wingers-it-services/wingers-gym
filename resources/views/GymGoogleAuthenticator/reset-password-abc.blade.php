@@ -1,12 +1,14 @@
-<form method="POST" action="{{ route('gym.reset-password') }}">
+<h2>Set up Google Authenticator</h2>
+<p>Scan the QR code below using the Google Authenticator app:</p>
+<img src="{{ $QRImageUrl }}" alt="QR Code">
+
+<p>Alternatively, enter this code manually: {{ $secretKey }}</p>
+
+<form method="POST" action="{{ route('gym.otp.verify') }}">
     @csrf
-    <input type="hidden" name="email" value="{{ $email }}">
-
-    <label for="password">New Password</label>
-    <input type="password" name="password" id="password" required>
-
-    <label for="password_confirmation">Confirm Password</label>
-    <input type="password" name="password_confirmation" id="password_confirmation" required>
-
-    <button type="submit">Reset Password</button>
+    <div class="form-group">
+        <label for="otp">Enter OTP</label>
+        <input type="text" name="otp" id="otp" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Verify OTP</button>
 </form>

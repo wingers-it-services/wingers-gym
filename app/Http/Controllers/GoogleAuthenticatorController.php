@@ -11,6 +11,13 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class GoogleAuthenticatorController extends Controller
 {
 
+    protected $gym;
+    
+    public function __construct(Gym $gym)
+    {
+        $this->gym = $gym;
+    }
+
     public function setupGoogleAuthenticator(Request $request)
     {
         $gym = Auth::guard('gym')->user();
@@ -50,7 +57,7 @@ class GoogleAuthenticatorController extends Controller
             'google_authenticator_code' => 'required|numeric',
         ]);
 
-        $gym = Gym::where('email', $request->email)->first();
+        $gym = $this->gym->where('email', $request->email)->first();
 
         if (!$gym) {
             return back()->with('status', 'error')->with('message', 'No user found with this email.');
@@ -82,7 +89,7 @@ class GoogleAuthenticatorController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
-        $gym = Gym::where('email', $request->email)->first();
+        $gym = $this->gym->where('email', $request->email)->first();
 
         if (!$gym) {
             return redirect()->back()->with('status','error')->with('message','No user found with this email.');

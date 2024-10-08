@@ -651,7 +651,7 @@
 					</div>
 
 					<ul class="navbar-nav header-right">
-						
+
 						<!-- <li class="nav-item">
 							<div class="input-group search-area d-xl-inline-flex d-none">
 								<input type="text" class="form-control" placeholder="Search here" aria-label="Username" aria-describedby="header-search">
@@ -897,6 +897,37 @@
 				</li>
 
 				@if(Auth::guard('gym')->check() && Auth::guard('gym')->user()->gym_type == 'admin')
+				<li>
+					<a href="/admin/admin-coupon">
+						<i class="fa fa-gift" aria-hidden="true"></i>
+						<span class="nav-text">Coupons</span>
+					</a>
+				</li>
+				<li>
+					<a href="/admin/admin-advertistement">
+						<i class="fa-solid fa-rectangle-ad"></i>
+						<span class="nav-text">Advertisement</span>
+					</a>
+				</li>
+				<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
+                        <i class="fa fa-bell" aria-hidden="true"></i>
+                        <span class="nav-text">Notification</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a href="#">User Notification</a></li>
+                        <li><a href="#">GYM Notification</a></li>
+                        <li><a href="#">System Notification</a></li>
+                    </ul>
+                </li>
+				<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
+						<i class="fa fa-address-card-o" aria-hidden="true"></i>
+						<span class="nav-text">GYM</span>
+					</a>
+					<ul aria-expanded="false">
+						<li><a href="/admin/add-gym">Add New GYM</a></li>
+						<li><a href="/admin/admin-gym-list">GYM List</a></li>
+					</ul>
+				</li>
 				<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
 						<i class="fa fa-pie-chart" aria-hidden="true"></i>
 						<span class="nav-text">Action</span>
@@ -944,6 +975,29 @@
 						</li>
 					</ul>
 				</li>
+				<li>
+					<a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+						<i class="fa-solid fa-shop"></i>
+						<span class="nav-text">Shop</span>
+					</a>
+					<ul aria-expanded="false">
+						<li><a href="/add-product">Add Product</a></li>
+						<li><a href="/product-list">Product List</a></li>
+						<li><a href="/order-list">Order</a></li>
+						<li><a href="/invoice">Invoice</a></li>
+					</ul>
+				</li> 
+				<li><a class="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
+                <i class="fas fa-user-md" aria-hidden="true"></i>
+                <span class="nav-text">Doctor</span>
+            </a>
+            <ul aria-expanded="false">
+                <li><a href="#">Add New Doctor</a></li>
+                <li><a href="#">Doctor List</a></li>
+
+            </ul>
+        </li>
+
 				@endif
 
 
@@ -985,21 +1039,6 @@
 						<span class="nav-text">Vendor</span>
 					</a>
 				</li>
-				{{-- <li>
-					<a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
-						<i class="fa-solid fa-shop"></i>
-						<span class="nav-text">Shop</span>
-					</a>
-					<ul aria-expanded="false">
-						<li><a href="/add-product">Add Product</a></li>
-						<li><a href="/product-list">Product List</a></li>
-						<li><a href="/order-list">Order</a></li>
-						<li><a href="/invoice">Invoice</a></li>
-						<li><a href="/coupon">Coupon</a></li>
-
-					</ul>
-				</li> --}}
-
 				<li>
 					<a href="/gym-gallery">
 						<i class="fa fa-picture-o" aria-hidden="true"></i>
