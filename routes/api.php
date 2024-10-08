@@ -63,10 +63,9 @@ Route::post('/profile-part-four-updated', [GymUserControllerApi::class, 'profile
 
 Route::post('/add-user-injuries', [GymUserControllerApi::class, 'addUserInjuries']);
 
-
 Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
 
-Route::post('/change-password', [GymUserControllerApi::class, 'updatePassword']);
+Route::post('/forget-password', [GymUserControllerApi::class, 'updatePassword']);
 
 Route::middleware('auth:api')->group(function () {
 
