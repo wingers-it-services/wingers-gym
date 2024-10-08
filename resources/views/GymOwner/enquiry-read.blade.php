@@ -11,19 +11,28 @@
     <div class="container-fluid">
         <div class="page-titles">
             <ol class="breadcrumb">
-               <li class="breadcrumb-item active"><a href="javascript:void(0)">Enquiry</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Enquiry</a></li>
             </ol>
         </div>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="email-left-box generic-width px-0 mb-5">
+                        <div class="email-left-box generic-width px-0 mb-5" style="width: max-content;">
                             <div class="mail-list rounded mt-4">
                                 @foreach($inquiries as $inquiry)
                                 <a href="javascript:void(0)" class="list-group-item inquiry-item" data-id="{{$inquiry->id}}">
-                                    <i class="fa fa-inbox font-18 align-middle me-2"></i> {{$inquiry->reason}} 
-                                    <span class="badge badge-secondary badge-sm float-end">198</span>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <img class="me-2 rounded" width="50" alt="image" src="{{$inquiry->user->image}}">
+                                        </div>
+                                        <div class="col-9">
+                                            <span class="font-18 align-middle me-2">Name:{{$inquiry->user->firstname}} </span></br>
+                                            <span class="font-18 align-middle me-2">Date:{{$inquiry->reason}} </span></br>
+                                            <span class="font-18 align-middle me-2">Status:{{$inquiry->reason}} </span>
+                                           <!-- <span class="badge badge-secondary badge-sm float-end">198</span> -->
+                                        </div>
+                                    </div>
                                 </a>
                                 @endforeach
                             </div>
@@ -46,19 +55,21 @@
 </div>
 
 <script>
-$(document).ready(function() {
-    // Handle inquiry click
-    $('.inquiry-item').on('click', function() {
-        var inquiryId = $(this).data('id');
-        
-        // Make an AJAX call to fetch inquiry details
-        $.ajax({
-            url: '{{ route("inquiry.details") }}', // Adjust the route as per your routing setup
-            method: 'GET',
-            data: { id: inquiryId },
-            success: function(response) {
-                // Populate the inquiry details in the right box
-                $('#inquiry-details').html(`
+    $(document).ready(function() {
+        // Handle inquiry click
+        $('.inquiry-item').on('click', function() {
+            var inquiryId = $(this).data('id');
+
+            // Make an AJAX call to fetch inquiry details
+            $.ajax({
+                url: '{{ route("inquiry.details") }}', // Adjust the route as per your routing setup
+                method: 'GET',
+                data: {
+                    id: inquiryId
+                },
+                success: function(response) {
+                    // Populate the inquiry details in the right box
+                    $('#inquiry-details').html(`
                     <div class="read-content">
                         <div class="media pt-3">
                             <img class="me-2 rounded" width="50" alt="image" src="${response.image}">
@@ -69,7 +80,6 @@ $(document).ready(function() {
                             <a href="javascript:void(0)" class="btn btn-primary px-3 light" data-toggle="modal" data-target="#replyModal">
                                 <i class="fa fa-reply"></i>
                             </a>
-                            <a href="javascript:void(0)" class="btn btn-primary px-3 light ms-2"><i class="fa fa-long-arrow-right"></i></a>
                             <a href="javascript:void(0)" class="btn btn-primary px-3 light ms-2"><i class="fa fa-trash"></i></a>
                         </div>
                         <hr>
@@ -78,10 +88,10 @@ $(document).ready(function() {
                         <hr>
                     </div>
                 `);
-            }
+                }
+            });
         });
     });
-});
 </script>
 
 @endsection

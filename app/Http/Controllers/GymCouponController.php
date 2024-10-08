@@ -15,11 +15,13 @@ class GymCouponController extends Controller
     use SessionTrait;
     protected $gymCoupon;
     protected $gym;
+    
     public function __construct(GymCoupon $gymCoupon, Gym $gym)
     {
         $this->gymCoupon = $gymCoupon;
         $this->gym = $gym;
     }
+
     public function listGymCoupons()
     {
         $gym = Auth::guard('gym')->user();

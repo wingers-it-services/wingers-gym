@@ -378,6 +378,9 @@ Route::post('/add-weekend', [GymDetailController::class, 'addWeekendsByGym']);
 
 Route::post('/update-gym-account', [GymDetailController::class, 'updateGymAccount']);
 
+Route::post('/gym/otp/verify', [GymDetailController::class, 'verifyOtp'])->name('gym.otp.verify');
+
+Route::get('/gym-otp', [GymDetailController::class, 'viewOtp'])->name('gym.viewOtp');
 
 Route::get('gym/setup-google-authenticator', [GoogleAuthenticatorController::class, 'setupGoogleAuthenticator'])
     ->name('gym.setup-google-authenticator')

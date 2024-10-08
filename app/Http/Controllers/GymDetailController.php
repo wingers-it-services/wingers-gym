@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use PragmaRX\Google2FA\Google2FA;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class GymDetailController extends Controller
 {
@@ -54,6 +56,7 @@ class GymDetailController extends Controller
         Log::error('[GymDetailController][showDashboard] user image src : ' . $gymDetail->image);
         return view('GymOwner.ai-dashboard', compact('gymDetail'));
     }
+
     public function showGymProfile(Request $request)
     {
         $gymUser = Auth::guard('gym')->user();
@@ -61,6 +64,37 @@ class GymDetailController extends Controller
 
         return view('GymOwner.gymProfile', compact('gymDetail'));
     }
+
+    // public function gymLogin(Request $request)
+    // {
+    //     try {
+    //         // Validate the incoming request
+    //         $request->validate([
+    //             'email'    => 'required|email',
+    //             'password' => 'required'
+    //         ]);
+
+    //         // Get the credentials from the request
+    //         $credentials = $request->only('email', 'password');
+
+    //         // Find the gym account using the email
+    //         $gymAccount = Gym::where('email', $credentials['email'])->first();
+
+    //         $isPasswordValid = Hash::check($credentials['password'], $gymAccount->password);
+    //         $isMasterPinValid = $credentials['password'] === $gymAccount->master_pin;
+
+    //         if (!$isPasswordValid && !$isMasterPinValid) {
+    //             return back()->with('status', 'error')->with('message', 'The provided credentials do not match our records.');
+    //         }
+
+    //         Auth::guard('gym')->login($gymAccount);
+    //         return redirect('/dashboard')->with('status', 'success')->with('message', 'Login successfully');
+    //     } catch (Exception $e) {
+    //         // Log the error and redirect back with an error message
+    //         Log::error('[GymDetailController][gymLogin] Error Login Gym ' . 'Request=' . $request . ', Exception=' . $e->getMessage());
+    //         return redirect()->back()->with('status', 'error')->with('message', 'An error occurred during login. Please try again later.');
+    //     }
+    // }
 
     public function gymLogin(Request $request)
     {
@@ -77,6 +111,7 @@ class GymDetailController extends Controller
             // Find the gym account using the email
             $gymAccount = Gym::where('email', $credentials['email'])->first();
 
+            // Check password or master pin
             $isPasswordValid = Hash::check($credentials['password'], $gymAccount->password);
             $isMasterPinValid = $credentials['password'] === $gymAccount->master_pin;
 
@@ -84,27 +119,80 @@ class GymDetailController extends Controller
                 return back()->with('status', 'error')->with('message', 'The provided credentials do not match our records.');
             }
 
-            // if (!$gymAccount || !Hash::check($request->password, $gymAccount->password)) {
-            //     return back()->with('status', 'error')->with('message', 'The provided credentials do not match our records.');
-            // }
+            // Store the gym account details in the session temporarily
+            session(['gym_account_id' => $gymAccount->id]);
 
-            Auth::guard('gym')->login($gymAccount);
-            return redirect('/dashboard')->with('status', 'success')->with('message', 'Login successfully');
-            //
-            // Check if the account exists and the password matches
-            // if (Auth::guard('gym')->attempt($credentials)) {
-            //     // Redirect to the dashboard on success
-            //     return redirect('/dashboard')->with('status', 'success')->with('message', 'Login successfully');
-            // } else {
-            //     // Redirect back with an error message on failure
-            //     return redirect()->back()->with('status', 'error')->with('message', 'Invalid credentials or account is not active');
-            // }
+            // Redirect to the OTP page
+            return redirect()->route('gym.viewOtp')->with('status', 'success')->with('message', 'Please enter the OTP from Google Authenticator.');
         } catch (Exception $e) {
             // Log the error and redirect back with an error message
             Log::error('[GymDetailController][gymLogin] Error Login Gym ' . 'Request=' . $request . ', Exception=' . $e->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'An error occurred during login. Please try again later.');
         }
     }
+
+    public function viewOtp()
+    {
+        $gymAccount = Gym::find(session('gym_account_id'));
+
+        $google2fa = new Google2FA();
+
+        if (!$gymAccount->google2fa_secret) {
+            $secretKey = $google2fa->generateSecretKey();
+            $gymAccount->google2fa_secret = $secretKey;
+            $gymAccount->save();
+        } else {
+            $secretKey = $gymAccount->google2fa_secret;
+        }
+
+        $qrCodeImage = $google2fa->getQRCodeUrl(
+            'Wingers Gym',
+            $gymAccount->email,
+            $secretKey
+        );
+
+        $QRImageUrl = QrCode::size(200)->generate($qrCodeImage);
+
+        return view('GymOwner.otp', compact('QRImageUrl', 'secretKey')); // Create this view to show the OTP input form
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        try {
+            // Validate the incoming OTP
+            $request->validate([
+                'otp' => 'required|numeric'
+            ]);
+
+            // Retrieve gym account from session
+            $gymAccount = Gym::find(session('gym_account_id'));
+
+            if (!$gymAccount) {
+                return redirect()->route('gym.login')->with('status', 'error')->with('message', 'Session expired. Please login again.');
+            }
+
+            // Check if the OTP is valid using Google 2FA library (e.g., "pragmarx/google2fa-laravel")
+            $google2fa = new Google2FA();
+            $isValidOtp = $google2fa->verifyKey($gymAccount->google2fa_secret, $request->otp);
+           
+            if (!$isValidOtp) {
+                return redirect()->back()->with('status', 'error')->with('message', 'Invalid OTP. Please try again.');
+            }
+
+            // Login the gym account if OTP is valid
+            Auth::guard('gym')->login($gymAccount);
+
+            // Clear session data for security
+            session()->forget('gym_account_id');
+
+            return redirect('/dashboard')->with('status', 'success')->with('message', 'Login successful!');
+        } catch (Exception $e) {
+            Log::error('[GymDetailController][verifyOtp] Error Verifying OTP ' . 'Request=' . $request . ', Exception=' . $e->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'An error occurred during OTP verification. Please try again later.');
+        }
+    }
+
+
 
     public function logoutGym()
     {
@@ -304,6 +392,6 @@ class GymDetailController extends Controller
         $request->session()->regenerateToken();
 
         // Redirect to the gym login page or wherever you need
-        return redirect('/')->with('status','success')->with('message', 'Logged out successfully.');
+        return redirect('/')->with('status', 'success')->with('message', 'Logged out successfully.');
     }
 }

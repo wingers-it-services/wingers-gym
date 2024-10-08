@@ -37,10 +37,9 @@ class GymUserLoginControllerApi extends Controller
             $request->validate([
                 'email_or_phone' => 'required|string',
                 'password'       => 'required|string',
-                'user_type'      => 'required'
             ]);
 
-            $credentials = $request->only('email_or_phone', 'password', 'user_type');
+            $credentials = $request->only('email_or_phone', 'password');
 
             // Determine if the input is an email or a phone number
             if (filter_var($credentials['email_or_phone'], FILTER_VALIDATE_EMAIL)) {
@@ -72,12 +71,7 @@ class GymUserLoginControllerApi extends Controller
                 ], 401);
             }
 
-            if ($credentials['user_type'] != $user->user_type) {
-                return response()->json([
-                    'status'  => 403,
-                    'message' => 'You are not a valid user for this login.',
-                ], 403);
-            }
+         
 
             $token = $user->createToken('MyAppToken')->accessToken;
             $age = null;
@@ -134,8 +128,7 @@ class GymUserLoginControllerApi extends Controller
         try {
             // Validate the incoming request
             $request->validate([
-                'email' => 'required|email',
-                'user_type' => 'required' // Add user_type validation
+                'email' => 'required|email'
             ]);
 
             // Find the user by email
@@ -144,13 +137,7 @@ class GymUserLoginControllerApi extends Controller
           
             // If user is found, proceed with further checks
             if ($user) {
-                // Check if the user_type matches
-                if ($user->user_type != $request->user_type) {
-                    return response()->json([
-                        'status'   => 403,
-                        'message'  => 'Invalid user type for this login.',
-                    ], 403);
-                }
+                
                 $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
                 $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
                 $levels = $user->levels()->get(['level_id', 'lebel']);
