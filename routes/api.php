@@ -86,6 +86,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/logout', [GymUserControllerApi::class, 'userLogout']);
 
+    Route::get('/logout-all', [GymUserControllerApi::class, 'logoutFromAllDevices']);
+
     Route::post('/diet-anlytics', [DietAnalyticControllerApi::class, 'fetchUserDietAnalytic']);
 
     Route::get('/fetch-advertisement', [AdvertisementControllerApi::class, 'fetchAdvertisement']);

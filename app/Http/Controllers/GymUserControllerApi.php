@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class GymUserControllerApi extends Controller
@@ -590,10 +591,33 @@ class GymUserControllerApi extends Controller
             // Return the response
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
-            Log::error('[AuthController][updatePassword] Error: ' . $e->getMessage());
+            Log::error('[GymUserControllerApi][updatePassword] Error: ' . $e->getMessage());
             return response()->json([
                 'status'       => 500,
                 'message'      => 'Server Error',
+                'errorMessage' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function logoutFromAllDevices(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            DB::table('oauth_access_tokens')
+                ->where('user_id', $user->id)
+                ->update(['revoked' => true]);
+
+            return response()->json([
+                'status'  => 200,
+                'message' => 'Logged out from all devices successfully'
+            ], 200);
+        } catch (Exception $e) {
+            // Log the exception and return an error message
+            Log::error('[GymUserControllerApi][logoutFromAllDevices] Error logging out from all devices: ' . $e->getMessage());
+            return response()->json([
+                'status'       => 500,
+                'message'      => 'Failed to logout from all devices',
                 'errorMessage' => $e->getMessage()
             ], 500);
         }
