@@ -15,49 +15,49 @@ class GymCoupon extends Model
     use SessionTrait;
 
     protected $fillable = [
-        'name',
-        'from',
-        'to',
-        'amount',
-        'discount',
-        'max_amount',
-        'type',
+        'coupon_code',
+        'description',
+        'discount_type',
+        'start_date',
+        'end_date',
+        'status',
         'gym_id'
     ];
 
 
-    public function addCoupon(array $couponArray)
+    public function addCoupon(array $couponArray, int $gymId)
     {
-        $gym_uuid = $this->getGymSession()['uuid'];
-        $gymId = Gym::where('uuid', $gym_uuid)->first();
-        // dd('gym uuid : ' . $gym_uuid . ' Id : ' . $gymId->id);
-        $this->create([
-            'name' => $couponArray['name'],
-            'from' => $couponArray['from'],
-            'to' => $couponArray['to'],
-            'amount' => $couponArray['amount'],
-            'discount' => $couponArray['discount'],
-            'max_amount' => $couponArray['max_amount'],
-            'type' => $couponArray['type'],
-            'gym_id' => $gymId->id
-        ]);
+        try {
+            $this->create([
+                'coupon_code' => $couponArray['coupon_code'],
+                'description' => $couponArray['description'],
+                'discount_type' => $couponArray['discount_type'],
+                'start_date' => $couponArray['start_date'],
+                'end_date' => $couponArray['end_date'],
+                'status' => $couponArray['status'],
+                'gym_id' => $gymId
+            ]);
+        } catch (Throwable $e) {
+            dd($e);
+            Log::error('[GymCoupon][addCoupon] Error while adding coupon detail: ' . $e->getMessage());
+        }
+
     }
 
-    public function updateCoupon(array $couponUpdateArray, $uuid)
+    public function updateCoupon(array $couponUpdateArray, $coupon_id)
     {
-        $gymCoupon = GymCoupon::where('uuid', $uuid)->first();
+        $gymCoupon = GymCoupon::where('id', $coupon_id)->first();
         if (!$gymCoupon) {
             return redirect()->back()->with('error', 'coupon not found');
         }
         try {
             $gymCoupon->update([
-                "name" =>  $couponUpdateArray['name'],
-                "from" =>  $couponUpdateArray['from'],
-                "to" =>  $couponUpdateArray['to'],
-                "amount" => $couponUpdateArray['amount'] ,
-                "discount" =>  $couponUpdateArray['discount'],
-                "type" =>  $couponUpdateArray['type'],
-                "max_amount" =>  $couponUpdateArray['max_amount']
+                'coupon_code' => $couponUpdateArray['coupon_code'],
+                'description' => $couponUpdateArray['description'],
+                'discount_type' => $couponUpdateArray['discount_type'],
+                'start_date' => $couponUpdateArray['start_date'],
+                'end_date' => $couponUpdateArray['end_date'],
+                'status' => $couponUpdateArray['status']
             ]);
             return $gymCoupon->save();
         } catch (Throwable $e) {

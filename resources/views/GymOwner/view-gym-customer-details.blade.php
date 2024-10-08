@@ -910,7 +910,7 @@
                                                                     <option value="0">Select</option>
                                                                     @foreach ($trainers as $trainer)
                                                                         <option value="{{$trainer->id}}">
-                                                                            {{$trainer->name}}
+                                                                            {{$trainer->name}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fees: {{$trainer->fees}}
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
