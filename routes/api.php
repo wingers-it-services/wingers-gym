@@ -9,6 +9,7 @@ use App\Http\Controllers\GoalControllerApi;
 use App\Http\Controllers\GymDetailControllerApi;
 use App\Http\Controllers\GymGalleryControllerApi;
 use App\Http\Controllers\GymUserAttendenceControllerApi;
+use App\Http\Controllers\GymUserController;
 use App\Http\Controllers\GymUserControllerApi;
 use App\Http\Controllers\GymUserLoginControllerApi;
 use App\Http\Controllers\GymUserTrainerControllerApi;
@@ -65,6 +66,8 @@ Route::post('/add-user-injuries', [GymUserControllerApi::class, 'addUserInjuries
 
 Route::post('/email-login', [GymUserLoginControllerApi::class, 'loginWithEmail']);
 
+Route::post('/change-password', [GymUserControllerApi::class, 'updatePassword']);
+
 Route::middleware('auth:api')->group(function () {
 
     Route::post('/fetch-user-mix-analytics', [MixAnalyticsControllerApi::class, 'fetchUserMixAnalytic']);
@@ -82,6 +85,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/fetch-inquiry-reason', [UserInquiryControllerApi::class, 'fetchInquiryReason']);
 
     Route::get('/logout', [GymUserControllerApi::class, 'userLogout']);
+
+    Route::get('/logout-all', [GymUserControllerApi::class, 'logoutFromAllDevices']);
 
     Route::post('/diet-anlytics', [DietAnalyticControllerApi::class, 'fetchUserDietAnalytic']);
 

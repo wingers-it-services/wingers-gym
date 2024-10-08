@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class GymUserControllerApi extends Controller
@@ -41,11 +42,11 @@ class GymUserControllerApi extends Controller
     /**
      * The function `sendMobileOtp` validates a phone number, generates a mobile OTP, and returns a JSON
      * response with the result.
-     * 
+     *
      * @param Request request The `sendMobileOtp` function is used to send a one-time password (OTP) to
      * a mobile phone number for verification purposes. Here's a breakdown of the parameters used in the
      * function:
-     * 
+     *
      * @return The `sendMobileOtp` function is returning a JSON response with the result of generating a
      * mobile OTP along with the corresponding status code. The result is returned in the JSON format
      * and the status code is included in the response. If an error occurs during the process, an error
@@ -68,11 +69,11 @@ class GymUserControllerApi extends Controller
     /**
      * The function `sendEmailOtp` validates the email input, sends an OTP to the provided email
      * address, and returns a JSON response with the result.
-     * 
+     *
      * @param Request request The `sendEmailOtp` function is responsible for sending a One Time Password
      * (OTP) to a user's email address for verification. Here's a breakdown of the code snippet you
      * provided:
-     * 
+     *
      * @return The `sendEmailOtp` function is returning a JSON response with the data returned from the
      * `sendOtptoEmail` method of the ``. The response status code is determined by the
      * `'status'` key in the result array. If an exception is caught during the process, an error
@@ -95,10 +96,10 @@ class GymUserControllerApi extends Controller
     /**
      * This PHP function verifies a mobile OTP provided by the user and returns a JSON response based on
      * the verification result.
-     * 
+     *
      * @param Request request The `verifyMobileOtp` function is used to verify a mobile OTP (One Time
      * Password) provided by the user. Here is a breakdown of the parameters used in this function:
-     * 
+     *
      * @return The `verifyMobileOtp` function is returning a JSON response with the data stored in the
      * `` variable along with the HTTP status code specified in the `['status']` field. If
      * an exception is caught during the process, it will log an error message and return an error
@@ -122,10 +123,10 @@ class GymUserControllerApi extends Controller
     /**
      * The function `verifyEmailOtp` validates an email and OTP, then calls a service to verify the OTP
      * and returns the result as a JSON response.
-     * 
+     *
      * @param Request request The `verifyEmailOtp` function is used to verify an OTP (One-Time Password)
      * sent to a user's email address. Here's a breakdown of the parameters used in the function:
-     * 
+     *
      * @return The `verifyEmailOtp` function is returning a JSON response with the data stored in the
      * `` variable and the HTTP status code specified in the `['status']` value. If an
      * exception is caught during the process, it will log an error message and return an error response
@@ -149,10 +150,10 @@ class GymUserControllerApi extends Controller
     /**
      * The function `registerGymUser` validates and registers a new gym user with optional profile image
      * upload.
-     * 
+     *
      * @param Request request The `registerGymUser` function is a controller method that handles the
      * registration of a user for a gym. Here's a breakdown of the function:
-     * 
+     *
      * @return The `registerGymUser` function returns a JSON response with the following structure:
      * - `status`: The status of the registration process (success or error)
      * - `message`: A message related to the status of the registration process
@@ -209,10 +210,10 @@ class GymUserControllerApi extends Controller
     /**
      * The function `verifyOtp` in PHP validates OTP, email, and phone number inputs, verifies the OTP
      * using a service, and returns a JSON response with the result.
-     * 
+     *
      * @param Request request The `verifyOtp` function is used to verify a one-time password (OTP)
      * provided by the user. Here is an explanation of the parameters used in the function:
-     * 
+     *
      * @return The `verifyOtp` function is returning a JSON response with the data stored in the
      * `` variable along with the HTTP status code specified in `['status']`. If an
      * exception occurs during the verification process, an error response is returned with a message
@@ -239,11 +240,11 @@ class GymUserControllerApi extends Controller
     /**
      * The function `profilePartFour` in PHP validates and processes a request to update a user's profile
      * information, handling any exceptions that may occur.
-     * 
+     *
      * @param Request request The `profilePartFour` function in the code snippet is a controller method
      * that handles a POST request to update a user's profile information. Here's a breakdown of the
      * parameters being validated in the request:
-     * 
+     *
      * @return The function `profilePartFour` is returning a JSON response with the data stored in the
      * variable `` and the HTTP status code stored in `['status']`. If an exception occurs
      * during the process, an error response is returned with a message indicating the error that
@@ -276,7 +277,7 @@ class GymUserControllerApi extends Controller
     /**
      * The function fetches gyms associated with the authenticated user and counts the number of users
      * in each gym, returning the results in a JSON response.
-     * 
+     *
      * @return The `fetchUserGym` function returns a JSON response with the status code, gyms data, and
      * a message based on the outcome of the gym fetching process.
      */
@@ -325,10 +326,10 @@ class GymUserControllerApi extends Controller
     /**
      * The function `addUserInjuries` in PHP validates and associates injuries with a user, updating
      * the user's profile status accordingly.
-     * 
+     *
      * @param Request request The `addUserInjuries` function is designed to handle the addition of
      * injuries for a user in a gym management system. Let me explain the key points of this function:
-     * 
+     *
      * @return The function `addUserInjuries` returns a JSON response with status code, message, and
      * additional data.
      */
@@ -567,6 +568,57 @@ class GymUserControllerApi extends Controller
             return response()->json([
                 'status'  => 500,
                 'message' => 'Server error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        try {
+            // Validate the request
+            $validatedData = $request->validate([
+                'password' => 'required|string|min:8',
+                'email' => 'nullable|email',
+            ]);
+
+            // Get the authenticated user or email
+            $user = $request->user('api');
+            $email = $validatedData['email'] ?? null;
+
+            // Call the service to update the password
+            $result = $this->userService->updatePassword($validatedData['password'], $user, $email);
+
+            // Return the response
+            return response()->json($result, $result['status']);
+        } catch (Exception $e) {
+            Log::error('[GymUserControllerApi][updatePassword] Error: ' . $e->getMessage());
+            return response()->json([
+                'status'       => 500,
+                'message'      => 'Server Error',
+                'errorMessage' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function logoutFromAllDevices(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            DB::table('oauth_access_tokens')
+                ->where('user_id', $user->id)
+                ->update(['revoked' => true]);
+
+            return response()->json([
+                'status'  => 200,
+                'message' => 'Logged out from all devices successfully'
+            ], 200);
+        } catch (Exception $e) {
+            // Log the exception and return an error message
+            Log::error('[GymUserControllerApi][logoutFromAllDevices] Error logging out from all devices: ' . $e->getMessage());
+            return response()->json([
+                'status'       => 500,
+                'message'      => 'Failed to logout from all devices',
+                'errorMessage' => $e->getMessage()
             ], 500);
         }
     }
