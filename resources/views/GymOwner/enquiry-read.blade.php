@@ -28,7 +28,7 @@
                                         </div>
                                         <div class="col-9">
                                             <span class="font-18 align-middle me-2">Name:{{$inquiry->user->firstname}} </span></br>
-                                            <span class="font-18 align-middle me-2">Date:{{$inquiry->reason}} </span></br>
+                                            <span class="font-18 align-middle me-2">Date:{{$inquiry->created_at->format('d M Y')}} </span></br>
                                             <span class="font-18 align-middle me-2">Status:{{$inquiry->reason}} </span>
                                            <!-- <span class="badge badge-secondary badge-sm float-end">198</span> -->
                                         </div>
