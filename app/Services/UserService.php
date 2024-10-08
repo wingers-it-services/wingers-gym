@@ -7,7 +7,9 @@ use App\Enums\GymUserAccountStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\GymUserGym;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 
 class UserService
 {
@@ -110,6 +112,44 @@ class UserService
             $imagePath = 'admin_user_images/' . $filename;
             $file->move(public_path('admin_user_images/'), $filename);
             return $imagePath;
+        }
+    }
+
+    public function updatePassword($newPassword, $user = null, $email = null)
+    {
+        try {
+            // Determine the user to update
+            $userToUpdate = $user ?? User::where('email', $email)->first();
+
+            // If a user is found, update their password
+            if ($userToUpdate) {
+                $userToUpdate->password = $newPassword;
+                $userToUpdate->save();
+                return [
+                    'status'  => 200,
+                    'message' => 'password updated successfully.'
+                ];
+            }
+
+            // Customize message if neither user nor email is provided
+            if (!$user && !$email) {
+                return [
+                    'status'  => 400,
+                    'message' => 'Email is required to update the password.'
+                ];
+            }
+
+            return [
+                'status'  => 404,
+                'message' => 'User not found with the provided email'
+            ];
+        } catch (Exception $e) {
+            Log::error('[UserService][updatePassword] Error while updating password: ' . $e->getMessage());
+            return [
+                'status'       => 500,
+                'message'      => 'An error occurred while updating the password',
+                'errorMessage' => $e->getMessage()
+            ];
         }
     }
 }
