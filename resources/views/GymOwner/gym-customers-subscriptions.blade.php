@@ -24,7 +24,7 @@
                                         <th>Phone</th>
                                         <th>Subscription</th>
                                         <th>Start Datae</th>
-                                        <th>End Datae</th>
+                                        <th>End Date</th>
                                         <th>Days Remain</th>
                                     </tr>
                                 </thead>
