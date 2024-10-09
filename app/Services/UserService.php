@@ -115,7 +115,7 @@ class UserService
         }
     }
 
-    public function updatePassword($newPassword, $user = null, $email = null)
+    public function resetPassword($newPassword, $user = null, $email = null)
     {
         try {
             // Determine the user to update
@@ -123,12 +123,7 @@ class UserService
 
             // If a user is found, update their password
             if ($userToUpdate) {
-                $userToUpdate->password = $newPassword;
-                $userToUpdate->save();
-                return [
-                    'status'  => 200,
-                    'message' => 'password updated successfully.'
-                ];
+                return $this->setPassword($userToUpdate, $newPassword);
             }
 
             // Customize message if neither user nor email is provided
@@ -151,5 +146,44 @@ class UserService
                 'errorMessage' => $e->getMessage()
             ];
         }
+    }
+
+    public function changePassword(User $user, $oldPassword, $newPassword)
+    {
+        try {
+            if (!$user) {
+                return [
+                    'status'  => 404,
+                    'message' => 'User not found',
+                ];
+            }
+
+            if ($user->password != $oldPassword) {
+                return [
+                    'status'  => 400,
+                    'message' => 'Incorrect old password',
+                ];
+            }
+
+            return $this->setPassword($user, $newPassword);
+        } catch (Exception $e) {
+            Log::error('[UserService][changePassword] Error while changing password: ' . $e->getMessage());
+            return [
+                'status'       => 500,
+                'message'      => 'Internal server error while changing password',
+                'errorMessage' => $e->getMessage(),
+            ];
+        }
+    }
+
+
+    private function setPassword(User $user, $password)
+    {
+        $user->password = $password;
+        $user->save();
+        return [
+            'status'  => 200,
+            'message' => 'password updated successfully.'
+        ];
     }
 }
