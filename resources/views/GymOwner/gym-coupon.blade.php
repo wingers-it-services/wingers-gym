@@ -63,8 +63,8 @@
                                     <label for="status">Select Status</label>
                                     <select class="form-control" id="status" name="status" required>
                                         <option value="">Select Status</option>
-                                        <option value="1">Active</option>
-                                        <option value="0">In Active</option>
+                                        <option value="{{ \App\Enums\GymCouponStatusEnum::ACTIVE }}">Active</option>
+                                        <option value="{{ \App\Enums\GymCouponStatusEnum::INACTIVE }}">In Active</option>
 
                                     </select>
                                     <div class="invalid-feedback">Choose a Status.</div>
@@ -131,8 +131,8 @@
                                     <label for="edit_status">Select Status</label>
                                     <select class="form-control" id="edit_status" name="status" required>
                                         <option value="">Select Status</option>
-                                        <option value="1">Active</option>
-                                        <option value="0">Inactive</option>
+                                        <option value="{{ \App\Enums\GymCouponStatusEnum::ACTIVE }}">Active</option>
+                                        <option value="{{ \App\Enums\GymCouponStatusEnum::INACTIVE }}">Inactive</option>
                                     </select>
                                     <div class="invalid-feedback">Choose a Status.</div>
                                 </div>
@@ -180,7 +180,7 @@
                                                     <td>{{ $coupon->coupon_code }}</td>
                                                     <td>{{ $coupon->start_date }}</td>
                                                     <td>{{ $coupon->end_date }}</td>
-                                                    <td>{{ $coupon->status == 1 ? 'Active' : 'Inactive' }}</td>
+                                                    <td>{{ $coupon->status == \App\Enums\GymCouponStatusEnum::ACTIVE ? 'Active' : 'Inactive' }}</td>
                                                     <td>
                                                         <a href="javascript:void(0);" class="edit-coupon"
                                                             data-coupon='@json($coupon)' data-bs-toggle="tooltip"

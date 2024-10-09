@@ -24,10 +24,8 @@ class GymCouponController extends Controller
 
     public function listGymCoupons()
     {
-        $gym = Auth::guard('gym')->user();
-        $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
 
-        $coupons = $this->gymCoupon->where('gym_id', $gymId)->get();
+        $coupons = $this->gymCoupon->all();
         return view('GymOwner.gym-coupon', compact('coupons'));
     }
 
@@ -43,10 +41,7 @@ class GymCouponController extends Controller
                 "status" => 'required'
             ]);
 
-            $gym = Auth::guard('gym')->user();
-            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
-
-            $this->gymCoupon->addCoupon($validatedData, $gymId);
+            $this->gymCoupon->addCoupon($validatedData);
 
             return redirect()->route('listGymCoupons')->with('status', 'success')->with('message', 'Data saved successfully.');
         } catch (\Throwable $th) {

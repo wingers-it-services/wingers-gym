@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
 
 class Advertisement extends Model
@@ -29,6 +30,20 @@ class Advertisement extends Model
         }
 
         return asset($defaultImagePath);
+    }
+
+    public function addAdvertisment(array $advertismentArray, $imagePath)
+    {
+        try {
+            return $this->create([
+                'ad_title'         => $advertismentArray['ad_title'],
+                'ad_link'          => $advertismentArray['ad_link'],
+                'type'             => $advertismentArray['type'],
+                'banner'           => $imagePath
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('[Advertisement][addAdvertisment] Error adding Advertisement: ' . $e->getMessage());
+        }
     }
 
     protected static function boot()

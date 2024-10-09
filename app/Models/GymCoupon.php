@@ -20,12 +20,11 @@ class GymCoupon extends Model
         'discount_type',
         'start_date',
         'end_date',
-        'status',
-        'gym_id'
+        'status'
     ];
 
 
-    public function addCoupon(array $couponArray, int $gymId)
+    public function addCoupon(array $couponArray)
     {
         try {
             $this->create([
@@ -35,7 +34,6 @@ class GymCoupon extends Model
                 'start_date' => $couponArray['start_date'],
                 'end_date' => $couponArray['end_date'],
                 'status' => $couponArray['status'],
-                'gym_id' => $gymId
             ]);
         } catch (Throwable $e) {
             dd($e);
