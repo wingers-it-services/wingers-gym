@@ -586,7 +586,7 @@ class GymUserControllerApi extends Controller
             $email = $validatedData['email'] ?? null;
 
             // Call the service to update the password
-            $result = $this->userService->updatePassword($validatedData['password'], $user, $email);
+            $result = $this->userService->resetPassword($validatedData['password'], $user, $email);
 
             // Return the response
             return response()->json($result, $result['status']);
@@ -599,6 +599,34 @@ class GymUserControllerApi extends Controller
             ], 500);
         }
     }
+
+    public function changePassword(Request $request)
+    {
+        try {
+            // Validate the request for old password and new password
+            $validatedData = $request->validate([
+                'old_password' => 'required|string',
+                'new_password' => 'required|string|min:8',
+            ]);
+
+            // Get the authenticated user
+            $user = $request->user('api');
+
+            // Call the service to update the password
+            $result = $this->userService->changePassword($user, $validatedData['old_password'], $validatedData['new_password']);
+
+            // Return the response
+            return response()->json($result, $result['status']);
+        } catch (Exception $e) {
+            Log::error('[GymUserControllerApi][changePassword] Error: ' . $e->getMessage());
+            return response()->json([
+                'status'       => 500,
+                'message'      => 'Server Error',
+                'errorMessage' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function logoutFromAllDevices(Request $request)
     {
         try {
