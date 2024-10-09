@@ -143,7 +143,7 @@ class UserService
             return [
                 'status'       => 500,
                 'message'      => 'An error occurred while updating the password',
-                'errorMessage' => $e->getMessage()
+                'errorMessage' => '[UserService][updatePassword] : ' . $e->getMessage()
             ];
         }
     }
@@ -171,7 +171,7 @@ class UserService
             return [
                 'status'       => 500,
                 'message'      => 'Internal server error while changing password',
-                'errorMessage' => $e->getMessage(),
+                'errorMessage' => '[UserService][changePassword] : ' . $e->getMessage(),
             ];
         }
     }
@@ -179,11 +179,21 @@ class UserService
 
     private function setPassword(User $user, $password)
     {
-        $user->password = $password;
-        $user->save();
-        return [
-            'status'  => 200,
-            'message' => 'password updated successfully.'
-        ];
+        try {
+            $user->password = $password;
+            $user->save();
+            return [
+                'status'   => 200,
+                'message'  => 'password updated successfully.',
+                'password' => $password
+            ];
+        } catch (Exception $e) {
+            Log::error('[UserService][setPassword] Error while changing password: ' . $e->getMessage());
+            return [
+                'status'       => 500,
+                'message'      => 'Internal server error while changing password',
+                'errorMessage' => '[UserService][setPassword] : ' . $e->getMessage(),
+            ];
+        }
     }
 }
