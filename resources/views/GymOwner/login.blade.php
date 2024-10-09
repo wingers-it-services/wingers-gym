@@ -76,7 +76,7 @@
 
                                         </div>
                                         <div class="row d-flex justify-content-between mt-4 mb-2">
-                                            <div class="form-group">
+                                            <!-- <div class="form-group">
                                                 <div class="form-check custom-checkbox ms-1">
                                                     <input type="checkbox" class="form-check-input" name="remember"
                                                         value="1" id="basic_checkbox_1">
@@ -84,7 +84,7 @@
                                                         me</label>
 
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="form-group">
                                                 <a href="/gym/forgot-password">Forgot Password?</a>
                                             </div>

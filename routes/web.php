@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdvertismentController;
 use App\Http\Controllers\DietController;
 use App\Http\Controllers\FcmTokenControllerApi;
 use App\Http\Controllers\GoalController;
@@ -315,7 +316,9 @@ Route::group(['middleware' => ['auth:gym']], function()  {
     Route::get('/update-designation-status/{id}', [GymDesignationController::class, 'deactivateDesignation'])->name('update-designation-status');
     Route::get('/activate-designation-status/{id}', [GymDesignationController::class, 'activateDesignation'])->name('activate-designation-status');
 
-
+    Route::get('/gym-advertisment', [AdvertismentController::class, 'viewGymAdvertisment'])->name('gym-advertisment');
+    Route::post('/add-gym-advertisment', [AdvertismentController::class, 'addAdvertisment'])->name('add-gym-advertisment');
+    Route::get('/delete-advertisment/{uuid}', [AdvertismentController::class, 'deleteAdvertisment'])->name('delete-advertisment');
 
 
     // deleteGymDesignation
