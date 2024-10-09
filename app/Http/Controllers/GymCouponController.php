@@ -36,8 +36,8 @@ class GymCouponController extends Controller
                 "coupon_code" => 'required',
                 "description" => 'required',
                 "discount_type" => 'required',
-                "start_date" => 'required',
-                "end_date" => 'required',
+                "start_date" => 'required|date',
+                "end_date" => 'required|date|after:start_date',            
                 "status" => 'required'
             ]);
 
@@ -46,7 +46,7 @@ class GymCouponController extends Controller
             return redirect()->route('listGymCoupons')->with('status', 'success')->with('message', 'Data saved successfully.');
         } catch (\Throwable $th) {
             Log::error("[GymCouponController][addGymCoupon] error " . $th->getMessage());
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Error occurs during adding coupon'.$th->getMessage());
         }
     }
 
