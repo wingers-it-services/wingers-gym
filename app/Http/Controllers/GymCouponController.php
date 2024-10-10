@@ -15,7 +15,7 @@ class GymCouponController extends Controller
     use SessionTrait;
     protected $gymCoupon;
     protected $gym;
-    
+
     public function __construct(GymCoupon $gymCoupon, Gym $gym)
     {
         $this->gymCoupon = $gymCoupon;
@@ -37,8 +37,9 @@ class GymCouponController extends Controller
                 "description" => 'required',
                 "discount_type" => 'required',
                 "start_date" => 'required|date',
-                "end_date" => 'required|date|after:start_date',            
-                "status" => 'required'
+                "end_date" => 'required|date|after:start_date',
+                "status" => 'required',
+                "amount" => 'required'
             ]);
 
             $this->gymCoupon->addCoupon($validatedData);
@@ -46,7 +47,7 @@ class GymCouponController extends Controller
             return redirect()->route('listGymCoupons')->with('status', 'success')->with('message', 'Data saved successfully.');
         } catch (\Throwable $th) {
             Log::error("[GymCouponController][addGymCoupon] error " . $th->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', 'Error occurs during adding coupon'.$th->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Error occurs during adding coupon' . $th->getMessage());
         }
     }
 
@@ -67,7 +68,8 @@ class GymCouponController extends Controller
                 "discount_type" => 'required',
                 "start_date" => 'required',
                 "end_date" => 'required|after:start_date',
-                "status" => 'required'
+                "status" => 'required',
+                "amount" => 'required'
             ]);
             $coupon_id = $request->coupon_id;
 
@@ -81,6 +83,24 @@ class GymCouponController extends Controller
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
+
+    public function validateCoupon($coupon_code)
+    {
+        // Find the coupon from the gym_coupons table
+        $coupon = GymCoupon::where('coupon_code', $coupon_code)->first();
+
+        if ($coupon) {
+            return response()->json([
+                'valid' => true,
+                'coupon_id' => $coupon->id,
+                'discount_type' => $coupon->discount_type, // 'percentage' or 'amount'
+                'discount_value' => $coupon->amount, // Either percentage or fixed amount
+            ]);
+        } else {
+            return response()->json(['valid' => false]);
+        }
+    }
+
 
     public function deleteGymCoupon($uuid)
     {

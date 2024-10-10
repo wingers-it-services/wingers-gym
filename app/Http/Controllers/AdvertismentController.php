@@ -30,7 +30,7 @@ class AdvertismentController extends Controller
             $validatedData = $request->validate([
                 "banner" => 'required',
                 "ad_title" => 'required',
-                "ad_link" => 'nullable',
+                "ad_link" => ['nullable', 'regex:/^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?$/'],
                 "type" => 'required'
             ]);
 

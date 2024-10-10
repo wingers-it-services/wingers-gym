@@ -20,7 +20,8 @@ class GymCoupon extends Model
         'discount_type',
         'start_date',
         'end_date',
-        'status'
+        'status',
+        'amount'
     ];
 
 
@@ -34,6 +35,7 @@ class GymCoupon extends Model
                 'start_date' => $couponArray['start_date'],
                 'end_date' => $couponArray['end_date'],
                 'status' => $couponArray['status'],
+                'amount' => $couponArray['amount']
             ]);
         } catch (Throwable $e) {
             dd($e);
@@ -55,7 +57,8 @@ class GymCoupon extends Model
                 'discount_type' => $couponUpdateArray['discount_type'],
                 'start_date' => $couponUpdateArray['start_date'],
                 'end_date' => $couponUpdateArray['end_date'],
-                'status' => $couponUpdateArray['status']
+                'status' => $couponUpdateArray['status'],
+                'amount' => $couponUpdateArray['amount']
             ]);
             return $gymCoupon->save();
         } catch (Throwable $e) {

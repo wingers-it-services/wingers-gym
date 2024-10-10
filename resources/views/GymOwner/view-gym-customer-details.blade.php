@@ -1,5 +1,5 @@
 @extends('GymOwner.master')
-@section('title', 'Dashboard')
+@section('title', 'User Profile')
 @section('content')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <style>
@@ -217,9 +217,8 @@
                                                             <h4 class="mb-3 text-black">Subscription Description
                                                             </h4>
                                                             <div class="mb-3">
-                                                                <textarea class="form-control" id="description"
-                                                                    rows="10" name="description" required
-                                                                    readonly></textarea>
+                                                                <textarea class="form-control" id="description" rows="7"
+                                                                    name="description" required readonly></textarea>
                                                             </div>
                                                             <!-- Joining Date -->
                                                             <div class="mb-3">
@@ -239,6 +238,23 @@
                                                                     Date is required.
                                                                 </div>
                                                             </div>
+                                                            <div class="col-md-12 mb-3">
+                                                                <label for="subscription_start_date">Coupon Code</label>
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="Enter Coupon code" id="coupon_code"
+                                                                    name="coupon_code">
+                                                                <div class="invalid-feedback" id="couponError"
+                                                                    style="display:none;">
+                                                                    Invalid coupon code.
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 mb-3">
+                                                                <input type="button"
+                                                                    class="btn btn-secondary btn-lg btn-block"
+                                                                    value="Apply Coupon" id="applyCouponBtn">
+                                                            </div>
+                                                            <input type="hidden" id="coupon_id" name="coupon_id">
+                                                            <!-- To store coupon_id -->
                                                             <!-- Amount and End Date -->
                                                             <ul class="list-group mb-3">
                                                                 <li
@@ -249,7 +265,7 @@
                                                                     </div>
                                                                     <span class="text-muted"
                                                                         id="subscription_amount">₹0</span>
-                                                                    <input type="hidden" id="amount" name="amount">
+                                                                    <input type="hidden" id="sub_amount">
                                                                 </li>
                                                                 <li
                                                                     class="list-group-item d-flex justify-content-between lh-condensed">
@@ -261,6 +277,21 @@
                                                                     </div>
                                                                     <span class="text-muted"
                                                                         id="subscription_end_date"></span>
+                                                                </li>
+                                                                <li
+                                                                    class="list-group-item d-flex justify-content-between lh-condensed">
+                                                                    <div><small class="text-muted">Discount
+                                                                            Applied</small></div>
+                                                                    <span class="text-muted"
+                                                                        id="discount_amount">₹0</span>
+                                                                    <!-- Discounted amount -->
+                                                                </li>
+
+                                                                <li
+                                                                    class="list-group-item d-flex justify-content-between">
+                                                                    <span>Total (USD)</span>
+                                                                    <strong id="total_amount">₹0</strong>
+                                                                    <input type="hidden" id="amount" name="amount">
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -315,7 +346,7 @@
                                                                     <tr>
                                                                         <td>{{$subscription->subscription->subscription_name}}
                                                                         </td>
-                                                                        <td>{{$subscription->subscription->amount}}</td>
+                                                                        <td>{{$subscription->amount}}</td>
                                                                         <td>{{$subscription->subscription->validity}}
                                                                             Months</td>
                                                                         <td>{{ \Carbon\Carbon::parse($subscription->subscription_start_date)->format('M d, Y') }}
@@ -333,27 +364,27 @@
                                                                                 Unknown
                                                                             @endif
                                                                             <!-- <form
-                                                                                                                                                                                    action="/update-subscription-status/{{$userDetail->id}}"
-                                                                                                                                                                                    method="POST">
-                                                                                                                                                                                    @csrf
-                                                                                                                                                                                    <select name="status"
-                                                                                                                                                                                        onchange="this.form.submit()"
-                                                                                                                                                                                        class="form-select" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'disabled' : '' }}>
-                                                                                                                                                                                        <option
-                                                                                                                                                                                            value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}"
-                                                                                                                                                                                            {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'selected' : '' }}>Active
-                                                                                                                                                                                        </option>
-                                                                                                                                                                                        <option
-                                                                                                                                                                                            value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}"
-                                                                                                                                                                                            {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'selected' : '' }}>Inactive
-                                                                                                                                                                                        </option>
-                                                                                                                                                                                    </select>
-                                                                                                                                                                                </form> -->
+                                                                                                                                                                                                                action="/update-subscription-status/{{$userDetail->id}}"
+                                                                                                                                                                                                                method="POST">
+                                                                                                                                                                                                                @csrf
+                                                                                                                                                                                                                <select name="status"
+                                                                                                                                                                                                                    onchange="this.form.submit()"
+                                                                                                                                                                                                                    class="form-select" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'disabled' : '' }}>
+                                                                                                                                                                                                                    <option
+                                                                                                                                                                                                                        value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}"
+                                                                                                                                                                                                                        {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'selected' : '' }}>Active
+                                                                                                                                                                                                                    </option>
+                                                                                                                                                                                                                    <option
+                                                                                                                                                                                                                        value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}"
+                                                                                                                                                                                                                        {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'selected' : '' }}>Inactive
+                                                                                                                                                                                                                    </option>
+                                                                                                                                                                                                                </select>
+                                                                                                                                                                                                            </form> -->
 
                                                                         </td>
                                                                         <!-- <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
-                                                                                                                                                                                                                                                        </a><a href="javascript:void()" onclick="confirmSubscriptionDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
-                                                                                                                                                                                                                                                </td> -->
+                                                                                                                                                                                                                                                                                    </a><a href="javascript:void()" onclick="confirmSubscriptionDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
+                                                                                                                                                                                                                                                                            </td> -->
                                                                     </tr>
                                                                 @endforeach
                                                             </tbody>
@@ -910,7 +941,9 @@
                                                                     <option value="0">Select</option>
                                                                     @foreach ($trainers as $trainer)
                                                                         <option value="{{$trainer->id}}">
-                                                                            {{$trainer->name}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fees: {{$trainer->fees}}
+                                                                            {{$trainer->name}}
+                                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fees:
+                                                                            {{$trainer->fees}}
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
@@ -1713,6 +1746,8 @@
         document.getElementById('amount').value = amount;
         document.getElementById('subscription_amount').innerText = '₹' + amount;
         document.getElementById('description').value = description;
+        document.getElementById('total_amount').innerText = '₹' + amount;
+        document.getElementById('sub_amount').value = amount;
 
         // Calculate and set the end date
         const joiningDate = document.getElementById('joining_date').value;
@@ -1721,6 +1756,51 @@
             endDate.setMonth(endDate.getMonth() + parseInt(validity));
             document.getElementById('end_date').value = endDate.toISOString().split('T')[0];
             document.getElementById('subscription_end_date').innerText = endDate.toISOString().split('T')[0];
+        }
+    });
+
+    document.getElementById('applyCouponBtn').addEventListener('click', function () {
+        alert("rdh");
+        var couponCode = document.getElementById('coupon_code').value;
+        var amount = parseFloat(document.getElementById('sub_amount').value); // Subscription amount
+        var discountAmountElement = document.getElementById('discount_amount');
+        var totalAmountElement = document.getElementById('total_amount');
+
+        // Clear previous errors
+        document.getElementById('couponError').style.display = 'none';
+
+        if (couponCode) {
+            // Perform an AJAX request to validate the coupon code
+            fetch(`/validate-coupon/${couponCode}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.valid) {
+                        // Coupon is valid, apply the discount
+                        document.getElementById('coupon_id').value = data.coupon_id; // Store coupon_id
+
+                        var discountAmount = 0;
+                        if (data.discount_type === '1') {
+                            discountAmount = (amount * data.discount_value) / 100; // Calculate percentage discount
+                        } else if (data.discount_type === '0') {
+                            discountAmount = data.discount_value; // Fixed amount discount
+                        }
+
+                        var newTotal = amount - discountAmount; // Apply discount to total amount
+
+                        // Update the discount and total amounts in the UI
+                        discountAmountElement.innerText = '₹' + discountAmount.toFixed(2);
+                        totalAmountElement.innerText = '₹' + newTotal.toFixed(2);
+                        document.getElementById('amount').value = newTotal;
+
+                    } else {
+                        // Invalid coupon, show error
+                        document.getElementById('couponError').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.log('Error validating coupon:', error);
+                    document.getElementById('couponError').style.display = 'block';
+                });
         }
     });
 

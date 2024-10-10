@@ -36,9 +36,20 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Discount Type</label>
-                                    <input type="text" id="discount_type" name="discount_type" class="form-control"
-                                        required>
+                                    <select class="form-control" id="discount_type" name="discount_type" required>
+                                        <option value="">Select Discount Type</option>
+                                        <option value="{{ \App\Enums\GymCouponTypeEnum::PERCENTAGE }}">In Percentage
+                                        </option>
+                                        <option value="{{ \App\Enums\GymCouponTypeEnum::AMOUNT }}">In Amount</option>
+
+                                    </select>
                                     <div class="invalid-feedback">Discount Type is required.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Amount</label>
+                                    <input type="number" class="form-control" id="amount" name="amount" required>
+                                    <div class="invalid-feedback">Amount (If In Percentage must be between 1 to 100) is
+                                        required.</div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -64,7 +75,8 @@
                                     <select class="form-control" id="status" name="status" required>
                                         <option value="">Select Status</option>
                                         <option value="{{ \App\Enums\GymCouponStatusEnum::ACTIVE }}">Active</option>
-                                        <option value="{{ \App\Enums\GymCouponStatusEnum::INACTIVE }}">In Active</option>
+                                        <option value="{{ \App\Enums\GymCouponStatusEnum::INACTIVE }}">In Active
+                                        </option>
 
                                     </select>
                                     <div class="invalid-feedback">Choose a Status.</div>
@@ -105,9 +117,20 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Discount Type</label>
-                                    <input type="text" id="edit_discount_type" name="discount_type" class="form-control"
-                                        required>
+                                    <select class="form-control" id="edit_discount_type" name="discount_type" required>
+                                        <option value="">Select Discount Type</option>
+                                        <option value="{{ \App\Enums\GymCouponTypeEnum::PERCENTAGE }}">In Percentage
+                                        </option>
+                                        <option value="{{ \App\Enums\GymCouponTypeEnum::AMOUNT }}">In Amount</option>
+
+                                    </select>
                                     <div class="invalid-feedback">Discount Type is required.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Amount</label>
+                                    <input type="number" class="form-control" id="edit_amount" name="amount" required>
+                                    <div class="invalid-feedback">Amount (If In Percentage must be between 1 to 100) is
+                                        required.</div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -168,6 +191,8 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">Coupon Code</th>
+                                                <th scope="col">Discount Type</th>
+                                                <th scope="col">Amount</th>
                                                 <th scope="col">Start Date</th>
                                                 <th scope="col">End Date</th>
                                                 <th scope="col">Status</th>
@@ -178,9 +203,12 @@
                                             @foreach ($coupons as $coupon)
                                                 <tr>
                                                     <td>{{ $coupon->coupon_code }}</td>
+                                                    <td>{{ $coupon->discount_type == \App\Enums\GymCouponTypeEnum::PERCENTAGE ? 'In Percentage' : 'In Amount' }}</td>
+                                                    <td>{{ $coupon->amount }}</td>
                                                     <td>{{ $coupon->start_date }}</td>
                                                     <td>{{ $coupon->end_date }}</td>
-                                                    <td>{{ $coupon->status == \App\Enums\GymCouponStatusEnum::ACTIVE ? 'Active' : 'Inactive' }}</td>
+                                                    <td>{{ $coupon->status == \App\Enums\GymCouponStatusEnum::ACTIVE ? 'Active' : 'Inactive' }}
+                                                    </td>
                                                     <td>
                                                         <a href="javascript:void(0);" class="edit-coupon"
                                                             data-coupon='@json($coupon)' data-bs-toggle="tooltip"
@@ -251,10 +279,26 @@
             $('#edit_start_date').val(coupon.start_date);
             $('#edit_end_date').val(coupon.end_date);
             $('#edit_status').val(coupon.status);
+            $('#edit_amount').val(coupon.amount);
 
             // Show the modal
             $('#editCouponModal').modal('show');
         });
+    });
+
+    document.getElementById('discount_type').addEventListener('change', function () {
+        const amountField = document.getElementById('amount');
+        if (this.value === '{{ \App\Enums\GymCouponTypeEnum::PERCENTAGE }}') {
+            // When "Percentage" is selected, restrict the amount between 1 and 100
+            amountField.setAttribute('min', 1);
+            amountField.setAttribute('max', 100);
+            amountField.setAttribute('placeholder', 'Enter a value between 1 and 100');
+        } else if (this.value === '{{ \App\Enums\GymCouponTypeEnum::AMOUNT }}') {
+            // When "Amount" is selected, remove restrictions on the amount
+            amountField.removeAttribute('min');
+            amountField.removeAttribute('max');
+            amountField.setAttribute('placeholder', 'Enter any amount');
+        }
     });
 
     function confirmDelete(uuid) {

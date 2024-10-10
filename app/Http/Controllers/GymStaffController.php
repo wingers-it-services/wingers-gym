@@ -78,14 +78,16 @@ class GymStaffController extends Controller
     {
         try {
             $request->validate([
-                "staff_id" => 'required',
-                "full_name" => 'required',
-                "email" => 'required',
-                "phone_number" => 'required',
-                "joining_date" => 'required',
-                "salary" => 'required',
-                "designation" => 'required',
-                "blood_group" => 'required'
+                "staff_id"         => 'required',
+                "full_name"        => 'required',
+                "email"            => 'required',
+                "phone_number"     => 'required',
+                "joining_date"     => 'required',
+                "salary"           => 'required',
+                "designation"      => 'required',
+                "blood_group"      => 'required',
+                "fees"             => 'nullable|numeric|min:1', 
+                "staff_commission" => 'nullable|numeric|min:1|max:100'  
             ]);
 
             $gym = Auth::guard('gym')->user();
@@ -170,10 +172,10 @@ class GymStaffController extends Controller
         try {
 
             $holidays = Holiday::where('gym_id', $gymId)
-            ->whereYear('date', $year)
-            ->whereMonth('date', $month)
-            ->pluck('date')
-            ->toArray();
+                ->whereYear('date', $year)
+                ->whereMonth('date', $month)
+                ->pluck('date')
+                ->toArray();
 
             // Fetch weekends dynamically from the gym_weekends table
             $weekendDays = GymWeekend::where('gym_id', $gymId)
@@ -214,7 +216,7 @@ class GymStaffController extends Controller
             foreach ($holidays as $holidayDate) {
                 $day = Carbon::parse($holidayDate)->day;
                 $attendanceField = 'day' . $day;
-                $holidaysAttendanceData[$attendanceField] = \App\Enums\StaffAttendanceStatusEnum::HOLIDAY; 
+                $holidaysAttendanceData[$attendanceField] = \App\Enums\StaffAttendanceStatusEnum::HOLIDAY;
             }
 
 
@@ -294,8 +296,8 @@ class GymStaffController extends Controller
                 }
             }
 
-             // Prepare the default data in case no attendance is marked
-             if (!$gym) {
+            // Prepare the default data in case no attendance is marked
+            if (!$gym) {
                 return response()->json([
                     'status' => 200,
                     'data' => [

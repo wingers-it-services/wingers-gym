@@ -176,7 +176,8 @@ class GymUserController extends Controller
                 'staff_assign_id' => 'nullable',
                 'password' => 'required',
                 'phone_no' => 'required',
-                'dob' => 'required'
+                'dob' => 'required',
+                'city' => 'required'
             ]);
 
 
@@ -244,7 +245,7 @@ class GymUserController extends Controller
                     'subscription_end_date' => $request->subscription_end_date,
                     'status' => $status,
                     'amount' => $request->amount, // Ensure this is part of the request or calculate it
-                    'coupon_id' => 2,
+                    'coupon_id' => $request->coupon_id,
                     'gym_id' => $gymId
                 ]);
             } else {
@@ -274,7 +275,7 @@ class GymUserController extends Controller
                         'subscription_end_date' => $request->subscription_end_date,
                         'status' => $status,
                         'amount' => $request->amount, // Ensure this is part of the request or calculate it
-                        'coupon_id' => 2,
+                        'coupon_id' => $request->coupon_id,
                         'gym_id' => $gymId
                     ]);
                 }
@@ -654,8 +655,8 @@ class GymUserController extends Controller
                 'subscription_start_date' => $validatedData['subscription_start_date'],
                 'subscription_end_date' => $validatedData['subscription_end_date'],
                 'amount' => $validatedData['amount'],
-                'status' => 1, // Mark as active
-                'coupon_id' => 2,
+                'status' =>  GymSubscriptionStatusEnum::ACTIVE, // Mark as active
+                'coupon_id' => $request->coupon_id,
                 'description' => $validatedData['description'],
             ]);
 
