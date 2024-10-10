@@ -243,7 +243,7 @@
 									<div class="row">
 										<div class="col-md-6 mb-3">
 											<label for="city">City</label>
-											<input type="text" class="form-control" id="city" name="city" required="">
+											<input type="text" class="form-control" id="city" name="city" required>
 											<small id="cityError" class="text-danger" style="display: none;">Only
 												Letters are allowed.</small>
 											<div class="invalid-feedback">
@@ -253,7 +253,7 @@
 										<div class="col-md-6 mb-3">
 											<label for="zip_code">Zip</label>
 											<input type="number" class="form-control" id="zip_code" name="zip_code"
-												placeholder="" required="">
+												placeholder="" required>
 											<small id="zipError" class="text-danger" style="display: none;">zip code
 												must be 6 digit long.</small>
 											<div class="invalid-feedback">
@@ -307,12 +307,25 @@
 												</div>
 											</div>
 
-											<li class="list-group-item d-flex justify-content-between lh-condensed">
-												<div>
-													<small class="text-muted">Subscription Amount</small>
+											<div class="col-md-12 mb-3">
+												<label for="subscription_start_date">Coupon Code</label>
+												<input type="text" class="form-control" placeholder="Enter Coupon code"
+													id="coupon_code" name="coupon_code">
+												<div class="invalid-feedback" id="couponError" style="display:none;">
+													Invalid coupon code.
 												</div>
+											</div>
+											<div class="col-md-12 mb-3">
+												<input type="button" class="btn btn-secondary btn-lg btn-block"
+													value="Apply Coupon" id="applyCouponBtn">
+											</div>
+											<input type="hidden" id="coupon_id" name="coupon_id">
+											<!-- To store coupon_id -->
+
+											<li class="list-group-item d-flex justify-content-between lh-condensed">
+												<div><small class="text-muted">Subscription Amount</small></div>
 												<span class="text-muted" id="subscription_amount">₹0</span>
-												<input type="hidden" id="amount" name="amount">
+												<input type="hidden" id="sub_amount">
 											</li>
 											<li class="list-group-item d-flex justify-content-between lh-condensed">
 												<div>
@@ -322,9 +335,17 @@
 												<span class="text-muted" id="subscription_end_date"></span>
 											</li>
 
+
+											<li class="list-group-item d-flex justify-content-between lh-condensed">
+												<div><small class="text-muted">Discount Applied</small></div>
+												<span class="text-muted" id="discount_amount">₹0</span>
+												<!-- Discounted amount -->
+											</li>
+
 											<li class="list-group-item d-flex justify-content-between">
 												<span>Total (USD)</span>
 												<strong id="total_amount">₹0</strong>
+												<input type="hidden" id="amount" name="amount">
 											</li>
 										</ul>
 									</div>
@@ -418,7 +439,8 @@
 		document.getElementById('description').value = description;
 		document.getElementById('subscription_amount').innerText = '₹' + amount;
 		document.getElementById('total_amount').innerText = '₹' + amount;
-		document.getElementById('amount').value = amount;
+		document.getElementById('sub_amount').value = amount;
+		document.getElementById('amount').value = amount;  // Set the hidden field to subscription amount by default
 
 		var joiningDate = document.getElementById('subscription_start_date').value;
 		if (joiningDate) {
@@ -449,6 +471,51 @@
 			document.getElementById('end_date').value = '';
 		}
 	}
+
+	document.getElementById('applyCouponBtn').addEventListener('click', function () {
+		var couponCode = document.getElementById('coupon_code').value;
+		var amount = parseFloat(document.getElementById('sub_amount').value); // Subscription amount
+		var discountAmountElement = document.getElementById('discount_amount');
+		var totalAmountElement = document.getElementById('total_amount');
+
+		// Clear previous errors
+		document.getElementById('couponError').style.display = 'none';
+
+		if (couponCode) {
+			// Perform an AJAX request to validate the coupon code
+			fetch(`/validate-coupon/${couponCode}`)
+				.then(response => response.json())
+				.then(data => {
+					if (data.valid) {
+						// Coupon is valid, apply the discount
+						document.getElementById('coupon_id').value = data.coupon_id; // Store coupon_id
+
+						var discountAmount = 0;
+						if (data.discount_type === '1') {
+							discountAmount = (amount * data.discount_value) / 100; // Calculate percentage discount
+						} else if (data.discount_type === '0') {
+							discountAmount = data.discount_value; // Fixed amount discount
+						}
+
+						var newTotal = amount - discountAmount; // Apply discount to total amount
+
+						// Update the discount and total amounts in the UI
+						discountAmountElement.innerText = '₹' + discountAmount.toFixed(2);
+						totalAmountElement.innerText = '₹' + newTotal.toFixed(2);
+						document.getElementById('amount').value = newTotal; // Update hidden field for form submission
+
+					} else {
+						// Invalid coupon, show error
+						document.getElementById('couponError').style.display = 'block';
+					}
+				})
+				.catch(error => {
+					console.log('Error validating coupon:', error);
+					document.getElementById('couponError').style.display = 'block';
+				});
+		}
+	});
+
 
 	document.addEventListener('DOMContentLoaded', function () {
 		const button = document.getElementById('continue');

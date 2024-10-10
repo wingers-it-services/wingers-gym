@@ -244,6 +244,7 @@ Route::group(['middleware' => ['auth:gym']], function()  {
     Route::post('/add-gym-coupon', [GymCouponController::class, 'addGymCoupon']);
     Route::post('/update-gym-coupon', [GymCouponController::class, 'updateGymCoupon'])->name('updateGymCoupon');
     Route::get('/delete-gym-coupon/{uuid}', [GymCouponController::class, 'deleteGymCoupon'])->name('delete-gym-coupon');
+    Route::get('/validate-coupon/{coupon_code}', [GymCouponController::class, 'validateCoupon']);
 
     Route::post('/updateGym', [GymDetailController::class, 'updateGym'])->name('updateGym');
 
