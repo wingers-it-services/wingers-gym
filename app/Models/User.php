@@ -16,6 +16,7 @@ use Throwable;
 
 class User extends Authenticatable
 {
+    use HasApiTokens;
     use SoftDeletes;
     use Notifiable, HasApiTokens;
     protected $table = 'gym_users';
@@ -356,11 +357,11 @@ class User extends Authenticatable
                 'gym_id'               => $gym->id,
                 'password'             => $userDetail['password'],
                 'dob'                  => $userDetail['dob'],
-                'address'              => $userDetail['address']??null,
-                'country'              => $userDetail['country']??null,
-                'state'                => $userDetail['state']??null,
-                'city'                 => $userDetail['city']??null,
-                'zip_code'             => $userDetail['zip_code']??null,
+                'address'              => $userDetail['address'] ?? null,
+                'country'              => $userDetail['country'] ?? null,
+                'state'                => $userDetail['state'] ?? null,
+                'city'                 => $userDetail['city'] ?? null,
+                'zip_code'             => $userDetail['zip_code'] ?? null,
                 'profile_status'       => GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED,
                 'is_email_verified'    => true,
                 'is_phone_no_verified' => true,

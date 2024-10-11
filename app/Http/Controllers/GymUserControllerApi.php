@@ -699,32 +699,39 @@ class GymUserControllerApi extends Controller
     public function logoutFromAllDevices(Request $request)
     {
         try {
+            $request->validate(['keep_current_login' => 'required|in:0,1']);
+
             $user = $request->user();
+            $currentTokenId = $request->bearerToken();
 
-            DB::table('oauth_access_tokens')
-                ->where('user_id', $user->id)
-                ->update(['revoked' => true]);
+            // Determine the query for revoking tokens
+            $query = DB::table('oauth_access_tokens')
+                ->where('user_id', $user->id);
 
-            return response()->json(
-                [
-                    'status' => 200,
-                    'message' => 'Logged out from all devices successfully',
-                ],
-                200,
-            );
+            if ($request->keep_current_login == '1') {
+                $query->where('id', '!=', $currentTokenId);
+                $message = 'Logged out from other devices';
+            } else {
+                $message = 'Logged out from all devices';
+            }
+
+            // Revoke the determined tokens
+            $query->update(['revoked' => true]);
+
+            return response()->json([
+                'status'  => 200,
+                'message' => $message,
+            ], 200);
         } catch (Exception $e) {
-            // Log the exception and return an error message
-            Log::error('[GymUserControllerApi][logoutFromAllDevices] Error logging out from all devices: ' . $e->getMessage());
-            return response()->json(
-                [
-                    'status' => 500,
-                    'message' => 'Failed to logout from all devices',
-                    'errorMessage' => $e->getMessage(),
-                ],
-                500,
-            );
+            Log::error('[GymUserControllerApi][logoutFromAllDevices] Error logging out: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Failed to logout from all devices',
+                'errorMessage' => $e->getMessage(),
+            ], 500);
         }
     }
+
 
     public function checkEmailExists(Request $request)
     {
