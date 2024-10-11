@@ -22,6 +22,7 @@
                         <div class="modal-body">
                             <form class="needs-validation" method="POST" action="/add-gym-coupon" novalidate>
                                 @csrf
+                                <input type="text" value="{{ Auth::guard('gym')->user()->id }}" name="gym_id" hidden>
                                 <div class="form-group">
                                     <label>Coupon Code</label>
                                     <input type="text" id="coupon_code" name="coupon_code" class="form-control"

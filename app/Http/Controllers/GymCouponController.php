@@ -24,8 +24,7 @@ class GymCouponController extends Controller
 
     public function listGymCoupons()
     {
-
-        $coupons = $this->gymCoupon->all();
+        $coupons = $this->gymCoupon->where('gym_id', Auth::guard('gym')->user()->id)->get();
         return view('GymOwner.gym-coupon', compact('coupons'));
     }
 
@@ -33,13 +32,14 @@ class GymCouponController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                "coupon_code" => 'required',
-                "description" => 'required',
+                "coupon_code"   => 'required',
+                'gym_id'        => 'required|exists:gyms,id',
+                "description"   => 'required',
                 "discount_type" => 'required',
-                "start_date" => 'required|date',
-                "end_date" => 'required|date|after:start_date',
-                "status" => 'required',
-                "amount" => 'required'
+                "start_date"    => 'required|date',
+                "end_date"      => 'required|date|after:start_date',
+                "status"        => 'required',
+                "amount"        => 'required'
             ]);
 
             $this->gymCoupon->addCoupon($validatedData);
@@ -110,4 +110,3 @@ class GymCouponController extends Controller
         return redirect()->back()->with('status', 'success')->with('message', 'Coupon Succesfully Deleted!');
     }
 }
-

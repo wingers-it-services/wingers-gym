@@ -29,13 +29,14 @@ class GymCoupon extends Model
     {
         try {
             $this->create([
-                'coupon_code' => $couponArray['coupon_code'],
-                'description' => $couponArray['description'],
+                'gym_id'        => $couponArray['gym_id'],
+                'coupon_code'   => $couponArray['coupon_code'],
+                'description'   => $couponArray['description'],
                 'discount_type' => $couponArray['discount_type'],
-                'start_date' => $couponArray['start_date'],
-                'end_date' => $couponArray['end_date'],
-                'status' => $couponArray['status'],
-                'amount' => $couponArray['amount']
+                'start_date'    => $couponArray['start_date'],
+                'end_date'      => $couponArray['end_date'],
+                'status'        => $couponArray['status'],
+                'amount'        => $couponArray['amount']
             ]);
         } catch (Throwable $e) {
             dd($e);
