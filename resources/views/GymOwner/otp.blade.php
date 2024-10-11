@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="ZY4pR8wIEdrTLWxVivLo4lvqoE0UPbxm6RtBU20w">
     <meta name="author" content="DexignZone">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Reset Password</title>
+    <title>Gym Authentication</title>
     <link rel="icon" type="image/png" href="{{asset('images/favicon.png')}}">
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
 </head>
