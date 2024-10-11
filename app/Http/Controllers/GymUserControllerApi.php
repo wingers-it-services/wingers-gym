@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Throwable;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class GymUserControllerApi extends Controller
 {
@@ -702,7 +704,7 @@ class GymUserControllerApi extends Controller
             $request->validate(['keep_current_login' => 'required|in:0,1']);
 
             $user = $request->user();
-            $currentTokenId = $request->bearerToken();
+            $currentTokenId = $this->getTokenId($request->bearerToken());
 
             // Determine the query for revoking tokens
             $query = DB::table('oauth_access_tokens')
@@ -766,6 +768,21 @@ class GymUserControllerApi extends Controller
                 'message'      => 'Failed to check email',
                 'errorMessage' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    function getTokenId($bearerToken)
+    {
+        $token = str_replace('Bearer ', '', $bearerToken);
+
+        try {
+            $publicKey = file_get_contents(storage_path('oauth-public.key'));
+            $decoded = JWT::decode($token, new Key($publicKey, 'RS256'));
+
+            return $decoded->jti ?? null;
+        } catch (Exception $e) {
+            Log::error('Failed to decode JWT: ' . $e->getMessage());
+            return null;
         }
     }
 }
