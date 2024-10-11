@@ -180,6 +180,13 @@ class UserService
     private function setPassword(User $user, $password)
     {
         try {
+            if ($user->password == $password) {
+                return [
+                    'status'       => 400,
+                    'message'      => 'password is same as old password',
+                    'errorMessage' => 'Try to set new password or Login via old password'
+                ];
+            }
             $user->password = $password;
             $user->save();
             return [
