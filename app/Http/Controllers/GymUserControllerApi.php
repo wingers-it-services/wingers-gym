@@ -11,6 +11,7 @@ use App\Services\UserService;
 use App\Traits\errorResponseTrait;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -25,13 +26,8 @@ class GymUserControllerApi extends Controller
     protected $injuryUser;
     protected $userLatitudeAndLongitude;
 
-    public function __construct(
-        OtpService $otpService,
-        User $user,
-        UserService $userService,
-        InjuryUser $injuryUser,
-        UserLatitudeAndLongitude $userLatitudeAndLongitude
-    ) {
+    public function __construct(OtpService $otpService, User $user, UserService $userService, InjuryUser $injuryUser, UserLatitudeAndLongitude $userLatitudeAndLongitude)
+    {
         $this->otpService = $otpService;
         $this->user = $user;
         $this->userService = $userService;
@@ -56,12 +52,12 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
-                'phone_no' => 'required|unique:gym_users,phone_no'
+                'phone_no' => 'required|unique:gym_users,phone_no',
             ]);
             $result = $this->otpService->generateMobileOtp($request->phone_no);
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
-            Log::error("[GymUserControllerApi][sendMobileOtp] Error sending otp: " . $e->getMessage());
+            Log::error('[GymUserControllerApi][sendMobileOtp] Error sending otp: ' . $e->getMessage());
             return $this->errorResponse('Error while sending otp', $e->getMessage(), 500);
         }
     }
@@ -88,7 +84,7 @@ class GymUserControllerApi extends Controller
             $result = $this->otpService->sendOtptoEmail($request->email);
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
-            Log::error("[GymUserControllerApi][sendEmailOtp] Error sending otp: " . $e->getMessage());
+            Log::error('[GymUserControllerApi][sendEmailOtp] Error sending otp: ' . $e->getMessage());
             return $this->errorResponse('Error while sending otp', $e->getMessage(), 500);
         }
     }
@@ -110,12 +106,12 @@ class GymUserControllerApi extends Controller
         try {
             $request->validate([
                 'phone_no' => 'required',
-                'otp'      => 'required|digits:4',
+                'otp' => 'required|digits:4',
             ]);
             $result = $this->otpService->verifyMobileOtp($request->phone_no, $request->otp);
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
-            Log::error("[GymUserControllerApi][verifyMobileOtp] Error verifying otp: " . $e->getMessage());
+            Log::error('[GymUserControllerApi][verifyMobileOtp] Error verifying otp: ' . $e->getMessage());
             return $this->errorResponse('Error while verifying otp', $e->getMessage(), 500);
         }
     }
@@ -137,12 +133,12 @@ class GymUserControllerApi extends Controller
         try {
             $request->validate([
                 'email' => 'required',
-                'otp'   => 'required|digits:4',
+                'otp' => 'required|digits:4',
             ]);
             $result = $this->otpService->verifyEmailOtp($request->email, $request->otp);
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
-            Log::error("[GymUserControllerApi][verifyEmailOtp] Error verifying otp: " . $e->getMessage());
+            Log::error('[GymUserControllerApi][verifyEmailOtp] Error verifying otp: ' . $e->getMessage());
             return $this->errorResponse('Error while verifying otp', $e->getMessage(), 500);
         }
     }
@@ -164,18 +160,18 @@ class GymUserControllerApi extends Controller
         try {
             $request->validate([
                 'firstname' => 'required',
-                'email'     => 'required|email|unique:gym_users,email',
-                'phone_no'  => 'required|digits:10|unique:gym_users,phone_no',
-                'lastname'  => 'required',
-                'gender'    => 'required',
-                'address'   => 'required',
-                'country'   => 'required',
-                'state'     => 'required',
-                'city'      => 'required',
-                'zip_code'  => 'required',
-                'password'  => 'required',
-                'image'     => 'nullable',
-                'dob'       => 'required'
+                'email' => 'required|email|unique:gym_users,email',
+                'phone_no' => 'required|digits:10|unique:gym_users,phone_no',
+                'lastname' => 'required',
+                'gender' => 'required',
+                'address' => 'required',
+                'country' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'zip_code' => 'required',
+                'password' => 'required',
+                'image' => 'nullable',
+                'dob' => 'required',
             ]);
 
             $userDetail = $request->all();
@@ -195,14 +191,17 @@ class GymUserControllerApi extends Controller
             }
 
             $user->age = $age;
-            return response()->json([
-                'status'       => $response['status'],
-                'message'      => $response['message'],
-                'user'         => $user ?? null,
-                'access_token' => $token ?? null
-            ], $response['status']);
+            return response()->json(
+                [
+                    'status' => $response['status'],
+                    'message' => $response['message'],
+                    'user' => $user ?? null,
+                    'access_token' => $token ?? null,
+                ],
+                $response['status'],
+            );
         } catch (Throwable $e) {
-            Log::error("[GymUserControllerApi][registerGymUser] Error in registration: " . $e->getMessage());
+            Log::error('[GymUserControllerApi][registerGymUser] Error in registration: ' . $e->getMessage());
             return $this->errorResponse('Error while registering', $e->getMessage(), 500);
         }
     }
@@ -223,16 +222,16 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
-                'uuid'     => 'required',
-                'otp'      => 'required|digits:4',
-                'email'    => 'required_without:phone_no|email|unique:gym_users,email',
+                'uuid' => 'required',
+                'otp' => 'required|digits:4',
+                'email' => 'required_without:phone_no|email|unique:gym_users,email',
                 'phone_no' => 'required_without:email|digits:10|unique:gym_users,phone_no',
             ]);
 
             $result = $this->otpService->verifyOtp($request);
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
-            Log::error("[GymUserControllerApi][verifyOtp] Error verifying otp: " . $e->getMessage());
+            Log::error('[GymUserControllerApi][verifyOtp] Error verifying otp: ' . $e->getMessage());
             return $this->errorResponse('Error while verifying otp', $e->getMessage(), 500);
         }
     }
@@ -254,14 +253,14 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
-                'uuid'     => 'required',
-                'height'   => 'required',
-                'weight'   => 'required',
-                'days'     => 'required',
-                'goals'    => 'array',
-                'goals.*'  => 'exists:goals,id',
-                'levels'   => 'array',
-                'levels.*' => 'exists:user_lebels,id'
+                'uuid' => 'required',
+                'height' => 'required',
+                'weight' => 'required',
+                'days' => 'required',
+                'goals' => 'array',
+                'goals.*' => 'exists:goals,id',
+                'levels' => 'array',
+                'levels.*' => 'exists:user_lebels,id',
             ]);
 
             $request = $request->all();
@@ -269,7 +268,7 @@ class GymUserControllerApi extends Controller
             $result = $this->user->profilePartFour($request);
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
-            Log::error("[GymUserControllerApi][profilePartFour] Error updating profile: " . $e->getMessage());
+            Log::error('[GymUserControllerApi][profilePartFour] Error updating profile: ' . $e->getMessage());
             return $this->errorResponse('Error while updating profile', $e->getMessage(), 500);
         }
     }
@@ -286,40 +285,56 @@ class GymUserControllerApi extends Controller
         try {
             $user = auth()->user();
             if (!$user) {
-                return response()->json([
-                    'status'  => 401,
-                    'message' => 'User not authenticated',
-                ], 401);
+                return response()->json(
+                    [
+                        'status' => 401,
+                        'message' => 'User not authenticated',
+                    ],
+                    401,
+                );
             }
 
             // Fetch gyms associated with the user and count the users in each gym
             // $gyms = $user->gyms()->withCount('users')->get();
 
-            $gyms = $user->gyms()->withCount('users')->get()->map(function ($gym) {
-                return array_merge($gym->toArray(), [
-                    'review'      => 0, // Assuming review is a method or attribute in the Gym model
-                    'total_years' => 1, // Assuming total_years is a method or attribute in the Gym model
-                ]);
-            });
+            $gyms = $user
+                ->gyms()
+                ->withCount('users')
+                ->get()
+                ->map(function ($gym) {
+                    return array_merge($gym->toArray(), [
+                        'review' => 0, // Assuming review is a method or attribute in the Gym model
+                        'total_years' => 1, // Assuming total_years is a method or attribute in the Gym model
+                    ]);
+                });
             if ($gyms->isEmpty()) {
-                return response()->json([
-                    'status'   => 422,
-                    'gyms'     => $gyms,
-                    'message'  => 'There are no gyms',
-                ], 200);
+                return response()->json(
+                    [
+                        'status' => 422,
+                        'gyms' => $gyms,
+                        'message' => 'There are no gyms',
+                    ],
+                    200,
+                );
             }
 
-            return response()->json([
-                'status'  => 200,
-                'gyms'    => $gyms,
-                'message' => 'User gyms fetched successfully',
-            ], 200);
+            return response()->json(
+                [
+                    'status' => 200,
+                    'gyms' => $gyms,
+                    'message' => 'User gyms fetched successfully',
+                ],
+                200,
+            );
         } catch (\Exception $e) {
             Log::error('[GymUserControllerApi][fetchUserGym]Error fetching gyms details: ' . $e->getMessage());
-            return response()->json([
-                'status'  => 500,
-                'message' => 'Error fetching gyms details: ' . $e->getMessage(),
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => 'Error fetching gyms details: ' . $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -337,8 +352,8 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
-                'uuid'         => 'required|string',
-                'injury_ids'   => 'array',
+                'uuid' => 'required|string',
+                'injury_ids' => 'array',
                 'injury_ids.*' => 'exists:user_injuries,id',
             ]);
 
@@ -346,10 +361,13 @@ class GymUserControllerApi extends Controller
             $user = $this->user->where('uuid', $request->uuid)->first();
 
             if (!$user) {
-                return response()->json([
-                    'status'  => 404,
-                    'message' => 'User not found',
-                ], 404);
+                return response()->json(
+                    [
+                        'status' => 404,
+                        'message' => 'User not found',
+                    ],
+                    404,
+                );
             }
 
             // If no injury IDs are provided, mark the user's profile status as completed
@@ -357,17 +375,20 @@ class GymUserControllerApi extends Controller
                 $user->profile_status = GymUserAccountStatusEnum::USER_INJURY_DETAIL;
                 $user->save();
 
-                return response()->json([
-                    'status'  => 200,
-                    'message' => 'User has no injuries. Profile status updated to completed.',
-                ], 200);
+                return response()->json(
+                    [
+                        'status' => 200,
+                        'message' => 'User has no injuries. Profile status updated to completed.',
+                    ],
+                    200,
+                );
             }
 
             // Associate each injury with the user
             $injuryUsers = [];
             foreach ($request->injury_ids as $injuryId) {
                 $injuryUser = $this->injuryUser->create([
-                    'user_id'   => $user->id,
+                    'user_id' => $user->id,
                     'injury_id' => $injuryId,
                 ]);
                 $injuryUsers[] = $injuryUser;
@@ -377,18 +398,24 @@ class GymUserControllerApi extends Controller
             $user->profile_status = GymUserAccountStatusEnum::USER_INJURY_DETAIL;
             $user->save();
 
-            return response()->json([
-                'status'      => 200,
-                'message'     => 'Injuries added successfully',
-                'injuryUsers' => $injuryUsers,
-            ], 200);
+            return response()->json(
+                [
+                    'status' => 200,
+                    'message' => 'Injuries added successfully',
+                    'injuryUsers' => $injuryUsers,
+                ],
+                200,
+            );
         } catch (\Exception $e) {
-            Log::error("[GymUserControllerApi][addUserInjuries] Error adding injuries: " . $e->getMessage());
-            return response()->json([
-                'status'       => 500,
-                'message'      => 'An error occurred while adding injuries',
-                'errorMessage' => $e->getMessage(),
-            ], 500);
+            Log::error('[GymUserControllerApi][addUserInjuries] Error adding injuries: ' . $e->getMessage());
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => 'An error occurred while adding injuries',
+                    'errorMessage' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -397,25 +424,25 @@ class GymUserControllerApi extends Controller
         try {
             Log::info('[update]', $request->all());
             $request->validate([
-                'firstname'    => 'required|string',
-                'lastname'     => 'required|string',
-                'gender'       => 'required|string',
-                'dob'          => 'required|date',
-                'address'       => 'required',
-                'country'      => 'required',
-                'state'        => 'required',
-                'city'         => 'required',
-                'zip_code'     => 'required',
-                'height'       => 'required|numeric',
-                'weight'       => 'required|numeric',
-                'days'         => 'required|string',
-                'goals'        => 'array',
-                'goals.*'      => 'exists:goals,id',
-                'injury_ids'   => 'array',
+                'firstname' => 'required|string',
+                'lastname' => 'required|string',
+                'gender' => 'required|string',
+                'dob' => 'required|date',
+                'address' => 'required',
+                'country' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'zip_code' => 'required',
+                'height' => 'required|numeric',
+                'weight' => 'required|numeric',
+                'days' => 'required|string',
+                'goals' => 'array',
+                'goals.*' => 'exists:goals,id',
+                'injury_ids' => 'array',
                 'injury_ids.*' => 'exists:user_injuries,id',
-                'levels'       => 'array',
-                'levels.*'     => 'exists:user_lebels,id',
-                'image'        => 'nullable',
+                'levels' => 'array',
+                'levels.*' => 'exists:user_lebels,id',
+                'image' => 'nullable',
                 'remove_image' => 'nullable|in:0,1',
             ]);
 
@@ -424,10 +451,13 @@ class GymUserControllerApi extends Controller
             return response()->json($result, $result['status']);
         } catch (\Throwable $e) {
             Log::error('[UserControllerApi][updateGymUserProfile] Error while updating user profile: ' . $e->getMessage());
-            return response()->json([
-                'status'  => 500,
-                'message' => 'An error occurred while updating the profile' . $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => 'An error occurred while updating the profile' . $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -436,16 +466,19 @@ class GymUserControllerApi extends Controller
         try {
             $user = auth()->user();
             if (!$user) {
-                return response()->json([
-                    'status'  => 401,
-                    'message' => 'User not authenticated',
-                ], 401);
+                return response()->json(
+                    [
+                        'status' => 401,
+                        'message' => 'User not authenticated',
+                    ],
+                    401,
+                );
             }
 
             // Fetch related injuries, goals, and levels
-            $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']);  // Adjust fields as per your model
-            $goals = $user->goals()->get(['goal_id', 'goal']);            // Adjust fields as per your model
-            $levels = $user->levels()->get(['level_id', 'lebel']);         // Adjust fields as per your model
+            $injuries = $user->injuries()->get(['injury_id', 'injury_type', 'image']); // Adjust fields as per your model
+            $goals = $user->goals()->get(['goal_id', 'goal']); // Adjust fields as per your model
+            $levels = $user->levels()->get(['level_id', 'lebel']); // Adjust fields as per your model
 
             // Calculate user's age based on DOB (assuming 'dob' field exists in user table)
             $age = null;
@@ -455,20 +488,26 @@ class GymUserControllerApi extends Controller
 
             $user->age = $age;
 
-            return response()->json([
-                'status'   => 200,
-                'user'     => $user,
-                'injuries' => $injuries,
-                'goals'    => $goals,
-                'levels'   => $levels,
-                'message'  => 'User detail fetched successfully',
-            ], 200);
+            return response()->json(
+                [
+                    'status' => 200,
+                    'user' => $user,
+                    'injuries' => $injuries,
+                    'goals' => $goals,
+                    'levels' => $levels,
+                    'message' => 'User detail fetched successfully',
+                ],
+                200,
+            );
         } catch (\Exception $e) {
             Log::error('[GymUserControllerApi][fetchUserDetails] Error fetching users details: ' . $e->getMessage());
-            return response()->json([
-                'status'  => 500,
-                'message' => 'Error fetching users details: ' . $e->getMessage(),
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => 'Error fetching users details: ' . $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -478,8 +517,8 @@ class GymUserControllerApi extends Controller
             $user = auth()->user();
 
             $request->validate([
-                'email'     => 'nullable|email|unique:gym_users,email,' . $user->id,
-                'phone_no'  => 'nullable|digits:10|unique:gym_users,phone_no,' . $user->id,
+                'email' => 'nullable|email|unique:gym_users,email,' . $user->id,
+                'phone_no' => 'nullable|digits:10|unique:gym_users,phone_no,' . $user->id,
             ]);
 
             // Update email if provided and different from current email
@@ -495,17 +534,23 @@ class GymUserControllerApi extends Controller
             // Save the updated user information
             $user->save();
 
-            return response()->json([
-                'status'  => 200,
-                'user'    => $user,
-                'message' => 'Email or phone number updated successfully.',
-            ], 200);
+            return response()->json(
+                [
+                    'status' => 200,
+                    'user' => $user,
+                    'message' => 'Email or phone number updated successfully.',
+                ],
+                200,
+            );
         } catch (\Exception $e) {
             // Handle exceptions such as validation or database errors
-            return response()->json([
-                'status'  => 500,
-                'message' => 'An error occurred while updating email or phone number: ' . $e->getMessage(),
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => 'An error occurred while updating email or phone number: ' . $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -517,22 +562,31 @@ class GymUserControllerApi extends Controller
                 // Revoke the user's current access token
                 $user->token()->revoke();
 
-                return response()->json([
-                    'status'  => 200,
-                    'message' => 'User logged out successfully.'
-                ], 200);
+                return response()->json(
+                    [
+                        'status' => 200,
+                        'message' => 'User logged out successfully.',
+                    ],
+                    200,
+                );
             } else {
-                return response()->json([
-                    'status'  => 200,
-                    'message' => 'No user is currently authenticated.'
-                ], 200);
+                return response()->json(
+                    [
+                        'status' => 200,
+                        'message' => 'No user is currently authenticated.',
+                    ],
+                    200,
+                );
             }
         } catch (Exception $e) {
             Log::error('[GymUserControllerApi][userLogout]Error logging out user: ' . $e->getMessage());
-            return response()->json([
-                'status'   => 500,
-                'message'  => 'An error occurred while logging out.'
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => 'An error occurred while logging out.',
+                ],
+                500,
+            );
         }
     }
 
@@ -540,7 +594,7 @@ class GymUserControllerApi extends Controller
     {
         try {
             $request->validate([
-                'latitude'  => 'required',
+                'latitude' => 'required',
                 'longitude' => 'required',
             ]);
 
@@ -552,23 +606,32 @@ class GymUserControllerApi extends Controller
             $result = $this->userLatitudeAndLongitude->addLatLongDetails($latLongData, $userId);
 
             if ($result) {
-                return response()->json([
-                    'status'  => 200,
-                    'message' => 'Latitude and longitude added or updated successfully',
-                    'data'    => $result
-                ], 200);
+                return response()->json(
+                    [
+                        'status' => 200,
+                        'message' => 'Latitude and longitude added or updated successfully',
+                        'data' => $result,
+                    ],
+                    200,
+                );
             } else {
-                return response()->json([
-                    'status'  => 500,
-                    'message' => 'Failed to add or update latitude and longitude'
-                ], 500);
+                return response()->json(
+                    [
+                        'status' => 500,
+                        'message' => 'Failed to add or update latitude and longitude',
+                    ],
+                    500,
+                );
             }
         } catch (\Throwable $e) {
             Log::error('[GymUserControllerApi][addLatLong] Error: ' . $e->getMessage());
-            return response()->json([
-                'status'  => 500,
-                'message' => 'Server error: ' . $e->getMessage(),
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => 'Server error: ' . $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -592,11 +655,14 @@ class GymUserControllerApi extends Controller
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
             Log::error('[GymUserControllerApi][updatePassword] Error: ' . $e->getMessage());
-            return response()->json([
-                'status'       => 500,
-                'message'      => 'Server Error',
-                'errorMessage' => $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => 'Server Error',
+                    'errorMessage' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -619,11 +685,14 @@ class GymUserControllerApi extends Controller
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
             Log::error('[GymUserControllerApi][changePassword] Error: ' . $e->getMessage());
-            return response()->json([
-                'status'       => 500,
-                'message'      => 'Server Error',
-                'errorMessage' => $e->getMessage(),
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => 'Server Error',
+                    'errorMessage' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -636,17 +705,59 @@ class GymUserControllerApi extends Controller
                 ->where('user_id', $user->id)
                 ->update(['revoked' => true]);
 
-            return response()->json([
-                'status'  => 200,
-                'message' => 'Logged out from all devices successfully'
-            ], 200);
+            return response()->json(
+                [
+                    'status' => 200,
+                    'message' => 'Logged out from all devices successfully',
+                ],
+                200,
+            );
         } catch (Exception $e) {
             // Log the exception and return an error message
             Log::error('[GymUserControllerApi][logoutFromAllDevices] Error logging out from all devices: ' . $e->getMessage());
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => 'Failed to logout from all devices',
+                    'errorMessage' => $e->getMessage(),
+                ],
+                500,
+            );
+        }
+    }
+
+    public function checkEmailExists(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email',
+            ]);
+
+            $emailExists = $this->user->where('email', $request->email)->exists();
+
+            if ($emailExists) {
+                return response()->json(
+                    [
+                        'exists'  => true,
+                        'message' => 'Email exists'
+                    ],
+                    200
+                );
+            } else {
+                return response()->json(
+                    [
+                        'exists'  => false,
+                        'message' => 'Email does not exist'
+                    ],
+                    200
+                );
+            }
+        } catch (Exception $e) {
+            Log::error('[GymUserControllerApi][checkEmailExists] Error while checking email existence: ' . $e->getMessage());
             return response()->json([
                 'status'       => 500,
-                'message'      => 'Failed to logout from all devices',
-                'errorMessage' => $e->getMessage()
+                'message'      => 'Failed to check email',
+                'errorMessage' => $e->getMessage(),
             ], 500);
         }
     }
