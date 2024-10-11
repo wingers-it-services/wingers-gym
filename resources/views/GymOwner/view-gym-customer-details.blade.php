@@ -222,11 +222,11 @@
                                                             </div>
                                                             <!-- Joining Date -->
                                                             <div class="mb-3">
-                                                                <label for="joining_date" class="form-label">Subscripion
+                                                                <label for="subscription_start_date" class="form-label">Subscripion
                                                                     Start
                                                                     Date</label>
                                                                 <input type="date" class="form-control"
-                                                                    id="joining_date" name="subscription_start_date"
+                                                                 id="subscription_start_date" name="subscription_start_date"
                                                                     required>
                                                                 <small id="subError" class="text-danger"
                                                                     style="display: none;">The selected start date
@@ -364,27 +364,27 @@
                                                                                 Unknown
                                                                             @endif
                                                                             <!-- <form
-                                                                                                                                                                                                                action="/update-subscription-status/{{$userDetail->id}}"
-                                                                                                                                                                                                                method="POST">
-                                                                                                                                                                                                                @csrf
-                                                                                                                                                                                                                <select name="status"
-                                                                                                                                                                                                                    onchange="this.form.submit()"
-                                                                                                                                                                                                                    class="form-select" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'disabled' : '' }}>
-                                                                                                                                                                                                                    <option
-                                                                                                                                                                                                                        value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}"
-                                                                                                                                                                                                                        {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'selected' : '' }}>Active
-                                                                                                                                                                                                                    </option>
-                                                                                                                                                                                                                    <option
-                                                                                                                                                                                                                        value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}"
-                                                                                                                                                                                                                        {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'selected' : '' }}>Inactive
-                                                                                                                                                                                                                    </option>
-                                                                                                                                                                                                                </select>
-                                                                                                                                                                                                            </form> -->
+                                                                                                                                                                                                                        action="/update-subscription-status/{{$userDetail->id}}"
+                                                                                                                                                                                                                        method="POST">
+                                                                                                                                                                                                                        @csrf
+                                                                                                                                                                                                                        <select name="status"
+                                                                                                                                                                                                                            onchange="this.form.submit()"
+                                                                                                                                                                                                                            class="form-select" {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'disabled' : '' }}>
+                                                                                                                                                                                                                            <option
+                                                                                                                                                                                                                                value="{{ \App\Enums\GymSubscriptionStatusEnum::ACTIVE }}"
+                                                                                                                                                                                                                                {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::ACTIVE ? 'selected' : '' }}>Active
+                                                                                                                                                                                                                            </option>
+                                                                                                                                                                                                                            <option
+                                                                                                                                                                                                                                value="{{ \App\Enums\GymSubscriptionStatusEnum::INACTIVE }}"
+                                                                                                                                                                                                                                {{ $subscription->status == \App\Enums\GymSubscriptionStatusEnum::INACTIVE ? 'selected' : '' }}>Inactive
+                                                                                                                                                                                                                            </option>
+                                                                                                                                                                                                                        </select>
+                                                                                                                                                                                                                    </form> -->
 
                                                                         </td>
                                                                         <!-- <td class="text-end"><span><a href="javascript:void()" class="me-4" data-bs-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted"></i>
-                                                                                                                                                                                                                                                                                    </a><a href="javascript:void()" onclick="confirmSubscriptionDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
-                                                                                                                                                                                                                                                                            </td> -->
+                                                                                                                                                                                                                                                                                            </a><a href="javascript:void()" onclick="confirmSubscriptionDelete('{{ $subscription->uuid }}')" data-bs-toggle="tooltip" data-placement="top" title="Close"><i class="fas fa-times color-danger"></i></a></span>
+                                                                                                                                                                                                                                                                                    </td> -->
                                                                     </tr>
                                                                 @endforeach
                                                             </tbody>
@@ -1750,7 +1750,7 @@
         document.getElementById('sub_amount').value = amount;
 
         // Calculate and set the end date
-        const joiningDate = document.getElementById('joining_date').value;
+        const joiningDate = document.getElementById('subscription_start_date').value;
         if (joiningDate) {
             const endDate = new Date(joiningDate);
             endDate.setMonth(endDate.getMonth() + parseInt(validity));
@@ -1760,11 +1760,11 @@
     });
 
     document.getElementById('applyCouponBtn').addEventListener('click', function () {
-        alert("rdh");
         var couponCode = document.getElementById('coupon_code').value;
         var amount = parseFloat(document.getElementById('sub_amount').value); // Subscription amount
         var discountAmountElement = document.getElementById('discount_amount');
         var totalAmountElement = document.getElementById('total_amount');
+        var subStartDate = document.getElementById('subscription_start_date').value;
 
         // Clear previous errors
         document.getElementById('couponError').style.display = 'none';
@@ -1775,22 +1775,37 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.valid) {
-                        // Coupon is valid, apply the discount
-                        document.getElementById('coupon_id').value = data.coupon_id; // Store coupon_id
+                        // Convert dates to Date objects for comparison
+                        var couponStartDate = new Date(data.coupon_start_date);
+                        var couponEndDate = new Date(data.coupon_end_date);
+                        var subscriptionStartDate = new Date(subStartDate);
 
-                        var discountAmount = 0;
-                        if (data.discount_type === '1') {
-                            discountAmount = (amount * data.discount_value) / 100; // Calculate percentage discount
-                        } else if (data.discount_type === '0') {
-                            discountAmount = data.discount_value; // Fixed amount discount
+                        if (subscriptionStartDate >= couponStartDate && subscriptionStartDate <= couponEndDate) {
+                            // Coupon is valid, apply the discount
+                            document.getElementById('coupon_id').value = data.coupon_id; // Store coupon_id
+
+                            var discountAmount = 0;
+                            if (data.discount_type === '1') {
+                                discountAmount = (amount * data.discount_value) / 100; // Calculate percentage discount
+                            } else if (data.discount_type === '0') {
+                                discountAmount = data.discount_value; // Fixed amount discount
+                            }
+
+                            var newTotal = amount - discountAmount; // Apply discount to total amount
+
+                            // Update the discount and total amounts in the UI
+                            discountAmountElement.innerText = '₹' + discountAmount.toFixed(2);
+                            totalAmountElement.innerText = '₹' + newTotal.toFixed(2);
+                            document.getElementById('amount').value = newTotal;
                         }
-
-                        var newTotal = amount - discountAmount; // Apply discount to total amount
-
-                        // Update the discount and total amounts in the UI
-                        discountAmountElement.innerText = '₹' + discountAmount.toFixed(2);
-                        totalAmountElement.innerText = '₹' + newTotal.toFixed(2);
-                        document.getElementById('amount').value = newTotal;
+                        else {
+                            // Show SweetAlert if the subscription start date is not within the coupon's valid date range
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Coupon Not Applied',
+                                text: 'The subscription start date must be between the coupon start date and the coupon end date.'
+                            });
+                        }
 
                     } else {
                         // Invalid coupon, show error
@@ -1804,7 +1819,7 @@
         }
     });
 
-    document.getElementById('joining_date').addEventListener('change', function () {
+    document.getElementById('subscription_start_date').addEventListener('change', function () {
         const fetchedStartDate = new Date(document.getElementById('fetched_start_date').value);
         const selectedJoiningDate = new Date(this.value);
         const errorSubscription = document.getElementById("subError");
@@ -1830,7 +1845,7 @@
 
     document.getElementById('subscriptionForm').addEventListener('submit', function (event) {
         const fetchedStartDate = new Date(document.getElementById('fetched_start_date').value);
-        const selectedJoiningDate = new Date(document.getElementById('joining_date').value);
+        const selectedJoiningDate = new Date(document.getElementById('subscription_start_date').value);
         const errorSubscription = document.getElementById("subError");
 
         // Check if the selected date is before the fetched subscription start date

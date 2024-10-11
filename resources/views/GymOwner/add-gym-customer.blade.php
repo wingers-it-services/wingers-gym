@@ -477,6 +477,7 @@
 		var amount = parseFloat(document.getElementById('sub_amount').value); // Subscription amount
 		var discountAmountElement = document.getElementById('discount_amount');
 		var totalAmountElement = document.getElementById('total_amount');
+		var subStartDate = document.getElementById('subscription_start_date').value;
 
 		// Clear previous errors
 		document.getElementById('couponError').style.display = 'none';
@@ -487,22 +488,39 @@
 				.then(response => response.json())
 				.then(data => {
 					if (data.valid) {
-						// Coupon is valid, apply the discount
-						document.getElementById('coupon_id').value = data.coupon_id; // Store coupon_id
 
-						var discountAmount = 0;
-						if (data.discount_type === '1') {
-							discountAmount = (amount * data.discount_value) / 100; // Calculate percentage discount
-						} else if (data.discount_type === '0') {
-							discountAmount = data.discount_value; // Fixed amount discount
+						// Convert dates to Date objects for comparison
+						var couponStartDate = new Date(data.coupon_start_date);
+						var couponEndDate = new Date(data.coupon_end_date);
+						var subscriptionStartDate = new Date(subStartDate);
+
+						if (subscriptionStartDate >= couponStartDate && subscriptionStartDate <= couponEndDate) {
+
+							// Coupon is valid, apply the discount
+							document.getElementById('coupon_id').value = data.coupon_id; // Store coupon_id
+
+							var discountAmount = 0;
+							if (data.discount_type === '1') {
+								discountAmount = (amount * data.discount_value) / 100; // Calculate percentage discount
+							} else if (data.discount_type === '0') {
+								discountAmount = data.discount_value; // Fixed amount discount
+							}
+
+							var newTotal = amount - discountAmount; // Apply discount to total amount
+
+							// Update the discount and total amounts in the UI
+							discountAmountElement.innerText = '₹' + discountAmount.toFixed(2);
+							totalAmountElement.innerText = '₹' + newTotal.toFixed(2);
+							document.getElementById('amount').value = newTotal; // Update hidden field for form submission
 						}
-
-						var newTotal = amount - discountAmount; // Apply discount to total amount
-
-						// Update the discount and total amounts in the UI
-						discountAmountElement.innerText = '₹' + discountAmount.toFixed(2);
-						totalAmountElement.innerText = '₹' + newTotal.toFixed(2);
-						document.getElementById('amount').value = newTotal; // Update hidden field for form submission
+						else {
+							// Show SweetAlert if the subscription start date is not within the coupon's valid date range
+							Swal.fire({
+								icon: 'error',
+								title: 'Coupon Not Applied',
+								text: 'The subscription start date must be between the coupon start date and the coupon end date.'
+							});
+						}
 
 					} else {
 						// Invalid coupon, show error

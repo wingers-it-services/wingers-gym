@@ -264,7 +264,6 @@
             let eventDiv = this.closest('.external-event');
             let eventName = eventDiv.querySelector('span').textContent;
             let eventId = eventDiv.getAttribute('data-id'); // Assuming you have the event ID in the div
-            alert(eventId);
 
             // Use SweetAlert for confirmation
             Swal.fire({

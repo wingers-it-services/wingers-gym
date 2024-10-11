@@ -95,6 +95,8 @@ class GymCouponController extends Controller
                 'coupon_id' => $coupon->id,
                 'discount_type' => $coupon->discount_type, // 'percentage' or 'amount'
                 'discount_value' => $coupon->amount, // Either percentage or fixed amount
+                'coupon_start_date' => $coupon->start_date,
+                'coupon_end_date'  =>  $coupon->end_date
             ]);
         } else {
             return response()->json(['valid' => false]);

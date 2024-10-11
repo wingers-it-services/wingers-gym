@@ -59,7 +59,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group position-relative">
-                                            <label class="mb-1"><strong>Enter Code</strong></label>
+                                            <label class="mb-1"><strong>Enter Code</strong> (Enter code from Google Authenticator app)</label>
                                             <input type="text" class="form-control" id="google_authenticator_code" name="google_authenticator_code"
                                                 placeholder="Enter Code" required>
                                             <div class="invalid-feedback">
