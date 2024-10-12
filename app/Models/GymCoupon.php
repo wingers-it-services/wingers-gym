@@ -21,7 +21,8 @@ class GymCoupon extends Model
         'start_date',
         'end_date',
         'status',
-        'amount'
+        'amount',
+        'gym_id'
     ];
 
 
