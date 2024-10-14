@@ -637,32 +637,63 @@ class GymUserController extends Controller
                 ->orderBy('subscription_end_date', 'desc')
                 ->first();
 
-            // Check if user already has an active subscription
-            if ($userSubscription && $userSubscription->status == 1 && $userSubscription->subscription_end_date > now()) {
-                // If subscription is active, return an error message with SweetAlert
-                return redirect()->back()->with('status', 'error')->with('message', 'User is already in an active subscription until  ' . Carbon::parse($userSubscription->subscription_end_date)->format('jS M Y'));
+
+            $newStartDate = Carbon::parse($validatedData['subscription_start_date']);
+            $newEndDate = Carbon::parse($validatedData['subscription_end_date']);
+
+            // Scenario 1: Check if the new subscription starts within the existing subscription period
+            if ($userSubscription && $userSubscription->status == GymSubscriptionStatusEnum::ACTIVE && $userSubscription->subscription_end_date > now()) {
+                $currentStartDate = Carbon::parse($userSubscription->subscription_start_date);
+                $currentEndDate = Carbon::parse($userSubscription->subscription_end_date);
+
+                if ($newStartDate->between($currentStartDate, $currentEndDate)) {
+                    // Mark the existing subscription as inactive
+                    $userSubscription->update(['status' => GymSubscriptionStatusEnum::INACTIVE]);
+
+                    // Add new subscription as active
+                    $this->userSubscriptionHistory->create([
+                        'gym_id' => $gymId,
+                        'original_transaction_id' => 1,
+                        'user_id' => $validatedData['user_id'],
+                        'subscription_id' => $validatedData['subscription_id'],
+                        'subscription_start_date' => $validatedData['subscription_start_date'],
+                        'subscription_end_date' => $validatedData['subscription_end_date'],
+                        'amount' => $validatedData['amount'],
+                        'status' => GymSubscriptionStatusEnum::ACTIVE,
+                        'coupon_id' => $request->coupon_id,
+                        'description' => $validatedData['description'],
+                    ]);
+
+                    // Show SweetAlert for inactivated previous subscription
+                    return redirect()->back()->with('status', 'success')
+                        ->with('message', 'Current subscription was inactivated and the new subscription has been activated.');
+                }
             }
 
-            // Fetch subscription details
-            $subscription = $this->gymSubscription->find($validatedData['subscription_id']);
+            // Scenario 2: If the new subscription starts after the current subscription period
+            if ($userSubscription && $newStartDate->greaterThan($userSubscription->subscription_end_date)) {
+                // Keep the existing subscription active until the new one starts
 
-            // Create user subscription history
-            $this->userSubscriptionHistory->create([
-                'gym_id' => $gymId,
-                'original_transaction_id' => 1,
-                'user_id' => $validatedData['user_id'],
-                'subscription_id' => $subscription->id,
-                'subscription_start_date' => $validatedData['subscription_start_date'],
-                'subscription_end_date' => $validatedData['subscription_end_date'],
-                'amount' => $validatedData['amount'],
-                'status' =>  GymSubscriptionStatusEnum::ACTIVE, // Mark as active
-                'coupon_id' => $request->coupon_id,
-                'description' => $validatedData['description'],
-            ]);
+                // Add new subscription but mark as pending (or any other inactive status)
+                $this->userSubscriptionHistory->create([
+                    'gym_id' => $gymId,
+                    'original_transaction_id' => 1,
+                    'user_id' => $validatedData['user_id'],
+                    'subscription_id' => $validatedData['subscription_id'],
+                    'subscription_start_date' => $validatedData['subscription_start_date'],
+                    'subscription_end_date' => $validatedData['subscription_end_date'],
+                    'amount' => $validatedData['amount'],
+                    'status' => GymSubscriptionStatusEnum::INACTIVE, // Set status as pending initially
+                    'coupon_id' => $request->coupon_id,
+                    'description' => $validatedData['description'],
+                ]);
 
-            return redirect()->back()
-                ->with('status', 'success')
-                ->with('message', 'Subscription added successfully');
+                // Show SweetAlert message that the new subscription will start after current one ends
+                return redirect()->back()->with('status', 'success')
+                    ->with('message', 'Current subscription will remain active until ' . Carbon::parse($userSubscription->subscription_end_date)->format('jS M Y') . ' New subscription started from ' . Carbon::parse($newStartDate)->format('jS M Y'));
+            }
+
+            return redirect()->back()->with('status', 'error')->with('message', 'User is already in an active subscription until ' . Carbon::parse($userSubscription->subscription_end_date)->format('jS M Y'));
         } catch (Throwable $th) {
             Log::error("[GymUserController][addUserSubscription] error " . $th->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'Failed to add subscription. ' . $th->getMessage());
@@ -690,7 +721,8 @@ class GymUserController extends Controller
     public function fetchWorkoutDetails(Request $request)
     {
         $exerciseId = $request->input('workout_id');
-        $workout = Workout::find($exerciseId);;
+        $workout = Workout::find($exerciseId);
+        ;
 
         if ($workout) {
             return response()->json([
