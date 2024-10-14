@@ -6,7 +6,9 @@ use App\Enums\AttendenceStatusEnum;
 use App\Models\Gym;
 use App\Models\GymUserAttendence;
 use App\Models\Holiday;
+use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -35,10 +37,10 @@ class GymUserAttendenceControllerApi extends Controller
                 'month'  => 'required|integer|min:1|max:12',
                 'year'   => 'required|integer|min:1900|max:' . date('Y')
             ]);
-    
+
             // Get the authenticated user
             $user = auth()->user();
-    
+
             // Fetch the attendance record for the given gym, user, month, and year
             $attendance = $this->gymUserAttendence
                 ->where('gym_id', $request->gym_id)
@@ -46,42 +48,42 @@ class GymUserAttendenceControllerApi extends Controller
                 ->where('month', $request->month)
                 ->where('year', $request->year)
                 ->first();
-    
+
             // Get the number of days in the provided month and year
             $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $request->month, $request->year);
-    
+
             // Fetch holidays for the specified gym within the given month and year
             $holidays = $this->holiday->where('gym_id', $request->gym_id)
                 ->whereMonth('date', $request->month)
                 ->whereYear('date', $request->year)
                 ->pluck('date'); // Get dates of holidays
-    
+
             // Convert holiday dates to an array of day numbers
             $holidayDays = $holidays->map(function ($holidayDate) {
                 return \Carbon\Carbon::parse($holidayDate)->day;
             })->toArray();
-    
+
             // Initialize counters for present, absent, holiday, and weekends (Sundays)
             $presentCount = 0;
             $absentCount = 0;
             $holidayCount = 0;
             $weekendCount = 0;
-    
+
             // Prepare an array to store attendance data for each day of the month
             $attendanceData = [];
-    
+
             // Loop through all days of the month
             for ($day = 1; $day <= $daysInMonth; $day++) {
                 // Get the attendance status for the current day, defaulting to ABSENT if no record
                 $status = $attendance ? (int)$attendance->{'day' . $day} : 0;
-    
+
                 // Get the day of the week (e.g., Sunday, Monday)
                 $date = \DateTime::createFromFormat('Y-m-d', "{$request->year}-{$request->month}-{$day}");
                 $dayName = $date->format('l'); // 'l' returns the full day name (e.g., Sunday, Monday)
-    
+
                 // Check if it's a holiday
                 $isHoliday = in_array($day, $holidayDays);
-    
+
                 // Set the status to HOLIDAY if it's a holiday
                 if ($isHoliday) {
                     $status = AttendenceStatusEnum::HOLIDAY;
@@ -89,7 +91,7 @@ class GymUserAttendenceControllerApi extends Controller
                     $weekendCount++;
                     $status = AttendenceStatusEnum::WEEKEND; // Override status to WEEKEND for Sundays
                 }
-    
+
                 // Count the status
                 if ($status == AttendenceStatusEnum::PRESENT) {
                     $presentCount++;
@@ -98,7 +100,7 @@ class GymUserAttendenceControllerApi extends Controller
                 } elseif ($status == AttendenceStatusEnum::HOLIDAY) {
                     $holidayCount++;
                 }
-    
+
                 // Add the day, status, and color to the attendanceData array
                 $attendanceData[] = [
                     'day'    => $day,
@@ -106,20 +108,20 @@ class GymUserAttendenceControllerApi extends Controller
                     'color'  => AttendenceStatusEnum::getColor($status),
                 ];
             }
-    
+
             // Calculate the percentages
             $totalDays = $daysInMonth;
             $presentPercentage = ($presentCount / $totalDays) * 100;
             $absentPercentage = ($absentCount / $totalDays) * 100;
             $holidayPercentage = ($holidayCount / $totalDays) * 100;
             $weekendPercentage = ($weekendCount / $totalDays) * 100;
-    
+
             // Assign color codes based on the status
             $presentColor = AttendenceStatusEnum::getColor(AttendenceStatusEnum::PRESENT);
             $absentColor = AttendenceStatusEnum::getColor(AttendenceStatusEnum::ABSENT);
             $holidayColor = AttendenceStatusEnum::getColor(AttendenceStatusEnum::HOLIDAY);
             $weekendColor = AttendenceStatusEnum::getColor(AttendenceStatusEnum::WEEKEND);
-    
+
             // Return the attendance data and summary in the response
             return response()->json([
                 'status'       => 200,
@@ -150,8 +152,8 @@ class GymUserAttendenceControllerApi extends Controller
             ], 500);
         }
     }
-    
-    public function markAttendance(Request $request)
+
+    public function markGymUserAttendance(Request $request)
     {
         try {
             $request->validate([
@@ -169,6 +171,54 @@ class GymUserAttendenceControllerApi extends Controller
 
             $gymId = $this->gym->where('uuid', $request->gym_uuid)->pluck('id')->first();
 
+            return $this->markAttendance($user, $gymId);
+        } catch (Throwable $e) {
+            Log::error('[GymUserAttendenceControllerApi][markGymUserAttendance]' . $e->getMessage());
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Error in Attendance mark' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function markHomeUserAttendance()
+    {
+        try {
+            $user = auth()->user();
+
+            if (!$user) {
+                return response()->json([
+                    'status'  => 401,
+                    'message' => 'User not authenticated',
+                ], 401);
+            }
+
+            // Fetch the gym ID where gym_type is 'admin'
+            $gymId = $this->gym
+                ->where('gym_type', 'admin')
+                ->value('id');
+
+            if (!$gymId) {
+                return response()->json([
+                    'status'  => 404,
+                    'message' => 'Admin gym not found',
+                ], 404);
+            }
+
+            return $this->markAttendance($user, $gymId);
+        } catch (Throwable $e) {
+            Log::error('[GymUserAttendenceControllerApi][markHomeUserAttendance] ' . $e->getMessage());
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Error in marking attendance: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    private function markAttendance(User $user, $gymId)
+    {
+        try {
             $today = Carbon::now();
             $currentDay = $today->day;
             $currentMonth = $today->month;
@@ -187,7 +237,7 @@ class GymUserAttendenceControllerApi extends Controller
                 return response()->json([
                     'status'  => 409,
                     'message' => 'Attendance already marked for today',
-                ], 409);  
+                ], 409);
             }
 
             $attendance->$dayField = AttendenceStatusEnum::PRESENT;
@@ -200,10 +250,10 @@ class GymUserAttendenceControllerApi extends Controller
                 'message'    => 'Attendance marked successfully',
             ], 200);
         } catch (Throwable $e) {
-            Log::error('[GymUserAttendenceControllerApi][markAttendance]'.$e->getMessage());
+            Log::error('[GymUserAttendenceControllerApi][markAttendance]' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
-                'message' => 'Error in Attendance mark' . $e->getMessage(),
+                'message' => 'Error in Attendance mark ' . $e->getMessage(),
             ], 500);
         }
     }

@@ -101,7 +101,9 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('/get-user-attendence', [GymUserAttendenceControllerApi::class, 'getUserAttendance']);
 
-    Route::post('/mark-user-attendence', [GymUserAttendenceControllerApi::class, 'markAttendance']);
+    Route::post('/mark-user-attendence', [GymUserAttendenceControllerApi::class, 'markGymUserAttendance']);
+
+    Route::get('/mark-home-user-attendence', [GymUserAttendenceControllerApi::class, 'markHomeUserAttendance']);
 
     Route::post('/update-daily-diet-status', [UserDietControllerApi::class, 'updateUserDietStatus']);
 
