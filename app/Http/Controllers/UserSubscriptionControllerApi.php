@@ -31,7 +31,7 @@ class UserSubscriptionControllerApi extends Controller
     /**
      * The function fetches gym subscriptions and returns a JSON response with the subscription details
      * or an error message if there is an issue.
-     * 
+     *
      * @return The `fetchSubscription` function returns a JSON response with status, subscriptions data,
      * and a message.
      */
@@ -41,8 +41,23 @@ class UserSubscriptionControllerApi extends Controller
             $request->validate([
                 'gym_id' => 'required',
             ]);
-            $subscriptions = $this->gymSubscription->where('gym_id', $request->gym_id)->get();
 
+            $hasFreeSubscription = $this->userSubscriptionHistory
+                ->where('gym_id', $request->gym_id)
+                ->where('user_id', auth()->user()->id)
+                ->where('amount', '<=', 1)
+                ->exists();
+
+            if ($hasFreeSubscription) {
+                $subscriptions = $this->gymSubscription
+                    ->where('gym_id', $request->gym_id)
+                    ->where('amount', '>', 1)
+                    ->get();
+            } else {
+                $subscriptions = $this->gymSubscription
+                    ->where('gym_id', $request->gym_id)
+                    ->get();
+            }
             if ($subscriptions->isEmpty()) {
                 return response()->json([
                     'status'        => 422,
@@ -75,7 +90,7 @@ class UserSubscriptionControllerApi extends Controller
     /**
      * The function fetches a user's subscription history and returns it in a JSON response, handling
      * authentication, empty subscriptions, and error cases.
-     * 
+     *
      * @return The `fetchSubscriptionHistry` function returns a JSON response with the status,
      * subscriptions data, and a message based on the logic within the function.
      */
@@ -127,7 +142,7 @@ class UserSubscriptionControllerApi extends Controller
     {
         $lastOrderId = $this->userSubscriptionPayment->latest('id')->value('id');
         $newOrderId = ($lastOrderId == null) ? 'WITS1' :  'W1' . ($lastOrderId + 1);
-        $amount = $data['totalprice']/100;
+        $amount = $data['totalprice'] / 100;
         $this->userSubscriptionPayment->newOrder($data);
     }
 
@@ -156,7 +171,7 @@ class UserSubscriptionControllerApi extends Controller
 
             $orderData = [
                 'subtotal'            => $responseData['amount'] ?? 0,
-                'amount'              => $responseData['amount']/100 ?? 0,
+                'amount'              => $responseData['amount'] / 100 ?? 0,
                 'response'            => $jsonResponse,
                 'response_code'       => $decodedResponse['code'] ?? null,
                 'merchantId'          => $responseData['merchantTransactionId'] ?? null,
@@ -234,7 +249,7 @@ class UserSubscriptionControllerApi extends Controller
                     'amount'                  => $order->amount,
                     'coupon_id'               => $order->coupon_id ?? 0
                 ];
-                
+
 
                 // Call buySubscription to create the user's subscription
                 $subscription = $this->userSubscriptionHistory->buySubscription($subscriptionData);
