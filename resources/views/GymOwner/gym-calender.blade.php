@@ -348,10 +348,8 @@
                             response.forEach(function(event) {
                                 events.push({
                                     title: event.title,
-                                    start: event
-                                        .start, // Use start directly from the response
-                                    end: event
-                                        .end, // Use end directly from the response
+                                    start: event.start, // Use start directly from the response
+                                    end: event.end, // Use end directly from the response
                                     className: event.className,
                                     allDay: !event
                                         .start_time // If there's no time, it's an all-day event
@@ -441,28 +439,30 @@
                 url: '/getEvent/' + eventId, // Route to fetch the event details
                 method: 'GET',
                 success: function(response) {
-                    // Populate the update modal fields with the fetched data
-                    $('#update_event_id').val(response.id);
-                    $('#update_event_name').val(response.event_name);
-                    $('#update_start_time').val(response.start_time);
-                    $('#update_end_time').val(response.end_time);
-                    $('#update_date').val(response.date);
-                    $('#update_description').val(response.description);
-                    $('#update_is_recurring').val(response.is_recurring);
+    // Assuming start_time and end_time are in H:i:s or other format, format them to H:i
+    const startTime = response.start_time.substring(0, 5); // If the time includes seconds
+    const endTime = response.end_time.substring(0, 5);
 
-                    // If recurring is Yes, show the week days section
-                    if (response.is_recurring == 1) {
-                        $('#week_days_section_update').show();
-                        response.week_days.forEach(function(day) {
-                            $('#update_day' + day).prop('checked', true);
-                        });
-                    } else {
-                        $('#week_days_section_update').hide();
-                    }
+    $('#update_event_id').val(response.id);
+    $('#update_event_name').val(response.event_name);
+    $('#update_start_time').val(startTime); // Set time in correct H:i format
+    $('#update_end_time').val(endTime);
+    $('#update_date').val(response.date);
+    $('#update_description').val(response.description);
+    $('#update_is_recurring').val(response.is_recurring);
 
-                    $('#update-category').modal('show');
+    if (response.is_recurring == 1) {
+        $('#week_days_section_update').show();
+        response.week_days.forEach(function(day) {
+            $('#update_day' + day).prop('checked', true);
+        });
+    } else {
+        $('#week_days_section_update').hide();
+    }
 
-                }
+    $('#update-category').modal('show');
+}
+
             });
         }
     </script>

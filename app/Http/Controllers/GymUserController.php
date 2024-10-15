@@ -721,7 +721,6 @@ class GymUserController extends Controller
     {
         $exerciseId = $request->input('workout_id');
         $workout = Workout::find($exerciseId);
-        ;
 
         if ($workout) {
             return response()->json([
