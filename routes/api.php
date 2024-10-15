@@ -150,6 +150,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/add-fcm-token', [FcmTokenControllerApi::class, 'addUserFcmToken']);
 
     Route::post('/change-password', [GymUserControllerApi::class, 'changePassword']);
+
+    Route::delete('/delete-user-account', [GymUserControllerApi::class, 'deleteUserAccount']);
 });
 
 
