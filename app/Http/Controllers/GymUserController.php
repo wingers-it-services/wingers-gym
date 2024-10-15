@@ -12,7 +12,6 @@ use App\Models\Gym;
 use App\Models\GymSubscription;
 use App\Models\GymUserAttendence;
 use App\Models\GymUserGym;
-use App\Models\GymUserSubscriptionsHistory;
 use App\Models\GymWeekend;
 use App\Models\Holiday;
 use App\Models\User;

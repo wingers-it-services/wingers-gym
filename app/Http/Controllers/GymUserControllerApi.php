@@ -785,4 +785,32 @@ class GymUserControllerApi extends Controller
             return null;
         }
     }
+
+    public function deleteUserAccount(Request $request)
+    {
+        try {
+
+            $user = auth()->user();
+
+            if (!$user) {
+                return response()->json([
+                    'status'   => 404,
+                    'message'  => 'No User Found'
+                ], 404); 
+            }
+            
+            $user->delete();
+            return response()->json([
+                'status'  => 200,
+                'message' => 'Your Account deleted successfully.',
+            ], 200);
+        } catch (Exception $e) {
+            Log::error('[GymUserControllerApi][deleteUserAccount] Error deleting account: ' . $e->getMessage());
+            return response()->json([
+                'status'       => 500,
+                'message'      => 'Failed to delete account',
+                'errorMessage' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }
