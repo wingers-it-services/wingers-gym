@@ -169,6 +169,8 @@ Route::group(['middleware' => ['auth:gym']], function()  {
 
     Route::get('/fetch-gym-schedules', [GymSheduleController::class, 'fetchSchedule'])->name('fetchSchedule');
     Route::get('/delete-gym-schedules/{id}', [GymSheduleController::class, 'deleteSchedule']);
+    Route::get('/getEvent/{id}', [GymSheduleController::class, 'getEvent'])->name('getEvent');
+    Route::post('/updateGymShedule', [GymSheduleController::class, 'updateGymShedule']);
 
     /* dashboard */
     Route::get('/dashboard', [GymDetailController::class, 'showDashboard'])->name('dashboard');
@@ -264,7 +266,7 @@ Route::group(['middleware' => ['auth:gym']], function()  {
     Route::get('/calendar', function () {
         return view('GymOwner.gym-calender');
     });
-  
+
     Route::get('/addFaq', function () {
         return view('GymOwner.addFaq');
     });

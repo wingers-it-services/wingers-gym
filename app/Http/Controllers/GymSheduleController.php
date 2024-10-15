@@ -51,7 +51,7 @@ class GymSheduleController extends Controller
             return redirect()->back()->with('status', 'success')->with('message', 'Schedule added successfully.');
         } catch (Exception $e) {
             Log::error("[GymSheduleController][addGymShedule] error " . $e->getMessage());
-            return redirect()->back()->with('status', 'error')->with('message', 'Error while adding schedule.'. $e->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Error while adding schedule.' . $e->getMessage());
         }
     }
 
@@ -118,6 +118,57 @@ class GymSheduleController extends Controller
 
         return $date->next($weekDayMap[$weekDay])->toDateString();
     }
+
+    public function getEvent($id)
+    {
+        $event = $this->gymShedule->find($id);
+
+        if ($event) {
+            // Optionally include week_days if recurring is true
+            $weekDays = $event->is_recurring ? explode(',', $event->week_days) : [];
+
+            return response()->json([
+                'id' => $event->id,
+                'event_name' => $event->event_name,
+                'start_time' => $event->start_time,
+                'end_time' => $event->end_time,
+                'date' => $event->date,
+                'description' => $event->description,
+                'is_recurring' => $event->is_recurring,
+                'week_days' => $weekDays,
+            ]);
+        }
+
+        return response()->json(['message' => 'Event not found'], 404);
+    }
+
+    public function updateGymShedule(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'event_id' => 'required', // Ensure the event exists
+                'event_name' => 'required|string|max:255',
+                'date' => 'required_if:is_recurring,0', // For non-recurring
+                'week_days' => 'required_if:is_recurring,1|array', // For recurring
+                'week_days.*' => 'integer|between:1,7',
+                'start_time' => 'required|date_format:H:i',
+                'end_time' => 'required|date_format:H:i|after:start_time',
+                'is_recurring' => 'required|boolean',
+                'description' => 'required|string',
+            ]);
+            $event_id = $request->event_id;
+
+            $isSheduleUpdated = $this->gymShedule->updateGymSchedule($validatedData, $event_id);
+            if (!$isSheduleUpdated) {
+                return redirect()->back()->with('status', 'error')->with('message', 'error while updating schedule.');
+            }
+            return redirect()->back()->with('status', 'success')->with('message', 'schedule Updated successfully.');
+        } catch (Exception $e) {
+            Log::error("[GymSheduleController][updateGymShedule] error " . $e->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', $e->getMessage());
+        }
+    }
+
 
     public function deleteSchedule($id)
     {
