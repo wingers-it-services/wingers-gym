@@ -87,7 +87,7 @@ class GymCouponController extends Controller
     public function validateCoupon($coupon_code)
     {
         // Find the coupon from the gym_coupons table
-        $coupon = GymCoupon::where('coupon_code', $coupon_code)->first();
+        $coupon = GymCoupon::where('coupon_code', $coupon_code)->where('status', \App\Enums\GymCouponStatusEnum::ACTIVE)->first();
 
         if ($coupon) {
             return response()->json([

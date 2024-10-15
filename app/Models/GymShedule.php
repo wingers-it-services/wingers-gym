@@ -73,6 +73,27 @@ class GymShedule extends Model
         }
     }
 
+    public function updateGymSchedule(array $scheduleUpdateArray, $schedule_id)
+    {
+        $gymSchedule = GymShedule::where('id', $schedule_id)->first();
+        if (!$gymSchedule) {
+            return redirect()->back()->with('error', 'schedue not found');
+        }
+        try {
+            $gymSchedule->update([
+                'event_name'   => $scheduleUpdateArray['event_name'],
+                'date'         => $scheduleUpdateArray['date'],
+                'start_time'   => $scheduleUpdateArray['start_time'],
+                'end_time'     => $scheduleUpdateArray['end_time'],
+                'is_recurring' => $scheduleUpdateArray['is_recurring'],
+                'description'  => $scheduleUpdateArray['description'],
+            ]);
+            return $gymSchedule->save();
+        } catch (Exception $e) {
+            Log::error('[GymShedule][updateGymSchedule] Error while updating schedule detail: ' . $e->getMessage());
+        }
+    }
+
 
     protected static function boot()
     {
