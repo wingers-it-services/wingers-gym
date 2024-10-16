@@ -199,8 +199,7 @@
                                 <h4 class="modal-title"><strong>Update Schedule</strong></h4>
                             </div>
                             <div class="modal-body">
-                                <form method="POST" class="needs-validation" action="/updateGymShedule"
-                                    novalidate>
+                                <form method="POST" class="needs-validation" action="/updateGymShedule" novalidate>
                                     @csrf
                                     <input type="hidden" name="event_id" id="update_event_id">
                                     <!-- Hidden input for event ID -->
@@ -229,14 +228,14 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="control-label">Date</label>
-                                            <input class="form-control form-white" type="date" name="date"
-                                                id="update_date">
+                                            <input class="form-control form-white"
+                                                type="date" name="date" id="update_date">
                                             <div id="week_days_section_update" style="padding-top: 5%; display: none;">
                                                 <label class="control-label">Week Day</label>
                                                 @foreach (\App\Enums\WeekDaysEnum::getWeekDays() as $key => $day)
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="week_days[]" value="{{ $key }}"
+                                                        <input class="form-check-input" type="checkbox" name="week_days[]"
+                                                            value="{{ $key }}"
                                                             id="update_day{{ $key }}">
                                                         <label class="form-check-label"
                                                             for="update_day{{ $key }}">{{ $day }}</label>
@@ -348,8 +347,10 @@
                             response.forEach(function(event) {
                                 events.push({
                                     title: event.title,
-                                    start: event.start, // Use start directly from the response
-                                    end: event.end, // Use end directly from the response
+                                    start: event
+                                        .start, // Use start directly from the response
+                                    end: event
+                                        .end, // Use end directly from the response
                                     className: event.className,
                                     allDay: !event
                                         .start_time // If there's no time, it's an all-day event
@@ -439,30 +440,40 @@
                 url: '/getEvent/' + eventId, // Route to fetch the event details
                 method: 'GET',
                 success: function(response) {
-    // Assuming start_time and end_time are in H:i:s or other format, format them to H:i
-    const startTime = response.start_time.substring(0, 5); // If the time includes seconds
-    const endTime = response.end_time.substring(0, 5);
+                    console.log(response);
+                    // Assuming start_time and end_time are in H:i:s or other format, format them to H:i
+                    const startTime = response.start_time.substring(0, 5); // If the time includes seconds
+                    const endTime = response.end_time.substring(0, 5);
 
-    $('#update_event_id').val(response.id);
-    $('#update_event_name').val(response.event_name);
-    $('#update_start_time').val(startTime); // Set time in correct H:i format
-    $('#update_end_time').val(endTime);
-    $('#update_date').val(response.date);
-    $('#update_description').val(response.description);
-    $('#update_is_recurring').val(response.is_recurring);
+                    // Set form fields
+                    $('#update_event_id').val(response.id);
+                    $('#update_event_name').val(response.event_name);
+                    $('#update_start_time').val(startTime);
+                    $('#update_end_time').val(endTime);
+                    $('#update_date').val(response.date);
+                    $('#update_description').val(response.description);
+                    $('#update_is_recurring').val(response.is_recurring);
 
-    if (response.is_recurring == 1) {
-        $('#week_days_section_update').show();
-        response.week_days.forEach(function(day) {
-            $('#update_day' + day).prop('checked', true);
-        });
-    } else {
-        $('#week_days_section_update').hide();
-    }
+                    // Handle recurring events and week days checkboxes
+                    if (response.is_recurring == 1) {
+                        $('#week_days_section_update').show();
 
-    $('#update-category').modal('show');
-}
+                        // Uncheck all checkboxes first
+                        $('input[name="week_days"]').prop('checked', false);
 
+                        // Check the corresponding checkbox for the single weekday
+                        if (response.week_days) {
+                            $('#update_day' + response.week_days).prop('checked', true);
+                        }
+                    } else {
+                        $('#week_days_section_update').hide();
+                        // Uncheck all week day checkboxes when not recurring
+                        $('input[name="week_days"]').prop('checked', false);
+                    }
+
+                    // Show modal
+                    $('#update-category').modal('show');
+                }
             });
         }
     </script>

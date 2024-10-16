@@ -29,6 +29,7 @@ class GymSheduleController extends Controller
         $gym = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
         $gymShedule = $this->gymShedule->where('gym_id', $gymId)->get();
+
         return view('GymOwner.gym-calender', compact('gymShedule'));
     }
 
@@ -62,7 +63,7 @@ class GymSheduleController extends Controller
     {
         $gym = Auth::guard('gym')->user();
         $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
-        $schedules = GymShedule::where('gym_id', $gymId)->get();  // Assuming GymSchedule model is used for schedule data
+        $schedules = $this->gymShedule->where('gym_id', $gymId)->get();  // Assuming GymSchedule model is used for schedule data
 
         // Get the total number of weeks remaining in the current year dynamically
         $currentDate = Carbon::now();
@@ -124,8 +125,8 @@ class GymSheduleController extends Controller
         $event = $this->gymShedule->find($id);
 
         if ($event) {
-            // Optionally include week_days if recurring is true
-            $weekDays = $event->is_recurring ? explode(',', $event->week_days) : [];
+            // Decode the week_days from the database (if stored as JSON) or explode if stored as comma-separated values
+            $weekDay = $event->is_recurring ? $event->week_day : null;
 
             return response()->json([
                 'id' => $event->id,
@@ -135,12 +136,13 @@ class GymSheduleController extends Controller
                 'date' => $event->date,
                 'description' => $event->description,
                 'is_recurring' => $event->is_recurring,
-                'week_days' => $weekDays,
+                'week_days' => $weekDay, // Return week days as an array
             ]);
         }
 
         return response()->json(['message' => 'Event not found'], 404);
     }
+
 
     public function updateGymShedule(Request $request)
     {
@@ -162,7 +164,7 @@ class GymSheduleController extends Controller
             if (!$isSheduleUpdated) {
                 return redirect()->back()->with('status', 'error')->with('message', 'error while updating schedule.');
             }
-            return redirect()->back()->with('status', 'success')->with('message', 'schedule Updated successfully.');
+            return redirect()->back()->with('status', 'success')->with('message', 'Schedule Updated successfully.');
         } catch (Exception $e) {
             Log::error("[GymSheduleController][updateGymShedule] error " . $e->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', $e->getMessage());
@@ -173,7 +175,7 @@ class GymSheduleController extends Controller
     public function deleteSchedule($id)
     {
         // Fetch the specific schedule by its ID
-        $schedule = GymShedule::find($id);
+        $schedule = $this->gymShedule->find($id);
 
         if ($schedule) {
             $schedule->delete(); // Call delete() on a single model instance
