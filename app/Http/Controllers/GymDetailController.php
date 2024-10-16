@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Diet;
 use App\Models\Gym;
+use App\Models\GymCoupon;
+use App\Models\GymStaff;
+use App\Models\GymSubscription;
 use App\Models\GymUserGym;
 use App\Models\GymWeekend;
 use App\Models\Holiday;
+use App\Models\User;
+use App\Models\Workout;
 use App\Services\GymService;
 use App\Traits\SessionTrait;
 use Exception;
@@ -24,28 +30,53 @@ class GymDetailController extends Controller
     protected $gymUserGym;
     protected $gymHoliday;
     protected $gymWeekend;
+    protected $user;
+    protected $staff;
+    protected $subscription;
+    protected $workout;
+    protected $coupon;
+    protected $diet;
 
     public function __construct(
         Gym $gym,
         GymService $gymService,
         GymUserGym $gymUserGym,
         Holiday $gymHoliday,
-        GymWeekend $gymWeekend
+        GymWeekend $gymWeekend,
+        User $user,
+        GymStaff $staff,
+        GymSubscription $subscription,
+        Workout $workout,
+        GymCoupon $coupon,
+        Diet $diet
     ) {
         $this->gym = $gym;
         $this->gymService = $gymService;
         $this->gymUserGym = $gymUserGym;
         $this->gymHoliday = $gymHoliday;
         $this->gymWeekend = $gymWeekend;
+        $this->user = $user;
+        $this->staff = $staff;
+        $this->subscription = $subscription;
+        $this->workout = $workout;
+        $this->coupon = $coupon;
+        $this->diet = $diet;
     }
 
     public function showDashboard(Request $request)
     {
         $gymUser = Auth::guard('gym')->user();
         $gymDetail = $this->gym->where('uuid', $gymUser->uuid)->first();
+        $totalUsers = $this->user->where('gym_id', $gymDetail->id)->count();
+        $totalStaffs = $this->staff->where('gym_id', $gymDetail->id)->count();
+        $totalSubscriptions = $this->subscription->where('gym_id', $gymDetail->id)->count();
+        $totalWorkouts = $this->workout->where('added_by', $gymDetail->id)->count();
+        $totalDiets = $this->workout->where('added_by', $gymDetail->id)->count();
+        $totalCoupons = $this->coupon->where('gym_id', $gymDetail->id)->count();
+        $totalActiveUsers = $this->user->where('gym_id', $gymDetail->id)->where('subscription_status', 1)->count();
         Log::error('[GymDetailController][showDashboard] user image null : ' . empty($gymDetail->image));
         Log::error('[GymDetailController][showDashboard] user image src : ' . $gymDetail->image);
-        return view('GymOwner.dashboard', compact('gymDetail'));
+        return view('GymOwner.dashboard', compact('gymDetail', 'totalUsers', 'totalStaffs', 'totalSubscriptions', 'totalWorkouts', 'totalDiets', 'totalCoupons', 'totalActiveUsers'));
     }
 
     public function showAiDashboard(Request $request)
@@ -174,7 +205,7 @@ class GymDetailController extends Controller
             // Check if the OTP is valid using Google 2FA library (e.g., "pragmarx/google2fa-laravel")
             $google2fa = new Google2FA();
             $isValidOtp = $google2fa->verifyKey($gymAccount->google2fa_secret, $request->otp);
-           
+
             if (!$isValidOtp) {
                 return redirect()->back()->with('status', 'error')->with('message', 'Invalid OTP. Please try again.');
             }
@@ -263,7 +294,7 @@ class GymDetailController extends Controller
     /**
      * The function fetches a gym profile, including the profile image URL, and returns it as a JSON
      * response, handling exceptions and logging errors if any occur.
-     * 
+     *
      * @return The `fetchGymProfile` function is returning a JSON response containing the gym profile
      * information. If an error occurs during the process, it will log the error and redirect back with
      * an error message.
@@ -285,8 +316,8 @@ class GymDetailController extends Controller
     /**
      * The GymProfileView function retrieves the gym profile data and total number of users in the gym,
      * displaying it in the gym-profile view, with error handling and logging in case of exceptions.
-     * 
-     * @return The GymProfileView function is returning a view called 'gym-profile' with the variables 
+     *
+     * @return The GymProfileView function is returning a view called 'gym-profile' with the variables
      * and  passed to it using the compact function. If an exception occurs during the process,
      * it will log the error message and redirect back with a status of 'error' and a message indicating
      * the error that occurred.
