@@ -11,6 +11,7 @@ use App\Models\GymUserGym;
 use App\Models\GymWeekend;
 use App\Models\Holiday;
 use App\Models\User;
+use App\Models\UserSubscriptionHistory;
 use App\Models\Workout;
 use App\Services\GymService;
 use App\Traits\SessionTrait;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use PragmaRX\Google2FA\Google2FA;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Carbon\Carbon;
 
 class GymDetailController extends Controller
 {
@@ -36,6 +38,7 @@ class GymDetailController extends Controller
     protected $workout;
     protected $coupon;
     protected $diet;
+    protected $subscriptionHistory;
 
     public function __construct(
         Gym $gym,
@@ -48,7 +51,8 @@ class GymDetailController extends Controller
         GymSubscription $subscription,
         Workout $workout,
         GymCoupon $coupon,
-        Diet $diet
+        Diet $diet,
+        UserSubscriptionHistory $subscriptionHistory
     ) {
         $this->gym = $gym;
         $this->gymService = $gymService;
@@ -61,6 +65,7 @@ class GymDetailController extends Controller
         $this->workout = $workout;
         $this->coupon = $coupon;
         $this->diet = $diet;
+        $this->subscriptionHistory = $subscriptionHistory;
     }
 
     public function showDashboard(Request $request)
@@ -74,9 +79,17 @@ class GymDetailController extends Controller
         $totalDiets = $this->workout->where('added_by', $gymDetail->id)->count();
         $totalCoupons = $this->coupon->where('gym_id', $gymDetail->id)->count();
         $totalActiveUsers = $this->user->where('gym_id', $gymDetail->id)->where('subscription_status', 1)->count();
+        $currentDate = Carbon::now();
+        $usersHistory = $this->subscriptionHistory
+            ->with('users')
+            ->where('gym_id', $gymDetail->id)
+            ->where('status', 1)
+            ->where('subscription_end_date', '<', $currentDate->addDays(10))
+            ->orderBy('subscription_end_date', 'asc')
+            ->get();
         Log::error('[GymDetailController][showDashboard] user image null : ' . empty($gymDetail->image));
         Log::error('[GymDetailController][showDashboard] user image src : ' . $gymDetail->image);
-        return view('GymOwner.dashboard', compact('gymDetail', 'totalUsers', 'totalStaffs', 'totalSubscriptions', 'totalWorkouts', 'totalDiets', 'totalCoupons', 'totalActiveUsers'));
+        return view('GymOwner.dashboard', compact('gymDetail', 'totalUsers', 'totalStaffs', 'totalSubscriptions', 'totalWorkouts', 'totalDiets', 'totalCoupons', 'totalActiveUsers', 'usersHistory'));
     }
 
     public function showAiDashboard(Request $request)
