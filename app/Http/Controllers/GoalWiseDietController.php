@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Diet;
 use App\Models\Goal;
 use App\Models\GoalWiseDiet;
+use App\Models\UserLebel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -14,13 +15,16 @@ class GoalWiseDietController extends Controller
     protected $goalWiseDiet;
     protected $diet;
     protected $goal;
+    protected $level;
 
     public function __construct(
         GoalWiseDiet $goalWiseDiet,
+        UserLebel $level,
         Diet $diet,
         Goal $goal
     ) {
         $this->goalWiseDiet = $goalWiseDiet;
+        $this->level = $level;
         $this->diet = $diet;
         $this->goal = $goal;
     }
@@ -33,9 +37,10 @@ class GoalWiseDietController extends Controller
         $goalWiseDiets = $this->goalWiseDiet->with('goal','diet')->get();
         $diets = $this->diet->where('added_by', $gym->id)->get();
         $goals = $this->goal->get();
+        $levels = $this->level->get();
         return view(
             'GymOwner.add-goal-wise-diet',
-            compact('status', 'message', 'goalWiseDiets', 'diets', 'goals')
+            compact('status', 'message', 'goalWiseDiets', 'diets', 'goals','levels')
         );
     }
 
@@ -46,13 +51,6 @@ class GoalWiseDietController extends Controller
                 'goal_id'  => 'required',
                 'diet_id'  => 'required',
             ]);
-            $existingDiet = $this->goalWiseDiet->where('diet_id', $request->diet_id)
-                ->where('goal_id', $request->goal_id)
-                ->first();
-
-            if ($existingDiet) {
-                return redirect()->back()->with('status', 'error')->with('message', 'This diet is already assigned to the corresponding goal');
-            }
 
             $this->goalWiseDiet->addGoalWiseDiet($request->all());
 

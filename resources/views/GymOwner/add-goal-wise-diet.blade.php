@@ -63,6 +63,41 @@
                                         @endforeach
                                     </select>
                                 </div>
+
+                                <div class="form-group">
+                                    <label>Level</label>
+                                    <select id="user_lebel_id" name="user_lebel_id" class="form-control" required>
+                                        <option value="" disabled selected>Select Level</option>
+                                        @foreach($levels as $level)
+                                        <option value="{{$level->id}}">{{$level->lebel}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Calories</label>
+                                    <input type="text" name="calories" id="calories" class="form-control" placeholder="Enter calories">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Protein</label>
+                                    <input type="text" name="protein" id="protein" class="form-control" placeholder="Enter protein">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Carbs</label>
+                                    <input type="text" name="carbs" id="carbs" class="form-control" placeholder="Enter carbs">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Fats</label>
+                                    <input type="text" name="fats" id="fats" class="form-control" placeholder="Enter fats">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Day</label>
+                                    <input type="text" name="day" id="day" class="form-control" placeholder="Enter day">
+                                </div>
                                 <button class="btn btn-primary">Submit</button>
                             </form>
                         </div>

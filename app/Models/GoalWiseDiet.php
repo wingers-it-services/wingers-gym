@@ -15,7 +15,13 @@ class GoalWiseDiet extends Model
 
     protected $fillable = [
         'diet_id',
-        'goal_id'
+        'goal_id' ,
+        'user_lebel_id',
+        'calories',
+        'protein',
+        'carbs',
+        'fats',
+        'day'
     ];
 
     protected static function boot()
@@ -30,18 +36,24 @@ class GoalWiseDiet extends Model
     {
         return $this->belongsTo(Diet::class, 'diet_id');
     }
-
+    
     public function goal()
     {
         return $this->belongsTo(Goal::class, 'goal_id');
     }
-
+    
     public function addGoalWiseDiet(array $goalWiseDiet)
     {
         try {
             return $this->create([
-                'diet_id'  => $goalWiseDiet['diet_id'],
-                'goal_id'  => $goalWiseDiet['goal_id']
+                'diet_id'        => $goalWiseDiet['diet_id'],
+                'goal_id'        => $goalWiseDiet['goal_id'],
+                'user_lebel_id'  => $goalWiseDiet['user_lebel_id'],
+                'calories'       => $goalWiseDiet['calories'],
+                'protein'        => $goalWiseDiet['protein'],
+                'carbs'          => $goalWiseDiet['carbs'],
+                'fats'           => $goalWiseDiet['fats'],
+                'day'            => $goalWiseDiet['day']
             ]);
         } catch (\Throwable $e) {
             Log::error('[GoalWiseDiet][addGoalWiseDiet] Error adding diet: ' . $e->getMessage());
