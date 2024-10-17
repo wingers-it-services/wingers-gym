@@ -15,7 +15,12 @@ class GoalWiseWorkouts extends Model
 
     protected $fillable = [
         'workout_id',
-        'goal_id'
+        'goal_id',
+        'user_lebel_id',
+        'sets',
+        'reps',
+        'weight',
+        'day'
     ];
 
     protected static function boot()
@@ -36,12 +41,22 @@ class GoalWiseWorkouts extends Model
         return $this->belongsTo(Goal::class, 'goal_id');
     }
 
+    public function level()
+    {
+        return $this->belongsTo(UserLebel::class, 'user_lebel_id');
+    }
+
     public function addGoalWiseWorkout(array $goalWiseWorkout)
     {
         try {
             return $this->create([
                 'workout_id'  => $goalWiseWorkout['workout_id'],
-                'goal_id'     => $goalWiseWorkout['goal_id']
+                'goal_id'     => $goalWiseWorkout['goal_id'],
+                'user_lebel_id'    => $goalWiseWorkout['user_lebel_id'],
+                'weight'      => $goalWiseWorkout['weight'],
+                'sets'        => $goalWiseWorkout['sets'],
+                'reps'        => $goalWiseWorkout['reps'],
+                'day'         => $goalWiseWorkout['day'],
             ]);
         } catch (\Throwable $e) {
             Log::error('[GoalWiseWorkouts][addGoalWiseWorkout] Error adding goal: ' . $e->getMessage());
