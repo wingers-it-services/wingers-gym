@@ -30,6 +30,11 @@ class UserLebel extends Model
         return $this->hasMany(LevelUser::class, 'level_id');
     }
 
+    public function goalWiseWorkouts()
+    {
+        return $this->hasMany(GoalWiseWorkouts::class, 'user_lebel_id');
+    }
+
     public function addLebel(array $lebel)
     {
         try {

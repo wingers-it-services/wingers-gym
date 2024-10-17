@@ -46,7 +46,7 @@ class NotificationService
 
         $tokens = $this->userFcmToken->pluck('fcm_token');
         $url = "https://fcm.googleapis.com/v1/projects/gym-managment-429808/messages:send";
-
+        Log::info('tokens' . $tokens);
         try {
             foreach ($tokens as $token) {
                 $messagePayload = $this->createPayload($token, $title, $message, $image);

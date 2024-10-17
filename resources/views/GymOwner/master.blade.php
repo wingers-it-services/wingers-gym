@@ -22,6 +22,7 @@
 	<title>@yield('title')</title>
 	<!-- Mobile Specific -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="{{asset('vendor/nestable2/css/jquery.nestable.min.css')}}" rel="stylesheet" type="text/css" />
 
 	<!-- Favicon icon -->
 	<link rel="icon" type="image/png" sizes="96x96" href="{{asset('images/witd-fitness-logo.png')}}">

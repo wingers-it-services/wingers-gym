@@ -28,6 +28,11 @@ class Workout extends Model
         return $this->hasMany(CurrentDayWorkout::class, 'workout_id');
     }
 
+    public function goalWiseWorkouts()
+    {
+        return $this->hasMany(GoalWiseWorkouts::class, 'workout_id');
+    }
+
     public function addWorkout(array $workoutArray, $imagePath, $addedBy)
     {
         try {
@@ -54,5 +59,4 @@ class Workout extends Model
             $model->uuid = Uuid::uuid4()->toString();
         });
     }
-
 }
