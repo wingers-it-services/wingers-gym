@@ -66,14 +66,6 @@ class GoalWiseWorkoutController extends Controller
                 'reps'        => 'required',
                 'weight'      => 'required'
             ]);
-            
-            $existingWorkout = $this->goalWiseWorkouts->where('workout_id', $request->workout_id)
-                ->where('goal_id', $request->goal_id)
-                ->first();
-
-            if ($existingWorkout) {
-                return redirect()->back()->with('status', 'error')->with('message', 'This workout is already assigned to the corresponding goal');
-            }
 
             $this->goalWiseWorkouts->addGoalWiseWorkout($request->all());
 
