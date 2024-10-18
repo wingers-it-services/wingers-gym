@@ -376,14 +376,14 @@
                                                                     User Before
                                                                     Subscription Expire</h4>
                                                             </div>
-                                                            <form action="" method="POST">
+                                                            <form class="needs-validation" action="/add-subscription-expire-days" method="POST" novalidate>
                                                                 @csrf
                                                                 <div class="row">
                                                                     <div class="col-md-6">
                                                                         <div class="form-group d-flex align-items-end">
                                                                             <div class="w-75">
                                                                                 <label>Number of Days</label>
-                                                                                <input class="form-control" type="number" name="days">
+                                                                                <input class="form-control" value="{{ isset($subscriptionExpireDays) ? $subscriptionExpireDays : '' }}" type="number" name="days" required>
                                                                             </div>
                                                                             <div class="ml-2">
                                                                                 <button type="submit" class="btn btn-primary">Save</button>

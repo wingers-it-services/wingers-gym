@@ -184,6 +184,7 @@ Route::group(['middleware' => ['auth:gym']], function()  {
 
     Route::get('/gymProfile', [GymDetailController::class, 'showGymProfile'])->name('showGymProfile');
     Route::get('/userProfile/{uuid}', [GymUserController::class, 'showUserProfile'])->name('showUserProfile');
+    
 
     /* listSubscriptionPlan */
     Route::get('/subscription-list', [GymSubscriptionController::class, 'listSubscriptionPlan'])->name('listSubscriptionPlan');
@@ -384,6 +385,8 @@ Route::get('/delete-holiday/{id}', [GymDetailController::class, 'deleteHoliday']
 Route::post('/add-weekend', [GymDetailController::class, 'addWeekendsByGym']);
 
 Route::post('/update-gym-account', [GymDetailController::class, 'updateGymAccount']);
+
+Route::post('/add-subscription-expire-days', [GymDetailController::class, 'addSubscriptionExpireDays']);
 
 Route::post('/gym/otp/verify', [GymDetailController::class, 'verifyOtp'])->name('gym.otp.verify');
 

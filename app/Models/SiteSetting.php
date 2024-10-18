@@ -10,6 +10,7 @@ class SiteSetting extends Model
     use HasFactory;
     
      protected $fillable = [
+        'gym_id',
         'key',
         'value'
     ];
