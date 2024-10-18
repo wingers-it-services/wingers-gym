@@ -5,15 +5,51 @@ document.addEventListener("DOMContentLoaded", function () {
         var map = L.map('map').setView(centerLocation.coords, 16);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+            attribution: '© WITS Fitness'
         }).addTo(map);
 
         L.marker(centerLocation.coords).addTo(map)
             .bindPopup(centerLocation.name)
             .openPopup();
 
+            loadUserLocations(map,1000);
         // Call the function with desired parameters for distance and number of locations
         addNearbyLocations(centerLocation.coords, map, 10000, 50); // Distance: 10km, Number of Locations: 20
+    }
+
+    function loadUserLocations(map,numberOfLocations) {
+        // Make an AJAX request to fetch user locations
+        $.ajax({
+            url: '/user-locations', // Replace with your backend route URL
+            method: 'GET',
+            success: function(response) {
+                if (response.length < numberOfLocations) {
+                    console.log(response);
+                    response.forEach(function(location) {
+                        if (location.latitude && location.longitude) {
+                            // Parse latitude and longitude as floating-point numbers
+                            var latitude = parseFloat(location.latitude);
+                            var longitude = parseFloat(location.longitude);
+                    
+                            if (!isNaN(latitude) && !isNaN(longitude)) { // Check if the parsing was successful
+                                var coords = [latitude, longitude];
+                                // Add marker to the map
+                                L.marker(coords).addTo(map)
+                                    .bindPopup( location.firstname);
+                            } else {
+                                console.error('Invalid coordinates for location:', location);
+                            }
+                        }
+                    });
+                    
+                } else {
+                    console.log("No user locations found.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching user locations: ", error);
+            }
+        });
     }
 
     function generateNearbyLocation(center, maxDistance) {

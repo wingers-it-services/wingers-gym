@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Google\Service\AlertCenter\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,6 +26,11 @@ class UserLatitudeAndLongitude extends Model
         static::creating(function ($model) {
             $model->uuid = Uuid::uuid4()->toString();
         });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function addLatLongDetails(array $addLatLong, $userId)
