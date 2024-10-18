@@ -10,6 +10,7 @@ use App\Models\GymSubscription;
 use App\Models\GymUserGym;
 use App\Models\GymWeekend;
 use App\Models\Holiday;
+use App\Models\SiteSetting;
 use App\Models\User;
 use App\Models\UserSubscriptionHistory;
 use App\Models\Workout;
@@ -40,6 +41,8 @@ class GymDetailController extends Controller
     protected $diet;
     protected $subscriptionHistory;
 
+    protected $siteSetting;
+
     public function __construct(
         Gym $gym,
         GymService $gymService,
@@ -52,7 +55,8 @@ class GymDetailController extends Controller
         Workout $workout,
         GymCoupon $coupon,
         Diet $diet,
-        UserSubscriptionHistory $subscriptionHistory
+        UserSubscriptionHistory $subscriptionHistory,
+        SiteSetting $siteSetting
     ) {
         $this->gym = $gym;
         $this->gymService = $gymService;
@@ -66,6 +70,7 @@ class GymDetailController extends Controller
         $this->coupon = $coupon;
         $this->diet = $diet;
         $this->subscriptionHistory = $subscriptionHistory;
+        $this->siteSetting = $siteSetting;
     }
 
     public function showDashboard(Request $request)
@@ -79,12 +84,15 @@ class GymDetailController extends Controller
         $totalDiets = $this->workout->where('added_by', $gymDetail->id)->count();
         $totalCoupons = $this->coupon->where('gym_id', $gymDetail->id)->count();
         $totalActiveUsers = $this->user->where('gym_id', $gymDetail->id)->where('subscription_status', 1)->count();
+        $subscriptionExpireDays = intval($this->siteSetting->where('gym_id', $gymDetail->id)
+        ->where('key', 'subscription_expiring_in_days')
+        ->value('value'));    
         $currentDate = Carbon::now();
         $usersHistory = $this->subscriptionHistory
             ->with('users')
             ->where('gym_id', $gymDetail->id)
             ->where('status', 1)
-            ->where('subscription_end_date', '<', $currentDate->addDays(10))
+            ->where('subscription_end_date', '<', $currentDate->addDays($subscriptionExpireDays))
             ->orderBy('subscription_end_date', 'asc')
             ->get();
         Log::error('[GymDetailController][showDashboard] user image null : ' . empty($gymDetail->image));
@@ -343,9 +351,11 @@ class GymDetailController extends Controller
             $totalUsers = $this->gymUserGym->countUsersInGym($gym->id);
             $holidays = $this->gymHoliday->where('gym_id', $gymId)->get();
             $savedWeekendDays = GymWeekend::where('gym_id', $gymId)->pluck('weekend_day')->toArray();
+            $subscriptionExpireDays = $this->siteSetting->where('gym_id', $gymId)
+            ->where('key', 'subscription_expiring_in_days')
+            ->value('value');
 
-
-            return view('GymOwner.gym-profile', compact('gym', 'totalUsers', 'holidays', 'savedWeekendDays'));
+            return view('GymOwner.gym-profile', compact('gym', 'totalUsers', 'holidays', 'savedWeekendDays', 'subscriptionExpireDays'));
         } catch (\Exception $e) {
             Log::error('[GymDetailController][GymProfileView] Error fetching gym profile view: ' . $e->getMessage());
         }
@@ -423,6 +433,48 @@ class GymDetailController extends Controller
             return redirect()->back()->with('status', 'error')->with('message', 'Error updating weekends: ' . $e->getMessage());
         }
     }
+
+    public function addSubscriptionExpireDays(Request $request)
+    {
+        try {
+            // Validate the request data
+            $request->validate([
+                'days' => 'required|integer'
+            ]);
+
+            // Get the authenticated gym user
+            $gym = Auth::guard('gym')->user();
+            $gymId = $this->gym->where('uuid', $gym->uuid)->first()->id;
+
+            // Check if the setting already exists for the gym
+            $setting = $this->siteSetting->where('gym_id', $gymId)
+                ->where('key', 'subscription_expiring_in_days')
+                ->first();
+
+            if ($setting) {
+                // If the setting exists, update it
+                $setting->update([
+                    'value' => $request->days
+                ]);
+            } else {
+                // If the setting does not exist, create a new one
+                $this->siteSetting->create([
+                    'gym_id' => $gymId,
+                    'key' => 'subscription_expiring_in_days',
+                    'value' => $request->days
+                ]);
+            }
+
+            // Redirect back with success message
+            return redirect()->back()->with('status', 'success')->with('message', 'Subscription Expire Days Updated Successfully.');
+        } catch (Exception $e) {
+            // Log the error and redirect back with error message
+            Log::error('[GymDetailController][addSubscriptionExpireDays] Error adding subscription expire days: ' . $e->getMessage());
+            return redirect()->back()->with('status', 'error')->with('message', 'Error adding subscription expire days: ' . $e->getMessage());
+        }
+    }
+
+
 
     public function logout(Request $request)
     {
