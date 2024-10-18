@@ -14,13 +14,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             loadUserLocations(map,1000);
         // Call the function with desired parameters for distance and number of locations
-        addNearbyLocations(centerLocation.coords, map, 10000, 50); // Distance: 10km, Number of Locations: 20
+        // addNearbyLocations(centerLocation.coords, map, 10000, 50); // Distance: 10km, Number of Locations: 20
     }
 
     function loadUserLocations(map,numberOfLocations) {
         // Make an AJAX request to fetch user locations
         $.ajax({
-            url: '/user-locations', // Replace with your backend route URL
+            url: '/user-locations', 
             method: 'GET',
             success: function(response) {
                 if (response.length < numberOfLocations) {
@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     
                             if (!isNaN(latitude) && !isNaN(longitude)) { // Check if the parsing was successful
                                 var coords = [latitude, longitude];
-                                // Add marker to the map
                                 L.marker(coords).addTo(map)
                                     .bindPopup( location.firstname);
                             } else {
