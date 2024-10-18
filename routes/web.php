@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdvertismentController;
+use App\Http\Controllers\AiDashboardController;
 use App\Http\Controllers\DietController;
 use App\Http\Controllers\FcmTokenControllerApi;
 use App\Http\Controllers\GoalController;
@@ -105,6 +106,8 @@ Route::group(['middleware' => ['auth:gym']], function()  {
     Route::get('/faq', function () {
         return view('GymOwner.gym-faq');
     });
+
+    Route::get('/user-locations',[AiDashboardController::class,'getUserLocations']);
 
     Route::get('/gym-logout',[GymDetailController::class,'logout'])->name('gym.logout');
 
