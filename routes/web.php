@@ -177,6 +177,8 @@ Route::group(['middleware' => ['auth:gym']], function()  {
 
     /* dashboard */
     Route::get('/dashboard', [GymDetailController::class, 'showDashboard'])->name('dashboard');
+    Route::get('/user-attendance-chart', [GymDetailController::class, 'fetchAttendanceData'])->name('user-attendance-chart');
+Route::get('/user-today-attendance', [GymDetailController::class, 'fetchTodayAttendanceInPer'])->name('user-today-attendance');
     Route::get('/ai-dashboard', [GymDetailController::class, 'showAiDashboard'])->name('ai-dashboard');
     Route::get('/logout', [GymDetailController::class, 'logoutGym'])->name('logout');
 

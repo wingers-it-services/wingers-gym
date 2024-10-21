@@ -109,7 +109,8 @@ class GymUserController extends Controller
         foreach ($users as $user) {
             if ($user->subscription_end_date) {
                 $endDate = Carbon::parse($user->subscription_end_date);
-                $user->remaining_days = (int) now()->diffInDays($endDate, false); // Force integer cast
+                $daysRemaining = (int) now()->diffInDays($endDate, false); // Force integer cast
+                $user->remaining_days = $daysRemaining >= 0 ? $daysRemaining : 0;
             } else {
                 $user->remaining_days = null; // No end date, so no remaining days
             }
