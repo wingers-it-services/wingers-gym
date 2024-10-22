@@ -101,15 +101,15 @@ Route::post('/register', [GymDetailController::class, 'registerGym'])->name('reg
 
 Route::post('/gym-login', [GymDetailController::class, 'gymLogin'])->name('gymLogin');
 
-Route::group(['middleware' => ['auth:gym']], function()  {
+Route::group(['middleware' => ['auth:gym']], function () {
 
     Route::get('/faq', function () {
         return view('GymOwner.gym-faq');
     });
 
-    Route::get('/user-locations',[AiDashboardController::class,'getUserLocations']);
+    Route::get('/user-locations', [AiDashboardController::class, 'getUserLocations']);
 
-    Route::get('/gym-logout',[GymDetailController::class,'logout'])->name('gym.logout');
+    Route::get('/gym-logout', [GymDetailController::class, 'logout'])->name('gym.logout');
 
     Route::get('/list-goal-wise-diets', [GoalWiseDietController::class, 'viewGoalWiseDiet'])->name('viewGoalWiseDiet');
 
@@ -177,8 +177,10 @@ Route::group(['middleware' => ['auth:gym']], function()  {
 
     /* dashboard */
     Route::get('/dashboard', [GymDetailController::class, 'showDashboard'])->name('dashboard');
-    Route::get('/user-attendance-chart', [GymDetailController::class, 'fetchAttendanceData'])->name('user-attendance-chart');
-Route::get('/user-today-attendance', [GymDetailController::class, 'fetchTodayAttendanceInPer'])->name('user-today-attendance');
+    Route::get('/user-attendance-chart', [GymDetailController::class, 'fetchUserAttendanceData'])->name('user-attendance-chart');
+    Route::get('/user-today-attendance', [GymDetailController::class, 'fetchTodayAttendanceInPer'])->name('user-today-attendance');
+    Route::get('/staff-attendance-chart', [GymDetailController::class, 'fetchStaffAttendanceData'])->name('staff-attendance-chart');
+    Route::get('/staff-today-attendance', [GymDetailController::class, 'fetchTodayStaffAttendanceInPer'])->name('staff-today-attendance');
     Route::get('/ai-dashboard', [GymDetailController::class, 'showAiDashboard'])->name('ai-dashboard');
     Route::get('/logout', [GymDetailController::class, 'logoutGym'])->name('logout');
 
@@ -186,7 +188,7 @@ Route::get('/user-today-attendance', [GymDetailController::class, 'fetchTodayAtt
 
     Route::get('/gymProfile', [GymDetailController::class, 'showGymProfile'])->name('showGymProfile');
     Route::get('/userProfile/{uuid}', [GymUserController::class, 'showUserProfile'])->name('showUserProfile');
-    
+
 
     /* listSubscriptionPlan */
     Route::get('/subscription-list', [GymSubscriptionController::class, 'listSubscriptionPlan'])->name('listSubscriptionPlan');
