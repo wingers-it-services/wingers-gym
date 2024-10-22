@@ -14,7 +14,7 @@
     <!-- row -->
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xl col-md-6">
+            <div class="col-xl col-md-4 col-sm-6">
                 <div class="card">
                     <div class="card-body p-4">
                         <div class="d-inline-block mb-4 ms--12 position-relative donut-chart-sale">
@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl col-md-6 col-sm-6">
+            <div class="col-xl col-md-4 col-sm-6">
                 <div class="card">
                     <div class="card-body p-4">
                         <div class="d-inline-block mb-4 ms--12 position-relative donut-chart-sale">
@@ -232,15 +232,14 @@
                             <svg class="me-2 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#clip4)">
-                                    <path
-                                        d="M0.988941 17.074C0.32826 17.2006 -0.1046 17.8385 0.021967 18.4992C0.133346 19.0814 0.644678 19.4864 1.21676 19.4864C1.2927 19.4864 1.37117 19.4788 1.44712 19.4636L6.45918 18.5017C6.74522 18.446 7.00089 18.2916 7.18315 18.0638L9.33479 15.3502L8.61591 14.9832C8.08433 14.7148 7.71473 14.2288 7.58816 13.639L5.55802 16.1982L0.988941 17.074Z"
-                                        fill="#FF9432" />
-                                    <path
-                                        d="M18.84 6.493C20.3135 6.493 21.508 5.29848 21.508 3.82496C21.508 2.35144 20.3135 1.15692 18.84 1.15692C17.3664 1.15692 16.1719 2.35144 16.1719 3.82496C16.1719 5.29848 17.3664 6.493 18.84 6.493Z"
-                                        fill="#FF9432" />
-                                    <path
-                                        d="M13.0179 3.15671C12.7369 2.86813 12.4762 2.75422 12.1902 2.75422C12.0864 2.75422 11.9826 2.76941 11.8712 2.79472L7.29202 3.88067C6.65918 4.03002 6.26936 4.66539 6.4187 5.29569C6.5478 5.8374 7.02876 6.20192 7.56287 6.20192C7.65403 6.20192 7.74513 6.19179 7.83628 6.16901L11.7371 5.24507C11.9902 5.52605 13.2584 6.90057 13.4888 7.14358C11.8763 8.86996 10.2638 10.5938 8.65135 12.3202C8.62604 12.3481 8.60328 12.3759 8.58047 12.4037C8.10964 13.0036 8.25395 13.9453 8.96273 14.3022L13.9064 16.826L11.3396 20.985C10.9878 21.5571 11.165 22.3063 11.7371 22.6607C11.937 22.7848 12.1573 22.843 12.375 22.843C12.7825 22.843 13.1824 22.638 13.4128 22.2658L16.6732 16.9829C16.8529 16.6918 16.901 16.34 16.8073 16.0134C16.7137 15.6843 16.4884 15.411 16.1821 15.2565L12.8331 13.5529L16.3543 9.7863L19.0122 12.0392C19.2324 12.2265 19.5032 12.3176 19.7716 12.3176C20.0601 12.3176 20.3487 12.2113 20.574 12.0038L23.6243 9.16106C24.1002 8.71808 24.128 7.97386 23.685 7.49797C23.4521 7.24989 23.1382 7.12333 22.8243 7.12333C22.5383 7.12333 22.2497 7.22711 22.0244 7.43721L19.7412 9.56101C19.7386 9.56354 14.0178 4.1819 13.0179 3.15671Z"
-                                        fill="#FF9432" />
+                                    <circle cx="12" cy="12" r="10" stroke="#FF9432" stroke-width="2" fill="none" />
+                                    <!-- Checkmark for present status -->
+                                    <path d="M8 12.5L11 15.5L16 9.5" stroke="#FF9432" stroke-width="2" fill="none" />
+                                    <defs>
+                                        <clipPath id="clip4">
+                                            <rect width="24" height="24" fill="white" />
+                                        </clipPath>
+                                    </defs>
                                 </g>
                                 <defs>
                                     <clipPath id="clip4">
@@ -257,18 +256,9 @@
                             <!-- Absent Percentage -->
                             <svg class="me-2 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M10.8586 5.22599L5.87121 10.5543C5.50758 11.0846 5.64394 11.8068 6.17172 12.1679L11.1945 15.6098V18.9558C11.1945 19.5921 11.6995 20.125 12.3359 20.1376C12.9874 20.1477 13.5177 19.625 13.5177 18.976V15.0013C13.5177 14.6174 13.3283 14.2588 13.0126 14.0442L9.79041 11.8346L12.5025 8.95836L13.8914 12.1225C14.0758 12.5442 14.4949 12.817 14.9546 12.817H19.1844C19.8207 12.817 20.3536 12.3119 20.3662 11.6755C20.3763 11.024 19.8536 10.4937 19.2046 10.4937H15.7172C15.2576 9.44824 14.7677 8.41288 14.3409 7.35228C14.1237 6.81693 14.0025 6.5846 13.6036 6.21592C13.5227 6.14016 12.9596 5.62501 12.4571 5.16541C11.995 4.74619 11.2828 4.77397 10.8586 5.22599Z"
-                                    fill="#1EA7C5" />
-                                <path
-                                    d="M15.6162 5.80681C17.0861 5.80681 18.2778 4.61517 18.2778 3.1452C18.2778 1.67523 17.0861 0.483582 15.6162 0.483582C14.1462 0.483582 12.9545 1.67523 12.9545 3.1452C12.9545 4.61517 14.1462 5.80681 15.6162 5.80681Z"
-                                    fill="#1EA7C5" />
-                                <path
-                                    d="M4.89899 23.5164C7.60463 23.5164 9.79798 21.3231 9.79798 18.6174C9.79798 15.9118 7.60463 13.7184 4.89899 13.7184C2.19335 13.7184 0 15.9118 0 18.6174C0 21.3231 2.19335 23.5164 4.89899 23.5164Z"
-                                    fill="#1EA7C5" />
-                                <path
-                                    d="M19.101 23.5164C21.8066 23.5164 24 21.3231 24 18.6174C24 15.9118 21.8066 13.7184 19.101 13.7184C16.3954 13.7184 14.202 15.9118 14.202 18.6174C14.202 21.3231 16.3954 23.5164 19.101 23.5164Z"
-                                    fill="#1EA7C5" />
+                                <circle cx="12" cy="12" r="10" stroke="#1EA7C5" stroke-width="2" fill="none" />
+                                <!-- Cross for absent status -->
+                                <path d="M8 8L16 16M8 16L16 8" stroke="#1EA7C5" stroke-width="2" />
                             </svg>
                             <div>
                                 <h4 class="fs-18 text-black font-w600 mb-0" id="absentPercentage">0%</h4>
@@ -305,6 +295,74 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-xl-9 col-xxl-8">
+                <div class="card">
+                    <div class="card-header flex-wrap pb-0 border-0">
+                        <div class="me-auto pe-3 mb-2">
+                            <h4 class="text-black fs-20">Staff Attendance Chart</h4>
+                            <p class="fs-13 mb-2 mb-sm-0 text-black">Day-wise Staff Attendance</p>
+                        </div>
+                        <div class="d-flex me-3 me-sm-4 mb-2">
+                            <!-- Present Percentage -->
+                            <svg class="me-2 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" stroke="#6cc51d" stroke-width="2" fill="none" />
+                                <!-- Checkmark for present status -->
+                                <path d="M8 12.5L11 15.5L16 9.5" stroke="#6cc51d" stroke-width="2" fill="none" />
+                                <defs>
+                                    <clipPath id="clip4">
+                                        <rect width="24" height="24" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <div>
+                                <h4 class="fs-18 text-black font-w600 mb-0" id="staffPresentPercentage">0%</h4>
+                                <span class="fs-12 text-black">Present</span>
+                            </div>
+                        </div>
+                        <div class="d-flex me-3 me-sm-4 mb-2">
+                            <!-- Absent Percentage -->
+                            <svg class="me-2 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" stroke="#ef3764" stroke-width="2" fill="none" />
+                                <!-- Cross for absent status -->
+                                <path d="M8 8L16 16M8 16L16 8" stroke="#ef3764" stroke-width="2" />
+                            </svg>
+                            <div>
+                                <h4 class="fs-18 text-black font-w600 mb-0" id="staffAbsentPercentage">0%</h4>
+                                <span class="fs-12 text-black">Absent</span>
+                            </div>
+                        </div>
+
+                        <div class="dropdown mt-sm-0 mt-3 mb-0">
+                            <button type="button" class="btn rounded border border-light dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false" id="monthDropdown1">
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="javascript:void(0);">Monthly</a>
+                                <a class="dropdown-item" href="javascript:void(0);">Weekly</a>
+                                <a class="dropdown-item" href="javascript:void(0);">Daily</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pt-3">
+                        <canvas id="staffAttendanceChart"></canvas> <!-- Canvas for the chart -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-xxl-4 col-md-6">
+                <div class="card">
+                    <div class="card-header border-0 pb-0">
+                        <h4 class="text-black fs-20 mb-0">Today's Staffs Present</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <!-- Radial Bar Container -->
+                        <div id="staffRadialBar"></div>
+                        <p class="fs-14">Stay committed to your fitness journey! Every day counts </p>
+                    </div>
+                </div>
+            </div>
             <div class="col-xl-3 col-xxl-4 col-md-6">
                 <div class="card">
                     <div class="card-header border-0 pb-0">
@@ -318,8 +376,8 @@
                             @foreach ($usersHistory as $index => $user)
                                                         <div class="media align-items-center border border-warning rounded p-3 mb-md-4 mb-3">
                                                             <div>
-                                                                <h4 class="fs-18 text-black mb-0">{{ $user->users->firstname }}</h4>
-
+                                                                <h4 class="fs-18 text-black mb-0">{{ $user->users->firstname }} {{ $user->users->lastname}}</h4>
+                                                                <!-- <span class="fs-14 text-primary"> {{ $user->subscription->subscription_name }}</span> -->
                                                                 {{-- Calculate remaining days --}}
                                                                 @php
                                                                     $subscriptionEnd = \Carbon\Carbon::parse($user->subscription_end_date);
@@ -355,9 +413,15 @@
                         <div class="scroll-container" style="max-height: 300px; overflow-y: auto;">
                             @foreach ($userRecentPayments as $index => $userPayments)
                                 <div class="media align-items-center border border-warning rounded p-3 mb-md-4 mb-3">
-                                    <div>
-                                        <h4 class="fs-18 text-black mb-0">{{ $userPayments->name }}</h4>
-
+                                    <div class="d-flex justify-content-between w-100">
+                                        <div>
+                                            <h4 class="fs-18 text-black mb-0">{{ $userPayments->name }}</h4>
+                                            <span class="fs-14 text-primary">Amount: {{ $userPayments->total }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="fs-14 text-warning">
+                                                {{ $userPayments->response_code }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
@@ -389,7 +453,7 @@
                     </div>
                 </div>
             </div> -->
-            <div class="col-xl-12">
+            <!-- <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header d-sm-flex d-block pb-0 border-0">
                         <div class="me-auto pe-3">
@@ -704,7 +768,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -989,6 +1053,198 @@
             chart.render();
         }
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize chart variables
+        let attendanceChart;
+
+        // Function to update chart with new data
+        function updateChart(presentData, absentData, presentPercentage, absentPercentage) {
+
+            // Set present and absent percentage in the UI
+            document.getElementById('staffPresentPercentage').innerText = presentPercentage + '%';
+            document.getElementById('staffAbsentPercentage').innerText = absentPercentage + '%';
+
+            let labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+            let ctx = document.getElementById('staffAttendanceChart').getContext('2d');
+
+            if (attendanceChart) {
+                // If chart already exists, update it
+                attendanceChart.data.datasets[0].data = presentData;
+                attendanceChart.data.datasets[1].data = absentData;
+                attendanceChart.update();
+            } else {
+                // Create new chart if it doesn't exist
+                attendanceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Present',
+                                data: presentData,
+                                borderColor: '#6cc51d',
+                                fill: false,
+                                tension: 0.1,
+                                borderWidth: 3,  // Make the line bold
+                                pointRadius: 6,  // Increase dot size
+                                pointBackgroundColor: '#6cc51d'  // Bold point color
+                            },
+                            {
+                                label: 'Absent',
+                                data: absentData,
+                                borderColor: '#ef3764',
+                                fill: false,
+                                tension: 0.1,
+                                borderWidth: 3,  // Make the line bold
+                                pointRadius: 6,  // Increase dot size
+                                pointBackgroundColor: '#ef3764'  // Bold point color
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Staffs',
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'  // Make the y-axis title bold
+                                    }
+                                },
+                                ticks: {
+                                    font: {
+                                        weight: 'bold'  // Make y-axis labels bold
+                                    }
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Week Days',
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'  // Make the x-axis title bold
+                                    }
+                                },
+                                ticks: {
+                                    font: {
+                                        weight: 'bold'  // Make x-axis labels bold
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // AJAX request to fetch data
+        function fetchAttendanceData() {
+            $.ajax({
+                url: '/staff-attendance-chart', // Replace with your route to fetch data
+                method: 'GET',
+                success: function (response) {
+                    // Assuming the response contains present and absent data
+                    let presentData = Object.values(response.present);
+                    let absentData = Object.values(response.absent);
+                    let presentPercentage = response.presentPercentage;
+                    let absentPercentage = response.absentPercentage;
+
+                    // Update the chart with new data
+                    updateChart(presentData, absentData, presentPercentage, absentPercentage);
+                },
+                error: function (error) {
+                    console.error('Error fetching attendance data:', error);
+                }
+            });
+        }
+
+        // Fetch the data once the page is loaded
+        fetchAttendanceData();
+
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const currentDate = new Date();
+        const currentMonth = monthNames[currentDate.getMonth()];
+        document.getElementById("monthDropdown1").innerHTML = currentMonth;
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Make an AJAX request to fetch today's attendance
+        $.ajax({
+            url: "{{ route('staff-today-attendance') }}",
+            type: 'GET',
+            success: function (data) {
+                // Get the present percentage from the response
+                let presentPercentage = data.presentPercentage;
+
+                // Render the radial bar chart using the fetched percentage
+                renderRadialBar(presentPercentage);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching attendance data:', error);
+            }
+        });
+
+        // Function to render the radial bar chart
+        function renderRadialBar(presentPercentage) {
+            var options = {
+                series: [presentPercentage],
+                chart: {
+                    type: 'radialBar',
+                    height: 300,
+                    offsetY: -10
+                },
+                plotOptions: {
+                    radialBar: {
+                        startAngle: -135,
+                        endAngle: 135,
+                        dataLabels: {
+                            name: {
+                                fontSize: '16px',
+                                color: undefined,
+                                offsetY: 120
+                            },
+                            value: {
+                                offsetY: 0,
+                                fontSize: '34px',
+                                color: 'black',
+                                formatter: function (val) {
+                                    return val + "%";
+                                }
+                            }
+                        }
+                    }
+                },
+                fill: {
+                    type: 'gradient',
+                    colors: '#6EC51E',
+                    gradient: {
+                        shade: 'dark',
+                        shadeIntensity: 0.15,
+                        inverseColors: false,
+                        opacityFrom: 1,
+                        opacityTo: 1,
+                        stops: [0, 50, 65, 91]
+                    },
+                },
+                stroke: {
+                    dashArray: 4,
+                    colors: '#6EC51E'
+                },
+                labels: ['Present Staffs'],
+                colors: ['#FF9432']
+            };
+
+            var chart = new ApexCharts(document.querySelector("#staffRadialBar"), options);
+            chart.render();
+        }
+    });
+
 </script>
 
 @endsection

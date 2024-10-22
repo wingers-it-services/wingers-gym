@@ -6,6 +6,7 @@ use App\Models\Diet;
 use App\Models\Gym;
 use App\Models\GymCoupon;
 use App\Models\GymStaff;
+use App\Models\GymStaffAttendance;
 use App\Models\GymSubscription;
 use App\Models\GymUserAttendence;
 use App\Models\GymUserGym;
@@ -42,9 +43,10 @@ class GymDetailController extends Controller
     protected $coupon;
     protected $diet;
     protected $subscriptionHistory;
-
     protected $siteSetting;
     protected $userAttendance;
+    protected $staffAttendance;
+    protected $userPaymentHistory;
 
     public function __construct(
         Gym $gym,
@@ -60,7 +62,10 @@ class GymDetailController extends Controller
         Diet $diet,
         UserSubscriptionHistory $subscriptionHistory,
         SiteSetting $siteSetting,
-        GymUserAttendence $userAttendance
+        GymUserAttendence $userAttendance,
+        UserSubscriptionPayment $userPaymentHistory,
+        GymStaffAttendance $staffAttendance
+
     ) {
         $this->gym = $gym;
         $this->gymService = $gymService;
@@ -76,6 +81,8 @@ class GymDetailController extends Controller
         $this->subscriptionHistory = $subscriptionHistory;
         $this->siteSetting = $siteSetting;
         $this->userAttendance = $userAttendance;
+        $this->userPaymentHistory = $userPaymentHistory;
+        $this->staffAttendance = $staffAttendance;
     }
 
     public function showDashboard(Request $request)
@@ -94,13 +101,20 @@ class GymDetailController extends Controller
             ->value('value'));
         $currentDate = Carbon::now();
         $usersHistory = $this->subscriptionHistory
-            ->with('users')
+            ->with([
+                'users' => function ($query) {
+                    $query->withTrashed();
+                }, // Assuming 'users' is the name of a relationship
+                'subscription' => function ($query) {
+                    $query->withTrashed();
+                }
+            ])
             ->where('gym_id', $gymDetail->id)
             ->where('status', 1)
             ->where('subscription_end_date', '<', $currentDate->addDays($subscriptionExpireDays))
             ->orderBy('subscription_end_date', 'asc')
             ->get();
-        $userRecentPayments = UserSubscriptionPayment::where('gym_id', $gymDetail->id)
+        $userRecentPayments = $this->userPaymentHistory->where('gym_id', $gymDetail->id)
             ->orderBy('created_at', 'desc') // Order by most recent
             ->limit(5)
             ->get();
@@ -108,19 +122,7 @@ class GymDetailController extends Controller
         Log::error('[GymDetailController][showDashboard] user image src : ' . $gymDetail->image);
         return view('GymOwner.dashboard', compact('gymDetail', 'totalUsers', 'totalStaffs', 'totalSubscriptions', 'totalWorkouts', 'totalDiets', 'totalCoupons', 'totalActiveUsers', 'usersHistory', 'userRecentPayments'));
     }
-    public function fetchAttendanceData()
-    {
-        $attendanceData = $this->getWeeklyAttendanceData();
-
-        return response()->json([
-            'present' => $attendanceData['present'],
-            'absent' => $attendanceData['absent'],
-            'presentPercentage' => $attendanceData['presentPercentage'],
-            'absentPercentage' => $attendanceData['absentPercentage'],
-        ]);
-    }
-
-    public function getWeeklyAttendanceData()
+    public function fetchUserAttendanceData()
     {
         $gymUser = Auth::guard('gym')->user();
         $gymDetail = $this->gym->where('uuid', $gymUser->uuid)->first();
@@ -175,14 +177,77 @@ class GymDetailController extends Controller
         $presentPercentage = $totalDays > 0 ? number_format(($totalPresent / $totalDays) * 100, 0) : 0;
         $absentPercentage = $totalDays > 0 ? number_format(($totalAbsent / $totalDays) * 100, 0) : 0;
 
-
-        return [
+        return response()->json([
             'present' => $presentCounts,
             'absent' => $absentCounts,
             'presentPercentage' => $presentPercentage,
             'absentPercentage' => $absentPercentage,
-        ];
+        ]);
     }
+
+    // public function getWeeklyAttendanceData()
+    // {
+    //     $gymUser = Auth::guard('gym')->user();
+    //     $gymDetail = $this->gym->where('uuid', $gymUser->uuid)->first();
+
+    //     // Get current month and year
+    //     $currentMonth = Carbon::now()->month;
+    //     $currentYear = Carbon::now()->year;
+
+    //     // Fetch attendance data for the current month and year
+    //     $attendanceData = $this->userAttendance
+    //         ->where('gym_id', $gymDetail->id)
+    //         ->where('month', $currentMonth)
+    //         ->where('year', $currentYear)
+    //         ->get();
+
+    //     // Initialize arrays to store the present and absent counts for each weekday
+    //     $presentCounts = ['Monday' => 0, 'Tuesday' => 0, 'Wednesday' => 0, 'Thursday' => 0, 'Friday' => 0, 'Saturday' => 0, 'Sunday' => 0];
+    //     $absentCounts = ['Monday' => 0, 'Tuesday' => 0, 'Wednesday' => 0, 'Thursday' => 0, 'Friday' => 0, 'Saturday' => 0, 'Sunday' => 0];
+
+    //     $totalPresent = 0;
+    //     $totalAbsent = 0;
+    //     $totalDays = 0;
+
+    //     // Get the number of days in the current month
+    //     $daysInMonth = Carbon::now()->daysInMonth;
+
+    //     // Loop through each attendance record
+    //     foreach ($attendanceData as $attendance) {
+    //         // Loop through each day of the month and determine the weekday (Mon-Sun)
+    //         for ($day = 1; $day <= $daysInMonth; $day++) {
+    //             $date = Carbon::createFromDate($currentYear, $currentMonth, $day);
+    //             $weekday = $date->format('l'); // Get the full name of the weekday (e.g., 'Monday')
+
+    //             // Field name in the attendance record (e.g., 'day1', 'day2', etc.)
+    //             $dayField = 'day' . $day;
+
+    //             if (isset($attendance->{$dayField})) {
+    //                 // Check the attendance value for the current day
+    //                 if ($attendance->{$dayField} == '1') {
+    //                     $presentCounts[$weekday]++;
+    //                     $totalPresent++;
+    //                 } elseif ($attendance->{$dayField} == '2') {
+    //                     $absentCounts[$weekday]++;
+    //                     $totalAbsent++;
+    //                 }
+    //                 $totalDays++;//total number of weekdays for all users.
+    //             }
+    //         }
+    //     }
+
+    //     // Calculate present and absent percentages
+    //     $presentPercentage = $totalDays > 0 ? number_format(($totalPresent / $totalDays) * 100, 0) : 0;
+    //     $absentPercentage = $totalDays > 0 ? number_format(($totalAbsent / $totalDays) * 100, 0) : 0;
+
+
+    //     return [
+    //         'present' => $presentCounts,
+    //         'absent' => $absentCounts,
+    //         'presentPercentage' => $presentPercentage,
+    //         'absentPercentage' => $absentPercentage,
+    //     ];
+    // }
 
     public function fetchTodayAttendanceInPer()
     {
@@ -215,6 +280,99 @@ class GymDetailController extends Controller
         ]);
     }
 
+    public function fetchStaffAttendanceData()
+    {
+        $gymUser = Auth::guard('gym')->user();
+        $gymDetail = $this->gym->where('uuid', $gymUser->uuid)->first();
+
+        // Get current month and year
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        // Fetch attendance data for the current month and year
+        $attendanceData = $this->staffAttendance
+            ->where('gym_id', $gymDetail->id)
+            ->where('month', $currentMonth)
+            ->where('year', $currentYear)
+            ->get();
+
+        // Initialize arrays to store the present and absent counts for each weekday
+        $presentCounts = ['Monday' => 0, 'Tuesday' => 0, 'Wednesday' => 0, 'Thursday' => 0, 'Friday' => 0, 'Saturday' => 0, 'Sunday' => 0];
+        $absentCounts = ['Monday' => 0, 'Tuesday' => 0, 'Wednesday' => 0, 'Thursday' => 0, 'Friday' => 0, 'Saturday' => 0, 'Sunday' => 0];
+
+        $totalPresent = 0;
+        $totalAbsent = 0;
+        $totalDays = 0;
+
+        // Get the number of days in the current month
+        $daysInMonth = Carbon::now()->daysInMonth;
+
+        // Loop through each attendance record
+        foreach ($attendanceData as $attendance) {
+            // Loop through each day of the month and determine the weekday (Mon-Sun)
+            for ($day = 1; $day <= $daysInMonth; $day++) {
+                $date = Carbon::createFromDate($currentYear, $currentMonth, $day);
+                $weekday = $date->format('l'); // Get the full name of the weekday (e.g., 'Monday')
+
+                // Field name in the attendance record (e.g., 'day1', 'day2', etc.)
+                $dayField = 'day' . $day;
+
+                if (isset($attendance->{$dayField})) {
+                    // Check the attendance value for the current day
+                    if ($attendance->{$dayField} == '1') {
+                        $presentCounts[$weekday]++;
+                        $totalPresent++;
+                    } elseif ($attendance->{$dayField} == '0') {
+                        $absentCounts[$weekday]++;
+                        $totalAbsent++;
+                    }
+                    $totalDays++;//total number of weekdays for all users.
+                }
+            }
+        }
+
+        // Calculate present and absent percentages
+        $presentPercentage = $totalDays > 0 ? number_format(($totalPresent / $totalDays) * 100, 0) : 0;
+        $absentPercentage = $totalDays > 0 ? number_format(($totalAbsent / $totalDays) * 100, 0) : 0;
+
+        return response()->json([
+            'present' => $presentCounts,
+            'absent' => $absentCounts,
+            'presentPercentage' => $presentPercentage,
+            'absentPercentage' => $absentPercentage,
+        ]);
+    }
+
+    public function fetchTodayStaffAttendanceInPer()
+    {
+        $gymUser = Auth::guard('gym')->user();
+        $gymDetail = $this->gym->where('uuid', $gymUser->uuid)->first();
+
+        // Get today's date and calculate the current field (e.g., 'day20')
+        $today = Carbon::now()->day;
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+        $todayField = 'day' . $today;
+
+        // Fetch attendance data for the current gym, month, and year
+        $attendanceData = $this->staffAttendance
+            ->where('gym_id', $gymDetail->id)
+            ->where('month', $currentMonth)
+            ->where('year', $currentYear)
+            ->get();
+
+        // Calculate total users and present users
+        $totalUsers = $attendanceData->count();
+        $presentUsers = $attendanceData->where($todayField, '1')->count();
+
+        // Calculate the present percentage
+        $presentPercentage = $totalUsers > 0 ? round(($presentUsers / $totalUsers) * 100) : 0;
+
+        // Return the present percentage as JSON
+        return response()->json([
+            'presentPercentage' => $presentPercentage
+        ]);
+    }
 
 
     public function showAiDashboard(Request $request)
