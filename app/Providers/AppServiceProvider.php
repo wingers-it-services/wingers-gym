@@ -29,5 +29,7 @@ class AppServiceProvider extends ServiceProvider
         $schedule->command('user:delete-previous-day-workout')->dailyAt('00:01');
 
         $schedule->command('user:delete-previous-day-diet')->dailyAt('00:01');
+        
+        $schedule->command('user:daily-attendence-update-cron')->everyMinute();
     }
 }
