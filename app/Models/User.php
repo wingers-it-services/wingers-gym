@@ -138,142 +138,27 @@ class User extends Authenticatable
         }
     }
 
-    public function allotDiet($user)
-    {
-        // Define the days of the week
-        $allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-        // Fetch the gym with gym_type = 'admin'
-        $gym = Gym::where('gym_type', 'admin')->first();
-
-        // Fetch the weekend days for the gym from the weekend table
-        $weekendDays = GymWeekend::where('gym_id', $gym->id)->pluck('weekend_day')->toArray(); // Assuming 'day' column stores day names like 'Saturday', 'Sunday'
-
-        // Fetch user's goal ID from the goal_user table
-        $userGoal = GoalUser::where('user_id', $user->id)->first();
-
-        $userLevel = LevelUser::where('user_id', $user->id)->first();
-
-        if ($userGoal) {
-            // Fetch diet IDs associated with the user's goal from goal_wise_diets
-            $goalDiets = GoalWiseDiet::where('goal_id', $userGoal->goal_id)
-            ->where('user_lebel_id', $userLevel->level_id)
-            ->get();
-
-            // Fetch diets added by the admin gym that match the goal
-            $diets = Diet::whereIn('id', $goalDiets)
-                ->where('added_by', $gym->id)
-                ->get();
-
-            if ($diets->isNotEmpty()) {
-                // Loop through each day (Monday to Sunday)
-                foreach ($allDays as $currentDay) {
-                    // Check if the current day is a weekend for this gym
-                    if (!in_array($currentDay, $weekendDays)) {
-                        foreach ($diets as $diet) {
-                            // Create a new entry in the UserDiet table for each diet and each non-weekend day
-                            UserDiet::create([
-                                'user_id'                      => $user->id,
-                                'day'                          => $currentDay, // Assign for each non-weekend day
-                                'meal_name'                    => $diet->name,
-                                'calories'                     => $diet->calories ?? 0, // Default values
-                                'protein'                      => $diet->protein ?? 0,
-                                'carbs'                        => $diet->carbs ?? 0,
-                                'fats'                         => $diet->fats ?? 0,
-                                'gym_id'                       => $gym->id,
-                                'diet_id'                      => $diet->id,
-                                'goal'                         => $userGoal->goal_id,
-                                'meal_type'                    => $diet->meal_type ?? 'breakfast',
-                                'diet_description'             => $diet->alternative_diet,
-                                'alternative_diet_description' => $diet->alternative_diet ?? null,
-                                'is_completed'                 => 0, // By default, the meal is not completed
-                            ]);
-                        }
-                    }
-                }
-                // Log success message
-                Log::info("Goal-based diets for user ID {$user->id} have been allotted for non-weekend days from gym admin.");
-
-                // After allotting diets, trigger the cron command for this user
-                Artisan::call('user:diets');
-            } else {
-                // Log warning if no diets found for the user's goal
-                Log::warning("No diets found for user goal ID {$userGoal->goal_id}.");
-            }
-        } else {
-            // Log warning if no goal found for the user
-            Log::warning("No goal found for user ID {$user->id}.");
-        }
-    }
-
-
-    // public function allotWorkouts($user)
-    // {
-    //     // Get today's day of the week (e.g., Monday, Tuesday)
-    //     $currentDay = Carbon::now()->format('l');
-
-    //     // Fetch the gym with gym_type = 'admin'
-    //     $gym = Gym::where('gym_type', 'admin')->first();
-
-    //     // Fetch user's goal ID from the goal_user table
-    //     $userGoal = GoalUser::where('user_id', $user->id)->first();
-
-    //     if ($userGoal) {
-    //         // Fetch workout IDs associated with the user's goal from goal_wise_workouts
-    //         $goalWorkouts = GoalWiseWorkouts::where('goal_id', $userGoal->goal_id)->pluck('workout_id');
-
-    //         // Fetch workouts added by the admin gym that match the goal
-    //         $workouts = Workout::whereIn('id', $goalWorkouts)
-    //             ->where('added_by', $gym->id)
-    //             ->get();
-
-    //         if ($workouts->isNotEmpty()) {
-    //             foreach ($workouts as $workout) {
-    //                 // Create a new entry in the UserWorkout table for each workout
-    //                 UserWorkout::create([
-    //                     'user_id'            => $user->id, // Use the passed user ID
-    //                     'workout_id'         => $workout->id,
-    //                     'day'                => $currentDay, // This could be different per workout
-    //                     'exercise_name'      => $workout->name,
-    //                     'sets'               => $workout->sets ?? 5, // Use workout sets or default to 5
-    //                     'reps'               => $workout->reps ?? 2, // Use workout reps or default to 2
-    //                     'weight'             => $workout->weight ?? 20, // Default weight
-    //                     'workout_des'        => $workout->description,
-    //                     'gym_id'             => $gym->id,
-    //                     'is_completed'       => 0, // By default, the workout is not completed
-    //                     'targeted_body_part' => $workout->targeted_body_part ?? 'Shoulder', // Default body part
-    //                 ]);
-    //             }
-
-    //             // Log success message
-    //             Log::info("Goal-based workouts for user ID {$user->id} have been allotted from gym admin.");
-
-    //             // After allotting workouts, trigger the cron command for this user
-    //             Artisan::call('user:workout', ['user_id' => $user->id]);
-    //         } else {
-    //             // Log warning if no workouts found for the user's goal
-    //             Log::warning("No workouts found for user goal ID {$userGoal->goal_id}.");
-    //         }
-    //     } else {
-    //         // Log warning if no goal found for the user
-    //         Log::warning("No goal found for user ID {$user->id}.");
-    //     }
-    // }
-
     // public function allotDiet($user)
     // {
-    //     // Get today's day of the week (e.g., Monday, Tuesday)
-    //     $currentDay = Carbon::now()->format('l');
+    //     // Define the days of the week
+    //     $allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     //     // Fetch the gym with gym_type = 'admin'
     //     $gym = Gym::where('gym_type', 'admin')->first();
 
+    //     // Fetch the weekend days for the gym from the weekend table
+    //     $weekendDays = GymWeekend::where('gym_id', $gym->id)->pluck('weekend_day')->toArray(); // Assuming 'day' column stores day names like 'Saturday', 'Sunday'
+
     //     // Fetch user's goal ID from the goal_user table
     //     $userGoal = GoalUser::where('user_id', $user->id)->first();
+
+    //     $userLevel = LevelUser::where('user_id', $user->id)->first();
 
     //     if ($userGoal) {
     //         // Fetch diet IDs associated with the user's goal from goal_wise_diets
-    //         $goalDiets = GoalWiseDiet::where('goal_id', $userGoal->goal_id)->pluck('diet_id');
+    //         $goalDiets = GoalWiseDiet::where('goal_id', $userGoal->goal_id)
+    //         ->where('user_lebel_id', $userLevel->level_id)
+    //         ->get();
 
     //         // Fetch diets added by the admin gym that match the goal
     //         $diets = Diet::whereIn('id', $goalDiets)
@@ -281,27 +166,35 @@ class User extends Authenticatable
     //             ->get();
 
     //         if ($diets->isNotEmpty()) {
-    //             foreach ($diets as $diet) {
-    //                 // Create a new entry in the UserDiet table for each diet
-    //                 UserDiet::create([
-    //                     'user_id'                      => $user->id,
-    //                     'day'                          => $currentDay, // Assign to today's day
-    //                     'meal_name'                    => $diet->name,
-    //                     'calories'                     => $diet->calories ?? 0, // Default values
-    //                     'protein'                      => $diet->protein ?? 0,
-    //                     'carbs'                        => $diet->carbs ?? 0,
-    //                     'fats'                         => $diet->fats ?? 0,
-    //                     'gym_id'                       => $gym->id,
-    //                     'diet_id'                      => $diet->id,
-    //                     'goal'                         => $userGoal->goal_id,
-    //                     'meal_type'                    => $diet->meal_type ?? 'breakfast',
-    //                     'diet_description'             => $diet->alternative_diet,
-    //                     'alternative_diet_description' => $diet->alternative_diet ?? null,
-    //                     'is_completed'                 => 0, // By default, the meal is not completed
-    //                 ]);
+    //             // Loop through each day (Monday to Sunday)
+    //             foreach ($allDays as $currentDay) {
+    //                 // Check if the current day is a weekend for this gym
+    //                 if (!in_array($currentDay, $weekendDays)) {
+    //                     foreach ($diets as $diet) {
+    //                         // Create a new entry in the UserDiet table for each diet and each non-weekend day
+    //                         UserDiet::create([
+    //                             'user_id'                      => $user->id,
+    //                             'day'                          => $currentDay, // Assign for each non-weekend day
+    //                             'meal_name'                    => $diet->name,
+    //                             'calories'                     => $diet->calories ?? 0, // Default values
+    //                             'protein'                      => $diet->protein ?? 0,
+    //                             'carbs'                        => $diet->carbs ?? 0,
+    //                             'fats'                         => $diet->fats ?? 0,
+    //                             'gym_id'                       => $gym->id,
+    //                             'diet_id'                      => $diet->id,
+    //                             'goal'                         => $userGoal->goal_id,
+    //                             'meal_type'                    => $diet->meal_type ?? 'breakfast',
+    //                             'diet_description'             => $diet->alternative_diet,
+    //                             'alternative_diet_description' => $diet->alternative_diet ?? null,
+    //                             'is_completed'                 => 0, // By default, the meal is not completed
+    //                         ]);
+    //                     }
+    //                 }
     //             }
     //             // Log success message
-    //             Log::info("Goal-based diets for user ID {$user->id} have been allotted from gym admin.");
+    //             Log::info("Goal-based diets for user ID {$user->id} have been allotted for non-weekend days from gym admin.");
+
+    //             // After allotting diets, trigger the cron command for this user
     //             Artisan::call('user:diets');
     //         } else {
     //             // Log warning if no diets found for the user's goal
@@ -312,6 +205,89 @@ class User extends Authenticatable
     //         Log::warning("No goal found for user ID {$user->id}.");
     //     }
     // }
+
+    public function allotDiet($user)
+    {
+        // Fetch the gym with gym_type = 'admin'
+        $gym = Gym::where('gym_type', 'admin')->first();
+
+        // Fetch the weekend days for the gym from the weekend table
+        $weekendDays = GymWeekend::where('gym_id', $gym->id)->pluck('weekend_day')->toArray();
+
+        // Fetch user's goal ID from the goal_user table
+        $userGoal = GoalUser::where('user_id', $user->id)->first();
+
+        // Fetch user's level ID from the level_user table
+        $userLevel = LevelUser::where('user_id', $user->id)->first();
+
+        if ($userGoal && $userLevel) {
+            // Fetch goal-wise diets associated with the user's goal and level
+            $goalDiets = GoalWiseDiet::where('goal_id', $userGoal->goal_id)
+                ->where('user_lebel_id', $userLevel->level_id)
+                ->get();
+
+            // Fetch diets from the Diet table for reference
+            $dietIds = $goalDiets->pluck('diet_id')->toArray();
+            $diets = Diet::whereIn('id', $dietIds)
+                ->where('added_by', $gym->id)
+                ->get()
+                ->keyBy('id'); // Using keyBy to easily reference diet details by id
+
+            if ($goalDiets->isNotEmpty()) {
+                // Filter out weekend days from the goal-wise diets
+                $goalDiets = $goalDiets->filter(function ($goalDiet) use ($weekendDays) {
+                    // Ensure the day from the goal-wise diet is not a weekend
+                    return !in_array($goalDiet->day, $weekendDays);
+                });
+
+                foreach ($goalDiets as $goalDiet) {
+                    // Find the diet details
+                    $diet = $diets->get($goalDiet->diet_id);
+
+                    if ($diet) {
+                        // Check if a diet entry for this user, day, and diet_id already exists to avoid duplication
+                        $existingDiet = UserDiet::where('user_id', $user->id)
+                            ->where('day', $goalDiet->day) // Now using day from GoalWiseDiet
+                            ->where('diet_id', $diet->id)
+                            ->exists();
+
+                        // If no existing diet, create a new entry
+                        if (!$existingDiet) {
+                            UserDiet::create([
+                                'user_id'                      => $user->id,
+                                'day'                          => $goalDiet->day, // Assign day from GoalWiseDiet
+                                'meal_name'                    => $diet->name,
+                                'calories'                     => $goalDiet->calories ?? 0, // From GoalWiseDiet
+                                'protein'                      => $goalDiet->protein ?? 0,  // From GoalWiseDiet
+                                'carbs'                        => $goalDiet->carbs ?? 0,    // From GoalWiseDiet
+                                'fats'                         => $goalDiet->fats ?? 0,     // From GoalWiseDiet
+                                'gym_id'                       => $gym->id,
+                                'diet_id'                      => $diet->id,
+                                'goal'                         => $userGoal->goal_id,
+                                'meal_type'                    => $diet->meal_type ?? 'breakfast',
+                                'diet_description'             => $diet->diet_description,
+                                'alternative_diet_description' => $diet->alternative_diet ?? null,
+                                'is_completed'                 => 0, // By default, the meal is not completed
+                            ]);
+                        }
+                    }
+                }
+
+                // Log success message
+                Log::info("Goal-based diets for user ID {$user->id} have been allotted for non-weekend days from gym admin.");
+
+                // After allotting diets, trigger the cron command for this user
+                Artisan::call('user:diets');
+            } else {
+                // Log warning if no diets found for the user's goal and level
+                Log::warning("No diets found for user goal ID {$userGoal->goal_id} and level ID {$userLevel->level_id}.");
+            }
+        } else {
+            // Log warning if no goal or level found for the user
+            Log::warning("No goal or level found for user ID {$user->id}.");
+        }
+    }
+
 
 
     public function getImageAttribute()

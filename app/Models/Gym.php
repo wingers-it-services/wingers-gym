@@ -107,4 +107,9 @@ class Gym extends Authenticatable
     {
         return $this->hasMany(GymStaff::class, 'gym_id');
     }
+
+    public function weekends()
+    {
+        return $this->hasMany(GymWeekend::class, 'gym_id', 'id');
+    }
 }

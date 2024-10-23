@@ -21,4 +21,9 @@ class GymWeekend extends Model
             $model->uuid = Uuid::uuid4()->toString();
         });
     }
+
+    public function gym()
+    {
+        return $this->belongsTo(Gym::class, 'gym_id', 'id');
+    }
 }

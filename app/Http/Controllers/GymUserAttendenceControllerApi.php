@@ -215,7 +215,6 @@ class GymUserAttendenceControllerApi extends Controller
         }
     }
 
-
     private function markAttendance(User $user, $gymId)
     {
         try {
