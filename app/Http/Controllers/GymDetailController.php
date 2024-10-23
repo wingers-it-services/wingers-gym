@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Diet;
 use App\Models\Gym;
 use App\Models\GymCoupon;
@@ -112,15 +113,36 @@ class GymDetailController extends Controller
             ->where('gym_id', $gymDetail->id)
             ->where('status', 1)
             ->where('subscription_end_date', '<', $currentDate->addDays($subscriptionExpireDays))
-            ->orderBy('subscription_end_date', 'asc')
+            ->orderBy('subscription_end_date', 'desc')
+            ->limit(5)
             ->get();
+        $usersWithNoSubscriptions = $this->subscriptionHistory
+            ->with([
+                'users' => function ($query) {
+                    $query->withTrashed(); // Include soft-deleted users
+                },
+                'subscription' => function ($query) {
+                    $query->withTrashed(); // Include soft-deleted subscriptions
+                }
+            ])
+            ->where('gym_id', $gymDetail->id)
+            ->where('status', [0, 2]) // No active subscription
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('user_subscription_histories as sub')
+                    ->whereRaw('sub.user_id = user_subscription_histories.user_id') // Ensure same user
+                    ->where('sub.status', 1); // Check if the user has any active subscriptions
+            })
+            ->orderBy('subscription_end_date', 'desc')
+            ->get();
+
         $userRecentPayments = $this->userPaymentHistory->where('gym_id', $gymDetail->id)
             ->orderBy('created_at', 'desc') // Order by most recent
             ->limit(5)
             ->get();
         Log::error('[GymDetailController][showDashboard] user image null : ' . empty($gymDetail->image));
         Log::error('[GymDetailController][showDashboard] user image src : ' . $gymDetail->image);
-        return view('GymOwner.dashboard', compact('gymDetail', 'totalUsers', 'totalStaffs', 'totalSubscriptions', 'totalWorkouts', 'totalDiets', 'totalCoupons', 'totalActiveUsers', 'usersHistory', 'userRecentPayments'));
+        return view('GymOwner.dashboard', compact('gymDetail', 'totalUsers', 'totalStaffs', 'totalSubscriptions', 'totalWorkouts', 'totalDiets', 'totalCoupons', 'totalActiveUsers', 'usersHistory', 'userRecentPayments', 'usersWithNoSubscriptions'));
     }
     public function fetchUserAttendanceData()
     {

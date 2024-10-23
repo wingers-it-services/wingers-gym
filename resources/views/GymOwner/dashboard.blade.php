@@ -373,30 +373,46 @@
 
                     <div class="card-body">
                         <div class="scroll-container" style="max-height: 300px; overflow-y: auto;">
-                            @foreach ($usersHistory as $index => $user)
-                                                        <div class="media align-items-center border border-warning rounded p-3 mb-md-4 mb-3">
-                                                            <div>
-                                                                <h4 class="fs-18 text-black mb-0">{{ $user->users->firstname }} {{ $user->users->lastname}}</h4>
-                                                                <!-- <span class="fs-14 text-primary"> {{ $user->subscription->subscription_name }}</span> -->
-                                                                {{-- Calculate remaining days --}}
-                                                                @php
-                                                                    $subscriptionEnd = \Carbon\Carbon::parse($user->subscription_end_date);
-                                                                    $remainingDays = intval(
-                                                                        \Carbon\Carbon::now()->diffInDays($subscriptionEnd, false),
-                                                                    ); // Cast to integer
-                                                                @endphp
+                            @if($usersHistory->isEmpty())
+                                <div class="text-center text-muted">
+                                    <p>No users found with subscription soon Expire.</p>
+                                </div>
+                            @else
+                                                    @foreach ($usersHistory as $index => $user)
+                                                                            <div class="media align-items-center border border-warning rounded p-3 mb-md-4 mb-3">
+                                                                                <div class="d-flex justify-content-between w-100">
+                                                                                    <div>
+                                                                                        <h4 class="fs-18 text-black mb-0">{{ $user->users->firstname }}
+                                                                                            {{ $user->users->lastname}}
+                                                                                        </h4>
+                                                                                        <!-- <span class="fs-14 text-primary"> {{ $user->subscription->subscription_name }}</span> -->
+                                                                                        {{-- Calculate remaining days --}}
+                                                                                        @php
+                                                                                            $subscriptionEnd = \Carbon\Carbon::parse($user->subscription_end_date);
+                                                                                            $remainingDays = intval(
+                                                                                                \Carbon\Carbon::now()->diffInDays($subscriptionEnd, false),
+                                                                                            ); // Cast to integer
+                                                                                        @endphp
 
-                                                                {{-- Display remaining days --}}
-                                                                @if ($remainingDays > 0)
-                                                                    <span class="fs-14 text-warning">Remaining: {{ $remainingDays }}
-                                                                        days</span>
-                                                                @else
-                                                                    <span class="fs-14 text-danger">Expired</span>
-                                                                @endif
-                                                            </div>
+                                                                                        {{-- Display remaining days --}}
+                                                                                        @if ($remainingDays > 0)
+                                                                                            <span class="fs-14 text-warning">Remaining: {{ $remainingDays }}
+                                                                                                days</span>
+                                                                                        @else
+                                                                                            <span class="fs-14 text-danger">Expired</span>
+                                                                                        @endif
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <!-- <span class="fs-14 text-muted">Previous Plan:</span> -->
+                                                                                        <span class="fs-14 text-warning">
+                                                                                            {{ $user->subscription->subscription_name }}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
 
-                                                        </div>
-                            @endforeach
+                                                                            </div>
+                                                    @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -404,371 +420,77 @@
             <div class="col-xl-3 col-xxl-4 col-md-6">
                 <div class="card">
                     <div class="card-header border-0 pb-0">
-                        <h4 class="text-black fs-20 mb-0">User Recent Payments</h4>
+                        <h4 class="text-black fs-20 mb-0">Users Recent Payments</h4>
                         <a href="/customers-payment" class="btn btn-primary btn-sm rounded d-none d-md-block">View
                             All</a>
                     </div>
 
                     <div class="card-body">
                         <div class="scroll-container" style="max-height: 300px; overflow-y: auto;">
-                            @foreach ($userRecentPayments as $index => $userPayments)
-                                <div class="media align-items-center border border-warning rounded p-3 mb-md-4 mb-3">
-                                    <div class="d-flex justify-content-between w-100">
-                                        <div>
-                                            <h4 class="fs-18 text-black mb-0">{{ $userPayments->name }}</h4>
-                                            <span class="fs-14 text-primary">Amount: {{ $userPayments->total }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="fs-14 text-warning">
-                                                {{ $userPayments->response_code }}</span>
+                            @if($userRecentPayments->isEmpty())
+                                <div class="text-center text-muted">
+                                    <p>No users found with Recent Payments.</p>
+                                </div>
+                            @else
+                                @foreach ($userRecentPayments as $index => $userPayments)
+                                    <div class="media align-items-center border border-warning rounded p-3 mb-md-4 mb-3">
+                                        <div class="d-flex justify-content-between w-100">
+                                            <div>
+                                                <h4 class="fs-18 text-black mb-0">{{ $userPayments->name }}</h4>
+                                                <span class="fs-14 text-primary">Amount: {{ $userPayments->total }}</span>
+                                            </div>
+                                            <div>
+                                                <span class="fs-14 text-warning">
+                                                    {{ $userPayments->response_code }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-xl-9 col-xxl-8">
+            <div class="col-xl-3 col-xxl-4 col-md-6">
                 <div class="card">
-                    <div class="card-header d-sm-flex d-block pb-0 border-0">
-                        <div class="me-auto pe-3">
-                            <h4 class="text-black fs-20">Calories Chart</h4>
-                            <p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit amet, consectetur</p>
-                        </div>
-                        <div class="dropdown mt-sm-0 mt-3">
-                            <button type="button" class="btn rounded border border-light dropdown-toggle"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Weekly
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="javascript:void(0);">Link 1</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Link 2</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Link 3</a>
-                            </div>
-                        </div>
+                    <div class="card-header border-0 pb-0">
+                        <h4 class="text-black fs-20 mb-0">Subscription Expired </h4>
+
                     </div>
+
                     <div class="card-body">
-                        <div id="chartTimeline"></div>
+                        <div class="scroll-container" style="max-height: 300px; overflow-y: auto;">
+                            @if($usersWithNoSubscriptions->isEmpty())
+                                <div class="text-center text-muted">
+                                    <p>No users found with expire subscriptions.</p>
+                                </div>
+                            @else
+                                @foreach ($usersWithNoSubscriptions as $index => $user)
+                                    <div class="media align-items-center border border-warning rounded p-3 mb-md-4 mb-3">
+                                        <div class="d-flex justify-content-between w-100">
+                                            <div>
+                                                <h4 class="fs-18 text-black mb-0">{{ $user->users->firstname }}
+                                                    {{ $user->users->lastname }}
+                                                </h4>
+                                                <span class="fs-14 text-primary">Expire At:
+                                                    {{ \Carbon\Carbon::parse($user->subscription_end_date)->format('jS F') }}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <!-- <span class="fs-14 text-muted">Previous Plan:</span> -->
+                                                <span class="fs-14 text-warning">
+                                                    {{ $user->subscription->subscription_name }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
+
                 </div>
-            </div> -->
-            <!-- <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-header d-sm-flex d-block pb-0 border-0">
-                        <div class="me-auto pe-3">
-                            <h4 class="text-black fs-20">Featured Diet Menus</h4>
-                            <p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit amet, consectetur</p>
-                        </div>
-                        <div class="card-action card-tabs mt-3 mt-sm-0 mt-3 mb-sm-0 mb-3 mt-sm-0 me-0 me-md-5">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" href="#Breakfast" role="tab">
-                                        Breakfast
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-bs-toggle="tab" href="#Lunch" role="tab">
-                                        Lunch
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-bs-toggle="tab" href="#Dinner" role="tab">
-                                        Dinner
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <a href="food-menu.html" class="btn btn-primary rounded d-none d-md-block">View More</a>
-                    </div>
-                    <div class="card-body">
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="Breakfast" role="tabpanel">
-                                <div class="featured-menus owl-carousel">
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/3.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/3.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Ilham</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Sweet Orange Fruits with Lemon</a></h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">176 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/1.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/1.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Andrew</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a>
-                                                </h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">568 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/1.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/1.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Andrew</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a>
-                                                </h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">568 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/2.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/2.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Chintya</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Chicken Egg with fresh tomatos</a></h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">223 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="Lunch" role="tabpanel">
-                                <div class="featured-menus owl-carousel">
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/1.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/1.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Andrew</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a>
-                                                </h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">568 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/3.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/3.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Ilham</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Sweet Orange Fruits with Lemon</a></h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">176 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/2.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/2.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Chintya</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Chicken Egg with fresh tomatos</a></h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">223 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/1.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/1.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Andrew</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a>
-                                                </h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">568 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="Dinner" role="tabpanel">
-                                <div class="featured-menus owl-carousel">
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/1.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/1.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Andrew</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a>
-                                                </h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">568 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/2.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/2.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Chintya</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Chicken Egg with fresh tomatos</a></h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">223 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/3.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/3.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Ilham</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Sweet Orange Fruits with Lemon</a></h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">176 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="items">
-                                        <div class="d-sm-flex p-3 border border-light rounded">
-                                            <a href="ecom-product-detail.html"><img class="me-4 food-image rounded"
-                                                    src="public/images/menus/1.png" alt="" width="160"></a>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img class="rounded-circle me-2 profile-image"
-                                                        src="public/images/testimonial/1.jpg" alt="" width="30">
-                                                    <span class="fs-14 text-primary">Andrew</span>
-                                                </div>
-                                                <h6 class="fs-16 mb-4"><a href="ecom-product-detail.html"
-                                                        class="text-black">Fresh or Frozen (No Sugar Added) Fruits</a>
-                                                </h6>
-                                                <ul>
-                                                    <li class="mb-2"><i class="las la-clock scale5 me-3"></i><span
-                                                            class="fs-14 text-black">4-6 mins </span></li>
-                                                    <li><i class="fa fa-star me-3 scale5 text-warning"
-                                                            aria-hidden="true"></i><span
-                                                            class="fs-14 text-black font-w500">568 Reviews</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+            </div>
         </div>
     </div>
 </div>
