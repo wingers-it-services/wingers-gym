@@ -108,6 +108,8 @@ Route::group(['middleware' => ['auth:gym']], function () {
     });
 
     Route::get('/user-locations', [AiDashboardController::class, 'getUserLocations']);
+    Route::post('/send-email', [AiDashboardController::class, 'sendContactForm'])->name('send.email');
+
 
     Route::get('/gym-logout', [GymDetailController::class, 'logout'])->name('gym.logout');
 
