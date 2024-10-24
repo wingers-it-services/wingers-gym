@@ -401,9 +401,10 @@ class GymDetailController extends Controller
     {
         $gymUser = Auth::guard('gym')->user();
         $gymDetail = $this->gym->where('uuid', $gymUser->uuid)->first();
-        Log::error('[GymDetailController][showDashboard] user image null : ' . empty($gymDetail->image));
-        Log::error('[GymDetailController][showDashboard] user image src : ' . $gymDetail->image);
-        return view('GymOwner.ai-dashboard', compact('gymDetail'));
+        // Log::error('[GymDetailController][showDashboard] user image null : ' . empty($gymDetail->image));
+        // Log::error('[GymDetailController][showDashboard] user image src : ' . $gymDetail->image);
+        $users=$this->user->get();
+        return view('GymOwner.ai-dashboard', compact('gymDetail','users'));
     }
 
     public function showGymProfile(Request $request)
