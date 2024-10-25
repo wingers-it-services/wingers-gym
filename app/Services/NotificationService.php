@@ -33,37 +33,37 @@ class NotificationService
         }
     }
 
-    public function sendNotification(string $title, string $message, string $image = null)
+    public function sendNotification(string $title, string $message, string $image = null, string $token)
     {
         $accessToken = $this->getAccessToken();
         if (!$accessToken) {
             return [
                 'code'    => 500,
                 'status'  => false,
-                'message' => 'cannot retrive fcm auth token'
+                'message' => 'Cannot retrieve FCM auth token'
             ];
         }
-
-        $tokens = $this->userFcmToken->pluck('fcm_token');
+    
         $url = "https://fcm.googleapis.com/v1/projects/gym-managment-429808/messages:send";
-        Log::info('tokens' . $tokens);
+        Log::info('Sending notification to token: ' . $token);
+        
         try {
-            foreach ($tokens as $token) {
-                $messagePayload = $this->createPayload($token, $title, $message, $image);
-
-                Log::info($messagePayload);
-                $response = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $accessToken,
-                ])->post($url, $messagePayload);
-
-                if (!$response->successful()) {
-                    return [
-                        'code'    => 500,
-                        'status'  => false,
-                        'message' => $response->body()
-                    ];
-                }
+            // Prepare the notification payload for a single token
+            $messagePayload = $this->createPayload($token, $title, $message, $image);
+    
+            Log::info($messagePayload);
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+            ])->post($url, $messagePayload);
+    
+            if (!$response->successful()) {
+                return [
+                    'code'    => 500,
+                    'status'  => false,
+                    'message' => $response->body()
+                ];
             }
+    
             return [
                 'code'    => 200,
                 'status'  => true,
@@ -77,6 +77,7 @@ class NotificationService
             ];
         }
     }
+    
 
     private function createPayload(string $token, string $title, string $message, ?string $image): array
     {
@@ -93,6 +94,9 @@ class NotificationService
             'message' => [
                 'token' => $token,
                 'notification' => $notification
+            ],
+            'data' => [
+                'audio_url' => 'https://commondatastorage.googleapis.com/codeskulptor-assets/Evillaugh.ogg'
             ],
         ];
     }
