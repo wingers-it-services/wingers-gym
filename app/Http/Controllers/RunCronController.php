@@ -36,5 +36,11 @@ class RunCronController extends Controller
         Artisan::call('user:delete-previous-day-diet');
         return redirect()->back()->with('status', 'success')->with('message', 'Cron job executed successfully');
     }
+
+    public function runHolidayNotificationCronJob()
+    {
+        Artisan::call('notify:holiday');
+        return redirect()->back()->with('status', 'success')->with('message', 'Cron job executed successfully');
+    }
     
 }

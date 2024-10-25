@@ -167,6 +167,8 @@ Route::group(['middleware' => ['auth:gym']], function () {
 
     Route::get('/run-diet-histry-cron', [RunCronController::class, 'runDietHistryCronJob'])->name('runDietHistryCronJob');
 
+    Route::get('/run-holiday-notification-cron', [RunCronController::class, 'runHolidayNotificationCronJob'])->name('runHolidayNotificationCronJob');
+
 
     Route::get('/gym-schedule', [GymSheduleController::class, 'viewGymSchedule']);
 
