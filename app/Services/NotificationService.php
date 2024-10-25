@@ -33,29 +33,31 @@ class NotificationService
         }
     }
 
-    public function sendNotification(string $title, string $message, string $image = null, string $token)
-    {
-        $accessToken = $this->getAccessToken();
-        if (!$accessToken) {
-            return [
-                'code'    => 500,
-                'status'  => false,
-                'message' => 'Cannot retrieve FCM auth token'
-            ];
-        }
-    
-        $url = "https://fcm.googleapis.com/v1/projects/gym-managment-429808/messages:send";
-        Log::info('Sending notification to token: ' . $token);
-        
-        try {
-            // Prepare the notification payload for a single token
-            $messagePayload = $this->createPayload($token, $title, $message, $image);
-    
+    public function sendNotification(string $title, string $message, array $userIds, string $image = null, string $sound = null)
+{
+    $accessToken = $this->getAccessToken();
+    if (!$accessToken) {
+        return [
+            'code'    => 500,
+            'status'  => false,
+            'message' => 'Cannot retrieve FCM auth token'
+        ];
+    }
+
+    // Retrieve tokens only for specified users
+    $tokens = $this->userFcmToken->whereIn('user_id', $userIds)->pluck('fcm_token');
+    $url = "https://fcm.googleapis.com/v1/projects/gym-managment-429808/messages:send";
+    Log::info('Tokens for specified users: ' . $tokens);
+
+    try {
+        foreach ($tokens as $token) {
+            $messagePayload = $this->createPayload($token, $title, $message, $image, $sound);
+
             Log::info($messagePayload);
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
             ])->post($url, $messagePayload);
-    
+
             if (!$response->successful()) {
                 return [
                     'code'    => 500,
@@ -63,41 +65,43 @@ class NotificationService
                     'message' => $response->body()
                 ];
             }
-    
-            return [
-                'code'    => 200,
-                'status'  => true,
-                'message' => 'Notification sent successfully'
-            ];
-        } catch (Exception $e) {
-            return [
-                'code'    => 500,
-                'status'  => false,
-                'message' => 'Exception during notification send: ' . $e->getMessage()
-            ];
         }
+        return [
+            'code'    => 200,
+            'status'  => true,
+            'message' => 'Notification sent successfully'
+        ];
+    } catch (Exception $e) {
+        return [
+            'code'    => 500,
+            'status'  => false,
+            'message' => 'Exception during notification send: ' . $e->getMessage()
+        ];
     }
-    
+}
 
-    private function createPayload(string $token, string $title, string $message, ?string $image): array
+
+    private function createPayload(string $token, string $title, string $message, ?string $image, ?string $sound): array
     {
         $notification = [
             'title' => $title,
             'body'  => $message,
         ];
-
-        if ($image) {
+    
+        if (!empty($image)) {
             $notification['image'] = $image;
         }
-
+    
         return [
             'message' => [
                 'token' => $token,
-                'notification' => $notification
-            ],
-            'data' => [
-                'audio_url' => 'https://commondatastorage.googleapis.com/codeskulptor-assets/Evillaugh.ogg'
+                'notification' => $notification,
+                'data' => [
+                    'image' => $image ?? '',
+                    'sound' => $sound ?? '',
+                ],
             ],
         ];
     }
+    
 }

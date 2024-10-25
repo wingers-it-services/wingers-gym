@@ -32,10 +32,10 @@ class GymUserTrainerControllerApi extends Controller
 
             if (!$trainers) {
                 return response()->json([
-                    'status'   => 200,
+                    'status'   => 422,
                     'trainers' => $trainers,
                     'message'  => 'There is no trainer.'
-                ], 200);
+                ], 422);
             }
 
             return response()->json([
