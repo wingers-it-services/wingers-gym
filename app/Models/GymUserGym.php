@@ -17,4 +17,15 @@ class GymUserGym extends Model
     {
         return self::where('gym_id', $gymId)->count();
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // Define the relationship to the Gym model
+    public function gym()
+    {
+        return $this->belongsTo(Gym::class, 'gym_id');
+    }
 }

@@ -716,4 +716,9 @@ class User extends Authenticatable
             ->with('trainer')
             ->latest('created_at');
     }
+
+    public function fcmTokens()
+    {
+        return $this->hasMany(UserFcmToken::class, 'user_id');
+    }
 }

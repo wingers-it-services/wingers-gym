@@ -33,5 +33,9 @@ class AppServiceProvider extends ServiceProvider
         $schedule->command('user:daily-attendence-update-cron')->dailyAt('23:55');
 
         $schedule->command('subscriptions:update-status')->dailyAt('00:01');
+
+        $schedule->command('notify:expiring-subscriptions')->dailyAt('00:01');
+
+        $schedule->command('notify:holiday')->dailyAt('18:00');
     }
 }

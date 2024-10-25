@@ -634,6 +634,7 @@ class GymUserController extends Controller
 
             // Fetch the latest subscription history for the user
             $userSubscription = $this->userSubscriptionHistory->where('user_id', $validatedData['user_id'])
+                ->where('status', GymSubscriptionStatusEnum::ACTIVE)
                 ->orderBy('subscription_end_date', 'desc')
                 ->first();
 
@@ -1156,5 +1157,4 @@ class GymUserController extends Controller
             return response()->json(['error' => 'Failed to store weekends in attendance table.'], 500);
         }
     }
-
 }
