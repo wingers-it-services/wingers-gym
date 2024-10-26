@@ -92,7 +92,7 @@ class User extends Authenticatable
                 throw new \Exception('Basic subscription for admin gym not found.');
             }
 
-            $validityMonths = $subscription->validity;
+            $validityMonths = (int) $subscription->validity;
 
             // Set the start date and calculate the end date based on the validity in months
             $startDate = Carbon::now();
@@ -317,7 +317,7 @@ class User extends Authenticatable
                                 'diet_id'                      => $diet->id,
                                 'goal'                         => $userGoal->goal_id,
                                 'meal_type'                    => $diet->meal_type ?? 'breakfast',
-                                'diet_description'             => $diet->diet_description ?? '------',
+                                'diet_description'             => $diet->diet_description,
                                 'alternative_diet_description' => $diet->alternative_diet ?? null,
                                 'is_completed' => 0, // By default, the meal is not completed
                             ]);
