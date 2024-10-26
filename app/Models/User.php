@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\GymSubscriptionStatusEnum;
 use App\Enums\GymUserAccountStatusEnum;
 use App\Enums\UserTypeEnum;
 use Carbon\Carbon;
@@ -67,10 +68,61 @@ class User extends Authenticatable
             // Check if profile_status changed to 2
             if ($user->profile_status === 2 && $user->getOriginal('profile_status') !== 2) {
                 // Allot all workouts for the user
+                $user->allotSubscription($user);
                 $user->allotWorkouts($user);
                 $user->allotDiet($user);
             }
         });
+    }
+
+    public function allotSubscription($user)
+    {
+        try {
+            // Fetch the gym with gym_type = 'admin'
+            $gym = Gym::where('gym_type', 'admin')->first();
+            if (!$gym) {
+                throw new \Exception('Admin gym not found.');
+            }
+
+            // Fetch the subscription with 'Basic' name for the admin gym
+            $subscription = GymSubscription::where('gym_id', $gym->id)
+                ->where('amount', '0')
+                ->first();
+            if (!$subscription) {
+                throw new \Exception('Basic subscription for admin gym not found.');
+            }
+
+            $validityMonths = $subscription->validity;
+
+            // Set the start date and calculate the end date based on the validity in months
+            $startDate = Carbon::now();
+            $endDate = $startDate->copy()->addMonths($validityMonths);
+
+            // Update user with subscription details
+            $homeUser = User::findOrFail($user->id);
+            $homeUser->update([
+                'subscription_id' => $subscription->id,
+                'subscription_start_date' => $startDate,
+                'subscription_end_date' => $endDate,
+                'subscription_status' => GymSubscriptionStatusEnum::ACTIVE,
+            ]);
+
+            // Create a record in the UserSubscriptionHistory table
+            UserSubscriptionHistory::create([
+                'user_id' => $homeUser->id,
+                'subscription_id' => $subscription->id,
+                'original_transaction_id' => 1, // Update as necessary
+                'subscription_start_date' => $startDate,
+                'subscription_end_date' => $endDate,
+                'status' => GymSubscriptionStatusEnum::ACTIVE,
+                'amount' => $subscription->amount,
+                'gym_id' => $gym->id,
+            ]);
+
+        } catch (\Exception $e) {
+            // Log the error message for debugging
+            Log::error('Error allotting subscription: ' . $e->getMessage());
+        }
     }
 
     public function allotWorkouts($user)
@@ -102,16 +154,16 @@ class User extends Authenticatable
                     if (!in_array($workoutDay, $weekendDays)) {
                         // Create a new entry in the UserWorkout table for each workout and its specific day
                         UserWorkout::create([
-                            'user_id'            => $user->id, // Use the passed user ID
-                            'workout_id'         => $workout->id,
-                            'day'                => $workoutDay, // Allot for the specific day
-                            'exercise_name'      => $workout->name,
-                            'sets'               => $goalWiseWorkout->sets, // Use sets from GoalWiseWorkouts
-                            'reps'               => $goalWiseWorkout->reps, // Use reps from GoalWiseWorkouts
-                            'weight'             => $goalWiseWorkout->weight, // Use weight from GoalWiseWorkouts
-                            'workout_des'        => $workout->description,
-                            'gym_id'             => $gym->id,
-                            'is_completed'       => 0, // By default, the workout is not completed
+                            'user_id' => $user->id, // Use the passed user ID
+                            'workout_id' => $workout->id,
+                            'day' => $workoutDay, // Allot for the specific day
+                            'exercise_name' => $workout->name,
+                            'sets' => $goalWiseWorkout->sets, // Use sets from GoalWiseWorkouts
+                            'reps' => $goalWiseWorkout->reps, // Use reps from GoalWiseWorkouts
+                            'weight' => $goalWiseWorkout->weight, // Use weight from GoalWiseWorkouts
+                            'workout_des' => $workout->description,
+                            'gym_id' => $gym->id,
+                            'is_completed' => 0, // By default, the workout is not completed
                             'targeted_body_part' => $workout->targeted_body_part ?? 'Shoulder', // Default body part if not available
                         ]);
                     }
@@ -254,20 +306,20 @@ class User extends Authenticatable
                         // If no existing diet, create a new entry
                         if (!$existingDiet) {
                             UserDiet::create([
-                                'user_id'                      => $user->id,
-                                'day'                          => $goalDiet->day, // Assign day from GoalWiseDiet
-                                'meal_name'                    => $diet->name,
-                                'calories'                     => $goalDiet->calories ?? 0, // From GoalWiseDiet
-                                'protein'                      => $goalDiet->protein ?? 0,  // From GoalWiseDiet
-                                'carbs'                        => $goalDiet->carbs ?? 0,    // From GoalWiseDiet
-                                'fats'                         => $goalDiet->fats ?? 0,     // From GoalWiseDiet
-                                'gym_id'                       => $gym->id,
-                                'diet_id'                      => $diet->id,
-                                'goal'                         => $userGoal->goal_id,
-                                'meal_type'                    => $diet->meal_type ?? 'breakfast',
-                                'diet_description'             => $diet->diet_description,
+                                'user_id' => $user->id,
+                                'day' => $goalDiet->day, // Assign day from GoalWiseDiet
+                                'meal_name' => $diet->name,
+                                'calories' => $goalDiet->calories ?? 0, // From GoalWiseDiet
+                                'protein' => $goalDiet->protein ?? 0,  // From GoalWiseDiet
+                                'carbs' => $goalDiet->carbs ?? 0,    // From GoalWiseDiet
+                                'fats' => $goalDiet->fats ?? 0,     // From GoalWiseDiet
+                                'gym_id' => $gym->id,
+                                'diet_id' => $diet->id,
+                                'goal' => $userGoal->goal_id,
+                                'meal_type' => $diet->meal_type ?? 'breakfast',
+                                'diet_description' => $diet->diet_description,
                                 'alternative_diet_description' => $diet->alternative_diet ?? null,
-                                'is_completed'                 => 0, // By default, the meal is not completed
+                                'is_completed' => 0, // By default, the meal is not completed
                             ]);
                         }
                     }
@@ -328,23 +380,23 @@ class User extends Authenticatable
     {
         try {
             return $this->create([
-                'gym_id'          => $gymId,
-                'employee_id'     => $employeeId,
+                'gym_id' => $gymId,
+                'employee_id' => $employeeId,
                 'subscription_id' => $subscriptionId,
-                'firstname'       => $addUser['firstname'],
-                'lastname'        => $addUser['lastname'],
-                'email'           => $addUser['email'],
-                'gender'          => $addUser['gender'],
-                'address'         => $addUser['address'],
-                'member_number'   => $addUser['member_number'],
-                'blood_group'     => $addUser['blood_group'],
-                'joining_date'    => $addUser['joining_date'],
-                'address'         => $addUser['address'],
-                'country'         => $addUser['country'],
-                'state'           => $addUser['state'],
-                'city'            => $addUser['city'],
-                'zip_code'        => $addUser['zip_code'],
-                'image'           => $imagePath,
+                'firstname' => $addUser['firstname'],
+                'lastname' => $addUser['lastname'],
+                'email' => $addUser['email'],
+                'gender' => $addUser['gender'],
+                'address' => $addUser['address'],
+                'member_number' => $addUser['member_number'],
+                'blood_group' => $addUser['blood_group'],
+                'joining_date' => $addUser['joining_date'],
+                'address' => $addUser['address'],
+                'country' => $addUser['country'],
+                'state' => $addUser['state'],
+                'city' => $addUser['city'],
+                'zip_code' => $addUser['zip_code'],
+                'image' => $imagePath,
             ]);
         } catch (Throwable $e) {
             Log::error('[User][addUser] Error adding user detail: ' . $e->getMessage());
@@ -362,12 +414,12 @@ class User extends Authenticatable
         try {
             $userProfile->update([
                 'first_name' => $updateUser['first_name'],
-                'last_name'  => $updateUser['last_name'],
-                'email'      => $updateUser['email'],
-                'gender'     => $updateUser['gender'],
-                'phone_no'   => $updateUser['phone_no'],
-                'username'   => $updateUser['username'],
-                'password'   => $updateUser['password'],
+                'last_name' => $updateUser['last_name'],
+                'email' => $updateUser['email'],
+                'gender' => $updateUser['gender'],
+                'phone_no' => $updateUser['phone_no'],
+                'username' => $updateUser['username'],
+                'password' => $updateUser['password'],
             ]);
             if (isset($imagePath)) {
                 $userProfile->update([
@@ -410,23 +462,23 @@ class User extends Authenticatable
         try {
             $gym = Gym::where('gym_type', 'admin')->first();
             $userProfile = $this->create([
-                'firstname'            => $userDetail['firstname'],
-                'lastname'             => $userDetail['lastname'],
-                'email'                => $userDetail['email'],
-                'gender'               => $userDetail['gender'],
-                'phone_no'             => $userDetail['phone_no'],
-                'gym_id'               => $gym->id,
-                'password'             => $userDetail['password'],
-                'dob'                  => $userDetail['dob'],
-                'address'              => $userDetail['address'] ?? null,
-                'country'              => $userDetail['country'] ?? null,
-                'state'                => $userDetail['state'] ?? null,
-                'city'                 => $userDetail['city'] ?? null,
-                'zip_code'             => $userDetail['zip_code'] ?? null,
-                'profile_status'       => GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED,
-                'is_email_verified'    => true,
+                'firstname' => $userDetail['firstname'],
+                'lastname' => $userDetail['lastname'],
+                'email' => $userDetail['email'],
+                'gender' => $userDetail['gender'],
+                'phone_no' => $userDetail['phone_no'],
+                'gym_id' => $gym->id,
+                'password' => $userDetail['password'],
+                'dob' => $userDetail['dob'],
+                'address' => $userDetail['address'] ?? null,
+                'country' => $userDetail['country'] ?? null,
+                'state' => $userDetail['state'] ?? null,
+                'city' => $userDetail['city'] ?? null,
+                'zip_code' => $userDetail['zip_code'] ?? null,
+                'profile_status' => GymUserAccountStatusEnum::PROFILE_DETAIL_COMPLETED,
+                'is_email_verified' => true,
                 'is_phone_no_verified' => true,
-                'user_type'            => UserTypeEnum::HOMEUSER,
+                'user_type' => UserTypeEnum::HOMEUSER,
             ]);
 
             if ($imagePath) {
@@ -440,21 +492,21 @@ class User extends Authenticatable
                 // Step 4: Insert the user and admin gym into gym_user_gym table
                 GymUserGym::create([
                     'user_id' => $userProfile->id,
-                    'gym_id'  => $adminGym->id
+                    'gym_id' => $adminGym->id
                 ]);
             } else {
                 Log::warning('[User][createUserProfile] No admin gym found.');
             }
 
             return [
-                'status'  => 200,
+                'status' => 200,
                 'message' => 'Profile created successfully',
-                'user'    => $userProfile
+                'user' => $userProfile
             ];
         } catch (Throwable $e) {
             Log::error('[User][createUserProfile] Error while creating user detail: ' . $e->getMessage());
             return [
-                'status'  => 500,
+                'status' => 500,
                 'message' => 'An error occurred while creating the profile'
             ];
         }
@@ -467,7 +519,7 @@ class User extends Authenticatable
         // Check if the user exists
         if (!$userProfile) {
             return [
-                'status'  => 404,
+                'status' => 404,
                 'message' => 'User not found'
             ];
         }
@@ -477,7 +529,7 @@ class User extends Authenticatable
             $userProfile->update([
                 'height' => $userDetail['height'],
                 'weight' => $userDetail['weight'],
-                'days'   => $userDetail['days']
+                'days' => $userDetail['days']
             ]);
 
             // Save goals to goal_users table
@@ -519,16 +571,16 @@ class User extends Authenticatable
             $goals = $userProfile->goals()->get();
             $levels = $userProfile->levels()->get();
             return [
-                'status'  => 200,
+                'status' => 200,
                 'message' => 'Profile updated successfully',
-                'user'    => $userProfile,
-                'goals'   => $goals,
-                'levels'  => $levels
+                'user' => $userProfile,
+                'goals' => $goals,
+                'levels' => $levels
             ];
         } catch (Throwable $e) {
             Log::error('[User][profilePartFour] Error while completing user detail: ' . $e->getMessage());
             return [
-                'status'  => 500,
+                'status' => 500,
                 'message' => 'An error occurred while updating the profile'
             ];
         }
@@ -544,25 +596,25 @@ class User extends Authenticatable
             // Check if the user exists
             if (!$userProfile) {
                 return [
-                    'status'  => 404,
+                    'status' => 404,
                     'message' => 'User not found'
                 ];
             }
 
             // Update the basic profile information
             $userProfile->update([
-                'firstname'       => $userDetail['firstname'],
-                'lastname'        => $userDetail['lastname'],
-                'gender'          => $userDetail['gender'],
-                'dob'             => $userDetail['dob'],
-                'height'          => $userDetail['height'],
-                'weight'          => $userDetail['weight'],
-                'days'            => $userDetail['days'],
-                'address'         => $userDetail['address'],
-                'country'         => $userDetail['country'],
-                'state'           => $userDetail['state'],
-                'city'            => $userDetail['city'],
-                'zip_code'        => $userDetail['zip_code']
+                'firstname' => $userDetail['firstname'],
+                'lastname' => $userDetail['lastname'],
+                'gender' => $userDetail['gender'],
+                'dob' => $userDetail['dob'],
+                'height' => $userDetail['height'],
+                'weight' => $userDetail['weight'],
+                'days' => $userDetail['days'],
+                'address' => $userDetail['address'],
+                'country' => $userDetail['country'],
+                'state' => $userDetail['state'],
+                'city' => $userDetail['city'],
+                'zip_code' => $userDetail['zip_code']
             ]);
 
             if (isset($userDetail['remove_image']) && $userDetail['remove_image'] == 1) {
@@ -596,7 +648,7 @@ class User extends Authenticatable
                 foreach ($newInjuryIds as $injuryId) {
                     InjuryUser::updateOrCreate(
                         [
-                            'user_id'   => $userProfile->id,
+                            'user_id' => $userProfile->id,
                             'injury_id' => $injuryId
                         ]
                     );
@@ -642,7 +694,7 @@ class User extends Authenticatable
                 foreach ($newLevelIds as $levelId) {
                     LevelUser::updateOrCreate(
                         [
-                            'user_id'  => $userProfile->id,
+                            'user_id' => $userProfile->id,
                             'level_id' => $levelId
                         ]
                     );
@@ -662,17 +714,17 @@ class User extends Authenticatable
             $levels = $user->levels()->get(['level_id', 'lebel']);
 
             return [
-                'status'   => 200,
-                'message'  => 'Profile updated successfully',
-                'user'     => $userProfile,
+                'status' => 200,
+                'message' => 'Profile updated successfully',
+                'user' => $userProfile,
                 'injuries' => $injuries,
-                'goals'    => $goals,
-                'levels'   => $levels,
+                'goals' => $goals,
+                'levels' => $levels,
             ];
         } catch (Throwable $e) {
             Log::error('[User][updateUserProfile] Error while updating user profile: ' . $e->getMessage());
             return [
-                'status'  => 500,
+                'status' => 500,
                 'message' => 'An error occurred while updating the profile: ' . $e->getMessage()
             ];
         }
