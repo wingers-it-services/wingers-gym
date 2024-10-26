@@ -265,7 +265,7 @@ class User extends Authenticatable
                                 'diet_id'                      => $diet->id,
                                 'goal'                         => $userGoal->goal_id,
                                 'meal_type'                    => $diet->meal_type ?? 'breakfast',
-                                'diet_description'             => $diet->diet_description,
+                                'diet_description'             => $diet->diet_description ?? '------',
                                 'alternative_diet_description' => $diet->alternative_diet ?? null,
                                 'is_completed'                 => 0, // By default, the meal is not completed
                             ]);
@@ -287,8 +287,6 @@ class User extends Authenticatable
             Log::warning("No goal or level found for user ID {$user->id}.");
         }
     }
-
-
 
     public function getImageAttribute()
     {
@@ -677,7 +675,6 @@ class User extends Authenticatable
             ];
         }
     }
-
 
     public function goalUsers()
     {
