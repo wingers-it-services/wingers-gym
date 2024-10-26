@@ -21,7 +21,7 @@ class AdvertismentController extends Controller
         $message = null;
         $advertisments = $this->advertisment->all(); 
 
-        return view('gymOwner.add-gym-advertisment', compact('status', 'message', 'advertisments'));
+        return view('GymOwner.add-gym-advertisment', compact('status', 'message', 'advertisments'));
     }
 
     public function addAdvertisment(Request $request)

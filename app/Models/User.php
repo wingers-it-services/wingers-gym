@@ -306,18 +306,18 @@ class User extends Authenticatable
                         // If no existing diet, create a new entry
                         if (!$existingDiet) {
                             UserDiet::create([
-                                'user_id' => $user->id,
-                                'day' => $goalDiet->day, // Assign day from GoalWiseDiet
-                                'meal_name' => $diet->name,
-                                'calories' => $goalDiet->calories ?? 0, // From GoalWiseDiet
-                                'protein' => $goalDiet->protein ?? 0,  // From GoalWiseDiet
-                                'carbs' => $goalDiet->carbs ?? 0,    // From GoalWiseDiet
-                                'fats' => $goalDiet->fats ?? 0,     // From GoalWiseDiet
-                                'gym_id' => $gym->id,
-                                'diet_id' => $diet->id,
-                                'goal' => $userGoal->goal_id,
-                                'meal_type' => $diet->meal_type ?? 'breakfast',
-                                'diet_description' => $diet->diet_description,
+                                'user_id'                      => $user->id,
+                                'day'                          => $goalDiet->day, // Assign day from GoalWiseDiet
+                                'meal_name'                    => $diet->name,
+                                'calories'                     => $goalDiet->calories ?? 0, // From GoalWiseDiet
+                                'protein'                      => $goalDiet->protein ?? 0,  // From GoalWiseDiet
+                                'carbs'                        => $goalDiet->carbs ?? 0,    // From GoalWiseDiet
+                                'fats'                         => $goalDiet->fats ?? 0,     // From GoalWiseDiet
+                                'gym_id'                       => $gym->id,
+                                'diet_id'                      => $diet->id,
+                                'goal'                         => $userGoal->goal_id,
+                                'meal_type'                    => $diet->meal_type ?? 'breakfast',
+                                'diet_description'             => $diet->diet_description ?? '------',
                                 'alternative_diet_description' => $diet->alternative_diet ?? null,
                                 'is_completed' => 0, // By default, the meal is not completed
                             ]);
@@ -339,8 +339,6 @@ class User extends Authenticatable
             Log::warning("No goal or level found for user ID {$user->id}.");
         }
     }
-
-
 
     public function getImageAttribute()
     {
@@ -729,7 +727,6 @@ class User extends Authenticatable
             ];
         }
     }
-
 
     public function goalUsers()
     {
