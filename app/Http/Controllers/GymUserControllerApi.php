@@ -11,7 +11,6 @@ use App\Services\UserService;
 use App\Traits\errorResponseTrait;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -87,6 +86,20 @@ class GymUserControllerApi extends Controller
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
             Log::error('[GymUserControllerApi][sendEmailOtp] Error sending otp: ' . $e->getMessage());
+            return $this->errorResponse('Error while sending otp', $e->getMessage(), 500);
+        }
+    }
+
+    public function sendEmailOtpForForgetPassword(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email|exists:gym_users,email',
+            ]);
+            $result = $this->otpService->sendOtptoEmail($request->email);
+            return response()->json($result, $result['status']);
+        } catch (Exception $e) {
+            Log::error('[GymUserControllerApi][sendEmailOtpForForgetPassword] Error sending otp: ' . $e->getMessage());
             return $this->errorResponse('Error while sending otp', $e->getMessage(), 500);
         }
     }

@@ -54,7 +54,7 @@ class SendEmail extends Mailable
     public function build()
     {
         return $this->subject('New Advertisement Submission')
-                    ->view('emails.contact')
-                    ->with('formData', $this->formData);
+            ->view('emails.contact')
+            ->with('formData', $this->formData);
     }
 }

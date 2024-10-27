@@ -45,6 +45,8 @@ Route::post('/gyms-by-city', [LocationControllerApi::class, 'fetchGymsByCity']);
 
 Route::post('/send-mobile-otp', [GymUserControllerApi::class, 'sendMobileOtp']);
 
+Route::post('/forget-password-otp', [GymUserControllerApi::class, 'sendEmailOtpForForgetPassword']);
+
 Route::post('/send-email-otp', [GymUserControllerApi::class, 'sendEmailOtp']);
 
 Route::post('/verify-mobile-otp', [GymUserControllerApi::class, 'verifyMobileOtp']);

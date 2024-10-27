@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SendEmail;
+use App\Models\MarketingAdvertisement;
 use App\Models\User;
 use App\Models\UserLatitudeAndLongitude;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -13,13 +15,16 @@ use Illuminate\Support\Facades\Mail;
 class AiDashboardController extends Controller
 {
     protected $userLatitudeAndLongitude;
+    protected $marketingAdvertisement;
     protected $user;
 
     public function __construct(
         UserLatitudeAndLongitude $userLatitudeAndLongitude,
+        MarketingAdvertisement $marketingAdvertisement,
         User $user
     ) {
         $this->userLatitudeAndLongitude = $userLatitudeAndLongitude;
+        $this->marketingAdvertisement=$marketingAdvertisement;
         $this->user = $user;
     }
 
@@ -54,18 +59,26 @@ class AiDashboardController extends Controller
 
     public function sendContactForm(Request $request)
     {
-        // Validate the form inputs
-        $validated = $request->validate([
-            'advertisement_type' => 'required|string',
-            'targeted_no' => 'required|integer',
-            'email' => 'required|email',
-            'phone' => 'required|string'
-        ]);
+        try {
+            $validated = $request->validate([
+                'advertisement_type' => 'required|string',
+                'targetted_no'       => 'required|integer',
+                'city'               => 'required',
+                'state'              => 'required',
+                'country'            => 'required',
+                'address'            => 'required',
+                'email'              => 'required|email',
+                'phone_no'           => 'required|string'
+            ]);
 
-        // Send the email
-        Mail::to('anjalitiwari67269@gmail.com')->send(new SendEmail($validated));
+            $this->marketingAdvertisement->addMarketingAdvertisement($request->all());
 
-        // Return success response or redirect
-        return redirect()->back()->with('success', 'Email sent successfully!');
+            Mail::to('wingersitservices@gmail.com')->send(new SendEmail($validated));
+
+            return redirect()->back()->with('status','success')->with('message', 'Email sent successfully!');
+        } catch (Exception $e) {
+            Log::error('[AiDashboardController][sendContactForm]Error sending email'.$e->getMessage());
+            return redirect()->back()->with('status','error')->with('message', 'Email not sent successfully!');
+        }
     }
 }
