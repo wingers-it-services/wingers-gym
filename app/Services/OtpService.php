@@ -59,19 +59,19 @@ class OtpService
     {
         try {
 
-            // $otp = strval(random_int(1000, 9999));
+            $otp = strval(random_int(1000, 9999));
 
-            $otp = 1234;
+            // $otp = 1234;
 
-            // Mail::to($email)->send(new OtpMail($otp));
+            Mail::to($email)->send(new OtpMail($otp));
 
 
-            // $data = ['otp' => $otp];
+            $data = ['otp' => $otp];
             // Mail::send([], [], function ($message) use ($email, $otp) {
             //     $message->to($email)
             //             ->subject('Your OTP Code')
             //             ->html('<html><body><p>Your OTP code is: ' . $otp . '</p></body></html>');
-            //       $message->from('anjali.wingersitservices@gmail.com', 'Your App Name');
+            //       $message->from('jadavdivyesh243@gmail.com', 'Your App Name');
             // });
 
             $this->mobileAndEmailOtp->updateOrCreate([

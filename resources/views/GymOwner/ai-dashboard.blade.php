@@ -25,7 +25,7 @@
 <div class="content-body ">
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-xl col-md-6">
+			<!-- <div class="col-xl col-md-6">
 				<div class="card">
 					<div class="card-body p-4">
 						<div class="d-inline-block mb-4 ms--12 position-relative donut-chart-sale">
@@ -130,7 +130,7 @@
 						<span class="fs-14">Total Members</span>
 					</div>
 				</div>
-			</div>
+			</div> -->
 			<div class="col-xl-9 col-xxl-8">
 				<div class="card">
 					<div class="card-header flex-wrap pb-0 border-0">
@@ -317,15 +317,15 @@
 								<label for="input3">Advertisment Type</label>
 								<select class="form-control" id="advertisement_type" name="advertisement_type">
 									<option value="">----select----</option>
-									<option value="whatsup">Whatsup</option>
-									<option value="email">Email</option>
+									<option value="{{ \App\Enums\MarketingAdvertisementTypeEnum::Email }}">Email</option>
+									<option value="{{ \App\Enums\MarketingAdvertisementTypeEnum::Whatsup }}">Whatsup</option>
 								</select>
 							</div>
 						</div>
 						<div class="col-6">
 							<div class="form-group">
 								<label for="input4">Targeted No of users</label>
-								<input type="number" class="form-control" id="input4" name="targeted_no" placeholder="Enter no of targetted people">
+								<input type="number" class="form-control" id="input4" name="targetted_no" placeholder="Enter no of targetted people">
 							</div>
 						</div>
 					</div>
@@ -339,16 +339,44 @@
 						<div class="col-6">
 							<div class="form-group">
 								<label for="input2">Phone No</label>
-								<input type="text" class="form-control" id="input2" name="phone" placeholder="Enter phone no">
+								<input type="text" class="form-control" id="input2" name="phone_no" placeholder="Enter phone no">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-6">
+							<div class="form-group">
+								<label for="input1">City</label>
+								<input type="text" class="form-control" id="input1" name="city" placeholder="Enter email">
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="form-group">
+								<label for="input2">State</label>
+								<input type="text" class="form-control" id="input2" name="state" placeholder="Enter phone no">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-6">
+							<div class="form-group">
+								<label for="input1">Country</label>
+								<input type="text" class="form-control" id="input1" name="country" placeholder="Enter email">
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="form-group">
+								<label for="input2">Address</label>
+								<textarea class="form-control" name="address"></textarea>
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
 				</form>
 			</div>
-			
+
 		</div>
 	</div>
 </div>
