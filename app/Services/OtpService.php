@@ -49,7 +49,7 @@ class OtpService
             Log::error("[OtpService][generateOtp] Error sending otp: " . $e->getMessage());
             return [
                 'status'       => 500,
-                'message'      => 'Error while sending otp',
+                'message'      => 'Error while sending otp. '.$e->getMessage(),
                 'errorMessage' => $e->getMessage(),
             ];
         }

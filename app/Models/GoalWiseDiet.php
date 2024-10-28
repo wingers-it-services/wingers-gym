@@ -41,6 +41,11 @@ class GoalWiseDiet extends Model
     {
         return $this->belongsTo(Goal::class, 'goal_id');
     }
+
+    public function level()
+    {
+        return $this->belongsTo(UserLebel::class, 'user_lebel_id');
+    }
     
     public function addGoalWiseDiet(array $goalWiseDiet)
     {

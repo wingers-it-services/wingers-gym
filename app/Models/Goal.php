@@ -30,6 +30,11 @@ class Goal extends Model
         return $this->hasMany(GoalWiseWorkouts::class, 'goal_id');
     }
 
+    public function goalWiseDiets()
+    {
+        return $this->hasMany(GoalWiseDiet::class, 'goal_id');
+    }
+
     public function addGoal(array $goal)
     {
         try {

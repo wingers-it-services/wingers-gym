@@ -118,7 +118,6 @@ class User extends Authenticatable
                 'amount' => $subscription->amount,
                 'gym_id' => $gym->id,
             ]);
-
         } catch (\Exception $e) {
             // Log the error message for debugging
             Log::error('Error allotting subscription: ' . $e->getMessage());
@@ -769,5 +768,10 @@ class User extends Authenticatable
     public function fcmTokens()
     {
         return $this->hasMany(UserFcmToken::class, 'user_id');
+    }
+
+    public function subscriptionHistory()
+    {
+        return $this->hasMany(UserSubscriptionHistory::class, 'user_id');
     }
 }

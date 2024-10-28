@@ -1,11 +1,12 @@
 <?php
-
 namespace App\Console\Commands;
 
 use App\Enums\AttendenceStatusEnum;
+use App\Enums\GymSubscriptionStatusEnum;
 use App\Models\Gym;
 use App\Models\GymUserAttendence;
 use App\Models\Holiday;
+use App\Models\UserSubscriptionHistory;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +25,7 @@ class DailyAttendenceUpdateCron extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Update daily attendance for active subscribers';
 
     /**
      * Execute the console command.
@@ -52,6 +53,18 @@ class DailyAttendenceUpdateCron extends Command
                 $users = $gym->users; // Adjust if your relation is different
 
                 foreach ($users as $user) {
+                    // Check if the user has an active subscription for the current gym
+                    $hasActiveSubscription = UserSubscriptionHistory::where('user_id', $user->id)
+                        ->where('gym_id', $gym->id)
+                        ->where('status',GymSubscriptionStatusEnum::ACTIVE) // Adjust the status value if needed
+                        ->whereDate('subscription_end_date', '>=', $currentDate)
+                        ->exists();
+
+                    if (!$hasActiveSubscription) {
+                        // Skip marking attendance for users without an active subscription
+                        continue;
+                    }
+
                     // Fetch the attendance record for the current month
                     $attendance = GymUserAttendence::firstOrNew([
                         'gym_id' => $gym->id,
@@ -59,9 +72,10 @@ class DailyAttendenceUpdateCron extends Command
                         'month' => $month,
                         'year' => $year
                     ]);
+
                     $weekendDays = $gym->weekends->pluck('weekend_day')->toArray(); // Array of weekend days (e.g., ['Saturday', 'Sunday'])
 
-                    // Check if today's attendance field is null
+                    // Check if today's attendance field is not already marked
                     $todayField = 'day' . $today;
 
                     if ($attendance->{$todayField} == 0) {
@@ -69,7 +83,7 @@ class DailyAttendenceUpdateCron extends Command
                         $isHoliday = $holidays->where('date', $currentDate)->isNotEmpty();
                         $dayName = $now->format('l'); // Get the name of the day
 
-                        // If today is Sunday or a holiday, don't mark absent
+                        // If today is a weekend or a holiday, mark accordingly
                         if (in_array($dayName, $weekendDays)) {
                             $attendance->{$todayField} = AttendenceStatusEnum::WEEKEND;
                         } elseif ($isHoliday) {
@@ -80,12 +94,11 @@ class DailyAttendenceUpdateCron extends Command
                         }
                     }
 
-                    // Save the updated attendance record
                     $attendance->save();
                 }
             }
 
-            Log::info('Daily attendance update executed successfully before day end.');
+            Log::info('Daily attendance update executed successfully.');
         } catch (\Exception $e) {
             Log::error('Error during daily attendance update: ' . $e->getMessage());
         }
