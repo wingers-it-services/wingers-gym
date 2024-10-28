@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AttendenceStatusEnum;
+use App\Enums\GymSubscriptionStatusEnum;
 use App\Models\Gym;
 use App\Models\GymUserAttendence;
 use App\Models\Holiday;
@@ -215,14 +216,71 @@ class GymUserAttendenceControllerApi extends Controller
         }
     }
 
+    // private function markAttendance(User $user, $gymId)
+    // {
+    //     try {
+    //         $today = Carbon::now();
+    //         $currentDay = $today->day;
+    //         $currentMonth = $today->month;
+    //         $currentYear = $today->year;
+
+    //         $attendance = $this->gymUserAttendence->firstOrNew([
+    //             'gym_user_id' => $user->id,
+    //             'gym_id'      => $gymId,
+    //             'month'       => $currentMonth,
+    //             'year'        => $currentYear,
+    //         ]);
+
+    //         $dayField = 'day' . $currentDay;
+
+    //         if ($attendance->$dayField != 0) {
+    //             return response()->json([
+    //                 'status'  => 409,
+    //                 'message' => 'Attendance already marked for today',
+    //             ], 409);
+    //         }
+
+    //         $attendance->$dayField = AttendenceStatusEnum::PRESENT;
+
+    //         $attendance->save();
+
+    //         return response()->json([
+    //             'status'     => 200,
+    //             'attendence' => $attendance,
+    //             'message'    => 'Attendance marked successfully',
+    //         ], 200);
+    //     } catch (Throwable $e) {
+    //         Log::error('[GymUserAttendenceControllerApi][markAttendance]' . $e->getMessage());
+    //         return response()->json([
+    //             'status'  => 500,
+    //             'message' => 'Error in Attendance mark ' . $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
     private function markAttendance(User $user, $gymId)
     {
         try {
+            // Check user's subscription status in UserSubscriptionHistory
+            $activeSubscription = $user->subscriptionHistory()
+                ->where('gym_id', $gymId)
+                ->where('status', GymSubscriptionStatusEnum::ACTIVE) // Assuming 'active' denotes an active subscription
+                ->exists();
+
+            if (!$activeSubscription) {
+                return response()->json([
+                    'status'  => 403,
+                    'message' => 'Please purchase an active subscription to mark attendance',
+                ], 403);
+            }
+
+            // Proceed with attendance marking if subscription is active
             $today = Carbon::now();
             $currentDay = $today->day;
             $currentMonth = $today->month;
             $currentYear = $today->year;
 
+            // Find or create attendance entry
             $attendance = $this->gymUserAttendence->firstOrNew([
                 'gym_user_id' => $user->id,
                 'gym_id'      => $gymId,
@@ -232,6 +290,7 @@ class GymUserAttendenceControllerApi extends Controller
 
             $dayField = 'day' . $currentDay;
 
+            // Check if attendance is already marked
             if ($attendance->$dayField != 0) {
                 return response()->json([
                     'status'  => 409,
@@ -239,8 +298,10 @@ class GymUserAttendenceControllerApi extends Controller
                 ], 409);
             }
 
+            // Mark attendance as present
             $attendance->$dayField = AttendenceStatusEnum::PRESENT;
 
+            // Save attendance record
             $attendance->save();
 
             return response()->json([
@@ -249,10 +310,10 @@ class GymUserAttendenceControllerApi extends Controller
                 'message'    => 'Attendance marked successfully',
             ], 200);
         } catch (Throwable $e) {
-            Log::error('[GymUserAttendenceControllerApi][markAttendance]' . $e->getMessage());
+            Log::error('[GymUserAttendenceControllerApi][markAttendance] ' . $e->getMessage());
             return response()->json([
                 'status'  => 500,
-                'message' => 'Error in Attendance mark ' . $e->getMessage(),
+                'message' => 'Error in marking attendance: ' . $e->getMessage(),
             ], 500);
         }
     }

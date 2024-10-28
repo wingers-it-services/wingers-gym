@@ -71,42 +71,69 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Level</label>
-                                        <select id="user_lebel_id" name="user_lebel_id" class="form-control" required>
-                                            <option value="" disabled selected>Select Level</option>
-                                            @foreach($levels as $level)
-                                            <option value="{{$level->id}}">{{$level->lebel}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Workout</label>
-                                        <select id="workout_id" name="workout_id" class="form-control" required>
-                                            <option value="" disabled selected>Select Workout</option>
-                                            @foreach($workouts as $workout)
-                                            <option value="{{$workout->id}}">{{$workout->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>No of Sets</label>
-                                        <input type="text" name="sets" class="form-control" id="sets" placeholder="Enter No of sets">
+
+                                    <div class="row">
+                                        <div class="col-lg-6 order-lg-1">
+                                            <div class="form-group">
+                                                <label>Level</label>
+                                                <select id="user_lebel_id" name="user_lebel_id" class="form-control" required>
+                                                    <option value="" disabled selected>Select Level</option>
+                                                    @foreach($levels as $level)
+                                                    <option value="{{$level->id}}">{{$level->lebel}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 order-lg-1">
+                                            <div class="form-group">
+                                                <label>Workout</label>
+                                                <select id="workout_id" name="workout_id" class="form-control" required>
+                                                    <option value="" disabled selected>Select Workout</option>
+                                                    @foreach($workouts as $workout)
+                                                    <option value="{{$workout->id}}">{{$workout->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label>No of Reps</label>
-                                        <input type="text" name="reps" id="reps" class="form-control" placeholder="Enter No of reps">
+                                    <div class="row">
+                                        <div class="col-lg-6 order-lg-1">
+                                            <div class="form-group">
+                                                <label>No of Sets</label>
+                                                <input type="text" name="sets" class="form-control" id="sets" placeholder="Enter No of sets">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 order-lg-1">
+                                            <div class="form-group">
+                                                <label>No of Reps</label>
+                                                <input type="text" name="reps" id="reps" class="form-control" placeholder="Enter No of reps">
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label>Weight</label>
-                                        <input type="text" name="weight" id="weight" class="form-control" placeholder="Enter weight">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Day</label>
-                                        <input type="text" name="day" id="day" class="form-control" placeholder="Enter day">
+                                    <div class="row">
+                                        <div class="col-lg-6 order-lg-1">
+                                            <div class="form-group">
+                                                <label>Weight</label>
+                                                <input type="text" name="weight" id="weight" class="form-control" placeholder="Enter weight">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 order-lg-1">
+                                            <div class="form-group">
+                                                <label>Day</label>
+                                                <select class="form-control" id="day" name="day" required>
+                                                    <option value="">Choose Day</option>
+                                                    <option value="Monday">Monday</option>
+                                                    <option value="Tuesday">Tuesday</option>
+                                                    <option value="Wednesday">Wednesday</option>
+                                                    <option value="Thursday">Thursday</option>
+                                                    <option value="Friday">Friday</option>
+                                                    <option value="Saturday">Saturday</option>
+                                                    <option value="Sunday">Sunday</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                     <!-- </div> -->
                                 </div>

@@ -37,10 +37,13 @@ class GoalWiseDietController extends Controller
         $goalWiseDiets = $this->goalWiseDiet->with('goal','diet')->get();
         $diets = $this->diet->where('added_by', $gym->id)->get();
         $goals = $this->goal->get();
-        $levels = $this->level->get();
+        $goals = Goal::with(['goalWiseDiets.level', 'goalWiseDiets.diet'])->get();
+        $levels = $this->level->get();  
+        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    
         return view(
             'GymOwner.add-goal-wise-diet',
-            compact('status', 'message', 'goalWiseDiets', 'diets', 'goals','levels')
+            compact('status', 'message', 'goalWiseDiets', 'diets', 'goals','levels','days')
         );
     }
 

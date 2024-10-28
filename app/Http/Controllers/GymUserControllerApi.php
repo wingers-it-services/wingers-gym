@@ -59,7 +59,7 @@ class GymUserControllerApi extends Controller
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
             Log::error('[GymUserControllerApi][sendMobileOtp] Error sending otp: ' . $e->getMessage());
-            return $this->errorResponse('Error while sending otp', $e->getMessage(), 500);
+            return $this->errorResponse('Error while sending otp. '.$e->getMessage(), $e->getMessage(), 500);
         }
     }
 
@@ -86,7 +86,7 @@ class GymUserControllerApi extends Controller
             return response()->json($result, $result['status']);
         } catch (Exception $e) {
             Log::error('[GymUserControllerApi][sendEmailOtp] Error sending otp: ' . $e->getMessage());
-            return $this->errorResponse('Error while sending otp', $e->getMessage(), 500);
+            return $this->errorResponse('Error while sending otp. '.$e->getMessage(), $e->getMessage(), 500);
         }
     }
 
