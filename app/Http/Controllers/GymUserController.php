@@ -537,8 +537,29 @@ class GymUserController extends Controller
             }
             $this->trainersHistory->addTrainer($validatedData, $gymId);
 
+            $userDetails = $this->user->where('gym_id', $gymId)->where('id', $validatedData['user_id'])->first();
+
+            $trainerDetails = $this->gymStaff->where('gym_id', $gymId)->where('id', $validatedData['trainer_id'])->first();
+
+              // Ensure user and trainer details are found
+            if (!$userDetails || !$trainerDetails) {
+                return redirect()->back()->with('status', 'error')->with('message', 'User or trainer details not found.');
+            }
+
+            $this->customerPayments->create([
+                "name"              => $userDetails->firstname . ' ' . $userDetails->lastname,
+                "user_id"           => $userDetails->id,
+                "gym_id"            => $gymId,
+                "email"             => $userDetails->email,
+                "mobile"            => $userDetails->phone_no,
+                "subscription_id"   => $validatedData['trainer_id'],
+                "amount"            => $trainerDetails->fees,
+                "total"             => $trainerDetails->fees,
+            ]);
+
             return redirect()->back()->with('status', 'success')->with('message', 'Trainer Alloted succesfully.');
         } catch (Throwable $th) {
+            dd($th);
             Log::error("[GymUserController][allocateTrainerToUser] error " . $th->getMessage());
             return redirect()->back()->with('status', 'error')->with('message', 'Failed to allocate trainer. Please try again.' . $th->getMessage());
         }
